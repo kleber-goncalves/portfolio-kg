@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+@layer base {
+    * {
+        font-family: "Montserrat", sans-serif;
+        box-sizing: border-box;
+    }
+}
+
+html {
+    -webkit-overflow-scrolling: touch;
+}
+
