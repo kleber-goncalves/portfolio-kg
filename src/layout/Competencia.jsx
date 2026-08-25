@@ -2,7 +2,7 @@ import Card1 from "../components/card";
 
 function Competencia() {
     return (
-        <section className="bg-obsidian w-full h-full relative overflow-hidden flex flex-col items-center gap-10">
+        <section className="bg-obsidian w-full h-full p-5 md:p-10 relative overflow-hidden flex flex-col items-center gap-10">
             <div className="flex flex-col items-center gap-10 w-full">
                 <div className="flex flex-row items-center gap-2 w-full">
                     <h2 className="text-sm md:text-7xl text-steel uppercase">

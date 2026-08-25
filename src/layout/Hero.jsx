@@ -2,7 +2,7 @@ import { Github, Linkedin, Instagram } from "@thesvg/react";
 
 function Hero() {
     return (
-        <section className="bg-obsidian w-full h-screen relative flex flex-row ">
+        <section className="bg-obsidian w-full p-5 md:p-10  h-screen relative flex flex-row ">
             <div id="eft1">
                 <h1 className="text-5xl md:text-7xl text-amber-700 font-bold text-center">
                     K
