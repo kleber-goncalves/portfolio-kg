@@ -3,6 +3,13 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 
+import ProjetoCard from "../components/ProjetoCard";
+
+import projeto01_01 from "../assets/projetos/projeto01/jason-1.webp";
+import projeto01_02 from "../assets/projetos/projeto01/jason-2.webp";
+import projeto01_03 from "../assets/projetos/projeto01/jason-3.webp";
+import projeto01_04 from "../assets/projetos/projeto01/lucia-1.webp";
+
 gsap.registerPlugin(ScrollTrigger);
 
 function Projetos() {
@@ -39,9 +46,12 @@ function Projetos() {
             });
 
             // PAUSA INICIAL
-            tl.to({}, {
-                duration: 10,
-            });
+            tl.to(
+                {},
+                {
+                    duration: 10,
+                },
+            );
 
             // MOVIMENTO HORIZONTAL
             tl.to(track, {
@@ -84,51 +94,91 @@ function Projetos() {
                     >
                         {/* PROJETO 01 */}
 
-                        <article className="h-[70vh] w-[80vw] shrink-0 rounded-3xl bg-neutral-900">
-                            <div className="flex h-full flex-col justify-end p-6">
-                                <span className="text-white/50">01</span>
-
-                                <h2 className="text-4xl font-bold text-white">
-                                    Projeto 01
-                                </h2>
-                            </div>
-                        </article>
+                        <ProjetoCard
+                            numero="01"
+                            titulo="Projeto E-commerce"
+                            descricao="Plataforma de e-commerce desenvolvida com autenticação, catálogo de produtos, carrinho e gerenciamento de pedidos."
+                            tecnologias={[
+                                "React",
+                                "Node.js",
+                                "PostgreSQL",
+                                "JWT",
+                            ]}
+                            imagens={[
+                                projeto01_01,
+                                projeto01_02,
+                                projeto01_03,
+                                projeto01_04,
+                            ]}
+                            demo="https://seu-projeto.com"
+                            github="https://github.com/seu-usuario/seu-projeto"
+                        />
 
                         {/* PROJETO 02 */}
 
-                        <article className="h-[70vh] w-[80vw] shrink-0 rounded-3xl bg-neutral-800">
-                            <div className="flex h-full flex-col justify-end p-6">
-                                <span className="text-white/50">02</span>
-
-                                <h2 className="text-4xl font-bold text-white">
-                                    Projeto 02
-                                </h2>
-                            </div>
-                        </article>
+                        <ProjetoCard
+                            numero="02"
+                            titulo="Projeto E-commerce"
+                            descricao="Plataforma de e-commerce desenvolvida com autenticação, catálogo de produtos, carrinho e gerenciamento de pedidos."
+                            tecnologias={[
+                                "React",
+                                "Node.js",
+                                "PostgreSQL",
+                                "JWT",
+                            ]}
+                            imagens={[
+                                projeto01_01,
+                                projeto01_02,
+                                projeto01_03,
+                                projeto01_04,
+                            ]}
+                            demo="https://seu-projeto.com"
+                            github="https://github.com/seu-usuario/seu-projeto"
+                        />
 
                         {/* PROJETO 03 */}
 
-                        <article className="h-[70vh] w-[80vw] shrink-0 rounded-3xl bg-neutral-700">
-                            <div className="flex h-full flex-col justify-end p-6">
-                                <span className="text-white/50">03</span>
-
-                                <h2 className="text-4xl font-bold text-white">
-                                    Projeto 03
-                                </h2>
-                            </div>
-                        </article>
+                        <ProjetoCard
+                            numero="03"
+                            titulo="Projeto E-commerce"
+                            descricao="Plataforma de e-commerce desenvolvida com autenticação, catálogo de produtos, carrinho e gerenciamento de pedidos."
+                            tecnologias={[
+                                "React",
+                                "Node.js",
+                                "PostgreSQL",
+                                "JWT",
+                            ]}
+                            imagens={[
+                                projeto01_01,
+                                projeto01_02,
+                                projeto01_03,
+                                projeto01_04,
+                            ]}
+                            demo="https://seu-projeto.com"
+                            github="https://github.com/seu-usuario/seu-projeto"
+                        />
 
                         {/* PROJETO 04 */}
 
-                        <article className="h-[70vh] w-[80vw] shrink-0 rounded-3xl bg-neutral-600">
-                            <div className="flex h-full flex-col justify-end p-6">
-                                <span className="text-white/50">04</span>
-
-                                <h2 className="text-4xl font-bold text-white">
-                                    Projeto 04
-                                </h2>
-                            </div>
-                        </article>
+                        <ProjetoCard
+                            numero="04"
+                            titulo="Projeto E-commerce"
+                            descricao="Plataforma de e-commerce desenvolvida com autenticação, catálogo de produtos, carrinho e gerenciamento de pedidos."
+                            tecnologias={[
+                                "React",
+                                "Node.js",
+                                "PostgreSQL",
+                                "JWT",
+                            ]}
+                            imagens={[
+                                projeto01_01,
+                                projeto01_02,
+                                projeto01_03,
+                                projeto01_04,
+                            ]}
+                            demo="https://seu-projeto.com"
+                            github="https://github.com/seu-usuario/seu-projeto"
+                        />
                     </div>
                 </div>
             </div>
