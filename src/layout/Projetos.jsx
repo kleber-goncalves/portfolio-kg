@@ -15,13 +15,15 @@ gsap.registerPlugin(ScrollTrigger);
 function Projetos() {
     const sectionRef = useRef(null);
     const trackRef = useRef(null);
+    const scrollHintRef = useRef(null);
 
     useGSAP(
         () => {
             const section = sectionRef.current;
             const track = trackRef.current;
+            const scrollHint = scrollHintRef.current;
 
-            if (!section || !track) return;
+            if (!section || !track || !scrollHint) return;
 
             const getScrollAmount = () => {
                 return track.scrollWidth - window.innerWidth;
@@ -37,7 +39,9 @@ function Projetos() {
 
                     pin: true,
 
-                    scrub: 1,
+                    scrub: 2,
+
+                    anticipatePin: 1,
 
                     invalidateOnRefresh: true,
 
@@ -45,7 +49,13 @@ function Projetos() {
                 },
             });
 
+            // ============================================================
             // PAUSA INICIAL
+            // ============================================================
+            // ============================================================
+            // PAUSA INICIAL
+            // ============================================================
+
             tl.to(
                 {},
                 {
@@ -53,12 +63,33 @@ function Projetos() {
                 },
             );
 
+            // ============================================================
             // MOVIMENTO HORIZONTAL
+            // ============================================================
+
             tl.to(track, {
                 x: () => -getScrollAmount(),
                 duration: 90,
                 ease: "none",
             });
+
+            // ============================================================
+            // TEXTO DESAPARECE NO FINAL
+            // ============================================================
+
+            tl.to(scrollHint, {
+                opacity: 0,
+                y: -20,
+                duration: 2,
+                ease: "power2.out",
+            });
+
+            tl.to(
+                {},
+                {
+                    duration: 10,
+                },
+            );
         },
         {
             scope: sectionRef,
@@ -180,6 +211,29 @@ function Projetos() {
                             github="https://github.com/seu-usuario/seu-projeto"
                         />
                     </div>
+                </div>
+                <div
+                    ref={scrollHintRef}
+                    className="
+                    pointer-events-none
+                    absolute
+                    bottom-6
+                    left-1/2
+                    z-30
+                    flex
+                    -translate-x-1/2
+                    flex-col
+                    items-center
+                    gap-2
+                "
+                >
+                    <span className="whitespace-nowrap text-[10px] uppercase tracking-[0.3em] text-white/40">
+                        Continue rolando
+                    </span>
+
+                    <span className="animate-bounce text-sm text-white/60">
+                        ↓
+                    </span>
                 </div>
             </div>
         </section>

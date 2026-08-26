@@ -10,11 +10,50 @@ function ProjetoCard({
     demo,
     github,
 }) {
+    const cardRef = useRef(null);
     const imageRef = useRef(null);
     const intervalRef = useRef(null);
 
     const [imagemAtual, setImagemAtual] = useState(0);
     const [pausado, setPausado] = useState(false);
+    const [ativo, setAtivo] = useState(false);
+
+    /*
+    ============================================================
+    DETECTAR SE O CARD ESTÁ VISÍVEL
+    ============================================================
+    */
+
+    useEffect(() => {
+        const card = cardRef.current;
+
+        if (!card) return;
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                /*
+                Só consideramos o card ativo quando uma
+                parte significativa dele está visível.
+                */
+
+                setAtivo(entry.isIntersecting);
+            },
+            {
+                /*
+                Como seus cards são grandes, 30% é um
+                bom ponto para considerar o projeto ativo.
+                */
+
+                threshold: 0.3,
+            },
+        );
+
+        observer.observe(card);
+
+        return () => {
+            observer.disconnect();
+        };
+    }, []);
 
     /*
     ============================================================
@@ -23,7 +62,19 @@ function ProjetoCard({
     */
 
     useEffect(() => {
-        if (imagens.length <= 1 || pausado) return;
+        /*
+        Se:
+
+        - não existem imagens suficientes;
+        - o card não está ativo;
+        - o usuário pausou;
+
+        NÃO criamos nenhum timer.
+        */
+
+        if (imagens.length <= 1 || !ativo || pausado) {
+            return;
+        }
 
         intervalRef.current = setInterval(() => {
             setImagemAtual((prev) => {
@@ -31,10 +82,24 @@ function ProjetoCard({
             });
         }, 3500);
 
+        /*
+        LIMPEZA
+
+        Quando:
+
+        - card sai da tela;
+        - usuário pausa;
+        - componente desmonta;
+
+        o timer é destruído.
+        */
+
         return () => {
             clearInterval(intervalRef.current);
+
+            intervalRef.current = null;
         };
-    }, [imagens.length, pausado]);
+    }, [imagens.length, ativo, pausado]);
 
     /*
     ============================================================
@@ -62,6 +127,20 @@ function ProjetoCard({
 
     /*
     ============================================================
+    LIMPAR ANIMAÇÃO GSAP
+    ============================================================
+    */
+
+    useEffect(() => {
+        return () => {
+            if (imageRef.current) {
+                gsap.killTweensOf(imageRef.current);
+            }
+        };
+    }, []);
+
+    /*
+    ============================================================
     CLIQUE NOS INDICADORES
     ============================================================
     */
@@ -81,7 +160,10 @@ function ProjetoCard({
     };
 
     return (
-        <article className="h-[70vh] w-[80vw] shrink-0 overflow-hidden rounded-3xl bg-neutral-900">
+        <article
+            ref={cardRef}
+            className="h-[70vh] w-[80vw] shrink-0 overflow-hidden rounded-3xl bg-neutral-900"
+        >
             {/* ==================================================
                 PREVIEW
             ================================================== */}
@@ -100,7 +182,9 @@ function ProjetoCard({
                 )}
 
                 {/* OVERLAY */}
+
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+
                 <div className="absolute inset-0 bg-black/10" />
 
                 {/* NUMERO */}
@@ -129,6 +213,7 @@ function ProjetoCard({
                                 type="button"
                                 onClick={(event) => {
                                     event.stopPropagation();
+
                                     mudarImagem(index);
                                 }}
                                 className={`h-1.5 rounded-full transition-all duration-300 ${
