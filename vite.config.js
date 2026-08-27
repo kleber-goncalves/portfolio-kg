@@ -9,7 +9,6 @@ export default defineConfig({
         port: 30001, // porta ALTA (fora de políticas)
         strictPort: true,
         hmr: {
-            host: "localhost",
             port: 30001,
             protocol: "ws",
         },
