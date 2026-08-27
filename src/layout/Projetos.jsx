@@ -35,17 +35,17 @@ function Projetos() {
 
                     start: "top top",
 
-                    end: () => `+=${getScrollAmount() * 4}`,
+                    end: () => `+=${getScrollAmount() * 8}`,
 
                     pin: true,
 
-                    scrub: 2,
-
-                    anticipatePin: 1,
+                    scrub: true,
 
                     invalidateOnRefresh: true,
 
                     markers: false,
+
+                   
                 },
             });
 
@@ -56,12 +56,6 @@ function Projetos() {
             // PAUSA INICIAL
             // ============================================================
 
-            tl.to(
-                {},
-                {
-                    duration: 10,
-                },
-            );
 
             // ============================================================
             // MOVIMENTO HORIZONTAL
@@ -69,7 +63,7 @@ function Projetos() {
 
             tl.to(track, {
                 x: () => -getScrollAmount(),
-                duration: 90,
+                duration: 20,
                 ease: "none",
             });
 
@@ -84,12 +78,6 @@ function Projetos() {
                 ease: "power2.out",
             });
 
-            tl.to(
-                {},
-                {
-                    duration: 10,
-                },
-            );
         },
         {
             scope: sectionRef,

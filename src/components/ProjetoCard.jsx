@@ -162,7 +162,7 @@ function ProjetoCard({
     return (
         <article
             ref={cardRef}
-            className="h-[70vh] w-[80vw] shrink-0 overflow-hidden rounded-3xl bg-neutral-900"
+            className="h-[70vh] w-[89vw] shrink-0 overflow-hidden rounded-3xl bg-neutral-900"
         >
             {/* ==================================================
                 PREVIEW
