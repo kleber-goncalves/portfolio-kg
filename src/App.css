@@ -7,12 +7,12 @@
 
     --color-t-sec: #020810;
 
-    --color-steel: #8B8B8B;
-    --color-ivory: #F2F0EC;
+    --color-steel: #8B8B8B; /* informação secundária */
+    --color-ivory: #F2F0EC; /* informação principal */
 
-    --color-bronze: #A87852;
-    --color-warm-bronze: #C49A78;
-    --color-champagne: #D8C2AA;
+    --color-bronze: #A87852; /* palavras e elementos importantes */
+    --color-warm-bronze: #C49A78; /* interação / hover */
+    --color-champagne: #D8C2AA; /* detalhe premium */
 
     --font-space: "Space Grotesk", sans-serif;
     --font-bebas: "Bebas Neue", sans-serif;
