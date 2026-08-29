@@ -37,6 +37,24 @@ html {
     -webkit-overflow-scrolling: touch;
 }
 
+/* ScrollSmooth - Lenis */
+html.lenis,
+html.lenis body {
+    height: auto;
+}
+
+html.lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+}
+
+html.lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+}
+
+html.lenis.lenis-stopped {
+    overflow: hidden;
+}
+
 :root {
     /* Paleta de Cores */
     --bg-primary: #0D0D0D;

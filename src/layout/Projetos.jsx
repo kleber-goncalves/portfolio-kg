@@ -16,14 +16,16 @@ function Projetos() {
     const sectionRef = useRef(null);
     const trackRef = useRef(null);
     const scrollHintRef = useRef(null);
+    const contentRef = useRef(null);
 
     useGSAP(
         () => {
             const section = sectionRef.current;
             const track = trackRef.current;
             const scrollHint = scrollHintRef.current;
+            const content = contentRef.current;
 
-            if (!section || !track || !scrollHint) return;
+            if (!section || !track || !scrollHint || !contentRef) return;
 
             const getScrollAmount = () => {
                 return track.scrollWidth - window.innerWidth;
@@ -35,17 +37,17 @@ function Projetos() {
 
                     start: "top top",
 
-                    end: () => `+=${getScrollAmount() * 8}`,
+                    end: () => `+=${window.innerHeight * 6}`,
 
-                    pin: true,
+                    pin: false,
 
-                    scrub: true,
+                    anticipatePin: 2,
+
+                    scrub: 0.5,
 
                     invalidateOnRefresh: true,
 
                     markers: false,
-
-                   
                 },
             });
 
@@ -56,14 +58,26 @@ function Projetos() {
             // PAUSA INICIAL
             // ============================================================
 
-
+            tl.fromTo(
+                content,
+                {
+                    y: 20,
+                    opacity: 0.95,
+                },
+                {
+                    y: 0,
+                    opacity: 1,
+                    duration: 0.2,
+                    ease: "none",
+                },
+            );
             // ============================================================
             // MOVIMENTO HORIZONTAL
             // ============================================================
 
             tl.to(track, {
                 x: () => -getScrollAmount(),
-                duration: 20,
+                duration: 1,
                 ease: "none",
             });
 
@@ -74,7 +88,7 @@ function Projetos() {
             tl.to(scrollHint, {
                 opacity: 0,
                 y: -20,
-                duration: 2,
+                duration: 0.5,
                 ease: "power2.out",
             });
 
@@ -102,7 +116,10 @@ function Projetos() {
 
                 {/* TRACK */}
 
-                <div className="relative w-full h-full flex items-center">
+                <div
+                    ref={contentRef}
+                    className="relative w-full h-full flex items-center"
+                >
                     <div
                         ref={trackRef}
                         className="flex w-max items-center gap-6"
