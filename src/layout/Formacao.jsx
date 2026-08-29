@@ -31,10 +31,10 @@ function Formacao() {
              // ----------------------------------------------------
 
              // Card entra suavemente
-             gsap.set(formationCardRef.current, {
-                 opacity: 0,
-                 y: 30,
-             });
+            //  gsap.set(formationCardRef.current, {
+            //      opacity: 0,
+            //      y: 30,
+            //  });
 
              // Linha começa invisível
              gsap.set(line, {
@@ -58,18 +58,18 @@ function Formacao() {
              // CARD DE FORMAÇÃO
              // ----------------------------------------------------
 
-             gsap.to(formationCardRef.current, {
-                 opacity: 1,
-                 y: 0,
-                 duration: 0.8,
-                 ease: "power2.out",
+            //  gsap.to(formationCardRef.current, {
+            //      opacity: 1,
+            //      y: 0,
+            //      duration: 0.8,
+            //      ease: "power2.out",
 
-                 scrollTrigger: {
-                     trigger: formationCardRef.current,
-                     start: "top 85%",
-                     toggleActions: "play none none reverse",
-                 },
-             });
+            //      scrollTrigger: {
+            //          trigger: formationCardRef.current,
+            //          start: "top 85%",
+            //          toggleActions: "play none none reverse",
+            //      },
+            //  });
 
              // ----------------------------------------------------
              // TIMELINE
@@ -225,9 +225,9 @@ function Formacao() {
                                 <div className="flex items-center gap-3">
                                     <span className="w-2 h-2 rounded-full bg-champagne"></span>
 
-                                    <p className="font-bold text-sm md:text-3xl text-steel">
+                                    <h3 className="font-bold text-sm md:text-3xl text-steel">
                                         FORMAÇÃO
-                                    </p>
+                                    </h3>
                                 </div>
 
                                 <div className="w-full max-w-xl h-2 rounded-full bg-graphite overflow-hidden">
@@ -249,9 +249,9 @@ function Formacao() {
                                 <div className="flex items-center gap-3">
                                     <span className="w-2 h-2 rounded-full bg-champagne"></span>
 
-                                    <p className="font-bold ">
+                                    <h3 className="font-bold ">
                                         FORMAÇÕES COMPLEMENTARES
-                                    </p>
+                                    </h3>
                                 </div>
                                 <p>✓ Front-end — concluído</p>
                                 <p>✓ Back-end — concluído</p>
@@ -259,108 +259,104 @@ function Formacao() {
                         </div>
                     </div>
 
-                    <div
-                        className="
-                        flex flex-col
-                            w-full
-                            items-start
-                            rounded-3xl
-                            p-5
-                            md:p-10
-                            gap-5
+                    <div className="flex flex-col w-full rounded-3xl border-t-2 border-warm-bronze">
+                        <div
+                            className="flex flex-col w-full items-start rounded-3xl p-5 md:p-10
+                            gap-12
                             border
-                            border-t-2
                             border-graphite
-                            border-t-warm-bronze
                             bg-carbon
                         "
-                    >
-                        {/* ==============================================
+                        >
+                            {/* ==============================================
                             CABEÇALHO
                         ============================================== */}
 
-                        <div className="flex flex-col gap-3">
-                            <div className="flex items-center gap-3">
-                                <span className="w-2 h-2 rounded-full bg-champagne"></span>
+                            <div className="flex flex-col gap-3">
+                                <div className="flex items-center gap-3">
+                                    <span className="w-2 h-2 rounded-full bg-champagne"></span>
 
-                                <p className="text-xs md:text-3xl text-steel uppercase">
-                                    Minha Trajetoria
-                                </p>
-                            </div>
+                                    <p className="text-xs md:text-3xl text-steel uppercase">
+                                        Minha Trajetoria
+                                    </p>
+                                </div>
 
-                            <h2
-                                className="
+                                <h2
+                                    className="
                                     text-5xl
                                     md:text-7xl
                                     font-bold
                                     bebas-neue-regular
                                     text-ivory
                                 "
-                            >
-                                Evolução
-                            </h2>
-                        </div>
+                                >
+                                    Evolução
+                                </h2>
+                            </div>
 
-                        {/* ==============================================
+                            {/* ==============================================
                             TIMELINE
                         ============================================== */}
 
-                        <div
-                            ref={timelineRef}
-                            className="
+                            <div
+                                ref={timelineRef}
+                                className="
                                 relative
                             "
-                        >
-                            {/* ==========================================
+                            >
+                                {/* ==========================================
                                 LINHA BASE
                             ========================================== */}
 
-                            <div
-                                className="
+                                <div
+                                    className="
                                     absolute
                                     left-0
                                     top-4
                                     bottom-0
                                     w-px
+                                    h-104
+                                    md:h-full
                                     bg-graphite
                                 "
-                            ></div>
+                                ></div>
 
-                            {/* ==========================================
+                                {/* ==========================================
                                 LINHA ANIMADA
                             ========================================== */}
 
-                            <div
-                                ref={lineRef}
-                                className="
+                                <div
+                                    ref={lineRef}
+                                    className="
                                     absolute
                                     left-0
                                     top-4
                                     w-px
-                                    h-full
+                                    h-104
+                                    md:h-full
                                     bg-warm-bronze
                                 "
-                            ></div>
+                                ></div>
 
-                            {/* ==========================================
+                                {/* ==========================================
                                 EVENTO 2023
                             ========================================== */}
 
-                            <div
-                                ref={(el) => {
-                                    eventsRef.current[0] = el;
-                                }}
-                                className="
+                                <div
+                                    ref={(el) => {
+                                        eventsRef.current[0] = el;
+                                    }}
+                                    className="
                                     relative
                                     pl-8
                                     pb-10
                                 "
-                            >
-                                <div
-                                    ref={(el) => {
-                                        dotsRef.current[0] = el;
-                                    }}
-                                    className="
+                                >
+                                    <div
+                                        ref={(el) => {
+                                            dotsRef.current[0] = el;
+                                        }}
+                                        className="
                                         absolute
                                         -left-[5px]
                                         top-0
@@ -369,60 +365,61 @@ function Formacao() {
                                         rounded-full
                                         bg-bronze
                                     "
-                                ></div>
+                                    ></div>
 
-                                <p
-                                    className="
+                                    <p
+                                        className="
                                         text-champagne
                                         font-bold
                                         text-sm
                                         md:text-xl
                                     "
-                                >
-                                    2023
-                                </p>
+                                    >
+                                        2023
+                                    </p>
 
-                                <h3
-                                    className="
+                                    <h3
+                                        className="
                                         text-ivory
                                         text-lg
                                         md:text-3xl
                                         font-bold
                                     "
-                                >
-                                    Primeiro contato com programação
-                                </h3>
+                                    >
+                                        Primeiro contato com programação
+                                    </h3>
 
-                                <p
-                                    className="
+                                    <p
+                                        className="
                                         text-steel
                                         text-sm
                                         md:text-xl
                                     "
-                                >
-                                    Início da minha jornada no desenvolvimento.
-                                </p>
-                            </div>
+                                    >
+                                        Início da minha jornada no
+                                        desenvolvimento.
+                                    </p>
+                                </div>
 
-                            {/* ==========================================
+                                {/* ==========================================
                                 EVENTO 2024
                             ========================================== */}
 
-                            <div
-                                ref={(el) => {
-                                    eventsRef.current[1] = el;
-                                }}
-                                className="
+                                <div
+                                    ref={(el) => {
+                                        eventsRef.current[1] = el;
+                                    }}
+                                    className="
                                     relative
                                     pl-8
                                     pb-10
                                 "
-                            >
-                                <div
-                                    ref={(el) => {
-                                        dotsRef.current[1] = el;
-                                    }}
-                                    className="
+                                >
+                                    <div
+                                        ref={(el) => {
+                                            dotsRef.current[1] = el;
+                                        }}
+                                        className="
                                         absolute
                                         -left-[5px]
                                         top-1
@@ -431,61 +428,61 @@ function Formacao() {
                                         rounded-full
                                         bg-bronze
                                     "
-                                ></div>
+                                    ></div>
 
-                                <p
-                                    className="
+                                    <p
+                                        className="
                                         text-champagne
                                         font-bold
                                         text-sm
                                         md:text-xl
                                     "
-                                >
-                                    2024
-                                </p>
+                                    >
+                                        2024
+                                    </p>
 
-                                <h3
-                                    className="
+                                    <h3
+                                        className="
                                         text-ivory
                                         text-lg
                                         md:text-3xl
                                         font-bold
                                     "
-                                >
-                                    Formação Front-end
-                                </h3>
+                                    >
+                                        Formação Front-end
+                                    </h3>
 
-                                <p
-                                    className="
+                                    <p
+                                        className="
                                         text-steel
                                         text-sm
                                         md:text-xl
                                     "
-                                >
-                                    HTML, CSS, JavaScript e construção de
-                                    interfaces.
-                                </p>
-                            </div>
+                                    >
+                                        HTML, CSS, JavaScript e construção de
+                                        interfaces.
+                                    </p>
+                                </div>
 
-                            {/* ==========================================
+                                {/* ==========================================
                                 EVENTO 2025
                             ========================================== */}
 
-                            <div
-                                ref={(el) => {
-                                    eventsRef.current[2] = el;
-                                }}
-                                className="
+                                <div
+                                    ref={(el) => {
+                                        eventsRef.current[2] = el;
+                                    }}
+                                    className="
                                     relative
                                     pl-8
                                     pb-10
                                 "
-                            >
-                                <div
-                                    ref={(el) => {
-                                        dotsRef.current[2] = el;
-                                    }}
-                                    className="
+                                >
+                                    <div
+                                        ref={(el) => {
+                                            dotsRef.current[2] = el;
+                                        }}
+                                        className="
                                         absolute
                                         -left-[5px]
                                         top-1
@@ -494,61 +491,61 @@ function Formacao() {
                                         rounded-full
                                         bg-bronze
                                     "
-                                ></div>
+                                    ></div>
 
-                                <p
-                                    className="
+                                    <p
+                                        className="
                                         text-champagne
                                         font-bold
                                         text-sm
                                         md:text-xl
                                     "
-                                >
-                                    2025
-                                </p>
+                                    >
+                                        2025
+                                    </p>
 
-                                <h3
-                                    className="
+                                    <h3
+                                        className="
                                         text-ivory
                                         text-lg
                                         md:text-3xl
                                         font-bold
                                     "
-                                >
-                                    Formação Back-end
-                                </h3>
+                                    >
+                                        Formação Back-end
+                                    </h3>
 
-                                <p
-                                    className="
+                                    <p
+                                        className="
                                         text-steel
                                         text-sm
                                         md:text-xl
                                     "
-                                >
-                                    APIs, bancos de dados, Node.js e
-                                    desenvolvimento de aplicações.
-                                </p>
-                            </div>
+                                    >
+                                        APIs, bancos de dados, Node.js e
+                                        desenvolvimento de aplicações.
+                                    </p>
+                                </div>
 
-                            {/* ==========================================
+                                {/* ==========================================
                                 EVENTO 2026
                             ========================================== */}
 
-                            <div
-                                ref={(el) => {
-                                    eventsRef.current[3] = el;
-                                }}
-                                className="
+                                <div
+                                    ref={(el) => {
+                                        eventsRef.current[3] = el;
+                                    }}
+                                    className="
                                     relative
                                     pl-8
                                     pb-2
                                 "
-                            >
-                                <div
-                                    ref={(el) => {
-                                        dotsRef.current[3] = el;
-                                    }}
-                                    className="
+                                >
+                                    <div
+                                        ref={(el) => {
+                                            dotsRef.current[3] = el;
+                                        }}
+                                        className="
                                         absolute
                                         -left-[6px]
                                         top-1
@@ -558,56 +555,58 @@ function Formacao() {
                                         bg-bronze
                                         shadow-[0_0_15px_rgba(168,120,82,0.45)]
                                     "
-                                ></div>
+                                    ></div>
+                                    <div
+                                        ref={(el) => {
+                                            dotsRef.current[3] = el;
+                                        }}
+                                        className="
+                                        absolute
+                                        -left-[6px]
+                                        top-1
+                                        w-4
+                                        h-4
+                                        rounded-full
+                                        animate-ping
+                                        bg-bronze
+                                        shadow-[0_0_15px_rgba(168,120,82,0.45)]
+                                    "
+                                    ></div>
 
-                                <p
-                                    className="
+                                    <p
+                                        className="
                                         text-champagne
                                         font-bold
                                         text-sm
                                         md:text-xl
                                     "
-                                >
-                                    2026
-                                </p>
+                                    >
+                                        2026
+                                    </p>
 
-                                <h3
-                                    className="
+                                    <h3
+                                        className="
                                         text-ivory
                                         text-lg
                                         md:text-3xl
                                         font-bold
                                     "
-                                >
-                                    Full Stack + ADS
-                                </h3>
+                                    >
+                                        Full Stack + ADS
+                                    </h3>
 
-                                <p
-                                    className="
+                                    <p
+                                        className="
                                         text-steel
                                         text-sm
                                         md:text-xl
                                     "
-                                >
-                                    Formação Full Stack pela DNC e graduação em
-                                    Análise e Desenvolvimento de Sistemas pela
-                                    Uniube.
-                                </p>
-
-                                <span
-                                    className="
-                                        inline-block
-                                        mt-3
-                                        text-xs
-                                        md:text-lg
-                                        text-bronze
-                                        font-bold
-                                        uppercase
-                                        tracking-wider
-                                    "
-                                >
-                                    Você está aqui
-                                </span>
+                                    >
+                                        Formação Full Stack pela DNC e graduação
+                                        em Análise e Desenvolvimento de Sistemas
+                                        pela Uniube.
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
