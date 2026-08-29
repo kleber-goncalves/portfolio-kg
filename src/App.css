@@ -337,3 +337,61 @@ html.lenis.lenis-stopped {
     transition:
         color 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
+
+
+
+
+
+
+
+/* =========================================================
+   INDICADOR MOBILE — ARRASTE
+   ========================================================= */
+
+/* ============================================================
+   INDICADOR DO SLIDER — MOBILE
+   ============================================================ */
+
+.indicator-arrow-left {
+    animation: indicator-left 2s ease-in-out infinite;
+}
+
+.indicator-arrow-right {
+    animation: indicator-right 2s ease-in-out infinite;
+}
+
+
+/* ============================================================
+   SETA ESQUERDA
+   ============================================================ */
+
+@keyframes indicator-left {
+    0%,
+    100% {
+        transform: translateX(0);
+        opacity: 0.4;
+    }
+
+    50% {
+        transform: translateX(-4px);
+        opacity: 0.8;
+    }
+}
+
+
+/* ============================================================
+   SETA DIREITA
+   ============================================================ */
+
+@keyframes indicator-right {
+    0%,
+    100% {
+        transform: translateX(0);
+        opacity: 0.4;
+    }
+
+    50% {
+        transform: translateX(4px);
+        opacity: 0.8;
+    }
+}
