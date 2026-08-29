@@ -1,3 +1,6 @@
+// ScrollSmooth - Lenis
+import SmoothScroll from "./components/SmoothScroll";
+
 // Layout
 import Hero from "./layout/Hero";
 import Seclogs from "./layout/logos";
@@ -12,7 +15,7 @@ import "./App.css";
 
 function App() {
     return (
-        <>
+        <SmoothScroll>
             <Hero />
             <Seclogs />
             <Competencia />
@@ -20,7 +23,7 @@ function App() {
             <Diferenciais />
             <Formacao />
             <Footer />
-        </>
+        </SmoothScroll>
     );
 }
 
