@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -13,6 +13,10 @@ import "swiper/css/effect-coverflow";
 
 import ProjetoCard from "../components/ProjetoCard";
 
+// ============================================================
+// IMAGENS
+// ============================================================
+
 import projeto01_01 from "../assets/projetos/projeto01/jason-1.webp";
 import projeto01_02 from "../assets/projetos/projeto01/jason-2.webp";
 import projeto01_03 from "../assets/projetos/projeto01/jason-3.webp";
@@ -26,63 +30,133 @@ function Projetos() {
     const scrollHintRef = useRef(null);
     const contentRef = useRef(null);
 
-    /*
-    ============================================================
-    PROJETOS
-    ============================================================
-    */
+    // ============================================================
+    // ESTADO DO INDICADOR MOBILE
+    // ============================================================
+
+    const [mostrarDragHint, setMostrarDragHint] = useState(true);
+
+    // ============================================================
+    // PROJETOS
+    // ============================================================
 
     const projetos = [
         {
             numero: "01",
+
             titulo: "Projeto E-commerce",
+
             descricao:
                 "Plataforma de e-commerce desenvolvida com autenticação, catálogo de produtos, carrinho e gerenciamento de pedidos.",
-            tecnologias: ["React", "Node.js", "PostgreSQL", "JWT"],
-            imagens: [projeto01_01, projeto01_02, projeto01_03, projeto01_04],
+
+            tecnologias: [
+                "React",
+                "Node.js",
+                "PostgreSQL",
+                "JWT",
+            ],
+
+            imagens: [
+                projeto01_01,
+                projeto01_02,
+                projeto01_03,
+                projeto01_04,
+            ],
+
             demo: "https://seu-projeto.com",
-            github: "https://github.com/seu-usuario/seu-projeto",
+
+            github:
+                "https://github.com/seu-usuario/seu-projeto",
         },
 
         {
             numero: "02",
+
             titulo: "Projeto E-commerce",
+
             descricao:
                 "Plataforma de e-commerce desenvolvida com autenticação, catálogo de produtos, carrinho e gerenciamento de pedidos.",
-            tecnologias: ["React", "Node.js", "PostgreSQL", "JWT"],
-            imagens: [projeto01_01, projeto01_02, projeto01_03, projeto01_04],
+
+            tecnologias: [
+                "React",
+                "Node.js",
+                "PostgreSQL",
+                "JWT",
+            ],
+
+            imagens: [
+                projeto01_01,
+                projeto01_02,
+                projeto01_03,
+                projeto01_04,
+            ],
+
             demo: "https://seu-projeto.com",
-            github: "https://github.com/seu-usuario/seu-projeto",
+
+            github:
+                "https://github.com/seu-usuario/seu-projeto",
         },
 
         {
             numero: "03",
+
             titulo: "Projeto E-commerce",
+
             descricao:
                 "Plataforma de e-commerce desenvolvida com autenticação, catálogo de produtos, carrinho e gerenciamento de pedidos.",
-            tecnologias: ["React", "Node.js", "PostgreSQL", "JWT"],
-            imagens: [projeto01_01, projeto01_02, projeto01_03, projeto01_04],
+
+            tecnologias: [
+                "React",
+                "Node.js",
+                "PostgreSQL",
+                "JWT",
+            ],
+
+            imagens: [
+                projeto01_01,
+                projeto01_02,
+                projeto01_03,
+                projeto01_04,
+            ],
+
             demo: "https://seu-projeto.com",
-            github: "https://github.com/seu-usuario/seu-projeto",
+
+            github:
+                "https://github.com/seu-usuario/seu-projeto",
         },
 
         {
             numero: "04",
+
             titulo: "Projeto E-commerce",
+
             descricao:
                 "Plataforma de e-commerce desenvolvida com autenticação, catálogo de produtos, carrinho e gerenciamento de pedidos.",
-            tecnologias: ["React", "Node.js", "PostgreSQL", "JWT"],
-            imagens: [projeto01_01, projeto01_02, projeto01_03, projeto01_04],
+
+            tecnologias: [
+                "React",
+                "Node.js",
+                "PostgreSQL",
+                "JWT",
+            ],
+
+            imagens: [
+                projeto01_01,
+                projeto01_02,
+                projeto01_03,
+                projeto01_04,
+            ],
+
             demo: "https://seu-projeto.com",
-            github: "https://github.com/seu-usuario/seu-projeto",
+
+            github:
+                "https://github.com/seu-usuario/seu-projeto",
         },
     ];
 
-    /*
-    ============================================================
-    GSAP — DESKTOP
-    ============================================================
-    */
+    // ============================================================
+    // GSAP — DESKTOP
+    // ============================================================
 
     useGSAP(
         () => {
@@ -95,29 +169,27 @@ function Projetos() {
                 return;
             }
 
-            /*
-            ========================================================
-            MEDIA QUERY
-            ========================================================
-
-            GSAP só funciona no desktop.
-
-            Abaixo de 768px:
-            NÃO criaremos ScrollTrigger.
-            */
+            // ========================================================
+            // MEDIA QUERY
+            // ========================================================
 
             const mm = gsap.matchMedia();
 
             mm.add("(min-width: 768px)", () => {
+                // ====================================================
+                // DISTÂNCIA HORIZONTAL
+                // ====================================================
+
                 const getScrollAmount = () => {
-                    return track.scrollWidth - window.innerWidth;
+                    return (
+                        track.scrollWidth -
+                        window.innerWidth
+                    );
                 };
 
-                /*
-                ====================================================
-                TIMELINE
-                ====================================================
-                */
+                // ====================================================
+                // TIMELINE
+                // ====================================================
 
                 const tl = gsap.timeline({
                     scrollTrigger: {
@@ -125,7 +197,8 @@ function Projetos() {
 
                         start: "top top",
 
-                        end: () => `+=${window.innerHeight * 6}`,
+                        end: () =>
+                            `+=${window.innerHeight * 6}`,
 
                         pin: false,
 
@@ -139,18 +212,18 @@ function Projetos() {
                     },
                 });
 
-                /*
-                ====================================================
-                ENTRADA
-                ====================================================
-                */
+                // ====================================================
+                // ENTRADA
+                // ====================================================
 
                 tl.fromTo(
                     content,
+
                     {
                         y: 20,
                         opacity: 0.95,
                     },
+
                     {
                         y: 0,
                         opacity: 1,
@@ -159,11 +232,9 @@ function Projetos() {
                     },
                 );
 
-                /*
-                ====================================================
-                MOVIMENTO HORIZONTAL
-                ====================================================
-                */
+                // ====================================================
+                // MOVIMENTO HORIZONTAL
+                // ====================================================
 
                 tl.to(track, {
                     x: () => -getScrollAmount(),
@@ -173,11 +244,9 @@ function Projetos() {
                     ease: "none",
                 });
 
-                /*
-                ====================================================
-                TEXTO DESAPARECE
-                ====================================================
-                */
+                // ====================================================
+                // TEXTO DESAPARECE
+                // ====================================================
 
                 tl.to(scrollHint, {
                     opacity: 0,
@@ -189,43 +258,51 @@ function Projetos() {
                     ease: "power2.out",
                 });
 
-                /*
-                ====================================================
-                CLEANUP
-                ====================================================
-                */
+                // ====================================================
+                // CLEANUP
+                // ====================================================
 
                 return () => {
                     tl.kill();
                 };
             });
 
-            /*
-            ========================================================
-            CLEANUP MEDIA QUERY
-            ========================================================
-            */
+            // ========================================================
+            // CLEANUP MEDIA QUERY
+            // ========================================================
 
             return () => {
                 mm.revert();
             };
         },
+
         {
             scope: sectionRef,
         },
     );
 
-    /*
-    ============================================================
-    RENDER
-    ============================================================
-    */
+    // ============================================================
+    // QUANDO O USUÁRIO COMEÇA A ARRASTAR
+    // ============================================================
+
+    const handleSwiperTouchStart = () => {
+        setMostrarDragHint(true);
+    };
+
+    // ============================================================
+    // RENDER
+    // ============================================================
 
     return (
         <section className="w-full bg-obsidian">
             <div
                 ref={sectionRef}
-                className="relative w-full overflow-hidden md:h-screen"
+                className="
+                    relative
+                    w-full
+                    overflow-hidden
+                    md:h-screen
+                "
             >
                 {/* ==================================================
                     TÍTULO
@@ -259,11 +336,18 @@ function Projetos() {
                         // Projetos
                     </h2>
 
-                    <span className="h-0.5 flex-1 bg-gradientaa md:h-1" />
+                    <span
+                        className="
+                            h-0.5
+                            flex-1
+                            bg-gradientaa
+                            md:h-1
+                        "
+                    />
                 </div>
 
                 {/* ==================================================
-                    DESKTOP
+                    DESKTOP — GSAP
                 ================================================== */}
 
                 <div
@@ -296,7 +380,9 @@ function Projetos() {
                                 numero={projeto.numero}
                                 titulo={projeto.titulo}
                                 descricao={projeto.descricao}
-                                tecnologias={projeto.tecnologias}
+                                tecnologias={
+                                    projeto.tecnologias
+                                }
                                 imagens={projeto.imagens}
                                 demo={projeto.demo}
                                 github={projeto.github}
@@ -325,34 +411,47 @@ function Projetos() {
                     <Swiper
                         modules={[EffectCoverflow]}
                         effect="coverflow"
-                        /*
-                        ====================================================
-                        CONFIGURAÇÃO DO SLIDER
-                        ====================================================
-                        */
+
+                        // ==================================================
+                        // CONFIGURAÇÃO
+                        // ==================================================
 
                         slidesPerView="auto"
-                        centeredSlides={true}
-                        spaceBetween={16}
-                        grabCursor={true}
-                        speed={500}
-                        /*
-                        ====================================================
-                        COVERFLOW
-                        ====================================================
 
-                        Mantemos o efeito discreto para não
-                        pesar no celular.
-                        */
+                        centeredSlides={true}
+
+                        spaceBetween={16}
+
+                        grabCursor={true}
+
+                        speed={500}
+
+                        // ==================================================
+                        // PRIMEIRO ARRASTE
+                        // ==================================================
+
+                        onTouchStart={
+                            handleSwiperTouchStart
+                        }
+
+                        // ==================================================
+                        // COVERFLOW
+                        // ==================================================
 
                         coverflowEffect={{
                             rotate: 0,
+
                             stretch: 0,
+
                             depth: 40,
+
                             modifier: 1,
+
                             scale: 0.94,
+
                             slideShadows: false,
                         }}
+
                         className="!w-full"
                     >
                         {projetos.map((projeto) => (
@@ -363,8 +462,12 @@ function Projetos() {
                                 <ProjetoCard
                                     numero={projeto.numero}
                                     titulo={projeto.titulo}
-                                    descricao={projeto.descricao}
-                                    tecnologias={projeto.tecnologias}
+                                    descricao={
+                                        projeto.descricao
+                                    }
+                                    tecnologias={
+                                        projeto.tecnologias
+                                    }
                                     imagens={projeto.imagens}
                                     demo={projeto.demo}
                                     github={projeto.github}
@@ -421,42 +524,62 @@ function Projetos() {
                     INDICAÇÃO MOBILE
                 ================================================== */}
 
-                <div
-                    className="
-                        pointer-events-none
-                        absolute
-                        bottom-5
-                        left-1/2
-                        z-30
-                        flex
-                        -translate-x-1/2
-                        flex-col
-                        items-center
-                        gap-2
-                        md:hidden
-                    "
-                >
-                    <span
+                {mostrarDragHint && (
+                    <div
                         className="
-                            whitespace-nowrap
-                            text-[10px]
-                            uppercase
-                            tracking-[0.3em]
-                            text-white/40
+                            pointer-events-none
+                            absolute
+                            bottom-5
+                            left-1/2
+                            z-30
+                            flex
+                            -translate-x-1/2
+                            flex-col
+                            items-center
+                            gap-2
+                            md:hidden
                         "
                     >
-                        Arraste para o lado
-                    </span>
+                        <span
+                            className="
+                                whitespace-nowrap
+                                text-[10px]
+                                uppercase
+                                tracking-[0.3em]
+                                text-white/40
+                            "
+                        >
+                            Arraste para o lado
+                        </span>
 
-                    <span
-                        className="
-                            text-sm
-                            text-white/50
-                        "
-                    >
-                        ← →
-                    </span>
-                </div>
+                        <div
+                            className="
+                                flex
+                                items-center
+                                gap-4
+                                text-sm
+                                text-white/50
+                            "
+                        >
+                            <span className="drag-arrow-left">
+                                ←
+                            </span>
+
+                            <span
+                                className="
+                                    h-1
+                                    w-1
+                                    rounded-full
+                                    bg-white/50
+                                "
+                            />
+
+                            <span className="drag-arrow-right">
+                                →
+                            </span>
+                        </div>
+                    </div>
+                )}
             </div>
         </section>
     );
