@@ -5,13 +5,13 @@ import SmoothScroll from "./components/SmoothScroll";
 import Hero from "./layout/Hero";
 import Seclogs from "./layout/logos";
 import Competencia from "./layout/Competencia";
-import Projetos from "./layout/Projetos";
 import Diferenciais from "./layout/Diferenciais";
 import Formacao from "./layout/Formacao";
 import Footer from "./layout/Footer";
 
 // Styles
 import "./App.css";
+import ProjetoT from "./layout/ProjetosTeste";
 
 function App() {
     return (
@@ -19,7 +19,7 @@ function App() {
             <Hero />
             <Seclogs />
             <Competencia />
-            <Projetos />
+            <ProjetoT />
             <Diferenciais />
             <Formacao />
             <Footer />
