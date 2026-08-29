@@ -5,6 +5,7 @@ import Competencia from "./layout/Competencia";
 import Projetos from "./layout/Projetos";
 import Diferenciais from "./layout/Diferenciais";
 import Formacao from "./layout/Formacao";
+import Footer from "./layout/Footer";
 
 // Styles
 import "./App.css";
@@ -18,8 +19,7 @@ function App() {
             <Projetos />
             <Diferenciais />
             <Formacao />
-            <Seclogs />
-            <Competencia />
+            <Footer />
         </>
     );
 }
