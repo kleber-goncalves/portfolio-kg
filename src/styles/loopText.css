@@ -1,0 +1,44 @@
+/* =========================================================
+   MARQUEE DO FOOTER
+========================================================= */
+
+.marquee-track {
+    display: flex;
+    width: max-content;
+
+    animation: marquee 18s linear infinite;
+}
+
+
+/* =========================================================
+   CADA BLOCO
+========================================================= */
+
+.marquee-content {
+    flex-shrink: 0;
+
+    font-family: "Bebas Neue", sans-serif;
+
+    font-size: 24vw;
+
+    line-height: 0.8;
+
+    white-space: nowrap;
+
+    color: var(--border);
+}
+
+
+/* =========================================================
+   ANIMAÇÃO
+========================================================= */
+
+@keyframes marquee {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
+}
