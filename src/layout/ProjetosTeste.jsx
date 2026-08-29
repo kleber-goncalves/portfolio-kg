@@ -1,5 +1,8 @@
 import { useRef, useState } from "react";
 
+// Lucide Icons
+import { MoveLeft, MoveRight } from "lucide-react";
+
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -25,16 +28,20 @@ import projeto01_04 from "../assets/projetos/projeto01/lucia-1.webp";
 gsap.registerPlugin(ScrollTrigger);
 
 function Projetos() {
+    // ============================================================
+    // REFS
+    // ============================================================
+
     const sectionRef = useRef(null);
     const trackRef = useRef(null);
     const scrollHintRef = useRef(null);
     const contentRef = useRef(null);
 
     // ============================================================
-    // ESTADO DO INDICADOR MOBILE
+    // ESTADO DO SLIDE ATUAL
     // ============================================================
 
-    const [mostrarDragHint, setMostrarDragHint] = useState(true);
+    const [slideAtual, setSlideAtual] = useState(0);
 
     // ============================================================
     // PROJETOS
@@ -49,24 +56,13 @@ function Projetos() {
             descricao:
                 "Plataforma de e-commerce desenvolvida com autenticação, catálogo de produtos, carrinho e gerenciamento de pedidos.",
 
-            tecnologias: [
-                "React",
-                "Node.js",
-                "PostgreSQL",
-                "JWT",
-            ],
+            tecnologias: ["React", "Node.js", "PostgreSQL", "JWT"],
 
-            imagens: [
-                projeto01_01,
-                projeto01_02,
-                projeto01_03,
-                projeto01_04,
-            ],
+            imagens: [projeto01_01, projeto01_02, projeto01_03, projeto01_04],
 
             demo: "https://seu-projeto.com",
 
-            github:
-                "https://github.com/seu-usuario/seu-projeto",
+            github: "https://github.com/seu-usuario/seu-projeto",
         },
 
         {
@@ -77,24 +73,13 @@ function Projetos() {
             descricao:
                 "Plataforma de e-commerce desenvolvida com autenticação, catálogo de produtos, carrinho e gerenciamento de pedidos.",
 
-            tecnologias: [
-                "React",
-                "Node.js",
-                "PostgreSQL",
-                "JWT",
-            ],
+            tecnologias: ["React", "Node.js", "PostgreSQL", "JWT"],
 
-            imagens: [
-                projeto01_01,
-                projeto01_02,
-                projeto01_03,
-                projeto01_04,
-            ],
+            imagens: [projeto01_01, projeto01_02, projeto01_03, projeto01_04],
 
             demo: "https://seu-projeto.com",
 
-            github:
-                "https://github.com/seu-usuario/seu-projeto",
+            github: "https://github.com/seu-usuario/seu-projeto",
         },
 
         {
@@ -105,24 +90,13 @@ function Projetos() {
             descricao:
                 "Plataforma de e-commerce desenvolvida com autenticação, catálogo de produtos, carrinho e gerenciamento de pedidos.",
 
-            tecnologias: [
-                "React",
-                "Node.js",
-                "PostgreSQL",
-                "JWT",
-            ],
+            tecnologias: ["React", "Node.js", "PostgreSQL", "JWT"],
 
-            imagens: [
-                projeto01_01,
-                projeto01_02,
-                projeto01_03,
-                projeto01_04,
-            ],
+            imagens: [projeto01_01, projeto01_02, projeto01_03, projeto01_04],
 
             demo: "https://seu-projeto.com",
 
-            github:
-                "https://github.com/seu-usuario/seu-projeto",
+            github: "https://github.com/seu-usuario/seu-projeto",
         },
 
         {
@@ -133,26 +107,52 @@ function Projetos() {
             descricao:
                 "Plataforma de e-commerce desenvolvida com autenticação, catálogo de produtos, carrinho e gerenciamento de pedidos.",
 
-            tecnologias: [
-                "React",
-                "Node.js",
-                "PostgreSQL",
-                "JWT",
-            ],
+            tecnologias: ["React", "Node.js", "PostgreSQL", "JWT"],
 
-            imagens: [
-                projeto01_01,
-                projeto01_02,
-                projeto01_03,
-                projeto01_04,
-            ],
+            imagens: [projeto01_01, projeto01_02, projeto01_03, projeto01_04],
 
             demo: "https://seu-projeto.com",
 
-            github:
-                "https://github.com/seu-usuario/seu-projeto",
+            github: "https://github.com/seu-usuario/seu-projeto",
+        },
+        {
+            numero: "05",
+
+            titulo: "Projeto E-commerce",
+
+            descricao:
+                "Plataforma de e-commerce desenvolvida com autenticação, catálogo de produtos, carrinho e gerenciamento de pedidos.",
+
+            tecnologias: ["React", "Node.js", "PostgreSQL", "JWT"],
+
+            imagens: [projeto01_01, projeto01_02, projeto01_03, projeto01_04],
+
+            demo: "https://seu-projeto.com",
+
+            github: "https://github.com/seu-usuario/seu-projeto",
+        },
+        {
+            numero: "06",
+
+            titulo: "Projeto E-commerce",
+
+            descricao:
+                "Plataforma de e-commerce desenvolvida com autenticação, catálogo de produtos, carrinho e gerenciamento de pedidos.",
+
+            tecnologias: ["React", "Node.js", "PostgreSQL", "JWT"],
+
+            imagens: [projeto01_01, projeto01_02, projeto01_03, projeto01_04],
+
+            demo: "https://seu-projeto.com",
+
+            github: "https://github.com/seu-usuario/seu-projeto",
         },
     ];
+
+    // ============================================================
+    // NÚMERO DO SLIDE
+    // ============================================================
+
 
     // ============================================================
     // GSAP — DESKTOP
@@ -181,10 +181,7 @@ function Projetos() {
                 // ====================================================
 
                 const getScrollAmount = () => {
-                    return (
-                        track.scrollWidth -
-                        window.innerWidth
-                    );
+                    return track.scrollWidth - window.innerWidth;
                 };
 
                 // ====================================================
@@ -197,10 +194,9 @@ function Projetos() {
 
                         start: "top top",
 
-                        end: () =>
-                            `+=${window.innerHeight * 6}`,
+                        end: () => `+=${window.innerHeight * 6}`,
 
-                        pin: false,
+                        pin: true,
 
                         anticipatePin: 2,
 
@@ -282,14 +278,6 @@ function Projetos() {
     );
 
     // ============================================================
-    // QUANDO O USUÁRIO COMEÇA A ARRASTAR
-    // ============================================================
-
-    const handleSwiperTouchStart = () => {
-        setMostrarDragHint(true);
-    };
-
-    // ============================================================
     // RENDER
     // ============================================================
 
@@ -344,6 +332,48 @@ function Projetos() {
                             md:h-1
                         "
                     />
+
+                    {/* ==================================================
+                        CONTADOR MOBILE — TOPO
+                    ================================================== */}
+
+                    <div
+                        className="
+                            flex
+                            items-center
+                            gap-1
+                            md:hidden
+                        "
+                    >
+                        <span
+                            className="
+                                text-sm
+                                font-medium
+                                
+                                text-champagne
+                            "
+                        >
+                            {String(slideAtual + 1).padStart(2, "0")}
+                        </span>
+
+                        <span
+                            className="
+                                text-[10px]
+                                text-white/20
+                            "
+                        >
+                            /
+                        </span>
+
+                        <span
+                            className="
+                                text-sm
+                                text-champagne/30
+                            "
+                        >
+                            {String(projetos.length).padStart(2, "0")}
+                        </span>
+                    </div>
                 </div>
 
                 {/* ==================================================
@@ -380,9 +410,7 @@ function Projetos() {
                                 numero={projeto.numero}
                                 titulo={projeto.titulo}
                                 descricao={projeto.descricao}
-                                tecnologias={
-                                    projeto.tecnologias
-                                }
+                                tecnologias={projeto.tecnologias}
                                 imagens={projeto.imagens}
                                 demo={projeto.demo}
                                 github={projeto.github}
@@ -411,47 +439,34 @@ function Projetos() {
                     <Swiper
                         modules={[EffectCoverflow]}
                         effect="coverflow"
-
                         // ==================================================
                         // CONFIGURAÇÃO
                         // ==================================================
 
                         slidesPerView="auto"
-
                         centeredSlides={true}
-
                         spaceBetween={16}
-
                         grabCursor={true}
-
                         speed={500}
-
                         // ==================================================
-                        // PRIMEIRO ARRASTE
+                        // SLIDE ATUAL
                         // ==================================================
 
-                        onTouchStart={
-                            handleSwiperTouchStart
-                        }
-
+                        onSlideChange={(swiper) => {
+                            setSlideAtual(swiper.activeIndex);
+                        }}
                         // ==================================================
                         // COVERFLOW
                         // ==================================================
 
                         coverflowEffect={{
                             rotate: 0,
-
                             stretch: 0,
-
                             depth: 40,
-
                             modifier: 1,
-
                             scale: 0.94,
-
                             slideShadows: false,
                         }}
-
                         className="!w-full"
                     >
                         {projetos.map((projeto) => (
@@ -462,12 +477,8 @@ function Projetos() {
                                 <ProjetoCard
                                     numero={projeto.numero}
                                     titulo={projeto.titulo}
-                                    descricao={
-                                        projeto.descricao
-                                    }
-                                    tecnologias={
-                                        projeto.tecnologias
-                                    }
+                                    descricao={projeto.descricao}
+                                    tecnologias={projeto.tecnologias}
                                     imagens={projeto.imagens}
                                     demo={projeto.demo}
                                     github={projeto.github}
@@ -524,62 +535,66 @@ function Projetos() {
                     INDICAÇÃO MOBILE
                 ================================================== */}
 
-                {mostrarDragHint && (
-                    <div
+                <div
+                    className="
+                        pointer-events-none
+                        absolute
+                        bottom-9
+                        left-1/2
+                        z-30
+                        flex
+                        -translate-x-1/2
+                        flex-col
+                        items-center
+                        gap-2
+                        md:hidden
+                    "
+                >
+                    {/* INSTRUÇÃO */}
+
+                    <span
                         className="
-                            pointer-events-none
-                            absolute
-                            bottom-5
-                            left-1/2
-                            z-30
-                            flex
-                            -translate-x-1/2
-                            flex-col
-                            items-center
-                            gap-2
-                            md:hidden
-                        "
-                    >
-                        <span
-                            className="
                                 whitespace-nowrap
                                 text-[10px]
                                 uppercase
                                 tracking-[0.3em]
                                 text-white/40
                             "
-                        >
-                            Arraste para o lado
-                        </span>
+                    >
+                        Arraste para o lado
+                    </span>
 
-                        <div
-                            className="
+                    <div
+                        className="
                                 flex
                                 items-center
                                 gap-4
                                 text-sm
                                 text-white/50
                             "
-                        >
-                            <span className="drag-arrow-left">
-                                ←
-                            </span>
+                    >
+                        <MoveLeft
+                            size={24}
+                            strokeWidth={1.5}
+                            className="indicator-arrow-left"
+                        />
 
-                            <span
-                                className="
-                                    h-1
-                                    w-1
+                        <span
+                            className="
+                                    h-3
+                                    w-8
                                     rounded-full
                                     bg-white/50
                                 "
-                            />
+                        />
 
-                            <span className="drag-arrow-right">
-                                →
-                            </span>
-                        </div>
+                        <MoveRight
+                            size={24}
+                            strokeWidth={1.5}
+                            className="indicator-arrow-right"
+                        />
                     </div>
-                )}
+                </div>
             </div>
         </section>
     );

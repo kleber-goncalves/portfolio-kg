@@ -348,29 +348,50 @@ html.lenis.lenis-stopped {
    INDICADOR MOBILE — ARRASTE
    ========================================================= */
 
-.drag-arrow-left,
-.drag-arrow-right {
-    display: inline-block;
-    animation: dragArrow 1.6s ease-in-out infinite;
+/* ============================================================
+   INDICADOR DO SLIDER — MOBILE
+   ============================================================ */
+
+.indicator-arrow-left {
+    animation: indicator-left 2s ease-in-out infinite;
 }
 
-.drag-arrow-left {
-    animation-delay: 0.1s;
+.indicator-arrow-right {
+    animation: indicator-right 2s ease-in-out infinite;
 }
 
-.drag-arrow-right {
-    animation-delay: 0.3s;
-}
 
-@keyframes dragArrow {
+/* ============================================================
+   SETA ESQUERDA
+   ============================================================ */
+
+@keyframes indicator-left {
     0%,
     100% {
         transform: translateX(0);
-        opacity: 0.45;
+        opacity: 0.4;
     }
 
     50% {
-        transform: translateX(5px);
-        opacity: 1;
+        transform: translateX(-4px);
+        opacity: 0.8;
+    }
+}
+
+
+/* ============================================================
+   SETA DIREITA
+   ============================================================ */
+
+@keyframes indicator-right {
+    0%,
+    100% {
+        transform: translateX(0);
+        opacity: 0.4;
+    }
+
+    50% {
+        transform: translateX(4px);
+        opacity: 0.8;
     }
 }
