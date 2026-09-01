@@ -5,13 +5,13 @@ import SmoothScroll from "./components/SmoothScroll";
 import Hero from "./layout/Hero";
 import Seclogs from "./layout/logos";
 import Competencia from "./layout/CompetenciaTeste";
-import Diferenciais from "./layout/Diferenciais";
 import Formacao from "./layout/Formacao";
 import Footer from "./layout/Footer";
 
 // Styles
 import "./App.css";
 import ProjetoT from "./layout/ProjetosTeste";
+import Diferenciais from "./layout/DiferenciaisTeste";
 
 function App() {
     return (

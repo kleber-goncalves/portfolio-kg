@@ -165,6 +165,7 @@ export default function Card1({
                     <span
                         className="
                             shrink-0
+                            hidden
 
                             text-lg
                             text-steel/30
@@ -182,6 +183,7 @@ export default function Card1({
                             group-active:text-bronze
 
                             md:text-xl
+                             md:block
                         "
                     >
                         ↗
@@ -221,7 +223,7 @@ export default function Card1({
                 MICRO LINHA
             ===================================================== */}
 
-            <span
+            {/* <span
                 className="
                     mt-6
                     block
@@ -238,7 +240,7 @@ export default function Card1({
                     group-hover:w-20
                     group-active:w-20
                 "
-            />
+            /> */}
         </article>
     );
 }
