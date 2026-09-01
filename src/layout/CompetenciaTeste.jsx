@@ -51,11 +51,7 @@ function Competencia() {
                 overflow-hidden
                 bg-obsidian
 
-                px-5
-                py-20
-
-                md:px-10
-                md:py-32
+                p-5
             "
         >
             {/* =====================================================
@@ -147,14 +143,7 @@ function Competencia() {
 
                 <div className="w-full">
                     {competencias.map((competencia) => (
-                        <Card1
-                            key={competencia.numero}
-                            numero={competencia.numero}
-                            variant="default"
-                            text={competencia.text}
-                            title={competencia.title}
-                            text_2={competencia.description}
-                        />
+                        <Card1 key={competencia.numero} numero={competencia.numero} variant="default" text={competencia.text} title={competencia.title} text_2={competencia.description} />
                     ))}
 
                     {/* =================================================
@@ -163,14 +152,25 @@ function Competencia() {
 
                     <div
                         className="
-                            h-px
-                            w-full
-                            border-b
-                            border-graphite
-                        "
-                    />
-                </div>
+                        mt-10
+                        flex
+                        items-center
+                        justify-between
 
+                        text-[10px]
+                        uppercase
+                        tracking-[0.25em]
+                        text-steel/60
+
+                        md:mt-10
+                        md:text-[10px]
+                    "
+                    >
+                        <span></span>
+
+                        <span>Desenvolvimento contínuo</span>
+                    </div>
+                </div>
             </div>
         </section>
     );

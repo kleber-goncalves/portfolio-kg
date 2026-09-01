@@ -36,11 +36,7 @@ function Diferenciais() {
 
                 bg-obsidian
 
-                px-5
-                py-20
-
-                md:px-10
-                md:py-32
+                p-5
             "
         >
             {/* =====================================================
@@ -165,7 +161,7 @@ function Diferenciais() {
                 >
                     <span
                         className="
-                            text-[9px]
+                            text-[10px]
                             uppercase
                             tracking-[0.3em]
                             text-steel/60

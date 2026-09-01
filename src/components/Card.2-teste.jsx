@@ -208,7 +208,7 @@ export default function Card2({
                         className={`
                             max-w-3xl
 
-                            text-xs
+                            text-sm
                             leading-6
 
                             md:text-sm

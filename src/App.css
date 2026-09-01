@@ -1,24 +1,27 @@
 @import "tailwindcss";
 
 @theme {
-    --color-obsidian: #0D0D0D;
+    --color-obsidian: #0d0d0d;
     --color-carbon: #151515;
     --color-graphite: #242424;
 
     --color-t-sec: #020810;
 
-    --color-steel: #8B8B8B; /* informação secundária */
-    --color-ivory: #F2F0EC; /* informação principal */
+    --color-steel: #8b8b8b; /* informação secundária */
+    --color-ivory: #f2f0ec; /* informação principal */
 
-    --color-bronze: #A87852; /* palavras e elementos importantes */
-    --color-warm-bronze: #C49A78; /* interação / hover */
-    --color-champagne: #D8C2AA; /* detalhe premium */
+    --color-bronze: #a87852; /* palavras e elementos importantes */
+    --color-warm-bronze: #c49a78; /* interação / hover */
+    --color-champagne: #d8c2aa; /* detalhe premium */
 
     --font-space: "Space Grotesk", sans-serif;
     --font-bebas: "Bebas Neue", sans-serif;
 
-
-    --background-image-gradientaa: linear-gradient(90deg, rgba(255, 255, 255, 0.08), transparent);
+    --background-image-gradientaa: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.08),
+        transparent
+    );
 }
 
 @layer base {
@@ -28,8 +31,6 @@
         font-family: "DM Mono", monospace;
         box-sizing: border-box;
     }
-
-    
 }
 
 html {
@@ -57,61 +58,54 @@ html.lenis.lenis-stopped {
 
 :root {
     /* Paleta de Cores */
-    --bg-primary: #0D0D0D;
+    --bg-primary: #0d0d0d;
     --bg-secondary: #151515;
     --border: #242424;
 
-    --text-primary: #F2F0EC;
-    --text-secondary: #8B8B8B;
+    --text-primary: #f2f0ec;
+    --text-secondary: #8b8b8b;
 
-    --accent: #A87852;
-    --accent-hover: #C49A78;
-    --accent-light: #D8C2AA;
-
+    --accent: #a87852;
+    --accent-hover: #c49a78;
+    --accent-light: #d8c2aa;
 
     /* Tipografia */
     --font-bebas: "Bebas Neue", sans-serif;
     --font-dm: "DM Mono", monospace;
     --font-space: "Space Grotesk", sans-serif;
 
-
-
-    --gradienteFundo:     radial-gradient(
-        circle at 70% 20%,
-        rgba(168, 120, 82, 0.08),
-        transparent 35%
-    ),
-    #0D0D0D;;
-
+    --gradienteFundo:
+        radial-gradient(
+            circle at 70% 20%,
+            rgba(168, 120, 82, 0.08),
+            transparent 35%
+        ),
+        #0d0d0d;
 }
 
 .bebas-neue-regular {
-  font-family: "Bebas Neue", sans-serif;
+    font-family: "Bebas Neue", sans-serif;
 
-  font-style: normal;
+    font-style: normal;
 }
 
-.fundo-principal{
-    background-color: #0D0D0D;
+.fundo-principal {
+    background-color: #0d0d0d;
 }
-.gradienteFundo{
-    background: radial-gradient(
-        circle at 70% 20%,
-        rgba(168, 120, 82, 0.08),
-        transparent 35%
-    ),
-    #0D0D0D;
+.gradienteFundo {
+    background:
+        radial-gradient(
+            circle at 70% 20%,
+            rgba(168, 120, 82, 0.08),
+            transparent 35%
+        ),
+        #0d0d0d;
 }
 
 #card2:active #contentNumber {
     color: var(--accent);
     border-color: var(--accent);
-
-    
-} 
-
-
-
+}
 
 #eft1 {
     position: relative;
@@ -152,7 +146,7 @@ html.lenis.lenis-stopped {
     border-bottom: 15px solid #a2a2a2;
     border-left: 15px solid #a2a2a2;
 }
-#eft2 span{
+#eft2 span {
     display: block;
 
     width: 31px;
@@ -185,11 +179,10 @@ html.lenis.lenis-stopped {
     align-items: end;
     border-radius: 17px;
     padding: 30px;
-    
 }
 
-#cx-span span{
-     display: block;
+#cx-span span {
+    display: block;
     width: 45px;
     height: 8px;
 
@@ -236,12 +229,12 @@ html.lenis.lenis-stopped {
     box-shadow: -13px 12px 0 var(--bg-primary);
 }
 
- .section-label::after {
+.section-label::after {
     content: "";
     flex: 1;
     height: 1px;
     background: linear-gradient(90deg, rgba(255, 255, 255, 0.08), transparent);
- }
+}
 
 #cx {
     position: absolute;
@@ -255,7 +248,6 @@ html.lenis.lenis-stopped {
     border-bottom-right-radius: 0px;
 }
 
-
 #cx3 {
     z-index: 1;
     position: absolute;
@@ -264,7 +256,6 @@ html.lenis.lenis-stopped {
     top: clamp(12px, 10.8%, 23%);
     left: -29%;
 }
-
 
 /* #content::before {
     content: "";
@@ -287,7 +278,6 @@ html.lenis.lenis-stopped {
 
     border-right: 1px solid var(--border);
 }
-
 
 /* =========================================================
    BORDA GRADIENTE
@@ -315,10 +305,8 @@ html.lenis.lenis-stopped {
 
     transform-origin: top;
 
-    transition:
-        transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
-
 
 /* =========================================================
    CARD SELECIONADO
@@ -328,21 +316,13 @@ html.lenis.lenis-stopped {
     transform: scaleY(1);
 }
 
-
 /* =========================================================
    NÚMERO
 ========================================================= */
 
 #number {
-    transition:
-        color 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
-
-
-
-
-
-
 
 /* =========================================================
    INDICADOR MOBILE — ARRASTE
@@ -360,7 +340,6 @@ html.lenis.lenis-stopped {
     animation: indicator-right 2s ease-in-out infinite;
 }
 
-
 /* ============================================================
    SETA ESQUERDA
    ============================================================ */
@@ -377,7 +356,6 @@ html.lenis.lenis-stopped {
         opacity: 0.8;
     }
 }
-
 
 /* ============================================================
    SETA DIREITA
