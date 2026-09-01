@@ -198,7 +198,7 @@ export default function Card1({
                     className={`
                         max-w-3xl
 
-                        text-xs
+                        text-sm
                         leading-relaxed
 
                         md:text-sm
