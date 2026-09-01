@@ -38,7 +38,7 @@ export default function Card1({
                 relative
                 w-full
 
-                border-t
+                border-b
                 border-graphite
 
                 py-7
