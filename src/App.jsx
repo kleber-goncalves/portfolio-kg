@@ -3,7 +3,6 @@ import SmoothScroll from "./components/SmoothScroll";
 
 // Layout
 import Hero from "./layout/Hero";
-import Seclogs from "./layout/logos";
 import Competencia from "./layout/CompetenciaTeste";
 import Formacao from "./layout/Formacao";
 import Footer from "./layout/Footer";
@@ -12,6 +11,7 @@ import Footer from "./layout/Footer";
 import "./App.css";
 import ProjetoT from "./layout/ProjetosTeste";
 import Diferenciais from "./layout/DiferenciaisTeste";
+import Seclogs from "./layout/LogosTeste";
 
 function App() {
     return (
