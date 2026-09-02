@@ -1,6 +1,5 @@
-import heroMobile from "../../public/hero-vetor-1.svg";
 
-import { Github, Linkedin, Instagram } from "@thesvg/react";
+import Socials from "../components/Socials";
 
 function Hero() {
     return (
@@ -9,7 +8,7 @@ function Hero() {
                 {/* =========================
                 SVG MOBILE
             ========================== */}
-                <img src={heroMobile} alt="" aria-hidden="true" className="absolute left-0 top-0 w-full h-full md:hidden" />
+                <img src="/hero-vetor-1.svg" alt="" aria-hidden="true" className="absolute left-0 top-0 w-full h-full md:hidden" />
 
                 {/* =========================
                 CONTEÚDO
@@ -23,7 +22,7 @@ function Hero() {
                     {/* FOTO */}
                     <div className="mt-26 flex flex-col gap-6">
                         <div className="relative flex h-54 w-54 items-center justify-center rounded-xl border border-bronze shadow-sm shadow-warm-bronze">
-                            <img src="https://github.com/kleber-goncalves.png" alt="Kleber Dev" className="h-full w-full rounded-xl object-cover" />
+                            <p>K</p>
 
                             <div className="absolute -right-10 top-10 h-80 w-80 rounded-full bg-[#A87852]/22 blur-[80px]" />
                         </div>
@@ -50,27 +49,8 @@ function Hero() {
                     </div>
 
                     {/* REDES */}
-                    <div
-                        className=" absolute
-        bottom-[6%]
-        left-[20%]
-        z-20
-        flex
-        -translate-x-1/2
-        items-center
-        gap-4"
-                    >
-                        <a href="#" aria-label="GitHub">
-                            <Github className="h-8 w-8" variant="dark" />
-                        </a>
-
-                        <a href="#" aria-label="LinkedIn">
-                            <Linkedin className="h-8 w-8" />
-                        </a>
-
-                        <a href="#" aria-label="Instagram">
-                            <Instagram className="h-8 w-8" />
-                        </a>
+                    <div className="absolute bottom-[2%] left-0 right-5 z-30">
+                        <Socials />
                     </div>
                 </div>
             </div>
