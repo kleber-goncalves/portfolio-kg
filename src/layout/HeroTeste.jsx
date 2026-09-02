@@ -12,29 +12,97 @@ function Hero() {
                 bg-obsidian
                 p-5
 
-                md:p-10
+                md:p-8
+                lg:p-10
             "
         >
-            {/* =====================================================
-                CONTAINER PRINCIPAL
-            ====================================================== */}
+            {/* =========================================================
+                PAINEL PRINCIPAL
+            ========================================================== */}
 
             <div
                 className="
+                    hero-panel
                     relative
                     mx-auto
-                    flex
                     min-h-[calc(100svh-2.5rem)]
                     w-full
                     max-w-[1800px]
-                    flex-col
+                    overflow-hidden
+                    rounded-[2rem]
+                    bg-carbon
 
-                    md:min-h-[calc(100svh-5rem)]
+                    md:min-h-[calc(100svh-4rem)]
+                    md:rounded-[2.75rem]
+
+                    lg:min-h-[calc(100svh-5rem)]
                 "
             >
-                {/* =================================================
+                {/* =====================================================
+                    DECORAÇÃO — CURVA / GLOW
+                ====================================================== */}
+
+                <div
+                    aria-hidden="true"
+                    className="
+                        pointer-events-none
+                        absolute
+                        -right-32
+                        top-1/4
+                        h-[26rem]
+                        w-[26rem]
+                        rounded-full
+                        bg-[#A87852]/10
+                        blur-[100px]
+
+                        md:-right-40
+                        md:h-[38rem]
+                        md:w-[38rem]
+                    "
+                />
+
+                {/* =====================================================
+                    RECORTE SUPERIOR ESQUERDO
+
+                    Cria a sensação de que o painel "abraça"
+                    o logo K.
+                ====================================================== */}
+
+                <div
+                    aria-hidden="true"
+                    className="
+                        hero-cut
+                        hero-cut-top-left
+                    "
+                />
+
+                {/* =====================================================
+                    RECORTE INFERIOR ESQUERDO
+                ====================================================== */}
+
+                <div
+                    aria-hidden="true"
+                    className="
+                        hero-cut
+                        hero-cut-bottom-left
+                    "
+                />
+
+                {/* =====================================================
+                    RECORTE INFERIOR DIREITO
+                ====================================================== */}
+
+                <div
+                    aria-hidden="true"
+                    className="
+                        hero-cut
+                        hero-cut-bottom-right
+                    "
+                />
+
+                {/* =====================================================
                     HEADER
-                ================================================== */}
+                ====================================================== */}
 
                 <header
                     className="
@@ -42,54 +110,59 @@ function Hero() {
                         z-30
                         flex
                         w-full
-                        items-center
+                        items-start
                         justify-between
                     "
                 >
-                    {/* LOGO */}
+                    {/* =================================================
+                        LOGO
+
+                        Fica parcialmente fora da estrutura.
+                    ================================================== */}
 
                     <div
                         className="
+                            hero-logo
+                            relative
                             flex
-                            h-20
-                            w-20
+                            h-24
+                            w-24
                             items-center
                             justify-center
 
-                            md:h-24
-                            md:w-24
+                            md:h-28
+                            md:w-28
                         "
                     >
                         <span
                             className="
                                 font-bebas
-                                text-6xl
+                                text-[4.5rem]
                                 leading-none
                                 text-bronze
 
-                                md:text-8xl
+                                md:text-[5.5rem]
                             "
                         >
                             K
                         </span>
                     </div>
 
-                    {/* MENU */}
+                    {/* =================================================
+                        MENU
+                    ================================================== */}
 
                     <button
                         type="button"
                         aria-label="Abrir menu"
                         className="
+                            hero-menu
                             flex
                             h-20
                             w-20
                             items-center
                             justify-center
-                            rounded-tl-[2rem]
-                            rounded-tr-[2rem]
-                            rounded-bl-[2rem]
-                            rounded-br-none
-                            bg-carbon
+                            bg-obsidian
                             transition
                             duration-300
 
@@ -109,8 +182,9 @@ function Hero() {
                             <span
                                 className="
                                     block
-                                    h-[6px]
+                                    h-[5px]
                                     w-10
+                                    rounded-full
                                     bg-ivory
                                 "
                             />
@@ -118,8 +192,9 @@ function Hero() {
                             <span
                                 className="
                                     block
-                                    h-[6px]
+                                    h-[5px]
                                     w-10
+                                    rounded-full
                                     bg-ivory
                                 "
                             />
@@ -127,433 +202,396 @@ function Hero() {
                     </button>
                 </header>
 
-                {/* =================================================
-                    ÁREA PRINCIPAL
-                ================================================== */}
+                {/* =====================================================
+                    CONTEÚDO PRINCIPAL
+                ====================================================== */}
 
                 <main
                     className="
                         relative
+                        z-10
                         flex
-                        flex-1
-                        items-start
+                        w-full
+                        flex-col
+                        gap-10
+                        px-5
+                        pb-28
                         pt-8
 
-                        md:items-center
-                        md:pt-0
+                        md:grid
+                        md:grid-cols-[minmax(250px,34%)_1fr]
+                        md:gap-10
+                        md:px-10
+                        md:pb-32
+                        md:pt-8
+
+                        lg:grid-cols-[minmax(300px,38%)_1fr]
+                        lg:gap-16
+                        lg:px-14
+                        lg:pb-36
+
+                        xl:grid-cols-[400px_1fr]
+                        xl:px-20
                     "
                 >
                     {/* =================================================
-                        PAINEL PRINCIPAL
+                        COLUNA DA FOTO
                     ================================================== */}
 
                     <div
                         className="
-                            relative
-                            w-full
-                            overflow-hidden
-                            rounded-[2rem]
-                            border
-                            border-graphite
-                            bg-carbon
-
-                            md:min-h-[78vh]
-                            md:rounded-[2.5rem]
+                            flex
+                            flex-col
+                            items-start
+                            justify-center
                         "
                     >
-                        {/* =================================================
-                            GLOW DECORATIVO
-                        ================================================== */}
-
-                        <div
-                            aria-hidden="true"
-                            className="
-                                pointer-events-none
-                                absolute
-                                right-[-10rem]
-                                top-[20%]
-                                h-[28rem]
-                                w-[28rem]
-                                rounded-full
-                                bg-[#A87852]/10
-                                blur-[100px]
-
-                                md:right-[-8rem]
-                                md:top-[15%]
-                                md:h-[40rem]
-                                md:w-[40rem]
-                            "
-                        />
-
-                        {/* =================================================
-                            CONTEÚDO
-                        ================================================== */}
+                        {/* FOTO */}
 
                         <div
                             className="
                                 relative
-                                z-10
-                                flex
                                 w-full
-                                flex-col
-                                gap-10
-                                p-5
-                                pt-8
+                                max-w-[330px]
 
-                                md:grid
-                                md:grid-cols-[minmax(240px,320px)_minmax(0,1fr)]
-                                md:gap-14
-                                md:p-12
-                                lg:grid-cols-[360px_minmax(0,1fr)]
-                                lg:gap-20
-                                lg:p-16
-                        "
+                                md:max-w-[300px]
+
+                                lg:max-w-[340px]
+
+                                xl:max-w-[380px]
+                            "
                         >
-                            {/* =================================================
-                                COLUNA ESQUERDA
-                            ================================================== */}
+                            {/* GLOW */}
+
+                            <div
+                                aria-hidden="true"
+                                className="
+                                    absolute
+                                    -right-8
+                                    top-10
+                                    h-48
+                                    w-48
+                                    rounded-full
+                                    bg-[#A87852]/20
+                                    blur-[70px]
+
+                                    md:h-60
+                                    md:w-60
+
+                                    lg:h-72
+                                    lg:w-72
+                                "
+                            />
+
+                            {/* MOLDURA */}
 
                             <div
                                 className="
-                                    flex
-                                    flex-col
-                                    gap-8
+                                    relative
+                                    aspect-square
+                                    w-full
+                                    overflow-hidden
+                                    rounded-[1.75rem]
+                                    border
+                                    border-bronze
+                                    bg-obsidian
+                                    shadow-lg
+                                    shadow-warm-bronze/20
 
-                                    md:justify-center
+                                    md:rounded-[2rem]
                                 "
                             >
-                                {/* FOTO */}
-
-                                <div
+                                <img
+                                    src="https://github.com/kleber-goncalves.png"
+                                    alt="Foto de Kleber"
                                     className="
                                         relative
+                                        z-10
+                                        h-full
                                         w-full
-                                        max-w-[360px]
-                                    "
-                                >
-                                    {/* GLOW DA FOTO */}
-
-                                    <div
-                                        aria-hidden="true"
-                                        className="
-                                            pointer-events-none
-                                            absolute
-                                            -right-10
-                                            top-10
-                                            h-52
-                                            w-52
-                                            rounded-full
-                                            bg-[#A87852]/20
-                                            blur-[70px]
-
-                                            md:h-72
-                                            md:w-72
-                                        "
-                                    />
-
-                                    {/* MOLDURA */}
-
-                                    <div
-                                        className="
-                                            relative
-                                            aspect-square
-                                            w-full
-                                            overflow-hidden
-                                            rounded-[1.5rem]
-                                            border
-                                            border-bronze
-                                            shadow-lg
-                                            shadow-warm-bronze/30
-
-                                            md:rounded-[1.75rem]
-                                        "
-                                    >
-                                        <img
-                                            src="https://github.com/kleber-goncalves.png"
-                                            alt="Foto de Kleber"
-                                            className="
-                                                relative
-                                                z-10
-                                                h-full
-                                                w-full
-                                                object-cover
-                                            "
-                                        />
-                                    </div>
-                                </div>
-
-                                {/* IDENTIFICAÇÃO */}
-
-                                <div
-                                    className="
-                                        hidden
-                                        flex-col
-                                        gap-2
-
-                                        md:flex
-                                    "
-                                >
-                                    <span
-                                        className="
-                                            text-xs
-                                            uppercase
-                                            tracking-[0.25em]
-                                            text-bronze/70
-                                        "
-                                    >
-                                        Desenvolvedor
-                                    </span>
-
-                                    <span
-                                        className="
-                                            text-sm
-                                            text-steel
-                                        "
-                                    >
-                                        Web · Software · Fullstack
-                                    </span>
-                                </div>
-                            </div>
-
-                            {/* =================================================
-                                COLUNA DIREITA
-                            ================================================== */}
-
-                            <div
-                                className="
-                                    flex
-                                    min-w-0
-                                    flex-col
-                                    justify-center
-                                "
-                            >
-                                {/* NOME */}
-
-                                <div
-                                    className="
-                                        flex
-                                        flex-col
-                                        gap-4
-                                    "
-                                >
-                                    <h1
-                                        className="
-                                            font-bebas
-                                            text-[4.5rem]
-                                            font-bold
-                                            uppercase
-                                            leading-[0.8]
-                                            tracking-tight
-                                            text-ivory
-
-                                            sm:text-[5.5rem]
-
-                                            md:text-[6rem]
-
-                                            lg:text-[8rem]
-
-                                            xl:text-[9rem]
-                                        "
-                                    >
-                                        Kleber
-                                        <br />
-                                        Dev.
-                                    </h1>
-
-                                    {/* ESPECIALIDADES */}
-
-                                    <p
-                                        className="
-                                            max-w-3xl
-                                            text-sm
-                                            leading-relaxed
-                                            text-steel
-
-                                            sm:text-base
-
-                                            md:text-xl
-
-                                            lg:text-2xl
-                                        "
-                                    >
-                                        Frontend
-                                        <span className="mx-2 text-bronze/50">·</span>
-                                        Backend
-                                        <span className="mx-2 text-bronze/50">·</span>
-                                        Fullstack
-                                        <span className="mx-2 text-bronze/50">·</span>
-                                        <strong className="text-bronze">Analista de Sistemas</strong>
-                                    </p>
-                                </div>
-
-                                {/* =================================================
-                                    DIVISOR
-                                ================================================== */}
-
-                                <div
-                                    className="
-                                        my-8
-                                        h-px
-                                        w-full
-                                        bg-gradientaa
-
-                                        md:my-10
+                                        object-cover
                                     "
                                 />
-
-                                {/* =================================================
-                                    APRESENTAÇÃO
-                                ================================================== */}
-
-                                <div
-                                    className="
-                                        flex
-                                        max-w-3xl
-                                        flex-col
-                                        gap-5
-                                    "
-                                >
-                                    <p
-                                        className="
-                                            text-base
-                                            leading-relaxed
-                                            text-steel
-
-                                            md:text-lg
-                                            md:leading-8
-
-                                            lg:text-xl
-                                        "
-                                    >
-                                        Sou formado em <strong className="text-ivory">Análise e Desenvolvimento de Sistemas</strong> pela Uniube e possuo formação em Fullstack pela DNC, com experiência em práticas como Scrum, sprints, revisão de código e metodologias ágeis.
-                                    </p>
-
-                                    <p
-                                        className="
-                                            text-base
-                                            leading-relaxed
-                                            text-steel
-
-                                            md:text-lg
-                                            md:leading-8
-
-                                            lg:text-xl
-                                        "
-                                    >
-                                        Trabalho como analista de projetos, acumulando responsabilidades de desenvolvimento e revisão de PRs sob supervisão sênior. Utilizo IA para acelerar a implementação, mantendo o raciocínio e a análise como base para minhas decisões.
-                                    </p>
-                                </div>
-
-                                {/* =================================================
-                                    REDES SOCIAIS
-                                ================================================== */}
-
-                                <div
-                                    className="
-                                        mt-8
-                                        flex
-                                        items-center
-                                        gap-5
-
-                                        md:mt-10
-                                        md:gap-6
-                                    "
-                                >
-                                    {/* GITHUB */}
-
-                                    <a
-                                        href="https://github.com/kleber-goncalves"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        aria-label="GitHub de Kleber"
-                                        className="
-                                            flex
-                                            h-12
-                                            w-12
-                                            items-center
-                                            justify-center
-                                            rounded-full
-                                            transition
-                                            duration-300
-                                            hover:scale-110
-
-                                            md:h-14
-                                            md:w-14
-                                        "
-                                    >
-                                        <Github className="h-full w-full" variant="dark" />
-                                    </a>
-
-                                    {/* LINKEDIN */}
-
-                                    <a
-                                        href="#"
-                                        aria-label="LinkedIn de Kleber"
-                                        className="
-                                            flex
-                                            h-12
-                                            w-12
-                                            items-center
-                                            justify-center
-                                            rounded-full
-                                            transition
-                                            duration-300
-                                            hover:scale-110
-
-                                            md:h-14
-                                            md:w-14
-                                        "
-                                    >
-                                        <Linkedin className="h-full w-full" />
-                                    </a>
-
-                                    {/* INSTAGRAM */}
-
-                                    <a
-                                        href="#"
-                                        aria-label="Instagram de Kleber"
-                                        className="
-                                            flex
-                                            h-12
-                                            w-12
-                                            items-center
-                                            justify-center
-                                            rounded-full
-                                            transition
-                                            duration-300
-                                            hover:scale-110
-
-                                            md:h-14
-                                            md:w-14
-                                        "
-                                    >
-                                        <Instagram className="h-full w-full" />
-                                    </a>
-                                </div>
                             </div>
                         </div>
 
+                        {/* IDENTIFICAÇÃO */}
+
+                        <div
+                            className="
+                                mt-6
+                                hidden
+                                flex-col
+                                gap-1
+
+                                md:flex
+                            "
+                        >
+                            <span
+                                className="
+                                    text-xs
+                                    uppercase
+                                    tracking-[0.25em]
+                                    text-bronze
+                                "
+                            >
+                                Desenvolvedor
+                            </span>
+
+                            <span
+                                className="
+                                    text-sm
+                                    text-steel
+                                "
+                            >
+                                Web · Software · Fullstack
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* =================================================
+                        COLUNA DE INFORMAÇÕES
+                    ================================================== */}
+
+                    <div
+                        className="
+                            flex
+                            min-w-0
+                            flex-col
+                            justify-center
+                        "
+                    >
                         {/* =================================================
-                            MARCA DECORATIVA INFERIOR
+                            NOME
                         ================================================== */}
 
                         <div
-                            aria-hidden="true"
                             className="
-                                absolute
-                                bottom-0
-                                left-0
-                                h-16
-                                w-1/3
-                                rounded-tr-[2rem]
-                                bg-obsidian
+                                flex
+                                flex-col
+                                gap-4
+                            "
+                        >
+                            <h1
+                                className="
+                                    font-bebas
+                                    text-[4.8rem]
+                                    font-bold
+                                    uppercase
+                                    leading-[0.78]
+                                    tracking-tight
+                                    text-ivory
 
-                                md:h-20
-                                md:w-1/4
+                                    sm:text-[5.5rem]
+
+                                    md:text-[6rem]
+
+                                    lg:text-[7rem]
+
+                                    xl:text-[8.5rem]
+                                "
+                            >
+                                Kleber
+                                <br />
+                                Dev.
+                            </h1>
+
+                            {/* ESPECIALIDADES */}
+
+                            <p
+                                className="
+                                    max-w-3xl
+                                    text-sm
+                                    leading-relaxed
+                                    text-steel
+
+                                    sm:text-base
+
+                                    md:text-lg
+
+                                    lg:text-xl
+
+                                    xl:text-2xl
+                                "
+                            >
+                                Frontend
+                                <span className="mx-2 text-bronze/40">·</span>
+                                Backend
+                                <span className="mx-2 text-bronze/40">·</span>
+                                Fullstack
+                                <span className="mx-2 text-bronze/40">·</span>
+                                <strong className="text-bronze">Analista de Sistemas</strong>
+                            </p>
+                        </div>
+
+                        {/* =================================================
+                            DIVISOR
+                        ================================================== */}
+
+                        <div
+                            className="
+                                my-7
+                                h-px
+                                w-full
+                                max-w-3xl
+                                bg-gradientaa
+
+                                md:my-8
                             "
                         />
+
+                        {/* =================================================
+                            TEXTO
+                        ================================================== */}
+
+                        <div
+                            className="
+                                flex
+                                max-w-3xl
+                                flex-col
+                                gap-5
+                            "
+                        >
+                            <p
+                                className="
+                                    text-base
+                                    leading-7
+                                    text-steel
+
+                                    md:text-lg
+                                    md:leading-8
+
+                                    lg:text-xl
+                                "
+                            >
+                                Sou formado em <strong className="text-ivory">Análise e Desenvolvimento de Sistemas</strong> pela Uniube e possuo formação em Fullstack pela DNC, com experiência em práticas como Scrum, sprints, revisão de código e metodologias ágeis.
+                            </p>
+
+                            <p
+                                className="
+                                    text-base
+                                    leading-7
+                                    text-steel
+
+                                    md:text-lg
+                                    md:leading-8
+
+                                    lg:text-xl
+                                "
+                            >
+                                Trabalho como analista de projetos, acumulando responsabilidades de desenvolvimento e revisão de PRs sob supervisão sênior. Utilizo IA para acelerar implementações, mantendo o raciocínio e a análise como base para minhas decisões.
+                            </p>
+                        </div>
+
+                        {/* =================================================
+                            REDES SOCIAIS
+                        ================================================== */}
+
+                        <div
+                            className="
+                                mt-8
+                                flex
+                                items-center
+                                gap-5
+
+                                md:mt-10
+                                md:gap-6
+                            "
+                        >
+                            {/* GITHUB */}
+
+                            <a
+                                href="https://github.com/kleber-goncalves"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label="GitHub de Kleber"
+                                className="
+                                    flex
+                                    h-12
+                                    w-12
+                                    items-center
+                                    justify-center
+                                    rounded-full
+                                    transition
+                                    duration-300
+                                    hover:scale-110
+
+                                    md:h-14
+                                    md:w-14
+                                "
+                            >
+                                <Github className="h-full w-full" variant="dark" />
+                            </a>
+
+                            {/* LINKEDIN */}
+
+                            <a
+                                href="#"
+                                aria-label="LinkedIn de Kleber"
+                                className="
+                                    flex
+                                    h-12
+                                    w-12
+                                    items-center
+                                    justify-center
+                                    rounded-full
+                                    transition
+                                    duration-300
+                                    hover:scale-110
+
+                                    md:h-14
+                                    md:w-14
+                                "
+                            >
+                                <Linkedin className="h-full w-full" />
+                            </a>
+
+                            {/* INSTAGRAM */}
+
+                            <a
+                                href="#"
+                                aria-label="Instagram de Kleber"
+                                className="
+                                    flex
+                                    h-12
+                                    w-12
+                                    items-center
+                                    justify-center
+                                    rounded-full
+                                    transition
+                                    duration-300
+                                    hover:scale-110
+
+                                    md:h-14
+                                    md:w-14
+                                "
+                            >
+                                <Instagram className="h-full w-full" />
+                            </a>
+                        </div>
                     </div>
                 </main>
+
+                {/* =====================================================
+                    PEQUENA MARCA INFERIOR
+                ====================================================== */}
+
+                <div
+                    aria-hidden="true"
+                    className="
+                        absolute
+                        bottom-0
+                        left-0
+                        z-20
+                        h-16
+                        w-32
+                        rounded-tr-[2rem]
+                        bg-obsidian
+
+                        md:h-20
+                        md:w-40
+                    "
+                />
             </div>
         </section>
     );
