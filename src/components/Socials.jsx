@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 
 import { ArrowRight, X } from "lucide-react";
@@ -7,21 +7,24 @@ import { Github, Linkedin, Instagram } from "@thesvg/react";
 function Socials() {
     const [isOpen, setIsOpen] = useState(false);
 
+    const containerRef = useRef(null);
     const buttonRef = useRef(null);
     const progressRef = useRef(null);
     const panelRef = useRef(null);
 
     const startX = useRef(0);
     const currentX = useRef(0);
-    const isDragging = useRef(false);
+    const maxDrag = useRef(0);
 
-    const DRAG_DISTANCE = 230;
+    const isDragging = useRef(false);
 
     const socials = [
         {
             name: "GitHub",
             href: "https://github.com/",
             icon: Github,
+            variant: "dark",
+            
         },
         {
             name: "LinkedIn",
@@ -36,7 +39,41 @@ function Socials() {
     ];
 
     // =========================================
-    // ABRIR
+    // CALCULA A DISTÂNCIA REAL
+    // =========================================
+
+    const calculateDragDistance = () => {
+        if (!containerRef.current || !buttonRef.current) {
+            return;
+        }
+
+        const containerWidth = containerRef.current.offsetWidth;
+
+        const buttonWidth = buttonRef.current.offsetWidth;
+
+        // 2 = left: 8px
+        // 2 = margem direita
+        const distance = containerWidth - buttonWidth - 16;
+
+        maxDrag.current = Math.max(0, distance);
+    };
+
+    // =========================================
+    // ATUALIZA AO REDIMENSIONAR
+    // =========================================
+
+    useEffect(() => {
+        calculateDragDistance();
+
+        window.addEventListener("resize", calculateDragDistance);
+
+        return () => {
+            window.removeEventListener("resize", calculateDragDistance);
+        };
+    }, []);
+
+    // =========================================
+    // ABRIR PAINEL
     // =========================================
 
     const openSocials = () => {
@@ -51,14 +88,14 @@ function Socials() {
                 panelRef.current,
                 {
                     opacity: 0,
-                    y: 20,
+                    y: 25,
                     scale: 0.96,
                 },
                 {
                     opacity: 1,
                     y: 0,
                     scale: 1,
-                    duration: 0.4,
+                    duration: 0.45,
                     ease: "power3.out",
                 },
             );
@@ -66,7 +103,7 @@ function Socials() {
     };
 
     // =========================================
-    // FECHAR
+    // FECHAR PAINEL
     // =========================================
 
     const closeSocials = () => {
@@ -79,13 +116,49 @@ function Socials() {
             opacity: 0,
             y: 20,
             scale: 0.96,
-            duration: 0.25,
+            duration: 0.3,
             ease: "power2.in",
             onComplete: () => {
                 setIsOpen(false);
             },
         });
     };
+
+      // =========================================
+    // FECHAR AO CLICAR FORA
+    // =========================================
+
+    useEffect(() => {
+
+        if (!isOpen) return;
+
+        const handleClickOutside = (event) => {
+
+            if (
+                panelRef.current &&
+                !panelRef.current.contains(event.target)
+            ) {
+                closeSocials();
+            }
+
+        };
+
+        document.addEventListener(
+            "pointerdown",
+            handleClickOutside
+        );
+
+        return () => {
+
+            document.removeEventListener(
+                "pointerdown",
+                handleClickOutside
+            );
+
+        };
+
+    }, [isOpen]);
+
 
     // =========================================
     // COMEÇOU A ARRASTAR
@@ -94,15 +167,20 @@ function Socials() {
     const handlePointerDown = (event) => {
         if (isOpen) return;
 
+        calculateDragDistance();
+
         isDragging.current = true;
+
         startX.current = event.clientX;
+
         currentX.current = 0;
 
         event.currentTarget.setPointerCapture(event.pointerId);
 
         gsap.to(buttonRef.current, {
-            scale: 0.95,
+            scale: 0.94,
             duration: 0.15,
+            ease: "power2.out",
         });
     };
 
@@ -111,23 +189,36 @@ function Socials() {
     // =========================================
 
     const handlePointerMove = (event) => {
-        if (!isDragging.current || isOpen) return;
+        if (!isDragging.current || isOpen) {
+            return;
+        }
 
         const delta = event.clientX - startX.current;
 
-        const distance = Math.max(0, Math.min(delta, DRAG_DISTANCE));
+        const distance = Math.max(0, Math.min(delta, maxDrag.current));
 
         currentX.current = distance;
 
-        const progress = distance / DRAG_DISTANCE;
+        // =====================================
+        // PROGRESSO
+        // =====================================
+
+        const progress = maxDrag.current > 0 ? distance / maxDrag.current : 0;
+
+        // =====================================
+        // BOTÃO
+        // =====================================
 
         gsap.set(buttonRef.current, {
             x: distance,
         });
 
+        // =====================================
+        // PROGRESSO
+        // =====================================
+
         gsap.set(progressRef.current, {
             scaleX: progress,
-            transformOrigin: "left center",
         });
     };
 
@@ -136,48 +227,63 @@ function Socials() {
     // =========================================
 
     const handlePointerUp = () => {
-        if (!isDragging.current) return;
+        if (!isDragging.current) {
+            return;
+        }
 
         isDragging.current = false;
 
-        const progress = currentX.current / DRAG_DISTANCE;
+        const progress = maxDrag.current > 0 ? currentX.current / maxDrag.current : 0;
 
         gsap.to(buttonRef.current, {
             scale: 1,
             duration: 0.2,
+            ease: "power2.out",
         });
 
-        // Abre se passou de 50%
-        if (progress >= 0.170) {
+        // =====================================
+        // CHEGOU AO FINAL
+        // =====================================
+
+        if (progress >= 0.95) {
             gsap.to(buttonRef.current, {
-                x: DRAG_DISTANCE,
-                duration: 0.4,
+                x: maxDrag.current,
+                duration: 0.2,
                 ease: "power2.out",
                 onComplete: openSocials,
+            });
+
+            gsap.to(progressRef.current, {
+                scaleX: 1,
+                duration: 0.2,
+                ease: "power2.out",
             });
 
             return;
         }
 
-        // Volta para o início
+        // =====================================
+        // NÃO CHEGOU → VOLTA
+        // =====================================
+
         gsap.to(buttonRef.current, {
             x: 0,
-            duration: 0.35,
+            duration: 0.45,
             ease: "back.out(1.5)",
         });
 
         gsap.to(progressRef.current, {
             scaleX: 0,
-            duration: 0.3,
+            duration: 0.35,
             ease: "power2.out",
         });
     };
 
     return (
-        <div className="relative w-[78%] md:hidden">
-            {/* =========================================
+        <div ref={containerRef} className="relative w-[78%] md:hidden">
+            {/* =====================================
                 BOTÃO DE ARRASTE
-            ========================================== */}
+            ====================================== */}
 
             {!isOpen && (
                 <div
@@ -192,20 +298,27 @@ function Socials() {
                         bg-carbon
                     "
                 >
-                    {/* FUNDO DE PROGRESSO */}
+                    {/* =================================
+                        PROGRESSO
+                    ================================== */}
 
                     <div
                         ref={progressRef}
                         className="
+                            pointer-events-none
                             absolute
-                            inset-0
+                            inset-y-0
+                            left-0
+                            w-full
                             origin-left
                             scale-x-0
                             bg-warm-bronze/15
                         "
                     />
 
-                    {/* TEXTO */}
+                    {/* =================================
+                        TEXTO
+                    ================================== */}
 
                     <div
                         className="
@@ -216,7 +329,7 @@ function Socials() {
                             items-center
                             justify-center
                             gap-2
-                            pl-12
+                            pl-14
                             text-[10px]
                             uppercase
                             tracking-[0.2em]
@@ -230,7 +343,9 @@ function Socials() {
                         <span className="text-ivory">Redes Sociais</span>
                     </div>
 
-                    {/* BOTÃO */}
+                    {/* =================================
+                        BOTÃO ARRASTÁVEL
+                    ================================== */}
 
                     <button
                         ref={buttonRef}
@@ -266,9 +381,9 @@ function Socials() {
                 </div>
             )}
 
-            {/* =========================================
-                PAINEL
-            ========================================== */}
+            {/* =====================================
+                PAINEL SOCIAL
+            ====================================== */}
 
             {isOpen && (
                 <div
@@ -319,8 +434,8 @@ function Socials() {
                             aria-label="Fechar redes sociais"
                             className="
                                 flex
-                                h-9
-                                w-9
+                                h-11
+                                w-11
                                 items-center
                                 justify-center
                                 rounded-full
@@ -330,9 +445,11 @@ function Socials() {
                                 transition-colors
                                 hover:border-bronze
                                 hover:text-bronze
+                                active:border-bronze
+                                active:text-bronze
                             "
                         >
-                            <X className="h-4 w-4" />
+                            <X className="h-5 w-5" />
                         </button>
                     </div>
 
@@ -364,10 +481,12 @@ function Socials() {
                                             className="
                                                 h-5
                                                 w-5
-                                                text-steel
+                                                text-ivory
+
                                                 transition-colors
                                                 group-hover:text-bronze
                                             "
+                                            variant="dark"
                                         />
 
                                         <span
