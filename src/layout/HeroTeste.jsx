@@ -1,7 +1,29 @@
-
 import Socials from "../components/Socials";
+import MenuMobile from "../components/MenuMobile";
 
 function Hero() {
+    const menuItems = [
+        {
+            label: "Sobre",
+            href: "#sobre",
+        },
+        {
+            label: "Competências",
+            href: "#competencias",
+        },
+        {
+            label: "Projetos",
+            href: "#projetos",
+        },
+        {
+            label: "Diferenciais",
+            href: "#diferenciais",
+        },
+        {
+            label: "Formação",
+            href: "#formacao",
+        },
+    ];
     return (
         <section className="relative w-full overflow-hidden bg-obsidian p-4 md:p-10">
             <div className="relative aspect-[390/790] w-full">
@@ -17,6 +39,18 @@ function Hero() {
                     {/* K */}
                     <div className="absolute left-4 top-4 h-15 w-15">
                         <img src="/logo.svg" alt="" srcset="" />
+                    </div>
+
+                    <div
+                        className="
+                            absolute
+                            right-4
+                            top-6
+                            z-31
+
+                        "
+                    >
+                        <MenuMobile items={menuItems} />
                     </div>
 
                     {/* FOTO */}
