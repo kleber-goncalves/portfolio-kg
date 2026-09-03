@@ -8,7 +8,7 @@ function Hero() {
                 {/* =========================
                 SVG MOBILE
             ========================== */}
-                <img src="/hero-vetor-1.svg" alt="" aria-hidden="true" className="absolute left-0 top-0 w-full h-full md:hidden" />
+                <img src="/hero-vetor-4t4.svg" alt="" aria-hidden="true" className="absolute left-0 top-0 w-full h-full md:hidden" />
 
                 {/* =========================
                 CONTEÚDO
@@ -53,7 +53,7 @@ function Hero() {
                     </div>
 
                     {/* REDES */}
-                    <div className="absolute bottom-[2%] left-0 right-5 z-30">
+                    <div className="absolute bottom-[2%] left-0 right-4 z-30">
                         <Socials />
                     </div>
                 </div>
