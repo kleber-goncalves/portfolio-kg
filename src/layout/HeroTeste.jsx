@@ -3,37 +3,33 @@ import Socials from "../components/Socials";
 
 function Hero() {
     return (
-        <section className="relative w-full overflow-hidden bg-obsidian p-5 md:p-10">
+        <section className="relative w-full overflow-hidden bg-obsidian p-4 md:p-10">
             <div className="relative aspect-[390/790] w-full">
                 {/* =========================
                 SVG MOBILE
             ========================== */}
-                <img src="/hero-vetor-4t4.svg" alt="" aria-hidden="true" className="absolute left-0 top-0 w-full h-full md:hidden" />
+                <img src="/hero-vetor-5.svg" alt="" aria-hidden="true" className="absolute left-0 top-0 w-full h-full md:hidden" />
 
                 {/* =========================
                 CONTEÚDO
             ========================== */}
                 <div className="relative z-10 flex flex-col h-full">
                     {/* K */}
-                    <div className="absolute left-5 top-5">
-                        <span className="font-bebas text-6xl text-bronze">K</span>
+                    <div className="absolute left-4 top-4 h-15 w-15">
+                        <img src="/logo.svg" alt="" srcset="" />
                     </div>
 
                     {/* FOTO */}
-                    <div className="mt-26 flex flex-col gap-6">
+                    <div className="mt-25 flex flex-col gap-6 pl-3 pr-3">
                         <div className="relative flex h-54 w-54 items-center justify-center rounded-xl border border-bronze shadow-sm shadow-warm-bronze">
-                            <img
-                                src="https://github.com/kleber-goncalves.png"
-                                alt="Kleber Dev"
-                                className="w-full h-full rounded-xl"
-                            />
+                            <img src="https://github.com/kleber-goncalves.png" alt="Kleber Dev" className="w-full h-full rounded-xl" />
 
-                            <div className="absolute -right-10 top-10 h-80 w-80 rounded-full bg-[#A87852]/22 blur-[80px]" />
+                            <div className="absolute -right-50 top-12 h-70 w-40 rounded-full bg-[#A87852]/22 blur-[90px]" />
                         </div>
 
                         {/* NOME */}
                         <div className="flex flex-col gap-2">
-                            <h1 className="font-bebas text-6xl leading-none text-ivory">
+                            <h1 className="font-bebas font-bold text-6xl text-ivory">
                                 Kleber
                                 <br />
                                 Dev.
@@ -45,10 +41,10 @@ function Hero() {
                         </div>
 
                         {/* DESCRIÇÃO */}
-                        <div className="flex flex-col gap-5 text-sm text-steel">
-                            <p>Meu nome é Kleber e sou formado em Análise e Desenvolvimento de Sistemas.</p>
+                        <div className="flex flex-col gap-4 pt-3 text-sm text-steel">
+                            <p>Meu nome é Kleber, tenho 21 anos e Sou formado em Análise e Desenvolvimento de Sistemas pela universidade Uniube e possuo formação em Fullstack pela DNC com simulação profissional real.</p>
 
-                            <p>Trabalho com desenvolvimento e busco construir sistemas pensando primeiro na estrutura e nas decisões técnicas.</p>
+                            <p>Prefiro chegar com uma hipótese formada antes de buscar ajuda de uso IA pra acelerar implementação, não como substituto de raciocínio.</p>
                         </div>
                     </div>
 
