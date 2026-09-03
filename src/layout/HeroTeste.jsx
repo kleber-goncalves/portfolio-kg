@@ -5,7 +5,7 @@ function Hero() {
     const menuItems = [
         {
             label: "Sobre",
-            href: "#sobre",
+            href: "#hero",
         },
         {
             label: "Competências",
@@ -25,7 +25,7 @@ function Hero() {
         },
     ];
     return (
-        <section className="relative w-full overflow-hidden bg-obsidian p-4 md:p-10">
+        <section id="hero" className="relative w-full overflow-hidden bg-obsidian p-4 md:p-10">
             <div className="relative aspect-[390/790] w-full">
                 {/* =========================
                 SVG MOBILE

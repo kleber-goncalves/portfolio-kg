@@ -1,16 +1,46 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import gsap from "gsap";
 
 function MenuMobile({ items = [] }) {
     const [isOpen, setIsOpen] = useState(false);
+    const menuRef = useRef(null);
+
 
     const openMenu = () => {
+        
         setIsOpen(true);
     };
 
     const closeMenu = () => {
-        setIsOpen(false);
+         if (!menuRef.current) return;
+
+          const links = menuRef.current.querySelectorAll("[data-mobile-menu-link]");
+
+          const tl = gsap.timeline({
+              onComplete: () => {
+                  setIsOpen(false);
+              },
+          });
+
+          tl.to(links, {
+              opacity: 0,
+              x: -20,
+              duration: 0.25,
+              stagger: 0.05,
+              ease: "power2.in",
+          });
+
+          tl.to(
+              menuRef.current,
+              {
+                  xPercent: -100,
+                  duration: 0.4,
+                  ease: "power2.in",
+              },
+              "-=0.05",
+          );
+
     };
 
     // =========================================
@@ -41,10 +71,12 @@ function MenuMobile({ items = [] }) {
         if (!isOpen) return;
 
         requestAnimationFrame(() => {
-            const menu = document.querySelector("[data-mobile-menu]");
+            const menu = menuRef.current;
             const links = document.querySelectorAll("[data-mobile-menu-link]");
 
             if (!menu) return;
+
+
 
             gsap.fromTo(
                 menu,
@@ -53,8 +85,8 @@ function MenuMobile({ items = [] }) {
                 },
                 {
                     xPercent: 0,
-                    duration: 0.45,
-                    ease: "power3.out",
+                    duration: 0.50,
+                    ease: "power2.out",
                 },
             );
 
@@ -67,10 +99,10 @@ function MenuMobile({ items = [] }) {
                 {
                     opacity: 1,
                     x: 0,
-                    duration: 0.35,
-                    stagger: 0.06,
+                    duration: 0.50,
+                    stagger: 0.26,
                     delay: 0.15,
-                    ease: "power2.out",
+                    ease: "power1.out",
                 },
             );
         });
@@ -102,7 +134,7 @@ function MenuMobile({ items = [] }) {
                     block: "start",
                 });
             }
-        }, 300);
+        }, 400);
     };
 
     return (
@@ -130,10 +162,13 @@ function MenuMobile({ items = [] }) {
                         duration-300
                         hover:border-bronze
                         hover:text-bronze
+                        group
                         active:scale-95
+                        active:text-bronze/20
+                        
                     "
                 >
-                    <Menu className="h-12 w-12" />
+                    <Menu className="h-12 w-12 group-active:text-bronze/29" />
                 </button>
             )}
 
@@ -152,6 +187,7 @@ function MenuMobile({ items = [] }) {
                     onClick={handleOverlayClick}
                 >
                     <nav
+                        ref={menuRef}
                         data-mobile-menu
                         aria-label="Menu principal"
                         className="
@@ -200,6 +236,8 @@ function MenuMobile({ items = [] }) {
                                     hover:border-bronze
                                     hover:text-bronze
                                     active:scale-95
+                                    active:border-bronze
+                                    active:text-bronze
                                 "
                             >
                                 <X className="h-5 w-5" />

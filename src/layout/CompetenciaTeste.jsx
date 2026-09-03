@@ -135,6 +135,7 @@ function Competencia() {
                     >
                         Eu posso te ajudar com...
                     </p>
+             
                 </div>
 
                 {/* =================================================
