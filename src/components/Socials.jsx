@@ -11,6 +11,7 @@ function Socials() {
     const buttonRef = useRef(null);
     const progressRef = useRef(null);
     const panelRef = useRef(null);
+    const txtRef = useRef(null);
 
     const startX = useRef(0);
     const currentX = useRef(0);
@@ -182,6 +183,7 @@ function Socials() {
             duration: 0.15,
             ease: "power2.out",
         });
+        
     };
 
     // =========================================
@@ -206,6 +208,14 @@ function Socials() {
         const progress = maxDrag.current > 0 ? distance / maxDrag.current : 0;
 
         // =====================================
+        // TEXTO
+        // =====================================
+        const textOpacity = Math.max(0, 1 - progress * 1.5);
+        gsap.set(txtRef.current, {
+            opacity: textOpacity,
+        });
+
+        // =====================================
         // BOTÃO
         // =====================================
 
@@ -220,6 +230,7 @@ function Socials() {
         gsap.set(progressRef.current, {
             scaleX: progress,
         });
+
     };
 
     // =========================================
@@ -277,6 +288,11 @@ function Socials() {
             duration: 0.35,
             ease: "power2.out",
         });
+        gsap.to(txtRef.current, {
+            opacity: 1,
+            duration: 0.35,
+            ease: "power2.out",
+        });
     };
 
     return (
@@ -312,6 +328,7 @@ function Socials() {
                             w-full
                             origin-left
                             scale-x-0
+                            rounded-2xl
                             bg-warm-bronze/15
                         "
                     />
@@ -321,7 +338,9 @@ function Socials() {
                     ================================== */}
 
                     <div
+                        ref={txtRef}
                         className="
+                        opacity-100
                             pointer-events-none
                             absolute
                             inset-0
@@ -329,7 +348,7 @@ function Socials() {
                             items-center
                             justify-center
                             gap-2
-                            pl-14
+                            pl-13
                             text-[10px]
                             uppercase
                             tracking-[0.2em]
@@ -372,8 +391,7 @@ function Socials() {
                             border-bronze
                             bg-obsidian
                             text-bronze
-                            shadow-lg
-                            shadow-warm-bronze/20
+                        
                         "
                     >
                         <ArrowRight className="h-5 w-5" />

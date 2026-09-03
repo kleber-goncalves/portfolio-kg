@@ -22,7 +22,11 @@ function Hero() {
                     {/* FOTO */}
                     <div className="mt-26 flex flex-col gap-6">
                         <div className="relative flex h-54 w-54 items-center justify-center rounded-xl border border-bronze shadow-sm shadow-warm-bronze">
-                            <p>K</p>
+                            <img
+                                src="https://github.com/kleber-goncalves.png"
+                                alt="Kleber Dev"
+                                className="w-full h-full rounded-xl"
+                            />
 
                             <div className="absolute -right-10 top-10 h-80 w-80 rounded-full bg-[#A87852]/22 blur-[80px]" />
                         </div>
