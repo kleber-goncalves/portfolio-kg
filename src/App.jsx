@@ -2,7 +2,6 @@
 import SmoothScroll from "./components/SmoothScroll";
 
 // Layout
-import Hero from "./layout/Hero";
 import Competencia from "./layout/CompetenciaTeste";
 import Formacao from "./layout/Formacao";
 import Footer from "./layout/Footer";
@@ -12,10 +11,13 @@ import "./App.css";
 import ProjetoT from "./layout/ProjetosTeste";
 import Diferenciais from "./layout/DiferenciaisTeste";
 import Seclogs from "./layout/LogosTeste";
+import Hero from "./layout/HeroTeste";
+import ButtonReset from "./components/buttonReset";
 
 function App() {
     return (
         <SmoothScroll>
+            <ButtonReset />
             <Hero />
             <Seclogs />
             <Competencia />

@@ -29,6 +29,7 @@ function Diferenciais() {
 
     return (
         <section
+            id="diferenciais"
             className="
                 relative
                 w-full

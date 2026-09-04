@@ -45,6 +45,7 @@ function Competencia() {
 
     return (
         <section
+            id="competencias"
             className="
                 relative
                 w-full
@@ -135,6 +136,7 @@ function Competencia() {
                     >
                         Eu posso te ajudar com...
                     </p>
+             
                 </div>
 
                 {/* =================================================
