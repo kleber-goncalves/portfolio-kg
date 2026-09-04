@@ -85,13 +85,13 @@ export default function Card1({
 
             <div
                 className="
-                    flex
-                    w-full
-                    flex-col
-                    items-start
-                    gap-3
-
-                    md:gap-4
+                   flex
+    w-full
+    min-h-[260px]
+    flex-col
+    items-start
+    gap-3
+    md:p-6
                 "
             >
                 {/* =================================================
