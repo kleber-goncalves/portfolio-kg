@@ -45,6 +45,7 @@ function Competencia() {
 
     return (
         <section
+            id="competencias"
             className="
                 relative
                 w-full

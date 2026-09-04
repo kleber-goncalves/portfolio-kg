@@ -4,7 +4,7 @@ import MenuMobile from "../components/MenuMobile";
 function Hero() {
     const menuItems = [
         {
-            label: "Sobre",
+            label: "Hero",
             href: "#hero",
         },
         {
@@ -23,6 +23,10 @@ function Hero() {
             label: "Formação",
             href: "#formacao",
         },
+        {
+            label: "Rodapé",
+            href: "#footer",
+        },
     ];
     return (
         <section id="hero" className="relative w-full overflow-hidden bg-obsidian p-4 md:p-10">
@@ -30,14 +34,14 @@ function Hero() {
                 {/* =========================
                 SVG MOBILE
             ========================== */}
-                <img src="/hero-vetor-5.svg" alt="" aria-hidden="true" className="absolute left-0 top-0 w-full h-full md:hidden" />
+                <img src="/hero-vetor-7.svg" alt="" aria-hidden="true" className="absolute left-0 top-0 w-full h-full md:hidden" />
 
                 {/* =========================
                 CONTEÚDO
             ========================== */}
                 <div className="relative z-10 flex flex-col h-full">
                     {/* K */}
-                    <div className="absolute left-4 top-4 h-15 w-15">
+                    <div className="absolute left-5 top-6 h-10 w-10">
                         <img src="/logo.svg" alt="" srcset="" />
                     </div>
 

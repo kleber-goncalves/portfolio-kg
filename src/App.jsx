@@ -12,10 +12,12 @@ import ProjetoT from "./layout/ProjetosTeste";
 import Diferenciais from "./layout/DiferenciaisTeste";
 import Seclogs from "./layout/LogosTeste";
 import Hero from "./layout/HeroTeste";
+import ButtonReset from "./components/buttonReset";
 
 function App() {
     return (
         <SmoothScroll>
+            <ButtonReset />
             <Hero />
             <Seclogs />
             <Competencia />

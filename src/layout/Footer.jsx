@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "../styles/loopText.css";
+
 function Footer() {
     const [dateTime, setDateTime] = useState(new Date());
 
@@ -36,23 +37,17 @@ function Footer() {
                     TOPO
                 ================================================= */}
 
-                <div className="flex items-start mt-10 justify-between">
+                <div id="footer" className="flex items-start mt-10 justify-between">
                     {/* LOGO */}
 
                     <div className="h-7 w-7 md:h-20 md:w-20">
-                        <img
-                            src="/logo.svg"
-                            alt="Kleber Dev"
-                            className="h-full w-full object-contain"
-                        />
+                        <img src="/logo.svg" alt="Kleber Dev" className="h-full w-full object-contain" />
                     </div>
 
                     {/* IDENTIFICAÇÃO */}
 
                     <div>
-                        <span className=" text-xs tracking-[0.2em] text-steel">
-                            PORTFOLIO · 2026
-                        </span>
+                        <span className=" text-xs tracking-[0.2em] text-steel">PORTFOLIO · 2026</span>
                     </div>
                 </div>
 
@@ -61,9 +56,7 @@ function Footer() {
                 ================================================= */}
 
                 <div className="w-full h-full ">
-                    <span className="font-bebas text-sm tracking-[0.25em] text-bronze">
-                        DISPONÍVEL PARA NOVOS PROJETOS
-                    </span>
+                    <span className="font-bebas text-sm tracking-[0.25em] text-bronze">DISPONÍVEL PARA NOVOS PROJETOS</span>
 
                     <h2 className="mt-4 max-w-4xl font-space text-5xl font-semibold leading-[0.9] tracking-tight text-ivory md:text-8xl">
                         Vamos construir
@@ -71,11 +64,7 @@ function Footer() {
                         algo relevante.
                     </h2>
 
-                    <p className="mt-6 max-w-xl text-sm leading-relaxed text-steel md:text-base">
-                        Desenvolvimento de aplicações web com foco em
-                        experiência, arquitetura e soluções que fazem sentido
-                        para o produto.
-                    </p>
+                    <p className="mt-6 max-w-xl text-sm leading-relaxed text-steel md:text-base">Desenvolvimento de aplicações web com foco em experiência, arquitetura e soluções que fazem sentido para o produto.</p>
 
                     {/* =================================================
                         LINKS
@@ -103,7 +92,6 @@ function Footer() {
                         >
                             GitHub ↗
                         </a>
-               
 
                         <a
                             href="#"
@@ -169,45 +157,31 @@ function Footer() {
                         {/* LOCAL */}
 
                         <div>
-                            <span className="block font-space text-[10px] tracking-[0.2em] text-steel">
-                                LOCAL
-                            </span>
+                            <span className="block font-space text-[10px] tracking-[0.2em] text-steel">LOCAL</span>
 
-                            <span className="mt-1 block text-xs text-ivory md:text-sm">
-                                Brasil
-                            </span>
+                            <span className="mt-1 block text-xs text-ivory md:text-sm">Brasil</span>
                         </div>
 
                         {/* DATA */}
 
                         <div>
-                            <span className="block font-space text-[10px] tracking-[0.2em] text-steel">
-                                DATA
-                            </span>
+                            <span className="block font-space text-[10px] tracking-[0.2em] text-steel">DATA</span>
 
-                            <span className="mt-1 block text-xs uppercase text-ivory md:text-sm">
-                                {data}
-                            </span>
+                            <span className="mt-1 block text-xs uppercase text-ivory md:text-sm">{data}</span>
                         </div>
 
                         {/* HORA */}
 
                         <div>
-                            <span className="block font-space text-[10px] tracking-[0.2em] text-steel">
-                                HORA LOCAL
-                            </span>
+                            <span className="block font-space text-[10px] tracking-[0.2em] text-steel">HORA LOCAL</span>
 
-                            <span className="mt-1 block font-bebas text-lg text-bronze md:text-xl">
-                                {hora}
-                            </span>
+                            <span className="mt-1 block font-bebas text-lg text-bronze md:text-xl">{hora}</span>
                         </div>
 
                         {/* STATUS */}
 
                         <div>
-                            <span className="block font-space text-[10px] tracking-[0.2em] text-steel">
-                                STATUS
-                            </span>
+                            <span className="block font-space text-[10px] tracking-[0.2em] text-steel">STATUS</span>
 
                             <span className="mt-1 flex items-center gap-2 text-xs text-ivory md:text-sm">
                                 <span className="h-1.5 w-1.5 rounded-full bg-green-400 " />
@@ -251,12 +225,14 @@ function Footer() {
                     <div className="marquee-track">
                         {/* PRIMEIRA CÓPIA */}
                         <div className="marquee-content">
-                            KLEBER DEV&nbsp;+&nbsp;
+                            <span className="font-bebas">KLEBER DEV</span>
+                            <span className="marquee-star">✦</span>
                         </div>
 
                         {/* SEGUNDA CÓPIA */}
                         <div className="marquee-content">
-                            KLEBER DEV&nbsp;+&nbsp;
+                            <span className="font-bebas">KLEBER DEV</span>
+                            <span className="marquee-star">✦</span>
                         </div>
                     </div>
                 </div>

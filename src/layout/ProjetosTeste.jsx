@@ -313,6 +313,7 @@ function Projetos() {
                     "
                 >
                     <h2
+                        id="projetos"
                         className="
                             whitespace-nowrap
                             text-sm
@@ -405,16 +406,7 @@ function Projetos() {
                         }}
                     >
                         {projetos.map((projeto) => (
-                            <ProjetoCard
-                                key={projeto.numero}
-                                numero={projeto.numero}
-                                titulo={projeto.titulo}
-                                descricao={projeto.descricao}
-                                tecnologias={projeto.tecnologias}
-                                imagens={projeto.imagens}
-                                demo={projeto.demo}
-                                github={projeto.github}
-                            />
+                            <ProjetoCard key={projeto.numero} numero={projeto.numero} titulo={projeto.titulo} descricao={projeto.descricao} tecnologias={projeto.tecnologias} imagens={projeto.imagens} demo={projeto.demo} github={projeto.github} />
                         ))}
                     </div>
                 </div>
@@ -470,19 +462,8 @@ function Projetos() {
                         className="!w-full"
                     >
                         {projetos.map((projeto) => (
-                            <SwiperSlide
-                                key={projeto.numero}
-                                className="!w-[89vw]"
-                            >
-                                <ProjetoCard
-                                    numero={projeto.numero}
-                                    titulo={projeto.titulo}
-                                    descricao={projeto.descricao}
-                                    tecnologias={projeto.tecnologias}
-                                    imagens={projeto.imagens}
-                                    demo={projeto.demo}
-                                    github={projeto.github}
-                                />
+                            <SwiperSlide key={projeto.numero} className="!w-[89vw]">
+                                <ProjetoCard numero={projeto.numero} titulo={projeto.titulo} descricao={projeto.descricao} tecnologias={projeto.tecnologias} imagens={projeto.imagens} demo={projeto.demo} github={projeto.github} />
                             </SwiperSlide>
                         ))}
                     </Swiper>
@@ -573,11 +554,7 @@ function Projetos() {
                                 text-white/50
                             "
                     >
-                        <MoveLeft
-                            size={24}
-                            strokeWidth={1.5}
-                            className="indicator-arrow-left"
-                        />
+                        <MoveLeft size={24} strokeWidth={1.5} className="indicator-arrow-left" />
 
                         <span
                             className="
@@ -588,11 +565,7 @@ function Projetos() {
                                 "
                         />
 
-                        <MoveRight
-                            size={24}
-                            strokeWidth={1.5}
-                            className="indicator-arrow-right"
-                        />
+                        <MoveRight size={24} strokeWidth={1.5} className="indicator-arrow-right" />
                     </div>
                 </div>
             </div>
