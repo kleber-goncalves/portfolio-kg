@@ -8,7 +8,7 @@ import Footer from "./layout/Footer";
 
 // Styles
 import "./App.css";
-import ProjetoT from "./layout/ProjetosTeste";
+import ProjetoT from "./layout/ProjetosTeste2";
 import Diferenciais from "./layout/DiferenciaisTeste";
 import Seclogs from "./layout/LogosTeste";
 import ButtonReset from "./components/buttonReset";
