@@ -53,6 +53,9 @@ function Competencia() {
                 bg-obsidian
 
                 p-5
+
+                
+                md:p-10
             "
         >
             {/* =====================================================
@@ -64,7 +67,7 @@ function Competencia() {
                     mx-auto
                     flex
                     w-full
-                    max-w-[1600px]
+                    max-w-[1500px]
                     flex-col
                 "
             >
@@ -91,7 +94,7 @@ function Competencia() {
                             uppercase
                             text-steel
 
-                            md:text-7xl
+                            md:text-sm
                         "
                     >
                         // COMPETÊNCIAS
@@ -136,14 +139,18 @@ function Competencia() {
                     >
                         Eu posso te ajudar com...
                     </p>
-             
                 </div>
 
                 {/* =================================================
                     LISTA
                 ================================================= */}
 
-                <div className="w-full">
+                <div
+                    className=" grid
+    w-full
+    grid-cols-1
+    md:grid-cols-2 md:gap-x-18"
+                >
                     {competencias.map((competencia) => (
                         <Card1 key={competencia.numero} numero={competencia.numero} variant="default" text={competencia.text} title={competencia.title} text_2={competencia.description} />
                     ))}
@@ -152,7 +159,9 @@ function Competencia() {
                         ÚLTIMA LINHA
                     ================================================= */}
 
-                    <div
+
+                </div>
+                                    <div
                         className="
                         mt-10
                         flex
@@ -172,7 +181,6 @@ function Competencia() {
 
                         <span>Desenvolvimento contínuo</span>
                     </div>
-                </div>
             </div>
         </section>
     );
