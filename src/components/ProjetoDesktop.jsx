@@ -1,91 +1,546 @@
-import { ArrowUpRight, ExternalLink } from "lucide-react";
+import { useEffect, useRef } from "react";
 
-export default function ProjetoDesktop({ numero, titulo, descricao, tecnologias = [], iframe, demo, github }) {
+import gsap from "gsap";
+
+import { ArrowUpRight } from "lucide-react";
+
+function ProjetoDesktop({ projetos }) {
+    // ============================================================
+    // REFS
+    // ============================================================
+
+    const containerRef = useRef(null);
+    const previewRef = useRef(null);
+    const previewTrackRef = useRef(null);
+
+    // ============================================================
+    // GSAP
+    // ============================================================
+
+    useEffect(() => {
+        const container = containerRef.current;
+        const preview = previewRef.current;
+        const previewTrack = previewTrackRef.current;
+
+        if (!container || !preview || !previewTrack) {
+            return;
+        }
+
+        // ========================================================
+        // ESTADO INICIAL
+        // ========================================================
+
+        gsap.set(preview, {
+            scale: 0,
+            xPercent: -50,
+            yPercent: -50,
+        });
+
+        // ========================================================
+        // ESCONDER PREVIEW
+        // ========================================================
+
+        const hidePreview = () => {
+            gsap.to(preview, {
+                scale: 0,
+                duration: 0.25,
+                ease: "power3.in",
+                overwrite: true,
+            });
+
+            console.log("👻 PREVIEW ESCONDIDO");
+        };
+
+        // ========================================================
+        // MOVIMENTO DO MOUSE
+        // ========================================================
+
+        const handleMouseMove = (event) => {
+            gsap.to(preview, {
+                x: event.clientX,
+                y: event.clientY,
+                duration: 0.45,
+                ease: "power3.out",
+                overwrite: "auto",
+            });
+
+            console.log("🖱️ MOUSEMOVE:", {
+                x: event.clientX,
+                y: event.clientY,
+            });
+        };
+
+        // ========================================================
+        // ENTRADA EM UM PROJETO
+        // ========================================================
+
+        const handleMouseEnter = (event) => {
+            const index = Number(event.currentTarget.dataset.projectIndex);
+
+            console.log("🟢 ENTROU NO PROJETO:", index + 1);
+
+            // Mostra preview
+            gsap.to(preview, {
+                scale: 1,
+                duration: 0.5,
+                ease: "power3.out",
+                overwrite: "auto",
+            });
+
+            // Troca imagem
+            gsap.to(previewTrack, {
+                yPercent: -(index * 100),
+                duration: 0.65,
+                ease: "power3.out",
+                overwrite: "auto",
+            });
+        };
+
+        // ========================================================
+        // SAÍDA DA SEÇÃO
+        // ========================================================
+
+        const handleContainerLeave = () => {
+            console.log("🔴 SAIU DA SEÇÃO");
+
+            hidePreview();
+        };
+
+        // ========================================================
+        // INTERSECTION OBSERVER
+        // ========================================================
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                console.log("👁️ PROJETOS VISÍVEL:", entry.isIntersecting);
+
+                if (!entry.isIntersecting) {
+                    hidePreview();
+                }
+            },
+            {
+                threshold: 0.1,
+            },
+        );
+
+        observer.observe(container);
+
+        // ========================================================
+        // PROJETOS
+        // ========================================================
+
+        const projectElements = container.querySelectorAll("[data-project-index]");
+
+        // ========================================================
+        // EVENTOS
+        // ========================================================
+
+        container.addEventListener("mousemove", handleMouseMove);
+
+        container.addEventListener("mouseleave", handleContainerLeave);
+
+        projectElements.forEach((project) => {
+            project.addEventListener("mouseenter", handleMouseEnter);
+        });
+
+        // ========================================================
+        // CLEANUP
+        // ========================================================
+
+        return () => {
+            container.removeEventListener("mousemove", handleMouseMove);
+
+            container.removeEventListener("mouseleave", handleContainerLeave);
+
+            projectElements.forEach((project) => {
+                project.removeEventListener("mouseenter", handleMouseEnter);
+            });
+
+            observer.disconnect();
+
+            gsap.killTweensOf(preview);
+            gsap.killTweensOf(previewTrack);
+        };
+    }, [projetos]);
+
+    // ============================================================
+    // RENDER
+    // ============================================================
+
     return (
-        <article className="group flex h-[78vh] w-[82vw] max-w-[1250px] shrink-0 flex-col justify-center">
-            {/* =============================================================== */}
-            {/* HEADER */}
-            {/* =============================================================== */}
+        <section
+            ref={containerRef}
+            className="
+                relative
+                min-h-screen
+                w-full
+                overflow-visible
+                bg-obsidian
+                px-10
+                py-24
+            "
+        >
+            <div
+                className="
+                    mx-auto
+                    flex
+                    w-full
+                    max-w-[1600px]
+                    flex-col
+                "
+            >
+                {/* ==================================================
+                    CABEÇALHO
+                ================================================== */}
 
-            <div className="mb-5 flex items-end justify-between border-t border-graphite pt-4">
-                <div className="flex items-center gap-4">
-                    <span className="font-bebas text-sm tracking-[0.2em] text-bronze">{numero}</span>
+                <div
+                    className="
+                        mb-14
+                        flex
+                        items-end
+                        justify-between
+                        border-b
+                        border-graphite
+                        pb-6
+                    "
+                >
+                    <div className="flex flex-col gap-3">
+                        <p
+                            className="
+                                font-bebas
+                                text-sm
+                                uppercase
+                                tracking-[0.25em]
+                                text-bronze
+                            "
+                        >
+                            04 / Projetos
+                        </p>
 
-                    <span className="h-px w-8 bg-graphite" />
-
-                    <span className="font-bebas text-xs uppercase tracking-[0.2em] text-steel">Projeto</span>
-                </div>
-
-                <ArrowUpRight className="h-5 w-5 text-steel/40 transition-all duration-500 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-bronze" strokeWidth={1.5} />
-            </div>
-
-            {/* =============================================================== */}
-            {/* IFRAME */}
-            {/* =============================================================== */}
-
-            <div className="relative h-[50vh] w-full overflow-hidden border border-graphite bg-carbon">
-                {/* BARRA DO PREVIEW */}
-
-                <div className="pointer-events-none absolute left-0 top-0 z-20 flex h-9 w-full items-center border-b border-graphite bg-obsidian/90 px-3 backdrop-blur-sm">
-                    <div className="flex items-center gap-1.5">
-                        <span className="h-1.5 w-1.5 rounded-full bg-graphite" />
-                        <span className="h-1.5 w-1.5 rounded-full bg-graphite" />
-                        <span className="h-1.5 w-1.5 rounded-full bg-graphite" />
+                        <h2
+                            className="
+                                font-bebas
+                                text-6xl
+                                uppercase
+                                leading-none
+                                text-ivory
+                                lg:text-8xl
+                            "
+                        >
+                            Projetos
+                        </h2>
                     </div>
 
-                    <span className="ml-auto font-bebas text-[9px] uppercase tracking-[0.2em] text-steel/50">Live Preview</span>
+                    <p
+                        className="
+                            hidden
+                            max-w-md
+                            text-right
+                            text-sm
+                            leading-6
+                            text-steel
+                            lg:block
+                        "
+                    >
+                        Uma seleção de projetos desenvolvidos durante minha evolução como desenvolvedor.
+                    </p>
                 </div>
 
-                {/* IFRAME */}
+                {/* ==================================================
+                    LISTA DE PROJETOS
+                ================================================== */}
 
-                <iframe src={iframe} title={`Preview do projeto ${titulo}`} loading="lazy" className="h-full w-full border-0 pt-9" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" />
+                <div className="flex w-full flex-col">
+                    {projetos.map((projeto, index) => (
+                        <article
+                            key={projeto.numero}
+                            data-project-index={index}
+                            className="
+                                group
+                                relative
+                                flex
+                                min-h-[155px]
+                                w-full
+                                cursor-pointer
+                                items-center
+                                justify-between
+                                border-t
+                                border-graphite
+                                py-8
+                                transition-colors
+                                duration-500
+                                last:border-b
+                                hover:border-bronze/50
+                            "
+                        >
+                            {/* ======================================
+                                LINHA ANIMADA
+                            ====================================== */}
 
-                {/* BORDA HOVER */}
+                            <span
+                                className="
+                                    absolute
+                                    left-0
+                                    top-0
+                                    h-px
+                                    w-0
+                                    bg-gradientaa
+                                    transition-all
+                                    duration-700
+                                    ease-out
+                                    group-hover:w-full
+                                "
+                            />
 
-                <div className="pointer-events-none absolute inset-0 border border-transparent transition-colors duration-500 group-hover:border-bronze/30" />
+                            {/* ======================================
+                                CONTEÚDO ESQUERDO
+                            ====================================== */}
+
+                            <div
+                                className="
+                                    flex
+                                    min-w-0
+                                    items-center
+                                    gap-8
+                                "
+                            >
+                                {/* NÚMERO */}
+
+                                <span
+                                    className="
+                                        w-10
+                                        shrink-0
+                                        font-bebas
+                                        text-sm
+                                        tracking-[0.2em]
+                                        text-steel/30
+                                        transition-colors
+                                        duration-500
+                                        group-hover:text-bronze
+                                    "
+                                >
+                                    {projeto.numero}
+                                </span>
+
+                                {/* INFORMAÇÕES */}
+
+                                <div
+                                    className="
+                                        flex
+                                        min-w-0
+                                        flex-col
+                                        gap-2
+                                    "
+                                >
+                                    <h3
+                                        className="
+                                            font-space
+                                            text-2xl
+                                            font-semibold
+                                            leading-tight
+                                            text-ivory
+                                            transition-transform
+                                            duration-500
+                                            ease-out
+                                            group-hover:translate-x-2
+                                            lg:text-4xl
+                                        "
+                                    >
+                                        {projeto.titulo}
+                                    </h3>
+
+                                    <p
+                                        className="
+                                            max-w-2xl
+                                            text-sm
+                                            leading-6
+                                            text-steel
+                                            transition-transform
+                                            duration-500
+                                            ease-out
+                                            group-hover:translate-x-4
+                                        "
+                                    >
+                                        {projeto.descricao}
+                                    </p>
+
+                                    {/* TECNOLOGIAS */}
+
+                                    <div
+                                        className="
+                                            mt-1
+                                            flex
+                                            flex-wrap
+                                            gap-x-3
+                                            gap-y-1
+                                        "
+                                    >
+                                        {projeto.tecnologias.map((tecnologia) => (
+                                            <span
+                                                key={tecnologia}
+                                                className="
+                                                        font-bebas
+                                                        text-[11px]
+                                                        uppercase
+                                                        tracking-[0.15em]
+                                                        text-steel/40
+                                                    "
+                                            >
+                                                {tecnologia}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* ======================================
+                                LINK
+                            ====================================== */}
+
+                            <a
+                                href={projeto.demo}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="
+                                    group/link
+                                    hidden
+                                    shrink-0
+                                    items-center
+                                    gap-2
+                                    text-sm
+                                    text-steel
+                                    transition-colors
+                                    duration-300
+                                    hover:text-bronze
+                                    lg:flex
+                                "
+                            >
+                                <span>Ver projeto</span>
+
+                                <ArrowUpRight
+                                    className="
+                                        h-4
+                                        w-4
+                                        transition-transform
+                                        duration-300
+                                        group-hover/link:-translate-y-0.5
+                                        group-hover/link:translate-x-0.5
+                                    "
+                                />
+                            </a>
+                        </article>
+                    ))}
+                </div>
             </div>
 
-            {/* =============================================================== */}
-            {/* INFORMAÇÕES */}
-            {/* =============================================================== */}
+            {/* ======================================================
+                PREVIEW FLUTUANTE
+            ======================================================= */}
 
-            <div className="mt-6">
-                {/* TÍTULO */}
+            <div
+                ref={previewRef}
+                className="
+                    pointer-events-none
+                    fixed
+                    left-0
+                    top-0
+                    z-50
+                    hidden
+                    h-[360px]
+                    w-[560px]
+                    overflow-hidden
+                    rounded-xl
+                    border
+                    border-graphite
+                    bg-carbon
+                    shadow-2xl
+                    lg:block
+                "
+            >
+                {/* ==============================================
+                    TRACK DAS IMAGENS
+                ============================================== */}
 
-                <h3 className="font-space text-4xl font-semibold uppercase leading-[0.95] text-ivory lg:text-5xl">{titulo}</h3>
-
-                {/* TECNOLOGIAS */}
-
-                <div className="mt-4 flex flex-wrap gap-x-3 gap-y-1">
-                    {tecnologias.map((tecnologia) => (
-                        <span key={tecnologia} className="font-bebas text-[10px] uppercase tracking-[0.18em] text-bronze">
-                            {tecnologia}
-                        </span>
+                <div
+                    ref={previewTrackRef}
+                    className="
+                        flex
+                        h-full
+                        w-full
+                        flex-col
+                    "
+                >
+                    {projetos.map((projeto) => (
+                        <div
+                            key={projeto.numero}
+                            className="
+                                h-[360px]
+                                w-full
+                                shrink-0
+                            "
+                        >
+                            <img
+                                src={projeto.preview || projeto.imagens?.[0]}
+                                alt={`Preview de ${projeto.titulo}`}
+                                className="
+                                    h-full
+                                    w-full
+                                    object-cover
+                                "
+                            />
+                        </div>
                     ))}
                 </div>
 
-                {/* DESCRIÇÃO */}
+                {/* ==============================================
+                    OVERLAY
+                ============================================== */}
 
-                <p className="mt-4 max-w-2xl text-[15px] leading-6 text-steel">{descricao}</p>
+                <div
+                    className="
+                        pointer-events-none
+                        absolute
+                        inset-0
+                        bg-gradient-to-t
+                        from-black/40
+                        via-transparent
+                        to-transparent
+                    "
+                />
 
-                {/* LINKS */}
+                {/* ==============================================
+                    LABEL
+                ============================================== */}
 
-                <div className="mt-5 flex items-center gap-3">
-                    {demo && (
-                        <a href={demo} target="_blank" rel="noopener noreferrer" className="group/link inline-flex items-center gap-2 rounded-full border border-ivory bg-ivory px-5 py-2.5 font-bebas text-xs uppercase tracking-[0.15em] text-obsidian transition-all duration-300 hover:border-bronze hover:bg-bronze">
-                            Ver projeto
-                            <ExternalLink className="h-3.5 w-3.5 transition-transform duration-300 group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5" strokeWidth={1.8} />
-                        </a>
-                    )}
-
-                    {github && (
-                        <a href={github} target="_blank" rel="noopener noreferrer" className="group/link inline-flex items-center gap-2 rounded-full border border-graphite px-5 py-2.5 font-bebas text-xs uppercase tracking-[0.15em] text-steel transition-all duration-300 hover:border-bronze hover:text-bronze">
-                            GitHub
-                            <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5" strokeWidth={1.8} />
-                        </a>
-                    )}
+                <div
+                    className="
+                        absolute
+                        bottom-4
+                        left-4
+                        rounded-full
+                        border
+                        border-white/10
+                        bg-black/50
+                        px-4
+                        py-2
+                        backdrop-blur-md
+                    "
+                >
+                    <span
+                        className="
+                            font-bebas
+                            text-xs
+                            uppercase
+                            tracking-[0.2em]
+                            text-white/70
+                        "
+                    >
+                        Preview
+                    </span>
                 </div>
             </div>
-        </article>
+        </section>
     );
 }
+
+export default ProjetoDesktop;

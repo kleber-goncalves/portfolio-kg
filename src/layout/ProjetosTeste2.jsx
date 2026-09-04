@@ -1,338 +1,269 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 
+// Lucide Icons
 import { MoveLeft, MoveRight } from "lucide-react";
 
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
-
+// Swiper
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow } from "swiper/modules";
 
 import "swiper/css";
 import "swiper/css/effect-coverflow";
 
-import ProjetoDesktop from "../components/ProjetoDesktop";
 import ProjetoCard from "../components/ProjetoCard";
+import ProjetoDesktop from "../components/ProjetoDesktop";
 
-gsap.registerPlugin(ScrollTrigger);
+// ============================================================
+// IMAGENS
+// ============================================================
 
-export default function Projetos() {
-    const sectionRef = useRef(null);
-    const trackRef = useRef(null);
-    const scrollHintRef = useRef(null);
+import projeto01_01 from "../assets/projetos/projeto01/jason-1.webp";
+import projeto01_02 from "../assets/projetos/projeto01/jason-2.webp";
+import projeto01_03 from "../assets/projetos/projeto01/jason-3.webp";
+import projeto01_04 from "../assets/projetos/projeto01/lucia-1.webp";
+
+// ============================================================
+// PROJETOS
+// ============================================================
+
+function Projetos() {
+    // ============================================================
+    // ESTADO DO SLIDE ATUAL
+    // ============================================================
 
     const [slideAtual, setSlideAtual] = useState(0);
+
+    // ============================================================
+    // PROJETOS
+    // ============================================================
 
     const projetos = [
         {
             numero: "01",
+
             titulo: "Projeto E-commerce",
 
             descricao: "Plataforma de e-commerce desenvolvida com autenticação, catálogo de produtos, carrinho e gerenciamento de pedidos.",
 
             tecnologias: ["React", "Node.js", "PostgreSQL", "JWT"],
 
-            iframe: "https://dennissnellenberg.com/",
+            preview: projeto01_01,
 
-            demo: "https://seu-projeto-ecommerce.com",
+            imagens: [projeto01_01, projeto01_02, projeto01_03, projeto01_04],
 
-            github: "https://github.com/seu-usuario/seu-projeto-ecommerce",
+            demo: "https://dennissnellenberg.com/",
 
-            imagens: ["/projetos/projeto01/01.png", "/projetos/projeto01/02.png", "/projetos/projeto01/03.png", "/projetos/projeto01/04.png"],
+            github: "https://github.com/seu-usuario/seu-projeto",
         },
 
         {
             numero: "02",
-            titulo: "Sistema de Gestão",
 
-            descricao: "Sistema web desenvolvido para gerenciamento de informações, usuários e processos internos.",
+            titulo: "Projeto E-commerce",
 
-            tecnologias: ["React", "Node.js", "Express", "PostgreSQL"],
+            descricao: "Plataforma de e-commerce desenvolvida com autenticação, catálogo de produtos, carrinho e gerenciamento de pedidos.",
 
-            iframe: "https://seu-projeto-gestao.com",
+            tecnologias: ["React", "Node.js", "PostgreSQL", "JWT"],
 
-            demo: "https://seu-projeto-gestao.com",
+            imagens: [projeto01_01, projeto01_02, projeto01_03, projeto01_04],
 
-            github: "https://github.com/seu-usuario/seu-projeto-gestao",
+            demo: "https://joao-hollanda.github.io/LandingPage/",
 
-            imagens: ["/projetos/projeto02/01.png", "/projetos/projeto02/02.png", "/projetos/projeto02/03.png"],
+            github: "https://github.com/seu-usuario/seu-projeto",
         },
 
         {
             numero: "03",
-            titulo: "API REST",
 
-            descricao: "API REST desenvolvida para gerenciamento de recursos, autenticação e comunicação entre aplicações.",
+            titulo: "Projeto E-commerce",
 
-            tecnologias: ["Node.js", "Express", "PostgreSQL", "JWT"],
+            descricao: "Plataforma de e-commerce desenvolvida com autenticação, catálogo de produtos, carrinho e gerenciamento de pedidos.",
 
-            iframe: "https://seu-projeto-api.com",
+            tecnologias: ["React", "Node.js", "PostgreSQL", "JWT"],
 
-            demo: "https://seu-projeto-api.com",
+            imagens: [projeto01_01, projeto01_02, projeto01_03, projeto01_04],
 
-            github: "https://github.com/seu-usuario/seu-projeto-api",
+            demo: "https://seu-projeto.com",
 
-            imagens: ["/projetos/projeto03/01.png", "/projetos/projeto03/02.png", "/projetos/projeto03/03.png"],
+            github: "https://github.com/seu-usuario/seu-projeto",
         },
 
         {
             numero: "04",
-            titulo: "Aplicação Fullstack",
 
-            descricao: "Aplicação fullstack integrando interface, regras de negócio, persistência de dados e autenticação.",
+            titulo: "Projeto E-commerce",
 
-            tecnologias: ["React", "Node.js", "Prisma", "PostgreSQL"],
+            descricao: "Plataforma de e-commerce desenvolvida com autenticação, catálogo de produtos, carrinho e gerenciamento de pedidos.",
 
-            iframe: "https://seu-projeto-fullstack.com",
+            tecnologias: ["React", "Node.js", "PostgreSQL", "JWT"],
 
-            demo: "https://seu-projeto-fullstack.com",
+            imagens: [projeto01_01, projeto01_02, projeto01_03, projeto01_04],
 
-            github: "https://github.com/seu-usuario/seu-projeto-fullstack",
+            demo: "https://seu-projeto.com",
 
-            imagens: ["/projetos/projeto04/01.png", "/projetos/projeto04/02.png", "/projetos/projeto04/03.png"],
+            github: "https://github.com/seu-usuario/seu-projeto",
+        },
+
+        {
+            numero: "05",
+
+            titulo: "Projeto E-commerce",
+
+            descricao: "Plataforma de e-commerce desenvolvida com autenticação, catálogo de produtos, carrinho e gerenciamento de pedidos.",
+
+            tecnologias: ["React", "Node.js", "PostgreSQL", "JWT"],
+
+            imagens: [projeto01_01, projeto01_02, projeto01_03, projeto01_04],
+
+            demo: "https://seu-projeto.com",
+
+            github: "https://github.com/seu-usuario/seu-projeto",
+        },
+
+        {
+            numero: "06",
+
+            titulo: "Projeto E-commerce",
+
+            descricao: "Plataforma de e-commerce desenvolvida com autenticação, catálogo de produtos, carrinho e gerenciamento de pedidos.",
+
+            tecnologias: ["React", "Node.js", "PostgreSQL", "JWT"],
+
+            imagens: [projeto01_01, projeto01_02, projeto01_03, projeto01_04],
+
+            demo: "https://seu-projeto.com",
+
+            github: "https://github.com/seu-usuario/seu-projeto",
         },
     ];
 
-    /*
-    |--------------------------------------------------------------------------
-    | DESKTOP — SCROLL HORIZONTAL
-    |--------------------------------------------------------------------------
-    */
-
-    useGSAP(
-        () => {
-            const mm = gsap.matchMedia();
-
-            mm.add("(min-width: 768px)", () => {
-                const section = sectionRef.current;
-                const track = trackRef.current;
-                const hint = scrollHintRef.current;
-
-                if (!section || !track) return;
-
-                const getScrollAmount = () => {
-                    return Math.max(
-                        0,
-                        track.scrollWidth - window.innerWidth
-                    );
-                };
-
-                const tl = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: section,
-
-                        start: "top top",
-
-                        end: () =>
-                            `+=${window.innerHeight * 6}`,
-
-                        pin: true,
-
-                        scrub: 0.5,
-
-                        anticipatePin: 2,
-
-                        invalidateOnRefresh: true,
-                    },
-                });
-
-                /*
-                |--------------------------------------------------------------------------
-                | PROJETOS → HORIZONTAL
-                |--------------------------------------------------------------------------
-                */
-
-                tl.to(
-                    track,
-                    {
-                        x: () => -getScrollAmount(),
-
-                        duration: 1,
-
-                        ease: "none",
-                    }
-                );
-
-                /*
-                |--------------------------------------------------------------------------
-                | HINT
-                |--------------------------------------------------------------------------
-                */
-
-                if (hint) {
-                    tl.to(
-                        hint,
-                        {
-                            opacity: 0,
-                            y: -20,
-
-                            duration: 0.2,
-
-                            ease: "power2.out",
-                        },
-                        0.1
-                    );
-                }
-
-                return () => {
-                    tl.kill();
-                };
-            });
-
-            return () => {
-                mm.revert();
-            };
-        },
-        {
-            scope: sectionRef,
-        }
-    );
-
-    /*
-    |--------------------------------------------------------------------------
-    | MOBILE
-    |--------------------------------------------------------------------------
-    */
-
-    const handleSlideChange = (swiper) => {
-        setSlideAtual(swiper.activeIndex);
-    };
+    // ============================================================
+    // RENDER
+    // ============================================================
 
     return (
-        <section
-            id="projetos"
-            className="w-full bg-obsidian"
-        >
-            {/* ================================================================= */}
-            {/* DESKTOP */}
-            {/* ================================================================= */}
+        <section className="w-full bg-obsidian">
+            {/* ==================================================
+                DESKTOP
+            ================================================== */}
 
-            <div
-                ref={sectionRef}
-                className="relative hidden h-screen w-full overflow-hidden md:block"
-            >
-                {/* ------------------------------------------------------------- */}
-                {/* HEADER */}
-                {/* ------------------------------------------------------------- */}
-
-                <div className="pointer-events-none absolute left-0 top-0 z-30 flex w-full items-start justify-between px-[6vw] pt-10">
-                    <div>
-                        <p className="font-bebas text-xs uppercase tracking-[0.25em] text-bronze">
-                            // Projetos
-                        </p>
-
-                        <h2 className="mt-2 font-space text-5xl font-semibold uppercase leading-none text-ivory lg:text-6xl">
-                            Projetos
-                        </h2>
-                    </div>
-
-                    <div className="font-bebas text-sm tracking-[0.2em] text-steel">
-                        <span className="text-ivory">
-                            {String(slideAtual + 1).padStart(
-                                2,
-                                "0"
-                            )}
-                        </span>
-
-                        <span className="mx-2 text-graphite">
-                            /
-                        </span>
-
-                        {String(projetos.length).padStart(
-                            2,
-                            "0"
-                        )}
-                    </div>
-                </div>
-
-                {/* ------------------------------------------------------------- */}
-                {/* TRACK */}
-                {/* ------------------------------------------------------------- */}
-
-                <div
-                    ref={trackRef}
-                    className="flex h-full w-max items-center gap-[8vw] pl-[6vw] pr-[12vw]"
-                >
-                    {projetos.map((projeto, index) => (
-                        <ProjetoDesktop
-                            key={projeto.numero}
-                            {...projeto}
-                            index={index}
-                        />
-                    ))}
-                </div>
-
-                {/* ------------------------------------------------------------- */}
-                {/* HINT */}
-                {/* ------------------------------------------------------------- */}
-
-                <div
-                    ref={scrollHintRef}
-                    className="absolute bottom-8 left-[6vw] z-30 flex items-center gap-3 font-bebas text-xs uppercase tracking-[0.2em] text-steel"
-                >
-                    <span>
-                        Continue rolando
-                    </span>
-
-                    <MoveRight
-                        className="h-4 w-4"
-                        strokeWidth={1.5}
-                    />
-                </div>
+            <div className="hidden md:block">
+                <ProjetoDesktop projetos={projetos} />
             </div>
 
-            {/* ================================================================= */}
-            {/* MOBILE */}
-            {/* ================================================================= */}
+            {/* ==================================================
+                MOBILE
+            ================================================== */}
 
-            <div className="relative min-h-screen w-full md:hidden">
-                {/* ------------------------------------------------------------- */}
-                {/* HEADER */}
-                {/* ------------------------------------------------------------- */}
+            <div
+                className="
+                    relative
+                    flex
+                    min-h-screen
+                    w-full
+                    items-center
+                    overflow-hidden
+                    px-0
+                    pb-12
+                    pt-24
+                    md:hidden
+                "
+            >
+                {/* ==================================================
+                    TÍTULO
+                ================================================== */}
 
-                <div className="absolute left-0 top-0 z-30 flex w-full items-start justify-between px-5 pt-8">
-                    <div>
-                        <p className="font-bebas text-xs uppercase tracking-[0.25em] text-bronze">
-                            // Projetos
-                        </p>
+                <div
+                    className="
+                        absolute
+                        left-0
+                        top-0
+                        z-20
+                        flex
+                        w-full
+                        flex-row
+                        items-center
+                        gap-2
+                        p-5
+                        pt-12
+                    "
+                >
+                    <h2
+                        id="projetos"
+                        className="
+                            whitespace-nowrap
+                            text-sm
+                            uppercase
+                            text-steel
+                        "
+                    >
+                        // Projetos
+                    </h2>
 
-                        <h2 className="mt-2 font-space text-4xl font-semibold uppercase leading-none text-ivory">
-                            Projetos
-                        </h2>
-                    </div>
+                    <span
+                        className="
+                            h-0.5
+                            flex-1
+                            bg-gradientaa
+                        "
+                    />
 
-                    <div className="pt-1 font-bebas text-sm tracking-[0.2em] text-steel">
-                        <span className="text-ivory">
-                            {String(slideAtual + 1).padStart(
-                                2,
-                                "0"
-                            )}
+                    {/* ==================================================
+                        CONTADOR MOBILE
+                    ================================================== */}
+
+                    <div
+                        className="
+                            flex
+                            items-center
+                            gap-1
+                        "
+                    >
+                        <span
+                            className="
+                                text-sm
+                                font-medium
+                                text-champagne
+                            "
+                        >
+                            {String(slideAtual + 1).padStart(2, "0")}
                         </span>
 
-                        <span className="mx-2 text-graphite">
+                        <span
+                            className="
+                                text-[10px]
+                                text-white/20
+                            "
+                        >
                             /
                         </span>
 
-                        {String(projetos.length).padStart(
-                            2,
-                            "0"
-                        )}
+                        <span
+                            className="
+                                text-sm
+                                text-champagne/30
+                            "
+                        >
+                            {String(projetos.length).padStart(2, "0")}
+                        </span>
                     </div>
                 </div>
 
-                {/* ------------------------------------------------------------- */}
-                {/* SLIDER DE PROJETOS */}
-                {/* ------------------------------------------------------------- */}
+                {/* ==================================================
+                    SWIPER MOBILE
+                ================================================== */}
 
                 <Swiper
                     modules={[EffectCoverflow]}
                     effect="coverflow"
-                    centeredSlides
                     slidesPerView="auto"
+                    centeredSlides={true}
                     spaceBetween={16}
-                    grabCursor
+                    grabCursor={true}
                     speed={500}
+                    onSlideChange={(swiper) => {
+                        setSlideAtual(swiper.activeIndex);
+                    }}
                     coverflowEffect={{
                         rotate: 0,
                         stretch: 0,
@@ -341,56 +272,73 @@ export default function Projetos() {
                         scale: 0.94,
                         slideShadows: false,
                     }}
-                    className="min-h-screen w-full !px-0 !pb-12 !pt-24"
-                    onSlideChange={handleSlideChange}
+                    className="!w-full"
                 >
                     {projetos.map((projeto) => (
-                        <SwiperSlide
-                            key={projeto.numero}
-                            className="!h-auto !w-[89vw]"
-                        >
-                            <ProjetoCard
-                                {...projeto}
-                            />
+                        <SwiperSlide key={projeto.numero} className="!w-[89vw]">
+                            <ProjetoCard numero={projeto.numero} titulo={projeto.titulo} descricao={projeto.descricao} tecnologias={projeto.tecnologias} imagens={projeto.imagens} demo={projeto.demo} github={projeto.github} />
                         </SwiperSlide>
                     ))}
                 </Swiper>
 
-                {/* ------------------------------------------------------------- */}
-                {/* NAVEGAÇÃO */}
-                {/* ------------------------------------------------------------- */}
+                {/* ==================================================
+                    INDICAÇÃO MOBILE
+                ================================================== */}
 
-                <div className="absolute bottom-5 left-0 z-30 flex w-full flex-col items-center gap-4">
-                    <div className="flex items-center gap-4">
-                        <MoveLeft
-                            className="h-4 w-4 text-steel"
-                            strokeWidth={1.5}
-                        />
+                <div
+                    className="
+                        pointer-events-none
+                        absolute
+                        bottom-9
+                        left-1/2
+                        z-30
+                        flex
+                        -translate-x-1/2
+                        flex-col
+                        items-center
+                        gap-2
+                    "
+                >
+                    {/* INSTRUÇÃO */}
 
-                        <div className="flex items-center gap-1.5">
-                            {projetos.map((_, index) => (
-                                <span
-                                    key={index}
-                                    className={`h-1 rounded-full transition-all duration-300 ${
-                                        index === slideAtual
-                                            ? "w-6 bg-bronze"
-                                            : "w-1 bg-graphite"
-                                    }`}
-                                />
-                            ))}
-                        </div>
-
-                        <MoveRight
-                            className="h-4 w-4 text-steel"
-                            strokeWidth={1.5}
-                        />
-                    </div>
-
-                    <p className="font-bebas text-[10px] uppercase tracking-[0.25em] text-steel">
+                    <span
+                        className="
+                            whitespace-nowrap
+                            text-[10px]
+                            uppercase
+                            tracking-[0.3em]
+                            text-white/40
+                        "
+                    >
                         Arraste para o lado
-                    </p>
+                    </span>
+
+                    <div
+                        className="
+                            flex
+                            items-center
+                            gap-4
+                            text-sm
+                            text-white/50
+                        "
+                    >
+                        <MoveLeft size={24} strokeWidth={1.5} className="indicator-arrow-left" />
+
+                        <span
+                            className="
+                                h-3
+                                w-8
+                                rounded-full
+                                bg-white/50
+                            "
+                        />
+
+                        <MoveRight size={24} strokeWidth={1.5} className="indicator-arrow-right" />
+                    </div>
                 </div>
             </div>
         </section>
     );
 }
+
+export default Projetos;
