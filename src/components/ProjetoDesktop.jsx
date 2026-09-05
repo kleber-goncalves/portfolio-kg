@@ -14,6 +14,15 @@ function ProjetoDesktop({ projetos }) {
     const previewTrackRef = useRef(null);
 
     // ============================================================
+    // POSIÇÃO GLOBAL DO MOUSE
+    // ============================================================
+
+    const mousePositionRef = useRef({
+        x: 0,
+        y: 0,
+    });
+
+    // ============================================================
     // GSAP
     // ============================================================
 
@@ -32,9 +41,30 @@ function ProjetoDesktop({ projetos }) {
 
         gsap.set(preview, {
             scale: 0,
+            x: mousePositionRef.current.x,
+            y: mousePositionRef.current.y,
             xPercent: -50,
             yPercent: -50,
         });
+
+        // ========================================================
+        // POSIÇÃO GLOBAL DO MOUSE
+        // ========================================================
+        //
+        // Aqui nós NÃO movemos o preview.
+        //
+        // Apenas mantemos registrada a posição atual do mouse
+        // na janela inteira.
+        //
+        // Isso resolve o problema de voltar para a seção sem
+        // mexer o mouse.
+        //
+        // ========================================================
+
+        const handleGlobalMouseMove = (event) => {
+            mousePositionRef.current.x = event.clientX;
+            mousePositionRef.current.y = event.clientY;
+        };
 
         // ========================================================
         // ESCONDER PREVIEW
@@ -59,7 +89,7 @@ function ProjetoDesktop({ projetos }) {
             gsap.to(preview, {
                 x: event.clientX,
                 y: event.clientY,
-                duration: 0.45,
+                duration: 1.45,
                 ease: "power3.out",
                 overwrite: "auto",
             });
@@ -78,6 +108,22 @@ function ProjetoDesktop({ projetos }) {
             const index = Number(event.currentTarget.dataset.projectIndex);
 
             console.log("🟢 ENTROU NO PROJETO:", index + 1);
+
+            // ====================================================
+            // ATUALIZA A POSIÇÃO DO PREVIEW
+            // ====================================================
+            //
+            // Usa a posição ATUAL do mouse na janela.
+            //
+            // Isso é importante quando o usuário voltou para
+            // a seção sem movimentar o mouse.
+            //
+            // ====================================================
+
+            gsap.set(preview, {
+                x: mousePositionRef.current.x,
+                y: mousePositionRef.current.y,
+            });
 
             // Mostra preview
             gsap.to(preview, {
@@ -114,9 +160,32 @@ function ProjetoDesktop({ projetos }) {
             ([entry]) => {
                 console.log("👁️ PROJETOS VISÍVEL:", entry.isIntersecting);
 
+                // =================================================
+                // SE SAIU DA VIEWPORT
+                // =================================================
                 if (!entry.isIntersecting) {
                     hidePreview();
+                    return;
                 }
+
+                 // =================================================
+                // SE VOLTOU PARA A VIEWPORT
+                // =================================================
+                //
+                // Reposiciona o preview para a posição REAL
+                // atual do mouse.
+                //
+                // =================================================
+
+                gsap.set(preview, {
+                    x: mousePositionRef.current.x,
+                    y: mousePositionRef.current.y,
+                });
+
+                 console.log("🔄 PROJETOS VOLTOU PARA A VIEWPORT:", {
+                     x: mousePositionRef.current.x,
+                     y: mousePositionRef.current.y,
+                 });
             },
             {
                 threshold: 0.1,
@@ -135,7 +204,10 @@ function ProjetoDesktop({ projetos }) {
         // EVENTOS
         // ========================================================
 
+        window.addEventListener("mousemove", handleGlobalMouseMove);
+
         container.addEventListener("mousemove", handleMouseMove);
+
 
         container.addEventListener("mouseleave", handleContainerLeave);
 
@@ -148,6 +220,8 @@ function ProjetoDesktop({ projetos }) {
         // ========================================================
 
         return () => {
+            window.removeEventListener("mousemove", handleGlobalMouseMove);
+            
             container.removeEventListener("mousemove", handleMouseMove);
 
             container.removeEventListener("mouseleave", handleContainerLeave);
