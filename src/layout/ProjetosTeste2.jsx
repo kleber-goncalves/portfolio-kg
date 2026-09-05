@@ -41,99 +41,99 @@ function Projetos() {
         {
             numero: "01",
 
-            titulo: "Projeto E-commerce",
+            titulo: "Autono",
 
-            descricao: "Plataforma de e-commerce desenvolvida com autenticação, catálogo de produtos, carrinho e gerenciamento de pedidos.",
+            descricao: "O Autono é um projeto fictício desenvolvido para fins de estudo e demonstração de boas práticas em desenvolvimento web moderno.",
 
-            tecnologias: ["React", "Node.js", "PostgreSQL", "JWT"],
+            tecnologias: ["React", "Node.js", "Tailwind", "GSAP", "Supabase"],
 
             preview: projeto01_01,
 
             imagens: [projeto01_01, projeto01_02, projeto01_03, projeto01_04],
 
-            demo: "https://dennissnellenberg.com/",
+            demo: "https://autono-kg.vercel.app/",
 
-            github: "https://github.com/seu-usuario/seu-projeto",
+            github: "https://github.com/kleber-goncalves/autono",
         },
 
         {
             numero: "02",
 
-            titulo: "Projeto E-commerce",
+            titulo: "GTA VI",
 
-            descricao: "Plataforma de e-commerce desenvolvida com autenticação, catálogo de produtos, carrinho e gerenciamento de pedidos.",
+            descricao: "Uma landing page moderna e cinematográfica inspirada na estética visual do site promocional de Grand Theft Auto VI - Rockstar Games, desenvolvida como estudo pessoal de front-end, interação, storytelling visual, motion design com o GSAP.",
 
-            tecnologias: ["React", "Node.js", "PostgreSQL", "JWT"],
+            tecnologias: ["React", "Node.js", "GSAP"],
 
             imagens: [projeto01_01, projeto01_02, projeto01_03, projeto01_04],
 
-            demo: "https://joao-hollanda.github.io/LandingPage/",
+            demo: "https://gtavi-kg.vercel.app/",
 
-            github: "https://github.com/seu-usuario/seu-projeto",
+            github: "https://github.com/kleber-goncalves/GTA-VI",
         },
 
         {
             numero: "03",
 
-            titulo: "Projeto E-commerce",
+            titulo: "Clone do site do iPhone 17 Pro",
 
-            descricao: "Plataforma de e-commerce desenvolvida com autenticação, catálogo de produtos, carrinho e gerenciamento de pedidos.",
+            descricao: "Este é um projeto inspirada no design e na estrutura do site oficial do iPhone 17 Pro da Apple",
 
-            tecnologias: ["React", "Node.js", "PostgreSQL", "JWT"],
+            tecnologias: ["React", "Node.js", "Tailwind"],
 
             imagens: [projeto01_01, projeto01_02, projeto01_03, projeto01_04],
 
-            demo: "https://seu-projeto.com",
+            demo: "https://iphone-17-pro-kg.vercel.app/",
 
-            github: "https://github.com/seu-usuario/seu-projeto",
+            github: "https://github.com/kleber-goncalves/iphone-17-PRO-MAX",
         },
 
         {
             numero: "04",
 
-            titulo: "Projeto E-commerce",
+            titulo: "Portifólio de Arquitetura (DNC)",
 
-            descricao: "Plataforma de e-commerce desenvolvida com autenticação, catálogo de produtos, carrinho e gerenciamento de pedidos.",
+            descricao: "Este projeto é um site de arquitetura da DNC focado em React e APIs",
 
-            tecnologias: ["React", "Node.js", "PostgreSQL", "JWT"],
+            tecnologias: ["React", "Node.js", "API"],
 
             imagens: [projeto01_01, projeto01_02, projeto01_03, projeto01_04],
 
-            demo: "https://seu-projeto.com",
+            demo: "https://dnc-arq-kleber.vercel.app/",
 
-            github: "https://github.com/seu-usuario/seu-projeto",
+            github: "https://github.com/kleber-goncalves/dnc-arq-kleber",
         },
 
         {
             numero: "05",
 
-            titulo: "Projeto E-commerce",
+            titulo: "Dashboard de Vendas (DNC)",
 
-            descricao: "Plataforma de e-commerce desenvolvida com autenticação, catálogo de produtos, carrinho e gerenciamento de pedidos.",
+            descricao: "Dashboard de Vendas desenvolvido como projeto didático para a escola DNC. A aplicação demonstra conceitos de visualização de métricas, organização de componentes React em TypeScript e fluxo básico de pages e testes.",
 
-            tecnologias: ["React", "Node.js", "PostgreSQL", "JWT"],
+            tecnologias: ["React", "Node.js", "TypeScript", "JS Cookies", "axios"],
 
             imagens: [projeto01_01, projeto01_02, projeto01_03, projeto01_04],
 
-            demo: "https://seu-projeto.com",
+            demo: "https://dashboard-de-vendas-psi.vercel.app/",
 
-            github: "https://github.com/seu-usuario/seu-projeto",
+            github: "https://dashboard-de-vendas-psi.vercel.app/",
         },
 
         {
             numero: "06",
 
-            titulo: "Projeto E-commerce",
+            titulo: "CAFENA - Café da Região (DNC)",
 
-            descricao: "Plataforma de e-commerce desenvolvida com autenticação, catálogo de produtos, carrinho e gerenciamento de pedidos.",
+            descricao: "Este é um Minimum Viable Product (MVP) desenvolvido para a CAFENA, uma cafeteria fictícia focada em promover o café da região.",
 
-            tecnologias: ["React", "Node.js", "PostgreSQL", "JWT"],
+            tecnologias: ["HTML", "CSS"],
 
             imagens: [projeto01_01, projeto01_02, projeto01_03, projeto01_04],
 
-            demo: "https://seu-projeto.com",
+            demo: "https://coffe-page-kl.vercel.app/",
 
-            github: "https://github.com/seu-usuario/seu-projeto",
+            github: "https://github.com/kleber-goncalves/coffe-page",
         },
     ];
 

@@ -537,7 +537,7 @@ function ProjetoDesktop({ projetos }) {
                                 cursor-pointer
                                 items-center
                                 justify-between
-                                border-t
+                                border-b
                                 border-graphite
                                 py-8
                                 transition-colors
@@ -553,28 +553,14 @@ function ProjetoDesktop({ projetos }) {
                                 className="
                                    group
                                    w-full
-                                    
+                                   transition-colors
+                                   
                                     
                                 "
                             >
                                 {/* ======================================
                                 LINHA ANIMADA
                             ====================================== */}
-
-                                <span
-                                    className="
-                                    absolute
-                                    left-0
-                                    top-0
-                                    h-px
-                                    w-0
-                                    bg-gradientaa
-                                    transition-all
-                                    duration-700
-                                    ease-out
-                                    group-hover:w-full
-                                "
-                                />
 
                                 {/* ======================================
                                 CONTEÚDO ESQUERDO
@@ -597,10 +583,13 @@ function ProjetoDesktop({ projetos }) {
                                         font-bebas
                                         text-sm
                                         tracking-[0.2em]
-                                        text-steel/30
+                                        text-bronze
+                                        opacity-60
                                         transition-colors
                                         duration-500
+
                                         group-hover:text-bronze
+                                        group-hover:opacity-100
                                     "
                                     >
                                         {projeto.numero}
@@ -667,7 +656,17 @@ function ProjetoDesktop({ projetos }) {
                                                         text-[11px]
                                                         uppercase
                                                         tracking-[0.15em]
-                                                        text-steel/40
+                                                        text-steel/60
+                                                        group-hover:border
+                                                        group-hover:border-bronze
+                                                         
+                                                        px-2
+                                                        py-1
+                                                        transition
+                                                        ease-out
+                                                        group-hover:translate-x-2
+                                                        duration-900
+                                                        rounded-3xl
                                                     "
                                                 >
                                                     {tecnologia}
@@ -703,6 +702,7 @@ function ProjetoDesktop({ projetos }) {
                     border-graphite
                     bg-carbon
                     shadow-2xl
+                    shadow-black
                     lg:block
                 "
             >
