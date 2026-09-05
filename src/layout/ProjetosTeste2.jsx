@@ -3,6 +3,10 @@ import { useState } from "react";
 // Lucide Icons
 import { MoveLeft, MoveRight } from "lucide-react";
 
+
+import { tecnologias } from "../data/tecnologias";
+
+
 // Swiper
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow } from "swiper/modules";
@@ -22,6 +26,8 @@ import projeto01_02 from "../assets/projetos/projeto01/jason-2.webp";
 import projeto01_03 from "../assets/projetos/projeto01/jason-3.webp";
 import projeto01_04 from "../assets/projetos/projeto01/lucia-1.webp";
 
+
+
 // ============================================================
 // PROJETOS
 // ============================================================
@@ -32,6 +38,7 @@ function Projetos() {
     // ============================================================
 
     const [slideAtual, setSlideAtual] = useState(0);
+
 
     // ============================================================
     // PROJETOS
@@ -276,7 +283,7 @@ function Projetos() {
                 >
                     {projetos.map((projeto) => (
                         <SwiperSlide key={projeto.numero} className="!w-[89vw]">
-                            <ProjetoCard numero={projeto.numero} titulo={projeto.titulo} descricao={projeto.descricao} tecnologias={projeto.tecnologias} imagens={projeto.imagens} demo={projeto.demo} github={projeto.github} />
+                            <ProjetoCard numero={projeto.numero} titulo={projeto.titulo} descricao={projeto.descricao} tecnologias={projeto.tecnologias} tecnologiasConfig={tecnologias} imagens={projeto.imagens} demo={projeto.demo} github={projeto.github} />
                         </SwiperSlide>
                     ))}
                 </Swiper>

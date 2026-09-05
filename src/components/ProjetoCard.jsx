@@ -1,15 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 
-function ProjetoCard({
-    numero,
-    titulo,
-    descricao,
-    tecnologias = [],
-    imagens = [],
-    demo,
-    github,
-}) {
+function ProjetoCard({ numero, titulo, descricao, tecnologias = [], tecnologiasConfig = {}, imagens = [], demo, github }) {
     const cardRef = useRef(null);
     const imageRef = useRef(null);
     const intervalRef = useRef(null);
@@ -160,26 +152,13 @@ function ProjetoCard({
     };
 
     return (
-        <article
-            ref={cardRef}
-            className="h-[70vh] w-[89vw] shrink-0 overflow-hidden rounded-3xl bg-neutral-900"
-        >
+        <article ref={cardRef} className="h-[70vh] w-[89vw] shrink-0 overflow-hidden rounded-3xl bg-neutral-900">
             {/* ==================================================
                 PREVIEW
             ================================================== */}
 
-            <div
-                className="relative h-[40%] w-full shrink-0 overflow-hidden bg-neutral-950"
-                onClick={alternarPausa}
-            >
-                {imagens.length > 0 && (
-                    <img
-                        ref={imageRef}
-                        src={imagens[imagemAtual]}
-                        alt={`Preview do projeto ${titulo}`}
-                        className="absolute inset-0 h-full w-full object-cover"
-                    />
-                )}
+            <div className="relative h-[40%] w-full shrink-0 overflow-hidden bg-neutral-950" onClick={alternarPausa}>
+                {imagens.length > 0 && <img ref={imageRef} src={imagens[imagemAtual]} alt={`Preview do projeto ${titulo}`} className="absolute inset-0 h-full w-full object-cover" />}
 
                 {/* OVERLAY */}
 
@@ -190,17 +169,13 @@ function ProjetoCard({
                 {/* NUMERO */}
 
                 <div className="absolute left-5 top-5 z-10">
-                    <span className="text-sm font-medium text-white/60">
-                        {numero}
-                    </span>
+                    <span className="text-sm font-medium text-white/60">{numero}</span>
                 </div>
 
                 {/* STATUS */}
 
                 <div className="absolute right-5 top-5 z-10">
-                    <span className="rounded-full bg-black/50 px-3 py-1 text-xs text-white backdrop-blur-md">
-                        {pausado ? "▶ Continuar" : "Ⅱ Pausar"}
-                    </span>
+                    <span className="rounded-full bg-black/50 px-3 py-1 text-xs text-white backdrop-blur-md">{pausado ? "▶ Continuar" : "Ⅱ Pausar"}</span>
                 </div>
 
                 {/* INDICADORES */}
@@ -216,11 +191,7 @@ function ProjetoCard({
 
                                     mudarImagem(index);
                                 }}
-                                className={`h-1.5 rounded-full transition-all duration-300 ${
-                                    index === imagemAtual
-                                        ? "w-8 bg-white"
-                                        : "w-2 bg-white/40"
-                                }`}
+                                className={`h-1.5 rounded-full transition-all duration-300 ${index === imagemAtual ? "w-8 bg-white" : "w-2 bg-white/40"}`}
                                 aria-label={`Mostrar imagem ${index + 1}`}
                             />
                         ))}
@@ -238,51 +209,58 @@ function ProjetoCard({
                 <div>
                     <span className="text-sm text-white/40">{numero}</span>
 
-                    <h2 className="mt-2 text-3xl font-bold uppercase text-white">
-                        {titulo}
-                    </h2>
+                    <h2 className="mt-2 text-3xl font-bold uppercase text-white">{titulo}</h2>
 
-                    <p className="mt-3 max-w-xl text-sm leading-relaxed text-white/60">
-                        {descricao}
-                    </p>
+                    <p className="mt-3 max-w-xl text-sm leading-relaxed text-white/60">{descricao}</p>
                 </div>
 
-                {/* TECNOLOGIAS */}
+                {/* ==================================================
+                    TECNOLOGIAS
+                ================================================== */}
 
                 <div className="mt-5 flex flex-wrap gap-2">
-                    {tecnologias.map((tecnologia) => (
-                        <span
-                            key={tecnologia}
-                            className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/60"
-                        >
-                            {tecnologia}
-                        </span>
-                    ))}
+                    {tecnologias.map((tecnologia) => {
+                        const tech = tecnologiasConfig[tecnologia];
+
+                        if (!tech) return null;
+
+                        const Icon = tech.icone;
+
+                        return (
+                            <span
+                                key={tecnologia}
+                                className={`
+                    inline-flex
+                    items-center
+                    gap-2
+                    rounded-full
+                    border
+                    px-3
+                    py-1.5
+                    ${tech.bg}
+                    ${tech.border}
+                    ${tech.text}
+                `}
+                            >
+                                {Icon && <Icon className={`h-3.5 w-3.5 shrink-0 ${tech.icon}`} />}
+
+                                <span className="text-xs font-medium">{tech.nome}</span>
+                            </span>
+                        );
+                    })}
                 </div>
 
                 {/* LINKS */}
 
                 <div className="mt-auto flex shrink-0 gap-3 pt-4">
                     {demo && (
-                        <a
-                            href={demo}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(event) => event.stopPropagation()}
-                            className="rounded-full bg-white px-5 py-2.5 text-sm font-medium text-black transition-transform duration-300 hover:scale-105"
-                        >
+                        <a href={demo} target="_blank" rel="noopener noreferrer" onClick={(event) => event.stopPropagation()} className="rounded-full bg-white px-5 py-2.5 text-sm font-medium text-black transition-transform duration-300 hover:scale-105">
                             Demo ↗
                         </a>
                     )}
 
                     {github && (
-                        <a
-                            href={github}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(event) => event.stopPropagation()}
-                            className="rounded-full border border-white/20 px-5 py-2.5 text-sm font-medium text-white transition-colors duration-300 hover:bg-white/10"
-                        >
+                        <a href={github} target="_blank" rel="noopener noreferrer" onClick={(event) => event.stopPropagation()} className="rounded-full border border-white/20 px-5 py-2.5 text-sm font-medium text-white transition-colors duration-300 hover:bg-white/10">
                             GitHub ↗
                         </a>
                     )}
