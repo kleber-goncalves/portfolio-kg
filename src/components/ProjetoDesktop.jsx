@@ -2,7 +2,6 @@ import { useEffect, useRef } from "react";
 
 import gsap from "gsap";
 
-import { ArrowUpRight } from "lucide-react";
 
 function ProjetoDesktop({ projetos }) {
     // ============================================================
@@ -547,12 +546,23 @@ function ProjetoDesktop({ projetos }) {
                                 hover:border-bronze/50
                             "
                         >
-                            {/* ======================================
+                            <a
+                                href={projeto.demo}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="
+                                   group
+                                   w-full
+                                    
+                                    
+                                "
+                            >
+                                {/* ======================================
                                 LINHA ANIMADA
                             ====================================== */}
 
-                            <span
-                                className="
+                                <span
+                                    className="
                                     absolute
                                     left-0
                                     top-0
@@ -564,24 +574,24 @@ function ProjetoDesktop({ projetos }) {
                                     ease-out
                                     group-hover:w-full
                                 "
-                            />
+                                />
 
-                            {/* ======================================
+                                {/* ======================================
                                 CONTEÚDO ESQUERDO
                             ====================================== */}
 
-                            <div
-                                className="
+                                <div
+                                    className="
                                     flex
                                     min-w-0
                                     items-center
                                     gap-8
                                 "
-                            >
-                                {/* NÚMERO */}
+                                >
+                                    {/* NÚMERO */}
 
-                                <span
-                                    className="
+                                    <span
+                                        className="
                                         w-10
                                         shrink-0
                                         font-bebas
@@ -592,22 +602,22 @@ function ProjetoDesktop({ projetos }) {
                                         duration-500
                                         group-hover:text-bronze
                                     "
-                                >
-                                    {projeto.numero}
-                                </span>
+                                    >
+                                        {projeto.numero}
+                                    </span>
 
-                                {/* INFORMAÇÕES */}
+                                    {/* INFORMAÇÕES */}
 
-                                <div
-                                    className="
+                                    <div
+                                        className="
                                         flex
                                         min-w-0
                                         flex-col
                                         gap-2
                                     "
-                                >
-                                    <h3
-                                        className="
+                                    >
+                                        <h3
+                                            className="
                                             font-space
                                             text-2xl
                                             font-semibold
@@ -619,12 +629,12 @@ function ProjetoDesktop({ projetos }) {
                                             group-hover:translate-x-2
                                             lg:text-4xl
                                         "
-                                    >
-                                        {projeto.titulo}
-                                    </h3>
+                                        >
+                                            {projeto.titulo}
+                                        </h3>
 
-                                    <p
-                                        className="
+                                        <p
+                                            className="
                                             max-w-2xl
                                             text-sm
                                             leading-6
@@ -634,73 +644,38 @@ function ProjetoDesktop({ projetos }) {
                                             ease-out
                                             group-hover:translate-x-4
                                         "
-                                    >
-                                        {projeto.descricao}
-                                    </p>
+                                        >
+                                            {projeto.descricao}
+                                        </p>
 
-                                    {/* TECNOLOGIAS */}
+                                        {/* TECNOLOGIAS */}
 
-                                    <div
-                                        className="
+                                        <div
+                                            className="
                                             mt-1
                                             flex
                                             flex-wrap
                                             gap-x-3
                                             gap-y-1
                                         "
-                                    >
-                                        {projeto.tecnologias.map((tecnologia) => (
-                                            <span
-                                                key={tecnologia}
-                                                className="
+                                        >
+                                            {projeto.tecnologias.map((tecnologia) => (
+                                                <span
+                                                    key={tecnologia}
+                                                    className="
                                                         font-bebas
                                                         text-[11px]
                                                         uppercase
                                                         tracking-[0.15em]
                                                         text-steel/40
                                                     "
-                                            >
-                                                {tecnologia}
-                                            </span>
-                                        ))}
+                                                >
+                                                    {tecnologia}
+                                                </span>
+                                            ))}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-
-                            {/* ======================================
-                                LINK
-                            ====================================== */}
-
-                            <a
-                                href={projeto.demo}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="
-                                    group/link
-                                    hidden
-                                    shrink-0
-                                    items-center
-                                    gap-2
-                                    text-sm
-                                    text-steel
-                                    transition-colors
-                                    duration-300
-                                    hover:text-bronze
-                                    lg:flex
-                                "
-                            >
-                                <span>Ver projeto</span>
-
-                                <ArrowUpRight
-                                    className="
-                                        h-4
-                                        w-4
-                                        transition-transform
-                                        duration-300
-                                        group-hover/link:-translate-y-0.5
-                                        group-hover/link:translate-x-0.5
-                                    "
-                                />
                             </a>
                         </article>
                     ))}
@@ -785,8 +760,7 @@ function ProjetoDesktop({ projetos }) {
                     BOTÃO PREVIEW
                 ============================================== */}
 
-                <a
-                    
+                <button
                     ref={previewButtonRef}
                     className="
                         pointer-events-none
@@ -803,8 +777,8 @@ function ProjetoDesktop({ projetos }) {
                         border-white/20
                         bg-black/50
                         p-15
-
                         backdrop-blur-md
+                        
                     "
                 >
                     <span
@@ -816,8 +790,7 @@ function ProjetoDesktop({ projetos }) {
                     >
                         View
                     </span>
-
-                </a>
+                </button>
             </div>
         </section>
     );
