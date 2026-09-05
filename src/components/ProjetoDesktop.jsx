@@ -12,6 +12,7 @@ function ProjetoDesktop({ projetos }) {
     const containerRef = useRef(null);
     const previewRef = useRef(null);
     const previewTrackRef = useRef(null);
+    const previewButtonRef = useRef(null);
 
     // ============================================================
     // POSIÇÃO GLOBAL DO MOUSE
@@ -23,6 +24,22 @@ function ProjetoDesktop({ projetos }) {
     });
 
     // ============================================================
+    // TIMER DO BOTÃO
+    // ============================================================
+    //
+    // Usado para detectar quando o mouse parou.
+    //
+    // Enquanto o mouse continua se movimentando, o timer
+    // é reiniciado.
+    //
+    // Quando o mouse fica parado por alguns milissegundos,
+    // o botão retorna para o centro do preview.
+    //
+    // ============================================================
+
+    const buttonIdleTimeoutRef = useRef(null);
+
+    // ============================================================
     // GSAP
     // ============================================================
 
@@ -30,8 +47,9 @@ function ProjetoDesktop({ projetos }) {
         const container = containerRef.current;
         const preview = previewRef.current;
         const previewTrack = previewTrackRef.current;
+        const previewButton = previewButtonRef.current;
 
-        if (!container || !preview || !previewTrack) {
+        if (!container || !preview || !previewTrack || !previewButton) {
             return;
         }
 
@@ -45,6 +63,21 @@ function ProjetoDesktop({ projetos }) {
             y: mousePositionRef.current.y,
             xPercent: -50,
             yPercent: -50,
+        });
+
+        // ========================================================
+        // ESTADO INICIAL DO BOTÃO
+        // ========================================================
+        //
+        // O botão começa invisível e ligeiramente menor.
+        //
+        // ========================================================
+
+        gsap.set(previewButton, {
+            x: preview.offsetWidth / 2,
+            y: preview.offsetHeight / 2.2,
+            scale: 0.75,
+            opacity: 0,
         });
 
         // ========================================================
@@ -67,10 +100,51 @@ function ProjetoDesktop({ projetos }) {
         };
 
         // ========================================================
+        // CENTRALIZAR BOTÃO
+        // ========================================================
+        //
+        // Função responsável por levar o botão para o centro
+        // exato do preview.
+        //
+        // ========================================================
+
+        const centerPreviewButton = (duration = 0.6) => {
+            if (!previewButton || !preview) {
+                return;
+            }
+
+            gsap.to(previewButton, {
+                x: preview.offsetWidth / 2,
+                y: preview.offsetHeight / 2.2,
+                duration,
+                ease: "power3.out",
+                overwrite: "auto",
+            });
+        };
+
+        // ========================================================
         // ESCONDER PREVIEW
         // ========================================================
 
         const hidePreview = () => {
+            // Cancela qualquer timer pendente do botão
+            clearTimeout(buttonIdleTimeoutRef.current);
+
+
+               // ====================================================
+            // BOTÃO VOLTA PARA O CENTRO
+            // ====================================================
+
+            gsap.to(previewButton, {
+                x: preview.offsetWidth / 2,
+                y: preview.offsetHeight / 2.2,
+                scale: 0.75,
+                opacity: 0,
+                duration: 0.25,
+                ease: "power3.in",
+                overwrite: "auto",
+            });
+
             gsap.to(preview, {
                 scale: 0,
                 duration: 0.25,
@@ -94,9 +168,93 @@ function ProjetoDesktop({ projetos }) {
                 overwrite: "auto",
             });
 
+            // ====================================================
+            // BOTÃO DENTRO DO PREVIEW
+            // ====================================================
+            //
+            // O preview está em:
+            //
+            // left: 0
+            // top: 0
+            //
+            // e utiliza:
+            //
+            // xPercent: -50
+            // yPercent: -50
+            //
+            // Portanto precisamos descobrir onde o mouse
+            // está em relação ao retângulo real do preview.
+            //
+            // ====================================================
+
+            const previewRect = preview.getBoundingClientRect();
+
+            const buttonRect = previewButton.getBoundingClientRect();
+
+            // ====================================================
+            // POSIÇÃO DO MOUSE RELATIVA AO PREVIEW
+            // ====================================================
+
+            const relativeX = event.clientX - previewRect.left;
+
+            const relativeY = event.clientY - previewRect.top;
+
+            // ====================================================
+            // ÁREA SEGURA DO BOTÃO
+            // ====================================================
+
+            const padding = 24;
+
+            const minX = padding + buttonRect.width / 2;
+
+            const maxX = previewRect.width - padding - buttonRect.width / 2;
+
+            const minY = padding + buttonRect.height / 2.2;
+
+            const maxY = previewRect.height - padding - buttonRect.height / 2.2;
+
+            // ====================================================
+            // LIMITA O BOTÃO DENTRO DO PREVIEW
+            // ====================================================
+
+            const buttonX = Math.min(Math.max(relativeX, minX), maxX);
+
+            const buttonY = Math.min(Math.max(relativeY, minY), maxY);
+
+            // ====================================================
+            // MOVE O BOTÃO
+            // ====================================================
+
+            gsap.to(previewButton, {
+                x: buttonX,
+                y: buttonY,
+                duration: 0.35,
+                ease: "power3.out",
+                overwrite: "auto",
+            });
+
+            // ====================================================
+            // DETECTA MOUSE PARADO
+            // ====================================================
+            //
+            // Cada novo movimento cancela o timer anterior.
+            //
+            // Se nenhum novo movimento acontecer durante 120ms,
+            // consideramos que o mouse parou.
+            //
+            // ====================================================
+
+            clearTimeout(buttonIdleTimeoutRef.current);
+
+            buttonIdleTimeoutRef.current = setTimeout(() => {
+                centerPreviewButton(0.7);
+            }, 120);
+
             console.log("🖱️ MOUSEMOVE:", {
                 x: event.clientX,
                 y: event.clientY,
+                buttonX,
+                buttonY,
             });
         };
 
@@ -108,6 +266,12 @@ function ProjetoDesktop({ projetos }) {
             const index = Number(event.currentTarget.dataset.projectIndex);
 
             console.log("🟢 ENTROU NO PROJETO:", index + 1);
+
+            // ====================================================
+            // CANCELA TIMER ANTERIOR
+            // ====================================================
+
+            clearTimeout(buttonIdleTimeoutRef.current);
 
             // ====================================================
             // ATUALIZA A POSIÇÃO DO PREVIEW
@@ -125,10 +289,43 @@ function ProjetoDesktop({ projetos }) {
                 y: mousePositionRef.current.y,
             });
 
+            // ====================================================
+            // RESET DO BOTÃO
+            // ====================================================
+            //
+            // Quando entramos em um novo projeto, o botão começa
+            // no centro do preview.
+            //
+            // ====================================================
+
+            gsap.set(previewButton, {
+                x: preview.offsetWidth / 2,
+                y: preview.offsetHeight / 2.2,
+                scale: 0.75,
+                opacity: 1,
+            });
+
             // Mostra preview
             gsap.to(preview, {
                 scale: 1,
                 duration: 0.5,
+                ease: "power3.out",
+                overwrite: "auto",
+            });
+
+              // ====================================================
+            // ENTRADA DO BOTÃO
+            // ====================================================
+            //
+            // Pequeno atraso para o botão entrar depois do
+            // preview, criando uma hierarquia visual.
+            //
+            // ====================================================
+
+            gsap.to(previewButton, {
+                opacity: 1,
+                duration: 0.5,
+                delay: 0.08,
                 ease: "power3.out",
                 overwrite: "auto",
             });
@@ -168,7 +365,7 @@ function ProjetoDesktop({ projetos }) {
                     return;
                 }
 
-                 // =================================================
+                // =================================================
                 // SE VOLTOU PARA A VIEWPORT
                 // =================================================
                 //
@@ -182,10 +379,10 @@ function ProjetoDesktop({ projetos }) {
                     y: mousePositionRef.current.y,
                 });
 
-                 console.log("🔄 PROJETOS VOLTOU PARA A VIEWPORT:", {
-                     x: mousePositionRef.current.x,
-                     y: mousePositionRef.current.y,
-                 });
+                console.log("🔄 PROJETOS VOLTOU PARA A VIEWPORT:", {
+                    x: mousePositionRef.current.x,
+                    y: mousePositionRef.current.y,
+                });
             },
             {
                 threshold: 0.1,
@@ -208,7 +405,6 @@ function ProjetoDesktop({ projetos }) {
 
         container.addEventListener("mousemove", handleMouseMove);
 
-
         container.addEventListener("mouseleave", handleContainerLeave);
 
         projectElements.forEach((project) => {
@@ -221,7 +417,7 @@ function ProjetoDesktop({ projetos }) {
 
         return () => {
             window.removeEventListener("mousemove", handleGlobalMouseMove);
-            
+
             container.removeEventListener("mousemove", handleMouseMove);
 
             container.removeEventListener("mouseleave", handleContainerLeave);
@@ -232,8 +428,12 @@ function ProjetoDesktop({ projetos }) {
 
             observer.disconnect();
 
+            // Cancela timer do botão
+            clearTimeout(buttonIdleTimeoutRef.current);
+
             gsap.killTweensOf(preview);
             gsap.killTweensOf(previewTrack);
+            gsap.killTweensOf(previewButton);
         };
     }, [projetos]);
 
@@ -581,37 +781,43 @@ function ProjetoDesktop({ projetos }) {
                         to-transparent
                     "
                 />
-
                 {/* ==============================================
-                    LABEL
+                    BOTÃO PREVIEW
                 ============================================== */}
 
-                <div
+                <a
+                    
+                    ref={previewButtonRef}
                     className="
+                        pointer-events-none
                         absolute
-                        bottom-4
-                        left-4
+                        left-0
+                        top-0
+                        z-20
+                        flex
+                        -translate-x-1/2
+                        -translate-y-1/2
+                        items-center
                         rounded-full
                         border
-                        border-white/10
+                        border-white/20
                         bg-black/50
-                        px-4
-                        py-2
+                        p-15
+
                         backdrop-blur-md
                     "
                 >
                     <span
                         className="
-                            font-bebas
-                            text-xs
-                            uppercase
-                            tracking-[0.2em]
-                            text-white/70
+                            font-space
+                            text-2xl
+                            text-white
                         "
                     >
-                        Preview
+                        View
                     </span>
-                </div>
+
+                </a>
             </div>
         </section>
     );
