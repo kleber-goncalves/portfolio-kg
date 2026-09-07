@@ -548,7 +548,7 @@ function Formacao() {
 
                                 <div className="flex flex-col gap-3">
                                     <div className="flex items-center gap-3">
-                                     <span
+                                        <span
                                             className="
                             h-1.5
                             w-1.5
@@ -685,188 +685,358 @@ function Formacao() {
                         </div>
                     </div>
 
-                    <div
-                        className="flex flex-col w-full items-start rounded-3xl  gap-12
-
-                        "
-                    >
+                    <div className="flex w-full flex-col items-start gap-12">
                         {/* ==============================================
-                            CABEÇALHO
-                        ============================================== */}
+        CABEÇALHO
+    ============================================== */}
 
                         <div className="flex flex-col gap-3">
                             <div className="flex items-center gap-3">
-                                <span className="w-2 h-2 rounded-full bg-champagne"></span>
+                                <span className="h-2 w-2 shrink-0 rounded-full bg-champagne" />
 
-                                <p className="text-xs md:text-3xl text-steel uppercase">Minha Trajetoria</p>
+                                <p className="font-bebas text-xs uppercase tracking-[0.2em] text-steel md:text-sm">Minha Trajetória</p>
                             </div>
 
                             <h2
-                                className=" text-5xl md:text-7xl font-bold bebas-neue-regular  text-ivory
-                                "
+                                className="
+                font-bold
+                bebas-neue-regular
+                text-5xl
+                leading-none
+                text-ivory
+                md:text-7xl
+            "
                             >
                                 Evolução
                             </h2>
 
-                            <p className=" mt-2 max-w-xl text-sm leading-6 text-steel md:text-sm md:leading-7 "> Uma trajetória construída através de aprendizado, prática e evolução contínua no desenvolvimento de software.</p>
+                            <p
+                                className="
+                mt-2
+                max-w-xl
+                text-sm
+                leading-6
+                text-steel
+                md:text-sm
+                md:leading-7
+            "
+                            >
+                                Aprendizado, prática e evolução contínua no desenvolvimento de software.
+                            </p>
                         </div>
 
                         {/* ==============================================
-                            TIMELINE
-                        ============================================== */}
+        TIMELINE
+    ============================================== */}
 
-                        <div
-                            ref={timelineRef}
-                            className="
-                                relative
-                                
-                            "
-                        >
+                        <div ref={timelineRef} className="relative w-full">
                             {/* ==========================================
-                                LINHA BASE
-                            ========================================== */}
+            LINHA BASE
+        ========================================== */}
 
                             <div
-                                className="absolute left-3 top-4 bottom-0 w-px h-123 md:h-full  bg-graphite
-                                "
-                            ></div>
+                                className="
+                absolute
+                bottom-0
+                left-3
+                top-4
+                h-123
+                w-px
+                bg-graphite
+                md:h-full
+            "
+                            />
 
                             {/* ==========================================
-                                LINHA ANIMADA
-                            ========================================== */}
+            LINHA ANIMADA
+        ========================================== */}
 
                             <div
                                 ref={lineRef}
-                                className="absolute left-3 top-4 w-px h-123 md:h-full bg-warm-bronze
-                                "
-                            ></div>
+                                className="
+                absolute
+                left-3
+                top-4
+                h-123
+                w-px
+                bg-warm-bronze
+                md:h-full
+            "
+                            />
 
                             {/* ==========================================
-                                EVENTO 2023
-                            ========================================== */}
+            EVENTO 2023
+        ========================================== */}
 
                             <div
                                 ref={(el) => {
                                     eventsRef.current[0] = el;
                                 }}
                                 className="
-                                    relative
-                                    pl-8
-                                    pb-17
-                                "
+                relative
+                pl-8
+                pb-17
+            "
                             >
                                 <div
                                     ref={(el) => {
                                         dotsRef.current[0] = el;
                                     }}
-                                    className="absolute left-1.75 top-1 w-3 h-3 rounded-full bg-bronze"
-                                ></div>
+                                    className="
+                    absolute
+                    left-1.75
+                    top-1
+                    h-3
+                    w-3
+                    rounded-full
+                    bg-bronze
+                "
+                                />
 
-                                <p className="mb-2 font-bebas text-bronze text-sm tracking-[0.15em] md:text-lg">2023</p>
+                                <p
+                                    className="
+                    mb-2
+                    font-bebas
+                    text-sm
+                    tracking-[0.15em]
+                    text-bronze
+                    md:text-lg
+                "
+                                >
+                                    2023
+                                </p>
 
-                                <h3 className=" max-w-3xl text-ivory font-space text-lg font-semibold md:text-4xl leading-tight">Primeiro contato com programação</h3>
+                                <h3
+                                    className="
+                    max-w-3xl
+                    font-space
+                    text-lg
+                    font-semibold
+                    leading-tight
+                    text-ivory
+                    md:text-4xl
+                "
+                                >
+                                    Primeiro contato com programação
+                                </h3>
 
-                                <p className=" mt-3 max-w-2xl text-steel text-sm md:text-base md:leading-7">Início da minha jornada no desenvolvimento e primeiro contato com a programação.</p>
+                                <p
+                                    className="
+                    mt-3
+                    max-w-2xl
+                    text-sm
+                    leading-6
+                    text-steel
+                    md:text-base
+                    md:leading-7
+                "
+                                >
+                                    Início da jornada no desenvolvimento de software.
+                                </p>
                             </div>
 
                             {/* ==========================================
-                                EVENTO 2024
-                            ========================================== */}
+            EVENTO 2024
+        ========================================== */}
 
                             <div
                                 ref={(el) => {
                                     eventsRef.current[1] = el;
                                 }}
                                 className="
-                                    relative
-                                    pl-8
-                                    pb-17
-                                "
+                relative
+                pl-8
+                pb-17
+            "
                             >
                                 <div
                                     ref={(el) => {
                                         dotsRef.current[1] = el;
                                     }}
                                     className="
-                                        absolute
-                                        left-1.75
-                                        top-1
-                                        w-3
-                                        h-3
-                                        rounded-full
-                                        bg-bronze
-                                    "
-                                ></div>
+                    absolute
+                    left-1.75
+                    top-1
+                    h-3
+                    w-3
+                    rounded-full
+                    bg-bronze
+                "
+                                />
 
-                                <p className="mb-2 font-bebas text-bronze text-sm tracking-[0.15em] md:text-lg">2024</p>
+                                <p
+                                    className="
+                    mb-2
+                    font-bebas
+                    text-sm
+                    tracking-[0.15em]
+                    text-bronze
+                    md:text-lg
+                "
+                                >
+                                    2024
+                                </p>
 
-                                <h3 className=" max-w-3xl text-ivory font-space text-lg font-semibold md:text-4xl leading-tight">Formação Front-end</h3>
+                                <h3
+                                    className="
+                    max-w-3xl
+                    font-space
+                    text-lg
+                    font-semibold
+                    leading-tight
+                    text-ivory
+                    md:text-4xl
+                "
+                                >
+                                    Formação Front-end
+                                </h3>
 
-                                <p className=" mt-3 max-w-2xl text-steel text-sm md:text-base md:leading-7">HTML, CSS, JavaScript e construção de interfaces para aplicações web.</p>
+                                <p
+                                    className="
+                    mt-3
+                    max-w-2xl
+                    text-sm
+                    leading-6
+                    text-steel
+                    md:text-base
+                    md:leading-7
+                "
+                                >
+                                    HTML, CSS, JavaScript e construção de interfaces web.
+                                </p>
                             </div>
 
                             {/* ==========================================
-                                EVENTO 2025
-                            ========================================== */}
+            EVENTO 2025
+        ========================================== */}
 
                             <div
                                 ref={(el) => {
                                     eventsRef.current[2] = el;
                                 }}
-                                className="relative pl-8 pb-17
-                                "
+                                className="
+                relative
+                pl-8
+                pb-17
+            "
                             >
                                 <div
                                     ref={(el) => {
                                         dotsRef.current[2] = el;
                                     }}
-                                    className="absolute left-1.75 top-1 w-3 h-3 rounded-full bg-bronze
-                                    "
-                                ></div>
+                                    className="
+                    absolute
+                    left-1.75
+                    top-1
+                    h-3
+                    w-3
+                    rounded-full
+                    bg-bronze
+                "
+                                />
 
-                                <p className=" mb-2 font-bebas text-bronze text-sm tracking-[0.15em] md:text-lg">2025</p>
+                                <p
+                                    className="
+                    mb-2
+                    font-bebas
+                    text-sm
+                    tracking-[0.15em]
+                    text-bronze
+                    md:text-lg
+                "
+                                >
+                                    2025
+                                </p>
 
-                                <h3 className=" max-w-3xl text-ivory font-space text-lg font-semibold md:text-4xl leading-tight">Formação Back-end</h3>
+                                <h3
+                                    className="
+                    max-w-3xl
+                    font-space
+                    text-lg
+                    font-semibold
+                    leading-tight
+                    text-ivory
+                    md:text-4xl
+                "
+                                >
+                                    Formação Back-end
+                                </h3>
 
-                                <p className=" mt-3 max-w-2xl text-steel text-sm md:text-base md:leading-7">APIs, bancos de dados, Node.js e desenvolvimento de aplicações.</p>
+                                <p
+                                    className="
+                    mt-3
+                    max-w-2xl
+                    text-sm
+                    leading-6
+                    text-steel
+                    md:text-base
+                    md:leading-7
+                "
+                                >
+                                    APIs, bancos de dados, Node.js e desenvolvimento de aplicações.
+                                </p>
                             </div>
 
                             {/* ==========================================
-                                EVENTO 2026
-                            ========================================== */}
+            EVENTO 2026 — ATUAL
+        ========================================== */}
 
                             <div
                                 ref={(el) => {
                                     eventsRef.current[3] = el;
                                 }}
-                                className="relative pl-8 pb-2
-                                "
+                                className="
+                relative
+                pl-8
+                pb-2
+            "
                             >
+                                {/* PONTO PULSANTE — DECORAÇÃO */}
                                 <div
-                                    ref={(el) => {
-                                        dotsRef.current[3] = el;
-                                    }}
-                                    className="absolute left-1.25 top-1 w-4 h-4 rounded-full bg-bronze shadow-[0_0_15px_rgba(168,120,82,0.45)]
-                                    "
-                                ></div>
+                                    className="
+                    absolute
+                    left-[5px]
+                    top-1
+                    h-4
+                    w-4
+                    rounded-full
+                    bg-bronze
+                    opacity-60
+                    shadow-[0_0_15px_rgba(168,120,82,0.45)]
+                    animate-ping
+                "
+                                />
+
+                                {/* PONTO PRINCIPAL — CONTROLADO PELO GSAP */}
                                 <div
                                     ref={(el) => {
                                         dotsRef.current[3] = el;
                                     }}
                                     className="
-                                        absolute
-                                        left-[5px]
-                                        top-1
-                                        w-4
-                                        h-4
-                                        rounded-full
-                                        animate-ping
-                                        bg-bronze
-                                        shadow-[0_0_15px_rgba(168,120,82,0.45)]
-                                    "
-                                ></div>
+                    absolute
+                    left-[5px]
+                    top-1
+                    h-4
+                    w-4
+                    rounded-full
+                    bg-bronze
+                    shadow-[0_0_15px_rgba(168,120,82,0.45)]
+                "
+                                />
+
                                 <div className="mb-2 flex items-center gap-3">
-                                    <p className="font-bebas text-bronze text-sm tracking-[0.15em] md:text-lg">2026</p>
+                                    <p
+                                        className="
+                        font-bebas
+                        text-sm
+                        tracking-[0.15em]
+                        text-bronze
+                        md:text-lg
+                    "
+                                    >
+                                        2026
+                                    </p>
+
                                     <span
                                         className="
                         rounded-full
@@ -875,12 +1045,10 @@ function Formacao() {
                         bg-bronze/5
                         px-2
                         py-0.5
-
                         text-[8px]
                         uppercase
                         tracking-[0.2em]
                         text-bronze
-
                         md:text-[9px]
                     "
                                     >
@@ -890,78 +1058,31 @@ function Formacao() {
 
                                 <h3
                                     className="
-                                       max-w-3xl
-                                        text-ivory
-                                        font-space
-                                        text-lg
-                                        font-[600]
-                                        md:text-4xl
-                                        leading-tight
-                                    "
+                    max-w-3xl
+                    font-space
+                    text-lg
+                    font-[600]
+                    leading-tight
+                    text-ivory
+                    md:text-4xl
+                "
                                 >
                                     Full Stack + ADS
                                 </h3>
 
                                 <p
                                     className="
-                                                                                mt-3
-                                        max-w-2xl
-                                        text-steel
-                                        text-sm
-                                        md:text-base
-                                        md:leading-7
-                                    "
+                    mt-3
+                    max-w-2xl
+                    text-sm
+                    leading-6
+                    text-steel
+                    md:text-base
+                    md:leading-7
+                "
                                 >
                                     Formação Full Stack pela DNC e graduação em Análise e Desenvolvimento de Sistemas pela Uniube.
                                 </p>
-                                <div
-                                    className="
-                    mt-6
-                    flex
-                    flex-wrap
-                    gap-2
-                "
-                                >
-                                    <span
-                                        className="
-                        rounded-full
-                        border
-                        border-graphite
-                        bg-carbon
-                        px-3
-                        py-1.5
-
-                        text-[9px]
-                        uppercase
-                        tracking-[0.15em]
-                        text-steel
-
-                        md:text-[10px]
-                    "
-                                    >
-                                        DNC · Full Stack
-                                    </span>
-
-                                    <span
-                                        className="
-                        rounded-full
-                        border
-                        border-graphite
-                        bg-carbon
-                        px-3
-                        py-1.5
-
-                        text-[9px]
-                        uppercase
-                        tracking-[0.15em]
-                        text-steel
-
-                        md:text-[10px]
-                    "
-                                    >
-                                        Uniube · ADS
-                                    </span>
-                                </div>
                             </div>
                         </div>
                     </div>
