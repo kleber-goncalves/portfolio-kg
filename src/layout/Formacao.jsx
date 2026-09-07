@@ -143,7 +143,7 @@ function Formacao() {
 
     return (
         <section ref={sectionRef} id="formacao" className="bg-obsidian w-full h-full p-5 md:p-10 relative overflow-hidden flex flex-col items-center gap-10">
-            <div className="flex flex-col items-center gap-10 w-full">
+            <div className="flex flex-col items-center gap-10 w-full md:max-w-[1500px]">
                 <div className="flex flex-row items-center gap-2 w-full">
                     <h2 className="text-sm md:text-7xl  text-steel uppercase">// Formação & Nivel Técnico</h2>
                     <span className="flex-1 h-0.5 md:h-1 bg-gradientaa"></span>
