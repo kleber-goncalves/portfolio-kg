@@ -89,7 +89,7 @@ export default function Card2({
                     grid-cols-[42px_1fr]
                     gap-5
 
-                    md:grid-cols-[70px_1fr]
+                    md:grid-cols-[50px_1fr]
                     md:gap-10
 
                     items-start
@@ -164,6 +164,7 @@ export default function Card2({
                                 leading-tight
 
                                 md:text-3xl
+                                lg:text-4xl
 
                                 ${styles.title}
                                 ${classNameTitle}

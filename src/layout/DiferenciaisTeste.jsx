@@ -38,6 +38,8 @@ function Diferenciais() {
                 bg-obsidian
 
                 p-5
+
+                md:p-10
             "
         >
             {/* =====================================================
@@ -49,7 +51,7 @@ function Diferenciais() {
                     mx-auto
                     flex
                     w-full
-                    max-w-[1600px]
+                    max-w-[1500px]
                     flex-col
                 "
             >
@@ -107,6 +109,7 @@ function Diferenciais() {
                         max-w-3xl
                         flex-col
                         gap-4
+                        
 
                         md:mb-20
                     "
