@@ -1,8 +1,16 @@
 import { useEffect, useState } from "react";
+import { ArrowUpRight } from "lucide-react";
+
 import "../styles/loopText.css";
 
 function Footer() {
     const [dateTime, setDateTime] = useState(new Date());
+
+    /*
+    ============================================================
+    DATA / HORA
+    ============================================================
+    */
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -23,57 +31,213 @@ function Footer() {
         minute: "2-digit",
         second: "2-digit",
     });
+
     return (
-        <section className="bg-obsidian w-full h-full p-5 md:p-10 relative overflow-hidden flex flex-col items-center ">
+        <footer
+            id="footer"
+            className="
+                relative
+                flex
+                min-h-screen
+                w-full
+                overflow-hidden
+                bg-obsidian
+                px-5
+                py-5
+
+                md:px-10
+                md:py-10
+            "
+        >
             {/* =====================================================
-                CONTEÚDO PRINCIPAL
+                CONTAINER PRINCIPAL
             ===================================================== */}
 
             <div
-                className="relative z-10 flex min-h-screen                         border-t
-                        border-graphite flex-col gap-20 "
+                className="
+                    relative
+                    z-10
+                    mx-auto
+                    flex
+                    min-h-[calc(100vh-2.5rem)]
+                    w-full
+                    max-w-[1500px]
+                    flex-col
+
+                    md:min-h-[calc(100vh-5rem)]
+                "
             >
                 {/* =================================================
                     TOPO
                 ================================================= */}
 
-                <div id="footer" className="flex items-start mt-10 justify-between">
+                <header
+                    className="
+                        flex
+                        items-start
+                        justify-between
+                        border-t
+                        border-graphite
+                        pt-6
+
+                        md:pt-8
+                    "
+                >
                     {/* LOGO */}
 
-                    <div className="h-7 w-7 md:h-20 md:w-20">
-                        <img src="/logo.svg" alt="Kleber Dev" className="h-full w-full object-contain" />
-                    </div>
+                    <a
+                        href="#hero"
+                        aria-label="Voltar ao início"
+                        className="
+                            block
+                            h-8
+                            w-8
+                            transition-transform
+                            duration-300
+                            hover:scale-105
+
+                            md:h-16
+                            md:w-16
+                        "
+                    >
+                        <img
+                            src="/logo.svg"
+                            alt="Kleber Dev"
+                            className="
+                                h-full
+                                w-full
+                                object-contain
+                            "
+                        />
+                    </a>
 
                     {/* IDENTIFICAÇÃO */}
 
-                    <div>
-                        <span className=" text-xs tracking-[0.2em] text-steel">PORTFOLIO · 2026</span>
+                    <div className="flex flex-col items-end gap-1">
+                        <span
+                            className="
+                                font-bebas
+                                text-xs
+                                tracking-[0.2em]
+                                text-steel
+                                md:text-sm
+                            "
+                        >
+                            PORTFOLIO
+                        </span>
+
+                        <span
+                            className="
+                                text-[10px]
+                                uppercase
+                                tracking-[0.15em]
+                                text-steel/50
+                            "
+                        >
+                            2026
+                        </span>
                     </div>
-                </div>
+                </header>
 
                 {/* =================================================
-                    CTA
+                    ÁREA PRINCIPAL
                 ================================================= */}
 
-                <div className="w-full h-full ">
-                    <span className="font-bebas text-sm tracking-[0.25em] text-bronze">DISPONÍVEL PARA NOVOS PROJETOS</span>
+                <div
+                    className="
+                        flex
+                        flex-1
+                        flex-col
+                        justify-center
+                        py-20
 
-                    <h2 className="mt-4 max-w-4xl font-space text-5xl font-semibold leading-[0.9] tracking-tight text-ivory md:text-8xl">
+                        md:py-24
+                    "
+                >
+                    {/* LABEL */}
+
+                    <span
+                        className="
+                            font-bebas
+                            text-xs
+                            uppercase
+                            tracking-[0.25em]
+                            text-bronze
+
+                            md:text-sm
+                        "
+                    >
+                        Disponível para novos projetos
+                    </span>
+
+                    {/* =================================================
+                        CTA
+                    ================================================= */}
+
+                    <h2
+                        className="
+                            mt-5
+                            max-w-5xl
+                            font-space
+                            text-5xl
+                            font-semibold
+                            leading-[0.9]
+                            tracking-tight
+                            text-ivory
+
+                            md:mt-7
+                            md:text-8xl
+                            lg:text-[8.5rem]
+                        "
+                    >
                         Vamos construir
                         <br />
                         algo relevante.
                     </h2>
 
-                    <p className="mt-6 max-w-xl text-sm leading-relaxed text-steel md:text-base">Desenvolvimento de aplicações web com foco em experiência, arquitetura e soluções que fazem sentido para o produto.</p>
+                    {/* DESCRIÇÃO */}
+
+                    <p
+                        className="
+                            mt-7
+                            max-w-xl
+                            text-sm
+                            leading-6
+                            text-steel
+
+                            md:mt-8
+                            md:text-base
+                            md:leading-7
+                        "
+                    >
+                        Desenvolvimento de aplicações web com foco em experiência, arquitetura e soluções que fazem sentido para o produto.
+                    </p>
 
                     {/* =================================================
                         LINKS
                     ================================================= */}
 
-                    <div className="mt-8 flex flex-wrap gap-3">
+                    <div
+                        className="
+                            mt-9
+                            flex
+                            flex-wrap
+                            gap-3
+
+                            md:mt-10
+                        "
+                    >
+                        {/* GITHUB */}
+
                         <a
-                            href="#"
+                            href="https://github.com/kleber-goncalves"
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className="
+                                group
+                                inline-flex
+                                items-center
+                                gap-2
                                 rounded-full
                                 border
                                 border-graphite
@@ -82,7 +246,7 @@ function Footer() {
                                 text-xs
                                 font-medium
                                 uppercase
-                                tracking-wider
+                                tracking-[0.12em]
                                 text-ivory
                                 transition-all
                                 duration-300
@@ -90,12 +254,30 @@ function Footer() {
                                 hover:text-bronze
                             "
                         >
-                            GitHub ↗
+                            GitHub
+                            <ArrowUpRight
+                                className="
+                                    h-3.5
+                                    w-3.5
+                                    transition-transform
+                                    duration-300
+                                    group-hover:-translate-y-0.5
+                                    group-hover:translate-x-0.5
+                                "
+                            />
                         </a>
+
+                        {/* LINKEDIN */}
 
                         <a
                             href="#"
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className="
+                                group
+                                inline-flex
+                                items-center
+                                gap-2
                                 rounded-full
                                 border
                                 border-graphite
@@ -104,7 +286,7 @@ function Footer() {
                                 text-xs
                                 font-medium
                                 uppercase
-                                tracking-wider
+                                tracking-[0.12em]
                                 text-ivory
                                 transition-all
                                 duration-300
@@ -112,12 +294,28 @@ function Footer() {
                                 hover:text-bronze
                             "
                         >
-                            LinkedIn ↗
+                            LinkedIn
+                            <ArrowUpRight
+                                className="
+                                    h-3.5
+                                    w-3.5
+                                    transition-transform
+                                    duration-300
+                                    group-hover:-translate-y-0.5
+                                    group-hover:translate-x-0.5
+                                "
+                            />
                         </a>
+
+                        {/* CONTATO */}
 
                         <a
                             href="mailto:seuemail@email.com"
                             className="
+                                group
+                                inline-flex
+                                items-center
+                                gap-2
                                 rounded-full
                                 bg-ivory
                                 px-5
@@ -125,119 +323,252 @@ function Footer() {
                                 text-xs
                                 font-medium
                                 uppercase
-                                tracking-wider
+                                tracking-[0.12em]
                                 text-obsidian
-                                transition-transform
+                                transition-all
                                 duration-300
-                                hover:scale-105
+                                hover:bg-champagne
                             "
                         >
-                            Entrar em contato ↗
+                            Entrar em contato
+                            <ArrowUpRight
+                                className="
+                                    h-3.5
+                                    w-3.5
+                                    transition-transform
+                                    duration-300
+                                    group-hover:-translate-y-0.5
+                                    group-hover:translate-x-0.5
+                                "
+                            />
                         </a>
                     </div>
                 </div>
-                <div>
-                    {/* =================================================
+
+                {/* =================================================
                     INFORMAÇÕES
                 ================================================= */}
 
-                    <div
-                        className="
-                        relative
-                        z-20
+                <div
+                    className="
                         grid
                         grid-cols-2
-                        gap-6
+                        gap-y-8
                         border-t
                         border-graphite
-                        pt-5
+                        py-6
+
                         md:grid-cols-4
+                        md:gap-6
+                        md:py-7
                     "
-                    >
-                        {/* LOCAL */}
+                >
+                    {/* LOCAL */}
 
-                        <div>
-                            <span className="block font-space text-[10px] tracking-[0.2em] text-steel">LOCAL</span>
+                    <div className="flex flex-col gap-1">
+                        <span
+                            className="
+                                font-bebas
+                                text-[10px]
+                                uppercase
+                                tracking-[0.2em]
+                                text-steel
+                            "
+                        >
+                            Local
+                        </span>
 
-                            <span className="mt-1 block text-xs text-ivory md:text-sm">Brasil</span>
-                        </div>
+                        <span
+                            className="
+                                text-xs
+                                text-ivory
 
-                        {/* DATA */}
-
-                        <div>
-                            <span className="block font-space text-[10px] tracking-[0.2em] text-steel">DATA</span>
-
-                            <span className="mt-1 block text-xs uppercase text-ivory md:text-sm">{data}</span>
-                        </div>
-
-                        {/* HORA */}
-
-                        <div>
-                            <span className="block font-space text-[10px] tracking-[0.2em] text-steel">HORA LOCAL</span>
-
-                            <span className="mt-1 block font-bebas text-lg text-bronze md:text-xl">{hora}</span>
-                        </div>
-
-                        {/* STATUS */}
-
-                        <div>
-                            <span className="block font-space text-[10px] tracking-[0.2em] text-steel">STATUS</span>
-
-                            <span className="mt-1 flex items-center gap-2 text-xs text-ivory md:text-sm">
-                                <span className="h-1.5 w-1.5 rounded-full bg-green-400 " />
-                                <span className="absolute h-1.5 w-1.5 rounded-full bg-green-400 animate-ping " />
-                                Disponível
-                            </span>
-                        </div>
+                                md:text-sm
+                            "
+                        >
+                            Brasil
+                        </span>
                     </div>
 
-                    {/* =================================================
+                    {/* DATA */}
+
+                    <div className="flex flex-col gap-1">
+                        <span
+                            className="
+                                font-bebas
+                                text-[10px]
+                                uppercase
+                                tracking-[0.2em]
+                                text-steel
+                            "
+                        >
+                            Data
+                        </span>
+
+                        <span
+                            className="
+                                text-xs
+                                uppercase
+                                text-ivory
+
+                                md:text-sm
+                            "
+                        >
+                            {data}
+                        </span>
+                    </div>
+
+                    {/* HORA */}
+
+                    <div className="flex flex-col gap-1">
+                        <span
+                            className="
+                                font-bebas
+                                text-[10px]
+                                uppercase
+                                tracking-[0.2em]
+                                text-steel
+                            "
+                        >
+                            Hora local
+                        </span>
+
+                        <span
+                            className="
+                                font-bebas
+                                text-lg
+                                leading-none
+                                text-bronze
+
+                                md:text-xl
+                            "
+                        >
+                            {hora}
+                        </span>
+                    </div>
+
+                    {/* STATUS */}
+
+                    <div className="flex flex-col gap-1">
+                        <span
+                            className="
+                                font-bebas
+                                text-[10px]
+                                uppercase
+                                tracking-[0.2em]
+                                text-steel
+                            "
+                        >
+                            Status
+                        </span>
+
+                        <span
+                            className="
+                                flex
+                                items-center
+                                gap-2
+                                text-xs
+                                text-ivory
+
+                                md:text-sm
+                            "
+                        >
+                            <span className="relative flex h-2 w-2">
+                                <span
+                                    className="
+                                        absolute
+                                        inline-flex
+                                        h-full
+                                        w-full
+                                        animate-ping
+                                        rounded-full
+                                        bg-green-400
+                                        opacity-60
+                                    "
+                                />
+
+                                <span
+                                    className="
+                                        relative
+                                        inline-flex
+                                        h-2
+                                        w-2
+                                        rounded-full
+                                        bg-green-400
+                                    "
+                                />
+                            </span>
+                            Disponível
+                        </span>
+                    </div>
+                </div>
+
+                {/* =================================================
                     COPYRIGHT
                 ================================================= */}
 
-                    <div
-                        className="
-                        relative
-                        z-20
+                <div
+                    className="
                         flex
                         flex-col
                         gap-2
                         border-t
                         border-graphite
                         py-5
-                        text-[10px]
+                        text-[9px]
                         uppercase
-                        tracking-wider
+                        tracking-[0.12em]
                         text-steel
+
                         md:flex-row
                         md:items-center
                         md:justify-between
+                        md:text-[10px]
                     "
-                    >
-                        <span>© 2026 Kleber Dev</span>
+                >
+                    <span>© 2026 Kleber Dev</span>
 
-                        <span>Desenvolvido com React · Tailwind · GSAP</span>
+                    <span>Desenvolvido com React · Tailwind · GSAP</span>
+                </div>
+            </div>
+
+            {/* =====================================================
+                MARQUEE
+            ===================================================== */}
+
+            <div
+                className="
+                    pointer-events-none
+                    absolute
+                    bottom-5
+                    left-0
+                    z-0
+                    w-full
+                    overflow-hidden
+                    opacity-100
+
+                    md:bottom-8
+                "
+            >
+                <div className="marquee-track">
+                    {/* PRIMEIRA CÓPIA */}
+
+                    <div className="marquee-content">
+                        <span className="font-bebas">KLEBER DEV</span>
+
+                        <span className="marquee-star">✦</span>
+                    </div>
+
+                    {/* SEGUNDA CÓPIA */}
+
+                    <div className="marquee-content">
+                        <span className="font-bebas">KLEBER DEV</span>
+
+                        <span className="marquee-star">✦</span>
                     </div>
                 </div>
             </div>
-            <div className="flex flex-col items-center w-full">
-                <div className="absolute bottom-10 left-0 w-full overflow-hidden">
-                    <div className="marquee-track">
-                        {/* PRIMEIRA CÓPIA */}
-                        <div className="marquee-content">
-                            <span className="font-bebas">KLEBER DEV</span>
-                            <span className="marquee-star">✦</span>
-                        </div>
-
-                        {/* SEGUNDA CÓPIA */}
-                        <div className="marquee-content">
-                            <span className="font-bebas">KLEBER DEV</span>
-                            <span className="marquee-star">✦</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+        </footer>
     );
 }
 
