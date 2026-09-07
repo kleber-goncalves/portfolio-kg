@@ -31,7 +31,9 @@ export default function Card2({ title, number, text, variant = "default", classN
                 w-full
 
                 border-t
-                mb:border-b
+                md:border-b
+                md:border-t-0
+
                 border-gray-700
 
                 py-7
