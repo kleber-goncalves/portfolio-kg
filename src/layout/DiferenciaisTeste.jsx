@@ -37,7 +37,13 @@ function Diferenciais() {
 
                 bg-obsidian
 
-                p-5
+                px-5
+                py-20
+
+                md:px-10
+                md:py-28
+
+                lg:py-32
             "
         >
             {/* =====================================================
@@ -49,7 +55,7 @@ function Diferenciais() {
                     mx-auto
                     flex
                     w-full
-                    max-w-[1600px]
+                    max-w-[1500px]
                     flex-col
                 "
             >
@@ -94,70 +100,149 @@ function Diferenciais() {
                             md:h-1
                         "
                     />
+
+                    {/* DESKTOP */}
+
+                    <p
+                        className="
+                            hidden
+                            max-w-md
+
+                            text-steel
+
+                            md:block
+                            md:text-sm
+                            md:leading-6
+                        "
+                    >
+                        Mais do que ferramentas, eu valorizo a forma como os problemas são analisados e transformados em soluções.
+                    </p>
                 </div>
 
                 {/* =================================================
-                    INTRODUÇÃO
+                    INTRODUÇÃO — MOBILE
                 ================================================= */}
 
                 <div
                     className="
-                        mb-14
+                        mb-16
                         flex
                         max-w-3xl
                         flex-col
                         gap-4
 
-                        md:mb-20
+                        md:hidden
                     "
                 >
                     <p
                         className="
+                            text-base
+                            leading-6
                             text-steel
-
-                            md:text-2xl
-                            md:leading-9
                         "
                     >
-                        Mais do que ferramentas, eu valorizo a forma como os
-                        problemas são analisados e transformados em soluções.
+                        Mais do que ferramentas, eu valorizo a forma como os problemas são analisados e transformados em soluções.
                     </p>
                 </div>
 
                 {/* =================================================
-                    LISTA DE DIFERENCIAIS
+                    DIFERENCIAIS
                 ================================================= */}
 
                 <div
                     className="
-                        flex
+                        grid
                         w-full
-                        flex-col
+
+                        grid-cols-1
+
+                        md:grid-cols-2
+                        md:grid-rows-4
                     "
                 >
-                    {diferenciais.map((diferencial) => (
-                        <Card2
-                            key={diferencial.numero}
-                            number={diferencial.numero}
-                            title={diferencial.titulo}
-                            text={diferencial.texto}
-                            variant="default"
-                        />
-                    ))}
+                    {/* =================================================
+                        CARD 01
+                    ================================================= */}
+
+                    <Card2
+                        number={diferenciais[0].numero}
+                        title={diferenciais[0].titulo}
+                        text={diferenciais[0].texto}
+                        variant="default"
+                        className="
+                            w-full
+                            md:col-start-1
+                            md:row-start-1
+                            md:max-w-[90%]
+                        "
+                    />
+
+                    {/* =================================================
+                        CARD 02
+                    ================================================= */}
+
+                    <Card2
+                        number={diferenciais[1].numero}
+                        title={diferenciais[1].titulo}
+                        text={diferenciais[1].texto}
+                        variant="default"
+                        className="
+                            w-full
+                            md:col-start-2
+                            md:row-start-2
+                            md:ml-auto
+                            md:max-w-[90%]
+                        "
+                    />
+
+                    {/* =================================================
+                        CARD 03
+                    ================================================= */}
+
+                    <Card2
+                        number={diferenciais[2].numero}
+                        title={diferenciais[2].titulo}
+                        text={diferenciais[2].texto}
+                        variant="default"
+                        className="
+                            w-full
+                            md:col-start-1
+                            md:row-start-3
+                            md:max-w-[90%]
+                        "
+                    />
+
+                    {/* =================================================
+                        CARD 04
+                    ================================================= */}
+
+                    <Card2
+                        number={diferenciais[3].numero}
+                        title={diferenciais[3].titulo}
+                        text={diferenciais[3].texto}
+                        variant="default"
+                        className="
+                            w-full
+                            md:col-start-2
+                            md:row-start-4
+                            md:ml-auto
+                            md:max-w-[90%]
+                        "
+                    />
                 </div>
 
                 {/* =================================================
-                    RODAPÉ DA SEÇÃO
+                    RODAPÉ
                 ================================================= */}
 
                 <div
                     className="
-                        mt-10
+                        mt-12
                         flex
                         w-full
                         justify-end
 
-                        md:mt-14
+                        md:mt-16
                     "
                 >
                     <span
