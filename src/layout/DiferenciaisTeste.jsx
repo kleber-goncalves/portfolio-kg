@@ -136,7 +136,7 @@ function Diferenciais() {
                 >
                     <p
                         className="
-                            text-sm
+                            text-base
                             leading-6
                             text-steel
                         "
