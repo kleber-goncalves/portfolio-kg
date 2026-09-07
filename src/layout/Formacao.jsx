@@ -27,12 +27,12 @@ function Formacao() {
 
     return (
         <section ref={sectionRef} id="formacao" className="bg-obsidian w-full h-full p-5 md:p-10 relative overflow-hidden flex flex-col items-center gap-10">
-            <div className="flex flex-col items-center gap-10 w-full md:max-w-[1500px]">
+            <div className="flex flex-col items-center gap-10 md:gap-20 w-full md:max-w-[1500px]">
                 <div className="flex flex-row items-center gap-2 w-full">
                     <h2 className="text-sm md:text-7xl  text-steel uppercase">// Formação & Nivel Técnico</h2>
                     <span className="flex-1 h-0.5 md:h-1 bg-gradientaa"></span>
                 </div>
-                <div className="w-full h-full relative overflow-hidden flex flex-col items-center gap-15">
+                <div className="w-full h-full relative overflow-hidden flex flex-col items-center gap-15 md:gap-20">
                     <div
                         ref={formationCardRef}
                         className="
@@ -80,9 +80,9 @@ function Formacao() {
                 grid-cols-1
                 gap-10
 
-                md:grid-cols-[1.15fr_0.85fr]
-                md:gap-16
-                lg:gap-24
+                md:grid-cols-[1.1fr_1.85fr]
+                md:gap-
+                lg:gap-
             "
                             >
                                 {/* =================================================
@@ -94,8 +94,8 @@ function Formacao() {
                     relative
                     flex
                     flex-col
-                    justify-between
                     gap-8
+                    pt-2
                 "
                                 >
                                     {/* LABEL */}
@@ -486,86 +486,6 @@ function Formacao() {
                                 </div>
                             </div>
 
-                            {/* =====================================================
-            FORMAÇÕES COMPLEMENTARES
-        ===================================================== */}
-
-                            <div
-                                className="
-                flex
-                w-full
-                flex-col
-                gap-5
-
-                border-t
-                border-graphite
-                pt-8
-
-                md:flex-row
-                md:items-center
-                md:justify-between
-                md:pt-7
-            "
-                            >
-                                <div className="flex items-center gap-3">
-                                    <span
-                                        className="
-                        h-2
-                        w-2
-                        shrink-0
-                        rounded-full
-                        bg-champagne
-                    "
-                                    />
-
-                                    <h3
-                                        className="
-                        font-bebas
-                        text-xs
-                        uppercase
-                        tracking-[0.2em]
-                        text-steel
-
-                        md:text-sm
-                    "
-                                    >
-                                        Formações complementares
-                                    </h3>
-                                </div>
-
-                                <div
-                                    className="
-                    flex
-                    flex-wrap
-                    gap-x-8
-                    gap-y-2
-                "
-                                >
-                                    <span
-                                        className="
-                        text-sm
-                        text-steel
-
-                        md:text-base
-                    "
-                                    >
-                                        Front-end
-                                        <span className="ml-2 text-bronze">concluído</span>
-                                    </span>
-
-                                    <span
-                                        className="
-                        text-sm
-                        text-steel
-
-                        md:text-base
-                    "
-                                    >
-                                        Back-end
-                                        <span className="ml-2 text-bronze">concluído</span>
-                                    </span>
-                                </div>
-                            </div>
                         </div>
                     </div>
 
