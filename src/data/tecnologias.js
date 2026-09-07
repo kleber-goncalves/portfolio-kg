@@ -16,7 +16,9 @@ export const tecnologias = {
         icone: ReactIcon,
         bg: "bg-cyan-500/10",
         border: "border-cyan-400/20",
+        hoverBorder: "group-hover:border-cyan-400",
         text: "text-cyan-300",
+        hoverText: "group-hover:text-cyan-300",
         icon: "text-cyan-300",
     },
 
@@ -25,8 +27,10 @@ export const tecnologias = {
         icone: NodejsIcon,
         bg: "bg-green-500/10",
         border: "border-green-400/20",
+        hoverBorder: "group-hover:border-green-400",
         text: "text-green-300",
-        icon: "text-green-300",
+        hoverText: "group-hover:text-green-300",
+        icon: "text-green-300 ",
     },
 
     Tailwind: {
@@ -34,7 +38,9 @@ export const tecnologias = {
         icone: TailwindCssIcon,
         bg: "bg-sky-500/10",
         border: "border-sky-400/20",
+        hoverBorder: "group-hover:border-sky-400",
         text: "text-sky-300",
+        hoverText: "group-hover:text-sky-300",
         icon: "text-sky-300",
     },
 
@@ -43,7 +49,9 @@ export const tecnologias = {
         icone: GsapIcon,
         bg: "bg-green-500/10",
         border: "border-green-400/20",
+        hoverBorder: "group-hover:border-green-400",
         text: "text-green-300",
+        hoverText: "group-hover:text-green-300",
         icon: "text-green-300",
     },
 
@@ -52,7 +60,9 @@ export const tecnologias = {
         icone: SupabaseIcon,
         bg: "bg-emerald-500/10",
         border: "border-emerald-400/20",
+        hoverBorder: "group-hover:border-emerald-400",
         text: "text-emerald-300",
+        hoverText: "group-hover:text-emerald-300",
         icon: "text-emerald-300",
     },
 
@@ -61,8 +71,10 @@ export const tecnologias = {
         icone: TypescriptIcon,
         bg: "bg-blue-500/10",
         border: "border-blue-400/20",
+        hoverBorder: "group-hover:border-blue-400",
         text: "text-blue-300",
-        icon: "text-blue-300",
+        hoverText: "group-hover:text-blue-300",
+        icon: "text-blue-300 ",
     },
 
     API: {
@@ -70,8 +82,10 @@ export const tecnologias = {
         icone: ApiIcon,
         bg: "bg-violet-500/10",
         border: "border-violet-400/20",
+        hoverBorder: "group-hover:border-violet-400",
         text: "text-violet-300",
-        icon: "text-violet-300",
+        hoverText: "group-hover:text-violet-300",
+        icon: "text-violet-300 ",
     },
 
     HTML: {
@@ -79,7 +93,9 @@ export const tecnologias = {
         icone: HTMLIcon,
         bg: "bg-orange-500/10",
         border: "border-orange-400/20",
+        hoverBorder: "group-hover:border-orange-400",
         text: "text-orange-300",
+        hoverText: "group-hover:text-orange-300",
         icon: "text-orange-300",
     },
 
@@ -88,7 +104,9 @@ export const tecnologias = {
         icone: CssNewIcon,
         bg: "bg-blue-500/10",
         border: "border-blue-400/20",
+        hoverBorder: "group-hover:border-blue-400",
         text: "text-blue-300",
+        hoverText: "group-hover:text-blue-300",
         icon: "text-blue-300",
     },
 
@@ -97,7 +115,9 @@ export const tecnologias = {
         icone: CookiecutterIcon,
         bg: "bg-yellow-500/10",
         border: "border-yellow-400/20",
+        hoverBorder: "group-hover:border-yellow-400",
         text: "text-yellow-300",
+        hoverText: "group-hover:text-yellow-300",
         icon: "text-yellow-300",
     },
 
@@ -106,7 +126,9 @@ export const tecnologias = {
         icone: AxiosIcon,
         bg: "bg-purple-500/10",
         border: "border-purple-400/20",
+        hoverBorder: "group-hover:border-purple-400",
         text: "text-purple-300",
+        hoverText: "group-hover:text-purple-300",
         icon: "text-purple-300",
     },
 };

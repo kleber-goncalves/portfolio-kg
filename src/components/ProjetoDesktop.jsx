@@ -2,6 +2,8 @@ import { useEffect, useRef } from "react";
 
 import gsap from "gsap";
 
+import { tecnologias } from "../data/tecnologias";
+
 
 function ProjetoDesktop({ projetos }) {
     // ============================================================
@@ -472,40 +474,37 @@ function ProjetoDesktop({ projetos }) {
                         flex
                         items-end
                         justify-between
-                        border-b
+                       
                         border-graphite
                         pb-6
                     "
                 >
-                    <div className="flex flex-col gap-3">
-                        <p
-                            className="
-                                font-bebas
-                                text-sm
-                                uppercase
-                                tracking-[0.25em]
-                                text-bronze
-                            "
-                        >
-                            04 / Projetos
-                        </p>
-
+                    <div className="flex flex-row w-full items-center gap-3">
                         <h2
                             className="
-                                font-bebas
-                                text-6xl
+                            
+                                text-7xl
                                 uppercase
-                                leading-none
-                                text-ivory
-                                lg:text-8xl
+                                tracking-wide
+                                text-steel
+                                lg:text-7xl
                             "
                         >
-                            Projetos
+                            // Projetos
                         </h2>
-                    </div>
+                        <span
+                            className="
+                            h-0.5
+                            flex-1
 
-                    <p
-                        className="
+                            bg-gradientaa
+
+                            md:h-1
+                        "
+                        />
+
+                        <p
+                            className="
                             hidden
                             max-w-md
                             text-right
@@ -514,9 +513,10 @@ function ProjetoDesktop({ projetos }) {
                             text-steel
                             lg:block
                         "
-                    >
-                        Uma seleção de projetos desenvolvidos durante minha evolução como desenvolvedor.
-                    </p>
+                        >
+                            Uma seleção de projetos desenvolvidos durante minha evolução como desenvolvedor
+                        </p>
+                    </div>
                 </div>
 
                 {/* ==================================================
@@ -648,30 +648,46 @@ function ProjetoDesktop({ projetos }) {
                                             gap-y-1
                                         "
                                         >
-                                            {projeto.tecnologias.map((tecnologia) => (
-                                                <span
-                                                    key={tecnologia}
-                                                    className="
-                                                        font-bebas
-                                                        text-[11px]
-                                                        uppercase
-                                                        tracking-[0.15em]
-                                                        text-steel/60
-                                                        group-hover:border
-                                                        group-hover:border-bronze
-                                                         
-                                                        px-2
-                                                        py-1
-                                                        transition
-                                                        ease-out
-                                                        group-hover:translate-x-2
-                                                        duration-900
-                                                        rounded-3xl
-                                                    "
-                                                >
-                                                    {tecnologia}
-                                                </span>
-                                            ))}
+                                            {projeto.tecnologias.map((tecnologia) => {
+                                                const tech = tecnologias[tecnologia];
+
+                                                if (!tech) return null;
+
+                                                const Icon = tech.icone;
+
+                                                return (
+                                                    <span
+                                                        key={tecnologia}
+                                                        className={`
+                inline-flex
+                items-center
+                gap-1.5
+                rounded-full
+                border
+                border-transparent
+                w-fit
+                h-fit 
+                px-3
+                py-2                           
+                font-bebas
+                text-[11px]
+                uppercase
+                tracking-[0.15em]
+                text-steel/60
+                transition-all
+                duration-500
+                ease-out
+                group-hover:translate-x-2
+                ${tech.hoverBorder}
+                ${tech.hoverText}
+            `}
+                                                    >
+                                                        {Icon && <Icon className={`h-4.5 w-4.5  ${tech.icon}`} />}
+
+                                                        {tech.nome}
+                                                    </span>
+                                                );
+                                            })}
                                         </div>
                                     </div>
                                 </div>

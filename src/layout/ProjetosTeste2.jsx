@@ -70,7 +70,7 @@ function Projetos() {
 
             descricao: "Uma landing page moderna e cinematográfica inspirada na estética visual do site promocional de Grand Theft Auto VI - Rockstar Games, desenvolvida como estudo pessoal de front-end, interação, storytelling visual, motion design com o GSAP.",
 
-            tecnologias: ["React", "Node.js", "GSAP"],
+            tecnologias: ["HTML", "CSS", "Node.js", "GSAP"],
 
             imagens: [projeto01_01, projeto01_02, projeto01_03, projeto01_04],
 
@@ -84,7 +84,7 @@ function Projetos() {
 
             titulo: "Clone do site do iPhone 17 Pro",
 
-            descricao: "Este é um projeto inspirada no design e na estrutura do site oficial do iPhone 17 Pro da Apple",
+            descricao: "Este é um projeto inspirada no design e na estrutura do site oficial do iPhone 17 Pro da Apple.",
 
             tecnologias: ["React", "Node.js", "Tailwind"],
 
@@ -100,7 +100,7 @@ function Projetos() {
 
             titulo: "Portifólio de Arquitetura (DNC)",
 
-            descricao: "Este projeto é um site de arquitetura da DNC focado em React e APIs",
+            descricao: "Este projeto é um site de arquitetura da DNC focado em React e APIs.",
 
             tecnologias: ["React", "Node.js", "API"],
 
