@@ -1,14 +1,6 @@
-export default function Card2({
-    title,
-    number,
-    text,
-    variant = "default",
-    className = "",
-    classNameNumber = "",
-    classNameTitle = "",
-    classNameText = "",
-    ...props
-}) {
+import { ArrowUpRight } from "lucide-react";
+
+export default function Card2({ title, number, text, variant = "default", className = "", classNameNumber = "", classNameTitle = "", classNameText = "", ...props }) {
     const variants = {
         default: {
             number: "text-bronze",
@@ -38,17 +30,17 @@ export default function Card2({
                 relative
                 w-full
 
-                border-t
-                border-graphite
+                border-b
+                border-gray-700
 
                 py-7
-                md:py-9
 
-                transition-all
+                md:py-9
+                lg:py-13
+
+                transition-colors
                 duration-500
                 ease-out
-
-                hover:border-graphite/80
 
                 ${className}
             `}
@@ -89,8 +81,11 @@ export default function Card2({
                     grid-cols-[42px_1fr]
                     gap-5
 
-                    md:grid-cols-[50px_1fr]
+                    md:grid-cols-[80px_1fr]
                     md:gap-10
+
+                    lg:grid-cols-[50px_1fr]
+                    lg:gap-14
 
                     items-start
                 "
@@ -114,8 +109,8 @@ export default function Card2({
                             duration-500
                             ease-out
 
-                            group-hover:opacity-100
                             group-hover:translate-x-1
+                            group-hover:opacity-100
 
                             ${styles.number}
                             ${classNameNumber}
@@ -132,9 +127,11 @@ export default function Card2({
                 <div
                     className="
                         flex
-                        max-w-4xl
+                        max-w-3xl
                         flex-col
                         gap-3
+
+                        lg:max-w-4xl
 
                         transition-transform
                         duration-500
@@ -144,9 +141,9 @@ export default function Card2({
                         group-active:translate-x-1
                     "
                 >
-                    {/* =================================================
+                    {/* =============================================
                         TÍTULO
-                    ================================================= */}
+                    ============================================= */}
 
                     <div
                         className="
@@ -173,17 +170,18 @@ export default function Card2({
                             {title}
                         </h3>
 
-                        {/* =================================================
+                        {/* =========================================
                             ÍCONE
-                        ================================================= */}
+                        ========================================= */}
 
-                        <span
+                        <ArrowUpRight
                             className="
                                 mt-1
                                 hidden
+                                h-5
+                                w-5
                                 shrink-0
 
-                                text-lg
                                 text-steel/30
 
                                 transition-all
@@ -194,16 +192,14 @@ export default function Card2({
                                 group-hover:translate-x-1
                                 group-hover:text-bronze
 
-                                md:block
+                                md:hidden
                             "
-                        >
-                            ↗
-                        </span>
+                        />
                     </div>
 
-                    {/* =================================================
+                    {/* =============================================
                         DESCRIÇÃO
-                    ================================================= */}
+                    ============================================= */}
 
                     <p
                         className={`
@@ -214,6 +210,8 @@ export default function Card2({
 
                             md:text-sm
                             md:leading-7
+
+                            lg:text-[15px]
 
                             transition-colors
                             duration-500
