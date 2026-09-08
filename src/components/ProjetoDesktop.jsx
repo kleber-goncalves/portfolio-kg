@@ -460,7 +460,7 @@ function ProjetoDesktop({ projetos }) {
                     mx-auto
                     flex
                     w-full
-                    max-w-[1600px]
+                    max-w-[1500px]
                     flex-col
                 "
             >
