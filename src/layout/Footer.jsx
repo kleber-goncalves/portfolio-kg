@@ -163,7 +163,7 @@ function Footer() {
 
                     <span
                         className="
-                            font-bebas
+                            font-space
                             text-xs
                             uppercase
                             tracking-[0.25em]
@@ -191,8 +191,9 @@ function Footer() {
                             text-ivory
 
                             md:mt-7
-                            md:text-8xl
-                            lg:text-[8.5rem]
+                            md:text-7xl
+        lg:text-8xl
+        
                         "
                     >
                         Vamos construir
@@ -213,6 +214,7 @@ function Footer() {
                             md:mt-8
                             md:text-base
                             md:leading-7
+                            
                         "
                     >
                         Desenvolvimento de aplicações web com foco em experiência, arquitetura e soluções que fazem sentido para o produto.
