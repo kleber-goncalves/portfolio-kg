@@ -154,7 +154,7 @@ function Projetos() {
                 DESKTOP
             ================================================== */}
 
-            <div className="hidden md:block   max-w-[1500px] mx-auto">
+            <div className="hidden md:block  ">
                 <ProjetoDesktop projetos={projetos} />
             </div>
 
