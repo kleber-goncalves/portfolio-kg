@@ -45,8 +45,9 @@ function Footer() {
                 px-5
                 py-5
 
+                md:min-h-[120vh]
                 md:px-10
-                md:py-10
+                md:py-1
             "
         >
             {/* =====================================================
@@ -64,7 +65,7 @@ function Footer() {
                     max-w-[1500px]
                     flex-col
 
-                    md:min-h-[calc(100vh-5rem)]
+                    md:min-h-[calc(120vh-5rem)]
                 "
             >
                 {/* =================================================
@@ -120,6 +121,7 @@ function Footer() {
                                 text-xs
                                 tracking-[0.2em]
                                 text-steel
+
                                 md:text-sm
                             "
                         >
@@ -149,9 +151,12 @@ function Footer() {
                         flex-1
                         flex-col
                         justify-center
+
                         py-20
+                        pb-[8vh]
 
                         md:py-24
+                        md:pb-24
                     "
                 >
                     {/* LABEL */}
@@ -530,6 +535,19 @@ function Footer() {
 
                     <span>Desenvolvido com React · Tailwind · GSAP</span>
                 </div>
+
+                {/* =================================================
+                    ESPAÇO ENTRE COPYRIGHT E MARQUEE
+                ================================================= */}
+
+                <div
+                    className="
+                        min-h-[12vh]
+                        flex-1
+
+                        md:min-h-[48vh]
+                    "
+                />
             </div>
 
             {/* =====================================================
@@ -540,14 +558,14 @@ function Footer() {
                 className="
                     pointer-events-none
                     absolute
-                    bottom-5
+                    bottom-0
                     left-0
                     z-0
                     w-full
                     overflow-hidden
-                    opacity-100
+                    pb-7
 
-                    md:bottom-8
+                    md:pb-0
                 "
             >
                 <div className="marquee-track">
