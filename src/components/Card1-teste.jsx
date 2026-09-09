@@ -39,6 +39,8 @@ export default function Card1({
                 w-full
 
                 border-t
+                md:border-t-0
+                md:border-b
                 border-graphite
 
                 py-7
@@ -85,13 +87,13 @@ export default function Card1({
 
             <div
                 className="
-                    flex
-                    w-full
-                    flex-col
-                    items-start
-                    gap-3
-
-                    md:gap-4
+                   flex
+    w-full
+    md:min-h-[260px]
+    flex-col
+    items-start
+    gap-3
+    md:p-6
                 "
             >
                 {/* =================================================
@@ -183,7 +185,7 @@ export default function Card1({
                             group-active:text-bronze
 
                             md:text-xl
-                             md:block
+                             md:hidden
                         "
                     >
                         ↗

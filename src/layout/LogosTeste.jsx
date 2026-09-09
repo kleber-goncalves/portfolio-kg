@@ -150,38 +150,89 @@ function Seclogs() {
 
             <div
                 className="
-                    flex
-                    w-full
-                    flex-row
-                    items-center
-                    gap-2
-                    p-5
+                        mb-14
+                        flex
+                        w-full
+                        flex-row
+                        items-center
+                        gap-2
+                        p-5
 
                     md:p-10
-                "
+                        md:mb-20
+                    "
             >
                 <h2
                     className="
-                        whitespace-nowrap
-                        text-sm
-                        uppercase
-                        text-steel
+                            whitespace-nowrap
 
-                        md:text-7xl
-                    "
+                            text-sm
+                            uppercase
+                            tracking-wide
+                            text-steel
+
+                            md:text-7xl
+                        "
                 >
                     // TECNOLOGIAS & FERRAMENTAS
                 </h2>
 
                 <span
                     className="
-                        h-0.5
-                        flex-1
-                        bg-gradientaa
+                            h-0.5
+                            flex-1
 
-                        md:h-1
-                    "
+                            bg-gradientaa
+
+                            md:h-1
+                        "
                 />
+
+                {/* DESKTOP */}
+
+                <p
+                    className="
+                            hidden
+                            max-w-md
+
+                            text-steel
+
+                            md:block
+                            md:text-sm
+                            md:leading-6
+                        "
+                >
+                    Ferramenta não é diferencial. Decisão técnica é.
+                </p>
+            </div>
+
+            {/* =================================================
+                    INTRODUÇÃO — MOBILE
+                ================================================= */}
+
+            <div
+                className="
+                        mb-16
+                        flex
+                        max-w-3xl
+                        flex-col
+                        gap-4
+                        p-5
+
+                    md:p-10
+
+                        md:hidden
+                    "
+            >
+                <p
+                    className="
+                            text-base
+                            leading-6
+                            text-steel
+                        "
+                >
+                    Ferramenta não é diferencial. Decisão técnica é
+                </p>
             </div>
 
             {/* ==================================================
@@ -195,6 +246,7 @@ function Seclogs() {
                     w-full
                     flex-col
                     gap-2
+                    md:gap-8
                     overflow-hidden
                     bg-obsidian
                 "
@@ -202,7 +254,7 @@ function Seclogs() {
                 {/* ==================================================
                     LOOP 01 — STACK
                 ================================================== */}
-                <p className="text-xs pl-5 uppercase tracking-[0.2em] text-warm-bronze/70 font-medium">Front-end</p>
+                <p className="text-xs pl-5  md:pl-10 uppercase tracking-[0.2em] text-warm-bronze/70 font-medium">Front-end</p>
                 <div
                     className="
                         relative
@@ -211,15 +263,29 @@ function Seclogs() {
                         w-full
                         items-center
                         overflow-hidden
+                        md:hidden
                     "
                 >
                     <LogoLoop logos={stackLogos} speed={80} direction="left" logoHeight={50} gap={45} hoverSpeed={0} scaleOnHover fadeOut fadeOutColor="#0b0b0b" ariaLabel="Stack de desenvolvimento" />
+                </div>
+                <div
+                    className="
+                        relative
+                        hidden
+                        h-20
+                        w-full
+                        items-center
+                        overflow-hidden
+                        md:flex
+                    "
+                >
+                    <LogoLoop logos={stackLogos} speed={55} direction="left" logoHeight={55} gap={80} hoverSpeed={0} scaleOnHover fadeOut fadeOutColor="#0b0b0b" ariaLabel="Stack de desenvolvimento" />
                 </div>
 
                 {/* ==================================================
                     LOOP 02 — BACKEND / DATABASE
                 ================================================== */}
-                <p className="text-xs pl-5 uppercase tracking-[0.2em] text-warm-bronze/70 font-medium">BACK-END / DADOS</p>
+                <p className="text-xs pl-5  md:pl-10 uppercase tracking-[0.2em] text-warm-bronze/70 font-medium">BACK-END / DADOS</p>
                 <div
                     className="
                         relative
@@ -228,15 +294,29 @@ function Seclogs() {
                         w-full
                         items-center
                         overflow-hidden
+                        md:hidden
                     "
                 >
                     <LogoLoop logos={backendLogos} speed={70} direction="right" logoHeight={50} gap={45} hoverSpeed={0} scaleOnHover fadeOut fadeOutColor="#0b0b0b" ariaLabel="Backend e bancos de dados" />
+                </div>
+                <div
+                    className="
+                        relative
+                        hidden
+                        h-20
+                        w-full
+                        items-center
+                        overflow-hidden
+                        md:flex
+                    "
+                >
+                    <LogoLoop logos={backendLogos} speed={55} direction="right" logoHeight={55} gap={80} hoverSpeed={0} scaleOnHover fadeOut fadeOutColor="#0b0b0b" ariaLabel="Backend e bancos de dados" />
                 </div>
 
                 {/* ==================================================
                     LOOP 03 — FERRAMENTAS
                 ================================================== */}
-                <p className="text-xs pl-5 uppercase tracking-[0.2em] text-warm-bronze/50">FERRAMENTAS</p>
+                <p className="text-xs pl-5 md:pl-10 uppercase tracking-[0.2em] text-warm-bronze/50">FERRAMENTAS</p>
                 <div
                     className="
                         relative
@@ -245,9 +325,23 @@ function Seclogs() {
                         w-full
                         items-center
                         overflow-hidden
+                        md:hidden
                     "
                 >
                     <LogoLoop logos={toolsLogos} speed={85} direction="left" logoHeight={50} gap={45} hoverSpeed={0} scaleOnHover fadeOut fadeOutColor="#0b0b0b" ariaLabel="Ferramentas de desenvolvimento" />
+                </div>
+                <div
+                    className="
+                        relative
+                        hidden
+                        h-20
+                        w-full
+                        items-center
+                        overflow-hidden
+                        md:flex
+                    "
+                >
+                    <LogoLoop logos={toolsLogos} speed={55} direction="left" logoHeight={55} gap={80} hoverSpeed={0} scaleOnHover fadeOut fadeOutColor="#0b0b0b" ariaLabel="Ferramentas de desenvolvimento" />
                 </div>
             </div>
         </section>

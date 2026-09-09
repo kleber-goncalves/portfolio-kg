@@ -52,7 +52,9 @@ function Competencia() {
                 overflow-hidden
                 bg-obsidian
 
+                
                 p-5
+                md:p-10
             "
         >
             {/* =====================================================
@@ -64,7 +66,7 @@ function Competencia() {
                     mx-auto
                     flex
                     w-full
-                    max-w-[1600px]
+                    md:max-w-[1500px]
                     flex-col
                 "
             >
@@ -74,7 +76,7 @@ function Competencia() {
 
                 <div
                     className="
-                        mb-12
+                        mb-14
                         flex
                         w-full
                         flex-row
@@ -87,63 +89,83 @@ function Competencia() {
                     <h2
                         className="
                             whitespace-nowrap
+
                             text-sm
                             uppercase
+                            tracking-wide
                             text-steel
 
                             md:text-7xl
                         "
                     >
-                        // COMPETÊNCIAS
+                        // COMPETENCIAS
                     </h2>
 
                     <span
                         className="
                             h-0.5
                             flex-1
+
                             bg-gradientaa
 
                             md:h-1
                         "
                     />
+
+                    {/* DESKTOP */}
+
+                    <p
+                        className="
+                            hidden
+                            max-w-md
+
+                            text-steel
+
+                            md:block
+                            md:text-sm
+                            md:leading-6
+                        "
+                    >
+                        Eu posso te ajudar com...
+                    </p>
                 </div>
 
                 {/* =================================================
-                    INTRODUÇÃO
+                    INTRODUÇÃO — MOBILE
                 ================================================= */}
 
                 <div
                     className="
-                        mb-10
+                        mb-16
                         flex
-                        w-full
+                        max-w-3xl
                         flex-col
-                        gap-3
+                        gap-4
 
-                        md:mb-16
-                        md:max-w-3xl
+                        md:hidden
                     "
                 >
                     <p
                         className="
-        text-base
-        leading-relaxed
-        text-steel
-
-        md:text-lg
-        md:leading-7
-    "
+                            text-base
+                            leading-6
+                            text-steel
+                        "
                     >
                         Eu posso te ajudar com...
                     </p>
-             
                 </div>
 
                 {/* =================================================
                     LISTA
                 ================================================= */}
 
-                <div className="w-full">
+                <div
+                    className=" grid
+    w-full
+    grid-cols-1
+    md:grid-cols-2 md:gap-x-18"
+                >
                     {competencias.map((competencia) => (
                         <Card1 key={competencia.numero} numero={competencia.numero} variant="default" text={competencia.text} title={competencia.title} text_2={competencia.description} />
                     ))}
@@ -151,9 +173,9 @@ function Competencia() {
                     {/* =================================================
                         ÚLTIMA LINHA
                     ================================================= */}
-
-                    <div
-                        className="
+                </div>
+                <div
+                    className="
                         mt-10
                         flex
                         items-center
@@ -167,11 +189,10 @@ function Competencia() {
                         md:mt-10
                         md:text-[10px]
                     "
-                    >
-                        <span></span>
+                >
+                    <span></span>
 
-                        <span>Desenvolvimento contínuo</span>
-                    </div>
+                    <span>Desenvolvimento contínuo</span>
                 </div>
             </div>
         </section>

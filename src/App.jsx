@@ -8,11 +8,11 @@ import Footer from "./layout/Footer";
 
 // Styles
 import "./App.css";
-import ProjetoT from "./layout/ProjetosTeste";
+import ProjetoT from "./layout/ProjetosTeste2";
 import Diferenciais from "./layout/DiferenciaisTeste";
-import Seclogs from "./layout/LogosTeste";
-import Hero from "./layout/HeroTeste";
 import ButtonReset from "./components/buttonReset";
+import Hero from "./layout/HeroTeste2";
+import Seclogs from "./layout/Logo2";
 
 function App() {
     return (
