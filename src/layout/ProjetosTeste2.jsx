@@ -118,7 +118,7 @@ function Projetos() {
 
             descricao: "Dashboard de Vendas desenvolvido como projeto didático para a escola DNC. A aplicação demonstra conceitos de visualização de métricas, organização de componentes React em TypeScript e fluxo básico de pages e testes.",
 
-            tecnologias: ["React", "Node.js", "TypeScript", "JS Cookies", "axios"],
+            tecnologias: ["React", "Node.js", "TypeScript"],
 
             imagens: [projeto01_01, projeto01_02, projeto01_03, projeto01_04],
 

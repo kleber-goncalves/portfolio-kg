@@ -150,38 +150,89 @@ function Seclogs() {
 
             <div
                 className="
-                    flex
-                    w-full
-                    flex-row
-                    items-center
-                    gap-2
-                    p-5
+                        mb-14
+                        flex
+                        w-full
+                        flex-row
+                        items-center
+                        gap-2
+                        p-5
 
                     md:p-10
-                "
+                        md:mb-20
+                    "
             >
                 <h2
                     className="
-                        whitespace-nowrap
-                        text-sm
-                        uppercase
-                        text-steel
+                            whitespace-nowrap
 
-                        md:text-7xl
-                    "
+                            text-sm
+                            uppercase
+                            tracking-wide
+                            text-steel
+
+                            md:text-7xl
+                        "
                 >
                     // TECNOLOGIAS & FERRAMENTAS
                 </h2>
 
                 <span
                     className="
-                        h-0.5
-                        flex-1
-                        bg-gradientaa
+                            h-0.5
+                            flex-1
 
-                        md:h-1
-                    "
+                            bg-gradientaa
+
+                            md:h-1
+                        "
                 />
+
+                {/* DESKTOP */}
+
+                <p
+                    className="
+                            hidden
+                            max-w-md
+
+                            text-steel
+
+                            md:block
+                            md:text-sm
+                            md:leading-6
+                        "
+                >
+                    Ferramenta não é diferencial. Decisão técnica é.
+                </p>
+            </div>
+
+            {/* =================================================
+                    INTRODUÇÃO — MOBILE
+                ================================================= */}
+
+            <div
+                className="
+                        mb-16
+                        flex
+                        max-w-3xl
+                        flex-col
+                        gap-4
+                        p-5
+
+                    md:p-10
+
+                        md:hidden
+                    "
+            >
+                <p
+                    className="
+                            text-base
+                            leading-6
+                            text-steel
+                        "
+                >
+                    Ferramenta não é diferencial. Decisão técnica é
+                </p>
             </div>
 
             {/* ==================================================
