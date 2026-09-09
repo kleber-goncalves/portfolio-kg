@@ -78,7 +78,7 @@ function HeroDesktop({ items }) {
                         lg:gap-7
                     "
                 >
-                    {items.map((item, index) => (
+                    {items.map((item) => (
                         <a
                             key={item.href}
                             href={item.href}
@@ -103,20 +103,7 @@ function HeroDesktop({ items }) {
                                 lg:text-[10px]
                             "
                         >
-                            <span
-                                className="
-                                    font-mono
-                                    text-[8px]
-                                    text-bronze/70
 
-                                    transition-colors
-                                    duration-300
-
-                                    group-hover:text-bronze
-                                "
-                            >
-                                {String(index + 1).padStart(2, "0")}
-                            </span>
 
                             <span>{item.label}</span>
                         </a>
@@ -432,45 +419,7 @@ function HeroDesktop({ items }) {
                     <Socials />
                 </div>
 
-                {/* =================================================
-                    MICRO TEXTO INFERIOR DIREITO
-                ================================================== */}
-
-                <div
-                    className="
-                        absolute
-                        bottom-8
-                        right-8
-                        z-30
-
-                        hidden
-
-                        items-center
-                        gap-3
-
-                        lg:flex
-                    "
-                >
-                    <span
-                        className="
-                            h-px
-                            w-8
-                            bg-graphite
-                        "
-                    />
-
-                    <span
-                        className="
-                            font-bebas
-                            text-[9px]
-                            uppercase
-                            tracking-[0.25em]
-                            text-steel/40
-                        "
-                    >
-                        Desenvolvendo soluções digitais
-                    </span>
-                </div>
+ 
             </div>
         </div>
     );

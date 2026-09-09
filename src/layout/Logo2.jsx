@@ -158,6 +158,7 @@ function Seclogs() {
                 flex-col
                 overflow-hidden
                 bg-obsidian
+                mb-14
             "
         >
             {/* ==================================================
@@ -166,16 +167,16 @@ function Seclogs() {
 
             <div
                 className="
-                    mb-14
+                    
                     flex
                     w-full
-                    flex-row
-                    items-center
+                    flex-col
+                    items-start
                     gap-2
                     p-5
 
-                    md:mb-20
-                    md:p-10
+                    md:mb-3
+                    md:pl-26
                 "
             >
                 <h2
@@ -183,9 +184,7 @@ function Seclogs() {
                         whitespace-nowrap
                         text-sm
                         uppercase
-                        tracking-wide
                         text-steel
-
                         md:text-7xl
                     "
                 >
@@ -213,9 +212,10 @@ function Seclogs() {
                         md:block
                         md:text-sm
                         md:leading-6
+                        md:pl-34
                     "
                 >
-                    Ferramenta não é diferencial. Decisão técnica é.
+                    Ferramenta não é diferencial. E sim decisão técnica.
                 </p>
             </div>
 
@@ -332,7 +332,7 @@ function Seclogs() {
                                 text-xs
                                 uppercase
                                 tracking-[0.2em]
-                                text-warm-bronze/50
+                                text-warm-bronze/70
                             "
                         >
                             Ferramentas

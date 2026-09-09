@@ -277,7 +277,7 @@ function Footer() {
                         {/* LINKEDIN */}
 
                         <a
-                            href="#"
+                            href="https://www.linkedin.com/in/kleber-goncalve-s/"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="
@@ -323,6 +323,7 @@ function Footer() {
                                 inline-flex
                                 items-center
                                 gap-2
+                                pointer-events-none
                                 rounded-full
                                 bg-ivory
                                 px-5

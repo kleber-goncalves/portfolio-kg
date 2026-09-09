@@ -669,9 +669,9 @@ function ProjetoDesktop({ projetos }) {
                 h-fit 
                 px-3
                 py-2                           
-                font-bebas
+                
                 text-[11px]
-                uppercase
+               
                 tracking-[0.15em]
                 text-steel/60
                 transition-all
@@ -679,7 +679,7 @@ function ProjetoDesktop({ projetos }) {
                 ease-out
                 group-hover:translate-x-2
                 ${tech.hoverBorder}
-                ${tech.hoverText}
+                group-hover:text-white
             `}
                                                     >
                                                         {Icon && <Icon className={`h-4.5 w-4.5  ${tech.icon}`} />}

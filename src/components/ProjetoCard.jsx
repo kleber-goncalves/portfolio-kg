@@ -203,11 +203,11 @@ function ProjetoCard({ numero, titulo, descricao, tecnologias = [], tecnologiasC
                 INFORMAÇÕES
             ================================================== */}
 
-            <div className="flex h-[52%] flex-col justify-between p-5">
+            <div className="flex h-[52%] flex-col  p-5">
                 {/* CABEÇALHO */}
 
                 <div>
-                    <span className="text-sm text-white/40">{numero}</span>
+                    
 
                     <h2 className="mt-2 text-3xl font-bold uppercase text-white">{titulo}</h2>
 
@@ -237,9 +237,9 @@ function ProjetoCard({ numero, titulo, descricao, tecnologias = [], tecnologiasC
                     border
                     px-3
                     py-1.5
-                    ${tech.bg}
+                    
                     ${tech.border}
-                    ${tech.text}
+                    text-white
                 `}
                             >
                                 {Icon && <Icon className={`h-3.5 w-3.5 shrink-0 ${tech.icon}`} />}
@@ -252,15 +252,15 @@ function ProjetoCard({ numero, titulo, descricao, tecnologias = [], tecnologiasC
 
                 {/* LINKS */}
 
-                <div className="mt-auto flex shrink-0 gap-3 pt-4">
+                <div className=" flex shrink-0 gap-3 pt-4">
                     {demo && (
-                        <a href={demo} target="_blank" rel="noopener noreferrer" onClick={(event) => event.stopPropagation()} className="rounded-full bg-white px-5 py-2.5 text-sm font-medium text-black transition-transform duration-300 hover:scale-105">
+                        <a href={demo} target="_blank" rel="noopener noreferrer" onClick={(event) => event.stopPropagation()} className="rounded-full bg-white py-3 px-4 text-sm font-medium text-black transition-transform duration-300 hover:scale-105">
                             Demo ↗
                         </a>
                     )}
 
                     {github && (
-                        <a href={github} target="_blank" rel="noopener noreferrer" onClick={(event) => event.stopPropagation()} className="rounded-full border border-white/20 px-5 py-2.5 text-sm font-medium text-white transition-colors duration-300 hover:bg-white/10">
+                        <a href={github} target="_blank" rel="noopener noreferrer" onClick={(event) => event.stopPropagation()} className="rounded-full border border-white/20 py-2.5 px-6 text-sm font-medium text-white transition-colors duration-300 hover:bg-white/10">
                             GitHub ↗
                         </a>
                     )}

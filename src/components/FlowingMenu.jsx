@@ -227,7 +227,7 @@ function MenuItem({ text, logos = [], speed, textColor, marqueeBgColor, marqueeT
                     justify-between
                     px-5
 
-                    md:px-10
+                    md:px-26
                 "
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
