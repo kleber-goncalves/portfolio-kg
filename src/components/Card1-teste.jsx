@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
 import "../styles/editorialCard.css";
 
 export default function Card1({ title, text, text_2, variant = "default", className = "", classNameText = "", classNameTitle = "", classNametext2 = "", ...props }) {
@@ -9,37 +10,115 @@ export default function Card1({ title, text, text_2, variant = "default", classN
 
         if (!card) return;
 
+        const mediaQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
+
+        if (!mediaQuery.matches) return;
+
+        const handleMouseEnter = () => {
+            card.style.setProperty("--spotlight-opacity", "1");
+            card.style.setProperty("--border-glow-opacity", "1");
+
+            gsap.to(card, {
+                y: -3,
+                duration: 0.35,
+                ease: "power2.out",
+            });
+        };
+
         const handleMouseMove = (e) => {
             const rect = card.getBoundingClientRect();
 
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
 
+            /*
+             * --------------------------------
+             * SPOTLIGHT
+             * --------------------------------
+             */
+
             const percentX = (x / rect.width) * 100;
             const percentY = (y / rect.height) * 100;
 
             card.style.setProperty("--mouse-x", `${percentX}%`);
-            card.style.setProperty("--mouse-y", `${percentY}%`);
-        };
 
-        const handleMouseEnter = () => {
-            card.style.setProperty("--spotlight-opacity", "1");
+            card.style.setProperty("--mouse-y", `${percentY}%`);
+
+            /*
+             * --------------------------------
+             * TILT 3D
+             * --------------------------------
+             */
+
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            const mouseX = x - centerX;
+            const mouseY = y - centerY;
+
+            /*
+             * Quanto maior o valor,
+             * mais forte o Tilt.
+             *
+             * 1.5 = bem sutil
+             * 3   = mais perceptível
+             */
+
+            const rotateX = (mouseY / centerY) * -1.5;
+
+            const rotateY = (mouseX / centerX) * 1.5;
+
+            gsap.to(card, {
+                rotateX,
+                rotateY,
+                duration: 0.18,
+                ease: "power2.out",
+                transformPerspective: 500,
+                overwrite: true,
+            });
         };
 
         const handleMouseLeave = () => {
             card.style.setProperty("--spotlight-opacity", "0");
+
+            card.style.setProperty("--border-glow-opacity", "0");
+
+            /*
+             * Retorna para a posição original
+             */
+
+            gsap.to(card, {
+                y: 0,
+                rotateX: 0,
+                rotateY: 0,
+                duration: 0.5,
+                ease: "power3.out",
+                overwrite: true,
+            });
         };
 
-        card.addEventListener("mousemove", handleMouseMove);
         card.addEventListener("mouseenter", handleMouseEnter);
+
+        card.addEventListener("mousemove", handleMouseMove);
+
         card.addEventListener("mouseleave", handleMouseLeave);
 
         return () => {
-            card.removeEventListener("mousemove", handleMouseMove);
             card.removeEventListener("mouseenter", handleMouseEnter);
+
+            card.removeEventListener("mousemove", handleMouseMove);
+
             card.removeEventListener("mouseleave", handleMouseLeave);
+
+            gsap.killTweensOf(card);
         };
     }, []);
+
+    /*
+     * --------------------------------
+     * VARIANTS ORIGINAIS
+     * --------------------------------
+     */
 
     const variants = {
         default: {
@@ -82,9 +161,7 @@ export default function Card1({ title, text, text_2, variant = "default", classN
             `}
             {...props}
         >
-            {/* =========================================
-                SPOTLIGHT
-            ========================================= */}
+            {/* Spotlight */}
             <span
                 className="
                     editorial-card__spotlight
@@ -94,9 +171,7 @@ export default function Card1({ title, text, text_2, variant = "default", classN
                 "
             />
 
-            {/* =========================================
-                BORDA ILUMINADA
-            ========================================= */}
+            {/* Glow da borda */}
             <span
                 className="
                     editorial-card__glow
@@ -106,9 +181,7 @@ export default function Card1({ title, text, text_2, variant = "default", classN
                 "
             />
 
-            {/* =========================================
-                CONTEÚDO
-            ========================================= */}
+            {/* Conteúdo ORIGINAL */}
             <div
                 className="
                     relative
@@ -123,7 +196,6 @@ export default function Card1({ title, text, text_2, variant = "default", classN
                     md:pl-6
                 "
             >
-                {/* CATEGORIA */}
                 <p
                     className={`
                         font-bebas
@@ -143,7 +215,6 @@ export default function Card1({ title, text, text_2, variant = "default", classN
                     {text}
                 </p>
 
-                {/* TÍTULO */}
                 <div
                     className="
                         flex
@@ -172,7 +243,6 @@ export default function Card1({ title, text, text_2, variant = "default", classN
                     </h3>
                 </div>
 
-                {/* DESCRIÇÃO */}
                 <p
                     className={`
                         max-w-3xl
@@ -183,7 +253,7 @@ export default function Card1({ title, text, text_2, variant = "default", classN
                         transition-colors
                         duration-500
                         ease-out
-                        group-hover:text-ivory/70
+                        text-ivory/70
                         ${styles.description}
                         ${classNametext2}
                     `}

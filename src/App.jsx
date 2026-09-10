@@ -2,7 +2,7 @@
 import SmoothScroll from "./components/SmoothScroll";
 
 // Layout
-import Competencia from "./layout/CompetenciaTeste";
+import Competencia from "./layout/Competencia";
 import Formacao from "./layout/Formacao";
 import Footer from "./layout/Footer";
 
