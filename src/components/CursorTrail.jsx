@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import "../styles/CursorTrail.css";
+import "../styles/cursorTrail.css";
 
 const CursorTrail = ({ dotSize = 6, borderSize = 28, speed = 0.18 }) => {
     const dotRef = useRef(null);
@@ -28,11 +28,14 @@ const CursorTrail = ({ dotSize = 6, borderSize = 28, speed = 0.18 }) => {
 
         if (!dotElement || !borderElement) return;
 
+        // =========================================
+        // MOUSE MOVE
+        // =========================================
+
         const handleMouseMove = (event) => {
             mouse.current.x = event.clientX;
             mouse.current.y = event.clientY;
 
-            // Evita o trail nascer no canto da tela
             if (!initialized.current) {
                 dot.current.x = event.clientX;
                 dot.current.y = event.clientY;
@@ -47,10 +50,51 @@ const CursorTrail = ({ dotSize = 6, borderSize = 28, speed = 0.18 }) => {
             }
         };
 
+        // =========================================
+        // ENTRAR EM ELEMENTO CLICÁVEL
+        // =========================================
+
+        const handleMouseOver = (event) => {
+            const clickable = event.target.closest("a, button, [role='button']");
+
+            if (clickable) {
+                dotElement.classList.add("is-hidden");
+                borderElement.classList.add("is-hidden");
+            }
+        };
+
+        // =========================================
+        // SAIR DE ELEMENTO CLICÁVEL
+        // =========================================
+
+        const handleMouseOut = (event) => {
+            const clickable = event.target.closest("a, button, [role='button']");
+
+            if (!clickable) return;
+
+            // Verifica para onde o mouse está indo
+            const relatedTarget = event.relatedTarget;
+
+            if (relatedTarget && relatedTarget.closest && relatedTarget.closest("a, button, [role='button']")) {
+                return;
+            }
+
+            dotElement.classList.remove("is-hidden");
+            borderElement.classList.remove("is-hidden");
+        };
+
+        // =========================================
+        // SAIR DA JANELA
+        // =========================================
+
         const handleMouseLeave = () => {
             dotElement.style.opacity = "0";
             borderElement.style.opacity = "0";
         };
+
+        // =========================================
+        // ENTRAR NOVAMENTE NA JANELA
+        // =========================================
 
         const handleMouseEnter = () => {
             if (initialized.current) {
@@ -59,13 +103,17 @@ const CursorTrail = ({ dotSize = 6, borderSize = 28, speed = 0.18 }) => {
             }
         };
 
+        // =========================================
+        // ANIMAÇÃO DO TRAIL
+        // =========================================
+
+        let animationFrame;
+
         const animate = () => {
-            // Bolinha acompanha mais rapidamente
             dot.current.x += (mouse.current.x - dot.current.x) * (speed * 1.5);
 
             dot.current.y += (mouse.current.y - dot.current.y) * (speed * 1.5);
 
-            // Círculo externo acompanha mais lentamente
             border.current.x += (mouse.current.x - border.current.x) * speed;
 
             border.current.y += (mouse.current.y - border.current.y) * speed;
@@ -88,18 +136,26 @@ const CursorTrail = ({ dotSize = 6, borderSize = 28, speed = 0.18 }) => {
                 translate(-50%, -50%)
             `;
 
-            requestAnimationFrame(animate);
+            animationFrame = requestAnimationFrame(animate);
         };
 
         document.addEventListener("mousemove", handleMouseMove);
+        document.addEventListener("mouseover", handleMouseOver);
+        document.addEventListener("mouseout", handleMouseOut);
         document.addEventListener("mouseleave", handleMouseLeave);
         document.addEventListener("mouseenter", handleMouseEnter);
 
-        const animationFrame = requestAnimationFrame(animate);
+        animationFrame = requestAnimationFrame(animate);
 
         return () => {
             document.removeEventListener("mousemove", handleMouseMove);
+
+            document.removeEventListener("mouseover", handleMouseOver);
+
+            document.removeEventListener("mouseout", handleMouseOut);
+
             document.removeEventListener("mouseleave", handleMouseLeave);
+
             document.removeEventListener("mouseenter", handleMouseEnter);
 
             cancelAnimationFrame(animationFrame);

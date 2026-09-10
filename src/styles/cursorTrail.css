@@ -53,6 +53,16 @@
 
 
 /* =========================================
+   ESCONDER SOBRE ELEMENTOS CLICÁVEIS
+   ========================================= */
+
+.cursor-trail-border.is-hidden,
+.cursor-trail-dot.is-hidden {
+    opacity: 0 !important;
+}
+
+
+/* =========================================
    MOBILE / TOUCH
    ========================================= */
 
