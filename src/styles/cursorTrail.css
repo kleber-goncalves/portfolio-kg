@@ -1,0 +1,64 @@
+/* =========================================
+   CURSOR TRAIL
+   ========================================= */
+
+.cursor-trail-border,
+.cursor-trail-dot {
+    position: fixed;
+    left: 0;
+    top: 0;
+
+    pointer-events: none;
+
+    z-index: 9998;
+
+    border-radius: 50%;
+
+    opacity: 0;
+
+    will-change: transform;
+
+    transition:
+        opacity 0.15s ease,
+        width 0.15s ease,
+        height 0.15s ease;
+}
+
+
+/* =========================================
+   CÍRCULO EXTERNO
+   ========================================= */
+
+.cursor-trail-border {
+    background: transparent;
+
+    border: 1px solid rgba(255, 255, 255, 0.55);
+
+    mix-blend-mode: difference;
+}
+
+
+/* =========================================
+   BOLINHA INTERNA
+   ========================================= */
+
+.cursor-trail-dot {
+    background: white;
+
+    mix-blend-mode: difference;
+
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+
+/* =========================================
+   MOBILE / TOUCH
+   ========================================= */
+
+@media (hover: none), (pointer: coarse) {
+    .cursor-trail-border,
+    .cursor-trail-dot {
+        display: none !important;
+    }
+}
