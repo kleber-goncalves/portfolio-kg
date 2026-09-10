@@ -1,14 +1,46 @@
-export default function Card1({
-    title,
-    text,
-    text_2,
-    variant = "default",
-    className = "",
-    classNameText = "",
-    classNameTitle = "",
-    classNametext2 = "",
-    ...props
-}) {
+import { useEffect, useRef } from "react";
+import "../styles/editorialCard.css";
+
+export default function Card1({ title, text, text_2, variant = "default", className = "", classNameText = "", classNameTitle = "", classNametext2 = "", ...props }) {
+    const cardRef = useRef(null);
+
+    useEffect(() => {
+        const card = cardRef.current;
+
+        if (!card) return;
+
+        const handleMouseMove = (e) => {
+            const rect = card.getBoundingClientRect();
+
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const percentX = (x / rect.width) * 100;
+            const percentY = (y / rect.height) * 100;
+
+            card.style.setProperty("--mouse-x", `${percentX}%`);
+            card.style.setProperty("--mouse-y", `${percentY}%`);
+        };
+
+        const handleMouseEnter = () => {
+            card.style.setProperty("--spotlight-opacity", "1");
+        };
+
+        const handleMouseLeave = () => {
+            card.style.setProperty("--spotlight-opacity", "0");
+        };
+
+        card.addEventListener("mousemove", handleMouseMove);
+        card.addEventListener("mouseenter", handleMouseEnter);
+        card.addEventListener("mouseleave", handleMouseLeave);
+
+        return () => {
+            card.removeEventListener("mousemove", handleMouseMove);
+            card.removeEventListener("mouseenter", handleMouseEnter);
+            card.removeEventListener("mouseleave", handleMouseLeave);
+        };
+    }, []);
+
     const variants = {
         default: {
             text: "text-bronze",
@@ -29,94 +61,81 @@ export default function Card1({
         },
     };
 
-    const styles = variants[variant];
+    const styles = variants[variant] || variants.default;
 
     return (
         <article
+            ref={cardRef}
             className={`
                 group
+                editorial-card
                 relative
                 w-full
-
                 border-t
                 md:border-t-0
                 md:border-b
                 border-graphite
-
                 py-7
                 md:py-10
-
-                transition-colors
-                duration-500
-                ease-out
-
-                hover:border-bronze/50
-                active:border-bronze/50
-
+                
                 ${className}
             `}
             {...props}
         >
-            {/* =====================================================
-                LINHA DE INTERAÇÃO
-            ===================================================== */}
-
+            {/* =========================================
+                SPOTLIGHT
+            ========================================= */}
             <span
                 className="
+                    editorial-card__spotlight
                     absolute
-                    left-0
-                    top-0
-
-                    h-px
-                    w-0
-
-                    bg-gradientaa
-
-                    transition-all
-                    duration-700
-                    ease-out
-
-                    group-hover:w-full
-                    group-active:w-full
+                    inset-0
+                    pointer-events-none
                 "
             />
 
-            {/* =====================================================
-                CONTEÚDO
-            ===================================================== */}
+            {/* =========================================
+                BORDA ILUMINADA
+            ========================================= */}
+            <span
+                className="
+                    editorial-card__glow
+                    absolute
+                    inset-0
+                    pointer-events-none
+                "
+            />
 
+            {/* =========================================
+                CONTEÚDO
+            ========================================= */}
             <div
                 className="
-                   flex
-    w-full
-    md:min-h-[260px]
-    flex-col
-    items-start
-    gap-3
-    md:p-6
+                    relative
+                    z-[2]
+                    flex
+                    w-full
+                    md:min-h-[260px]
+                    flex-col
+                    items-start
+                    gap-3
+                    md:py-6
+                    md:pl-6
                 "
             >
-                {/* =================================================
-                    CATEGORIA
-                ================================================= */}
-
+                {/* CATEGORIA */}
                 <p
                     className={`
                         font-bebas
                         text-xs
                         uppercase
                         tracking-[0.2em]
-
                         md:text-sm
                         md:tracking-[0.25em]
-
                         transition-colors
                         duration-500
                         ease-out
-
                         group-hover:text-accent-hover
-                        group-active:text-accent-hover
-
                         ${styles.text}
                         ${classNameText}
                     `}
@@ -124,10 +143,7 @@ export default function Card1({
                     {text}
                 </p>
 
-                {/* =================================================
-                    TÍTULO + ÍCONE
-                ================================================= */}
-
+                {/* TÍTULO */}
                 <div
                     className="
                         flex
@@ -143,76 +159,31 @@ export default function Card1({
                             text-xl
                             font-[600]
                             leading-tight
-
                             md:text-4xl
-
                             transition-transform
                             duration-500
                             ease-out
-
                             group-hover:translate-x-1
-                            group-active:translate-x-1
-
                             ${styles.title}
                             ${classNameTitle}
                         `}
                     >
                         {title}
                     </h3>
-
-                    {/* =================================================
-                        ÍCONE
-                    ================================================= */}
-
-                    <span
-                        className="
-                            shrink-0
-                            hidden
-
-                            text-lg
-                            text-steel/30
-
-                            transition-all
-                            duration-500
-                            ease-out
-
-                            group-hover:-translate-y-1
-                            group-hover:translate-x-1
-                            group-hover:text-bronze
-
-                            group-active:-translate-y-1
-                            group-active:translate-x-1
-                            group-active:text-bronze
-
-                            md:text-xl
-                             md:hidden
-                        "
-                    >
-                        ↗
-                    </span>
                 </div>
 
-                {/* =================================================
-                    DESCRIÇÃO
-                ================================================= */}
-
+                {/* DESCRIÇÃO */}
                 <p
                     className={`
                         max-w-3xl
-
                         text-sm
                         leading-relaxed
-
                         md:text-sm
                         md:leading-6
-
                         transition-colors
                         duration-500
                         ease-out
-
                         group-hover:text-ivory/70
-                        group-active:text-ivory/70
-
                         ${styles.description}
                         ${classNametext2}
                     `}
@@ -220,29 +191,6 @@ export default function Card1({
                     {text_2}
                 </p>
             </div>
-
-            {/* =====================================================
-                MICRO LINHA
-            ===================================================== */}
-
-            {/* <span
-                className="
-                    mt-6
-                    block
-
-                    h-px
-                    w-0
-
-                    bg-bronze/40
-
-                    transition-all
-                    duration-700
-                    ease-out
-
-                    group-hover:w-20
-                    group-active:w-20
-                "
-            /> */}
         </article>
     );
 }

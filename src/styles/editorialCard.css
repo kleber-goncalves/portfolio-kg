@@ -1,0 +1,106 @@
+/* =========================================================
+   EDITORIAL CARD
+========================================================= */
+
+.editorial-card {
+    --mouse-x: 50%;
+    --mouse-y: 50%;
+    --spotlight-opacity: 0;
+
+    isolation: isolate;
+    overflow: hidden;
+
+    background: transparent;
+
+    transition:
+        background-color 0.4s ease;
+}
+
+
+/* =========================================================
+   SPOTLIGHT
+========================================================= */
+
+.editorial-card__spotlight {
+    z-index: 0;
+
+    background: radial-gradient(
+        420px circle at var(--mouse-x) var(--mouse-y),
+        rgba(168, 120, 82, 0.20),
+        rgba(168, 120, 82, 0.08) 35%,
+        transparent 70%
+    );
+
+    opacity: var(--spotlight-opacity);
+
+    transition:
+        opacity 0.25s ease;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   BORDA ILUMINADA
+========================================================= */
+
+.editorial-card__glow {
+    z-index: 1;
+
+    padding: 3px;
+
+    background: radial-gradient(
+        380px circle at var(--mouse-x) var(--mouse-y),
+        rgba(216, 194, 170, 1),
+        rgba(168, 120, 82, 0.70) 25%,
+        rgba(168, 120, 82, 0.25) 45%,
+        transparent 70%
+    );
+
+    opacity: var(--spotlight-opacity);
+
+    transition:
+        opacity 0.25s ease;
+
+    pointer-events: none;
+
+    /* transforma o elemento em uma borda */
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+
+    -webkit-mask-composite: xor;
+
+    mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+
+    mask-composite: exclude;
+}
+
+
+/* =========================================================
+   HOVER DO CARD
+========================================================= */
+
+@media (hover: hover) and (pointer: fine) {
+    .editorial-card:hover {
+        background-color: #171717;
+    }
+}
+
+
+/* =========================================================
+   MOBILE / TOUCH
+========================================================= */
+
+@media (hover: none), (pointer: coarse) {
+    .editorial-card__spotlight,
+    .editorial-card__glow {
+        display: none;
+    }
+
+    .editorial-card {
+        background: transparent;
+    }
+}

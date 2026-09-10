@@ -164,7 +164,7 @@ function Competencia() {
                     className=" grid
     w-full
     grid-cols-1
-    md:grid-cols-2 md:gap-x-18"
+    md:grid-cols-2  "
                 >
                     {competencias.map((competencia) => (
                         <Card1 key={competencia.numero} numero={competencia.numero} variant="default" text={competencia.text} title={competencia.title} text_2={competencia.description} />
