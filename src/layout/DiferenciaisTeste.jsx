@@ -1,4 +1,4 @@
-import Card2 from "../components/Card2";
+import Card2 from "../components/card2";
 
 function Diferenciais() {
     const diferenciais = [
