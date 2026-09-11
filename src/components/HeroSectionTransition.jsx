@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef } from "react";
+
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -18,35 +19,87 @@ function HeroSectionTransition() {
             const hero = heroRef.current;
             const seclogs = seclogsRef.current;
 
-            if (!section || !hero || !seclogs) return;
+            if (!section || !hero || !seclogs) {
+                console.error("❌ Elementos da transição não encontrados.");
+
+                return;
+            }
+
+            /*
+            ============================================================
+            ELEMENTOS DO HERO
+            ============================================================
+            */
+
+            const heroTitle = hero.querySelector('[data-hero-element="title"]');
+
+            const heroText = hero.querySelector('[data-hero-element="text"]');
+
+            const heroVisual = hero.querySelector('[data-hero-element="visual"]');
 
             console.log("====================================");
+
             console.log("🎬 HERO → SECLOGS TRANSITION");
+
             console.log("====================================");
 
-            // =========================================
-            // SECLOGS COMEÇA ABAIXO DA TELA
-            // =========================================
+            console.log("Hero:", hero);
+
+            console.log("Title:", heroTitle);
+
+            console.log("Text:", heroText);
+
+            console.log("Visual:", heroVisual);
+
+            console.log("Seclogs:", seclogs);
+
+            /*
+            ============================================================
+            ESTADO INICIAL
+            ============================================================
+            */
 
             gsap.set(seclogs, {
                 yPercent: 100,
             });
 
-            // =========================================
-            // TIMELINE PRINCIPAL
-            // =========================================
+            gsap.set(hero, {
+                opacity: 1,
+            });
+
+            /*
+            ============================================================
+            ESCALA INICIAL
+            ============================================================
+            */
+
+            const animatedElements = [heroTitle, heroText, heroVisual].filter(Boolean);
+
+            gsap.set(animatedElements, {
+                scale: 1,
+                transformOrigin: "center center",
+            });
+
+            /*
+            ============================================================
+            MASTER TIMELINE
+            ============================================================
+            */
 
             const tl = gsap.timeline({
                 scrollTrigger: {
                     trigger: section,
+
                     start: "top top",
 
-                    // Distância total da transição
                     end: "+=1800",
 
-                    scrub: 1,
+                    scrub: true,
+
                     pin: true,
+
                     anticipatePin: 1,
+
                     invalidateOnRefresh: true,
 
                     markers: false,
@@ -57,46 +110,107 @@ function HeroSectionTransition() {
                 },
             });
 
-            // =========================================
-            // 1. SECLOGS SOBE
-            // =========================================
+            /*
+            ============================================================
+            1 — SECLOGS SOBE
+            ============================================================
+            */
 
             tl.to(
                 seclogs,
                 {
                     yPercent: 0,
+
                     ease: "none",
+
                     duration: 1,
                 },
                 0,
             );
 
-            // =========================================
-            // 2. HERO PERDE OPACIDADE
-            // =========================================
+            /*
+            ============================================================
+            2 — HERO PERDE OPACIDADE
+            ============================================================
+            */
 
             tl.to(
                 hero,
-                {   
+                {
                     opacity: 0.55,
+
                     ease: "none",
+
                     duration: 1,
                 },
                 0,
             );
 
-            // =========================================
-            // 3. HOLD
-            // =========================================
-            //
-            // Depois que a Seclogs chega no topo,
-            // ela permanece parada durante este trecho.
-            //
-            // Como estamos usando scrub, isso representa
-            // uma distância adicional de scroll.
-            //
-            // 1.2 = hold perceptível
-            //
+            /*
+            ============================================================
+            3 — FOTO DIMINUI
+            ============================================================
+            */
+
+            if (heroVisual) {
+                tl.to(
+                    heroVisual,
+                    {
+                        scale: 0.88,
+
+                        ease: "none",
+
+                        duration: 1,
+                    },
+                    0,
+                );
+            }
+
+            /*
+            ============================================================
+            4 — KLEBER DEV DIMINUI
+            ============================================================
+            */
+
+            if (heroTitle) {
+                tl.to(
+                    heroTitle,
+                    {
+                        scale: 0.84,
+
+                        ease: "none",
+
+                        duration: 1,
+                    },
+                    0,
+                );
+            }
+
+            /*
+            ============================================================
+            5 — TEXTO DIMINUI
+            ============================================================
+            */
+
+            if (heroText) {
+                tl.to(
+                    heroText,
+                    {
+                        scale: 0.9,
+
+                        ease: "none",
+
+                        duration: 1,
+                    },
+                    0,
+                );
+            }
+
+            /*
+            ============================================================
+            6 — HOLD
+            ============================================================
+            */
 
             tl.to(
                 {},
@@ -106,7 +220,9 @@ function HeroSectionTransition() {
             );
         }, sectionRef);
 
-        return () => ctx.revert();
+        return () => {
+            ctx.revert();
+        };
     }, []);
 
     return (
@@ -119,9 +235,9 @@ function HeroSectionTransition() {
                 overflow-hidden
             "
         >
-            {/* =========================================
+            {/* =====================================================
                 HERO
-            ========================================= */}
+            ====================================================== */}
 
             <div
                 ref={heroRef}
@@ -136,9 +252,9 @@ function HeroSectionTransition() {
                 <Hero />
             </div>
 
-            {/* =========================================
+            {/* =====================================================
                 SECLOGS
-            ========================================= */}
+            ====================================================== */}
 
             <div
                 ref={seclogsRef}
@@ -149,7 +265,6 @@ function HeroSectionTransition() {
                     w-full
                     h-auto
                     bg-obsidian
-
                 "
             >
                 <Seclogs />

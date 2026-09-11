@@ -158,6 +158,7 @@ function Seclogs() {
                 flex-col
                 overflow-hidden
                 bg-obsidian
+                md:mt-34
                 mb-14
                 shadow-t-2xl
                 shadow-black
