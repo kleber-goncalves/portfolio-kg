@@ -5,8 +5,6 @@ import SmoothScroll from "./components/SmoothScroll";
 import DotField from "./components/DotField";
 
 // Layout
-import Hero from "./layout/HeroTeste2";
-import Seclogs from "./layout/Logo2";
 import Competencia from "./layout/Competencia";
 import ProjetoT from "./layout/ProjetosTeste2";
 import Diferenciais from "./layout/DiferenciaisTeste";
@@ -18,6 +16,7 @@ import "./App.css";
 
 
 // Components
+import HeroSectionTransition from "./components/HeroSectionTransition";
 import ButtonReset from "./components/buttonReset";
 import CursorTrail from "./components/CursorTrail";
 
@@ -41,8 +40,9 @@ function App() {
 
                 <div className="relative z-[1] w-full">
                     <ButtonReset />
-                    <Hero />
-                    <Seclogs />
+
+                    <HeroSectionTransition />
+
                     <Competencia />
                     <ProjetoT />
                     <Diferenciais />

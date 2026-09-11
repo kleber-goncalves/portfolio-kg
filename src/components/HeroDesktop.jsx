@@ -1,276 +1,358 @@
+import { useLayoutEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
+
 import Socials from "../components/Socials";
 import { ArrowDownRight } from "lucide-react";
 import "../styles/looptextHero.css";
-
+import "../styles/heroParallax.css";
 
 function HeroDesktop({ items }) {
+      const heroRef = useRef(null);
+
+      useLayoutEffect(() => {
+          console.log("====================================");
+          console.log("🚀 HERO DESKTOP MONTADO");
+          console.log("====================================");
+
+          const hero = heroRef.current;
+
+          console.log("heroRef:", hero);
+          console.log("hero element:", hero?.tagName);
+          console.log("hero class:", hero?.className);
+
+          if (!hero) {
+              console.error("❌ heroRef.current NÃO EXISTE");
+              return;
+          }
+
+          const rect = hero.getBoundingClientRect();
+
+          console.log("📐 HERO DIMENSÕES");
+          console.log("width:", rect.width);
+          console.log("height:", rect.height);
+          console.log("top:", rect.top);
+          console.log("bottom:", rect.bottom);
+
+          console.log("📏 WINDOW");
+          console.log("innerWidth:", window.innerWidth);
+          console.log("innerHeight:", window.innerHeight);
+
+          console.log("📌 COMPUTED STYLE");
+
+          const styles = window.getComputedStyle(hero);
+
+          console.log("position:", styles.position);
+          console.log("top:", styles.top);
+          console.log("z-index:", styles.zIndex);
+          console.log("height:", styles.height);
+          console.log("min-height:", styles.minHeight);
+          console.log("overflow:", styles.overflow);
+
+          console.log("====================================");
+
+          const ctx = gsap.context(() => {
+              const animation = gsap.to(hero, {
+                  opacity: 0.55,
+
+                  scrollTrigger: {
+                      trigger: hero,
+
+                      start: "top top",
+
+                      end: "bottom top",
+
+                      scrub: true,
+
+                      markers: false,
+
+                      invalidateOnRefresh: true,
+
+                      onEnter: () => {
+                          console.log("🟢 ScrollTrigger → onEnter");
+                      },
+
+                      onUpdate: (self) => {
+                          console.log("🔄 ScrollTrigger progress:", self.progress.toFixed(3));
+                      },
+
+                      onLeave: () => {
+                          console.log("🔴 ScrollTrigger → onLeave");
+                      },
+
+                      onEnterBack: () => {
+                          console.log("🔵 ScrollTrigger → onEnterBack");
+                      },
+
+                      onLeaveBack: () => {
+                          console.log("⚪ ScrollTrigger → onLeaveBack");
+                      },
+                  },
+              });
+
+              console.log("🎬 ANIMAÇÃO CRIADA:", animation);
+
+              console.log("🎯 ScrollTrigger:", animation.scrollTrigger);
+          }, heroRef);
+
+          return () => {
+              console.log("🧹 HERO DESKTOP DESMONTADO");
+              ctx.revert();
+          };
+      }, []);
+    
     return (
-        <div
+        <section
+            ref={heroRef}
             className="
-                relative
-                min-h-[calc(100vh-2rem)]
-                w-full
-                overflow-hidden
-                bg-obsidian/20
-            "
+    hero-desktop
+    relative
+    z-0
+    w-full
+    h-screen
+    overflow-hidden
+"
         >
             {/* =====================================================
-                HERO
+                HERO STICKY
             ====================================================== */}
+
+            {/* =================================================
+                    CONTEÚDO DO HERO
+                ================================================== */}
 
             <div
                 className="
-                    relative
-                    flex
-                    min-h-[calc(100vh-2rem)]
-                    w-full
-                    items-center
-                    justify-center
-                    overflow-hidden
-                "
+                        relative
+                        flex
+                        h-full
+                        w-full
+                        items-center
+                        justify-center
+                        overflow-hidden
+                    "
             >
                 {/* =================================================
-                    LOGO
-                ================================================== */}
+                        LOGO
+                    ================================================== */}
 
                 <div
                     className="
-                        absolute
-                        left-8
-                        top-8
-                        z-40
+                            absolute
+                            left-8
+                            top-8
+                            z-40
 
-                        lg:left-18
-                        lg:top-10
-                    "
+                            lg:left-18
+                            lg:top-10
+                        "
                 >
                     <div
                         className="
-                            h-10
-                            w-10
+                                h-10
+                                w-10
 
-                            lg:h-11
-                            lg:w-11
-                        "
+                                lg:h-11
+                                lg:w-11
+                            "
                     >
                         <img src="/logo.svg" alt="Kleber Dev" className="h-full w-full" />
                     </div>
                 </div>
 
                 {/* =================================================
-                    NAVEGAÇÃO
-                ================================================== */}
+                        NAVEGAÇÃO
+                    ================================================== */}
 
                 <nav
                     aria-label="Navegação principal"
                     className="
-                        absolute
-                        right-8
-                        top-8
-                        z-40
+                            absolute
+                            right-8
+                            top-8
+                            z-40
 
-                        flex
-                        items-center
-                        gap-5
+                            flex
+                            items-center
+                            gap-5
 
-                        lg:right-17
-                        lg:top-10
-                        lg:gap-7
-                    "
+                            lg:right-17
+                            lg:top-10
+                            lg:gap-7
+                        "
                 >
                     {items.map((item) => (
                         <a
                             key={item.href}
                             href={item.href}
                             className="
-                                group
-                                flex
-                                items-center
-                                gap-2
+                                    group
+                                    flex
+                                    items-center
+                                    gap-2
 
-                                font-space
-                                text-[9px]
-                                uppercase
-                                tracking-[0.12em]
+                                    font-space
+                                    text-[9px]
+                                    uppercase
+                                    tracking-[0.12em]
 
-                                text-steel
+                                    text-steel
 
-                                transition-colors
-                                duration-300
+                                    transition-colors
+                                    duration-300
 
-                                hover:text-bronze
+                                    hover:text-bronze
 
-                                lg:text-[10px]
-                            "
+                                    lg:text-[10px]
+                                "
                         >
-
-
                             <span>{item.label}</span>
                         </a>
                     ))}
                 </nav>
 
-
-
                 {/* =================================================
-                    FOTO CENTRAL
-                ================================================== */}
+                        FOTO CENTRAL
+                    ================================================== */}
 
                 <div
                     className="
-                        absolute
-                        left-1/2
-                        top-1/2
-                        z-10
+                            absolute
+                            left-1/2
+                            top-1/2
+                            z-10
 
-                        h-[122vh]
-                        w-[420px]
+                            h-[122vh]
+                            w-[420px]
 
-                        -translate-x-1/2
-                        -translate-y-1/2
+                            -translate-x-1/2
+                            -translate-y-1/2
 
-                        overflow-hidden
+                            overflow-hidden
 
-                        lg:w-[440px]
-                        xl:w-[970px]
-                    "
+                            lg:w-[440px]
+                            xl:w-[970px]
+                        "
                 >
                     <img
                         src="/euNv.png"
                         alt="Kleber Dev"
                         className="
-                            h-full
-                            w-full
-                            object-cover
-                            object-top
-                        "
+                                h-full
+                                w-full
+                                object-cover
+                                object-top
+                            "
                     />
 
                     {/* =================================================
-                        GRADIENTE INFERIOR
-                    ================================================== */}
+                            GRADIENTE INFERIOR
+                        ================================================== */}
 
                     <div
                         aria-hidden="true"
                         className="
-                            pointer-events-none
-                            absolute
-                            inset-x-0
-                            bottom-0
-                            h-[40%]
+                                pointer-events-none
+                                absolute
+                                inset-x-0
+                                bottom-0
+                                h-[40%]
 
-                            bg-gradient-to-t
-                            from-obsidian
-                            via-obsidian/20
-                            to-transparent
-                        "
+                                bg-gradient-to-t
+                                from-obsidian
+                                via-obsidian/20
+                                to-transparent
+                            "
                     />
                 </div>
 
                 {/* =================================================
-                    MARQUEE — NOME GIGANTE
-                ================================================== */}
+                        MARQUEE — NOME
+                    ================================================== */}
 
                 <div
                     aria-hidden="true"
                     className="
-                        pointer-events-none
-                        absolute
-                        left-85
-                        bottom-[-4%]
-                        z-20
+                            pointer-events-none
+                            absolute
+                            left-85
+                            bottom-[-4%]
+                            z-20
 
-                        w-full
+                            w-full
 
-                        overflow-hidden
-                        select-none
-                    "
+                            overflow-hidden
+                            select-none
+                        "
                 >
-                    {/* <div className="marquee-track">
-                      
-
-                        <div className="marquee-content">
-                            <span className="font-bebas">KLEBER DEV</span>
-
-                            <span className="marquee-star">✦</span>
-                        </div>
-
-                       
-
-                        <div className="marquee-content">
-                            <span className="font-bebas">KLEBER DEV</span>
-
-                            <span className="marquee-star">✦</span>
-                        </div>
-                    </div> */}
                     <div className="marquee-contentHero">
                         <span className="font-bebas">KLEBER DEV</span>
-
-                       
                     </div>
                 </div>
 
                 {/* =================================================
-                    BLOCO ESQUERDO
-                ================================================== */}
+                        BLOCO ESQUERDO
+                    ================================================== */}
 
                 <div
                     className="
-                        absolute
-                        left-0
-                        top-83
-                        z-30
+                            absolute
+                            left-0
+                            top-83
+                            z-30
 
-                        hidden
+                            hidden
 
-                        -translate-y-1/2
+                            -translate-y-1/2
 
-                        lg:flex
-                    "
+                            lg:flex
+                        "
                 >
                     <div
                         className="
-                            flex
-                            items-center
+                                flex
+                                items-center
 
-                            rounded-r-full
+                                rounded-r-full
 
-                            border
-                            border-graphite
+                                border
+                                border-graphite
 
-                            bg-carbon
+                                bg-carbon
 
-                            py-3
-                            pl-8
-                            pr-3
-                        "
+                                py-3
+                                pl-8
+                                pr-3
+                            "
                     >
                         <div
                             className="
-                                flex
-                                flex-col
-                                gap-1
-                            "
+                                    flex
+                                    flex-col
+                                    gap-1
+                                "
                         >
                             <span
                                 className="
-                                    font-bebas
-                                    text-[14px]
-                                    uppercase
-                                    tracking-[0.22em]
-                                    text-steel/50
-                                "
+                                        font-bebas
+                                        text-[14px]
+                                        uppercase
+                                        tracking-[0.22em]
+                                        text-steel/50
+                                    "
                             >
                                 Localização
                             </span>
 
                             <span
                                 className="
-                                    font-space
-                                    text-xl
-                                    font-medium
-                                    text-ivory
-                                "
+                                        font-space
+                                        text-xl
+                                        font-medium
+                                        text-ivory
+                                    "
                             >
                                 Brasil
                             </span>
@@ -278,105 +360,93 @@ function HeroDesktop({ items }) {
 
                         <div
                             className="
-                                ml-6
-                                flex
-                                h-12
-                                w-12
-                                items-center
-                                justify-center
+                                    ml-6
+                                    flex
+                                    h-12
+                                    w-12
+                                    items-center
+                                    justify-center
 
-                                rounded-full
+                                    rounded-full
 
-                                border
-                                border-graphite
+                                    border
+                                    border-graphite
 
-                                bg-obsidian
+                                    bg-obsidian
 
-                                text-bronze
-                            "
-                        >
-                            <span
-                                className="
-                                    text-lg
+                                    text-bronze
                                 "
-                            >
-                                ◉
-                            </span>
+                        >
+                            <span className="text-lg">◉</span>
                         </div>
                     </div>
                 </div>
 
                 {/* =================================================
-                    BLOCO DIREITO
-                ================================================== */}
+                        BLOCO DIREITO
+                    ================================================== */}
 
                 <div
                     className="
-                        absolute
-                        right-[7%]
-                        top-78
-                        z-30
+                            absolute
+                            right-[7%]
+                            top-78
+                            z-30
 
-                        hidden
-                        w-[300px]
+                            hidden
+                            w-[300px]
 
-                        -translate-y-1/2
+                            -translate-y-1/2
 
-                        lg:flex
-                        lg:flex-col
+                            lg:flex
+                            lg:flex-col
 
-                        xl:right-[0%]
-                        xl:w-[340px]
-                    "
+                            xl:right-[0%]
+                            xl:w-[340px]
+                        "
                 >
-                    {/* =================================================
-                        SETA
-                    ================================================== */}
+                    {/* SETA */}
 
                     <div
                         className="
-                            mb-10
-                            flex
-                            justify-start
-                        "
+                                mb-10
+                                flex
+                                justify-start
+                            "
                     >
                         <ArrowDownRight
                             className="
-                                h-8
-                                w-8
+                                    h-8
+                                    w-8
 
-                                stroke-[1]
+                                    stroke-[1]
 
-                                text-ivory/80
-                            "
+                                    text-ivory/80
+                                "
                         />
                     </div>
 
-                    {/* =================================================
-                        CARGO
-                    ================================================== */}
+                    {/* CARGO */}
 
                     <div
                         className="
-                            flex
-                            flex-col
-                        "
+                                flex
+                                flex-col
+                            "
                     >
-
-
                         <h2
                             className="
-                                font-space
-                                text-4xl
-                                font-medium
-                                leading-[0.95]
-                                tracking-[-0.04em]
+                                    font-space
+                                    text-4xl
+                                    font-medium
+                                    leading-[0.95]
+                                    tracking-[-0.04em]
 
-                                text-ivory
+                                    text-ivory
 
-                                lg:text-5xl
-                                xl:text-6xl
-                            "
+                                    lg:text-5xl
+                                    xl:text-6xl
+                                "
                         >
                             Software
                             <br />
@@ -385,43 +455,40 @@ function HeroDesktop({ items }) {
 
                         <p
                             className="
-                                mt-5
+                                    mt-5
 
-                                max-w-[280px]
+                                    max-w-[280px]
 
-                                text-sm
-                                leading-6
+                                    text-sm
+                                    leading-6
 
-                                text-steel/60
-                            "
+                                    text-steel/60
+                                "
                         >
                             Frontend · Backend · Fullstack
                         </p>
                     </div>
                 </div>
 
-
                 {/* =================================================
-                    SOCIALS
-                ================================================== */}
+                        SOCIALS
+                    ================================================== */}
 
                 <div
                     className="
-                        absolute
-                        bottom-8
-                        left-8
-                        z-40
+                            absolute
+                            bottom-8
+                            left-8
+                            z-40
 
-                        lg:bottom-10
-                        lg:left-10
-                    "
+                            lg:bottom-10
+                            lg:left-10
+                        "
                 >
                     <Socials />
                 </div>
-
- 
             </div>
-        </div>
+        </section>
     );
 }
 

@@ -35,10 +35,28 @@ function Hero() {
             className="
                 relative
                 w-full
-                overflow-hidden
+                overflow-visible
            
                 
             "
+            ref={(el) => {
+                if (!el) return;
+
+                const rect = el.getBoundingClientRect();
+
+                console.log("====================================");
+                console.log("🧱 HERO PAI");
+                console.log("====================================");
+                console.log("element:", el);
+                console.log("height:", rect.height);
+                console.log("top:", rect.top);
+                console.log("bottom:", rect.bottom);
+
+                const styles = window.getComputedStyle(el);
+
+                console.log("position:", styles.position);
+                console.log("overflow:", styles.overflow);
+            }}
         >
             {/* =====================================================
                 MOBILE

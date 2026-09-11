@@ -159,7 +159,28 @@ function Seclogs() {
                 overflow-hidden
                 bg-obsidian
                 mb-14
+                shadow-t-2xl
+                shadow-black
             "
+            ref={(el) => {
+                if (!el) return;
+
+                const rect = el.getBoundingClientRect();
+
+                console.log("====================================");
+                console.log("📦 SECLOGS");
+                console.log("====================================");
+                console.log("height:", rect.height);
+                console.log("top:", rect.top);
+                console.log("bottom:", rect.bottom);
+
+                const styles = window.getComputedStyle(el);
+
+                console.log("position:", styles.position);
+                console.log("z-index:", styles.zIndex);
+                console.log("margin-top:", styles.marginTop);
+                console.log("background:", styles.backgroundColor);
+            }}
         >
             {/* ==================================================
                 CABEÇALHO
