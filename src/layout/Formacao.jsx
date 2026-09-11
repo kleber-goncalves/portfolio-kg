@@ -43,9 +43,11 @@ function Formacao() {
 
             /*
             ====================================================
-            APLICA O EFEITO EM CADA ELEMENTO
+            APLICA O EFEITO EM CADA CARD
             ====================================================
             */
+
+            const cleanups = [];
 
             interactiveCards.forEach((card) => {
                 /*
@@ -77,7 +79,6 @@ function Formacao() {
                     const rect = card.getBoundingClientRect();
 
                     const x = event.clientX - rect.left;
-
                     const y = event.clientY - rect.top;
 
                     /*
@@ -87,7 +88,6 @@ function Formacao() {
                     */
 
                     const percentX = (x / rect.width) * 100;
-
                     const percentY = (y / rect.height) * 100;
 
                     card.style.setProperty("--mouse-x", `${percentX}%`);
@@ -101,17 +101,14 @@ function Formacao() {
                     */
 
                     const centerX = rect.width / 2;
-
                     const centerY = rect.height / 2;
 
                     const mouseX = x - centerX;
-
                     const mouseY = y - centerY;
 
                     /*
-                     * Tilt sutil.
-                     *
-                     * Igual aos outros cards do portfólio.
+                     * Tilt extremamente sutil,
+                     * igual aos outros cards.
                      */
 
                     const rotateX = (mouseY / centerY) * -1.5;
@@ -121,13 +118,9 @@ function Formacao() {
                     gsap.to(card, {
                         rotateX,
                         rotateY,
-
                         duration: 0.18,
-
                         ease: "power2.out",
-
-                        transformPerspective: 1000,
-
+                        transformPerspective: 500,
                         overwrite: true,
                     });
                 };
@@ -147,11 +140,8 @@ function Formacao() {
                         y: 0,
                         rotateX: 0,
                         rotateY: 0,
-
                         duration: 0.5,
-
                         ease: "power3.out",
-
                         overwrite: true,
                     });
                 };
@@ -170,33 +160,29 @@ function Formacao() {
 
                 /*
                 =================================================
-                CLEANUP
+                CLEANUP INDIVIDUAL
                 =================================================
                 */
 
-                card._formationMouseEnter = handleMouseEnter;
+                cleanups.push(() => {
+                    card.removeEventListener("mouseenter", handleMouseEnter);
 
-                card._formationMouseMove = handleMouseMove;
+                    card.removeEventListener("mousemove", handleMouseMove);
 
-                card._formationMouseLeave = handleMouseLeave;
+                    card.removeEventListener("mouseleave", handleMouseLeave);
+
+                    gsap.killTweensOf(card);
+                });
             });
 
             /*
             ====================================================
-            CLEANUP DOS EVENTOS
+            CLEANUP
             ====================================================
             */
 
             return () => {
-                interactiveCards.forEach((card) => {
-                    card.removeEventListener("mouseenter", card._formationMouseEnter);
-
-                    card.removeEventListener("mousemove", card._formationMouseMove);
-
-                    card.removeEventListener("mouseleave", card._formationMouseLeave);
-
-                    gsap.killTweensOf(card);
-                });
+                cleanups.forEach((cleanup) => cleanup());
             };
         }, sectionRef);
 
@@ -232,6 +218,10 @@ function Formacao() {
                     md:max-w-[1500px]
                 "
             >
+                {/* =====================================================
+                    TÍTULO
+                ===================================================== */}
+
                 <div
                     className="
                         flex
@@ -308,7 +298,7 @@ function Formacao() {
                                 border-graphite
                                 p-5
 
-                                md:gap-16
+                                md:gap-4
                                 md:rounded-none
                                 md:border-0
                                 md:p-0
@@ -327,12 +317,11 @@ function Formacao() {
                                     gap-10
 
                                     md:grid-cols-[1.1fr_1.85fr]
-                                    md:gap-
-                                    lg:gap-
+                                    md:gap-0
                                 "
                             >
                                 {/* =================================================
-                                    COLUNA ESQUERDA — NÍVEL ATUAL
+                                    CARD 1 — NÍVEL ATUAL
                                 ================================================= */}
 
                                 <div
@@ -344,6 +333,8 @@ function Formacao() {
                                         flex-col
                                         gap-8
                                         pt-2
+                                        md:pt-6
+                                        md:pl-6
                                     "
                                 >
                                     {/* SPOTLIGHT */}
@@ -429,8 +420,6 @@ function Formacao() {
                                         >
                                             Junior
                                         </h2>
-
-
                                     </div>
 
                                     {/* ESPECIALIDADES */}
@@ -463,7 +452,7 @@ function Formacao() {
                                 </div>
 
                                 {/* =================================================
-                                    COLUNA DIREITA — FORMAÇÃO
+                                    CARD 2 — FORMAÇÃO ACADÊMICA PRINCIPAL
                                 ================================================= */}
 
                                 <div
@@ -478,7 +467,10 @@ function Formacao() {
                                         md:border-l
                                         md:border-graphite
                                         md:pl-10
-                                        lg:pl-14
+                                        md:pt-6
+                                        lg:pl-10
+                                        lg:pr-10
+                                        lg:pb-6
                                     "
                                 >
                                     {/* SPOTLIGHT */}
@@ -656,67 +648,77 @@ function Formacao() {
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
 
                             {/* =====================================================
-                                DESCRIÇÃO DAS FORMAÇÕES
+                                FORMAÇÕES COMPLEMENTAR + ACADÊMICA
                             ===================================================== */}
 
                             <div
-                                data-formation-card
                                 className="
-                                    formation-inner-card
-                                    relative
-
                                     grid
                                     w-full
                                     grid-cols-1
                                     gap-6
 
-                                    border-t
-                                    border-graphite
-                                    pt-8
-
                                     md:grid-cols-2
-                                    md:gap-16
-                                    md:pt-10
+                                    md:gap-5
                                 "
                             >
-                                {/* SPOTLIGHT */}
-
-                                <span
-                                    className="
-                                        formation-inner-card__spotlight
-                                        absolute
-                                        inset-0
-                                        pointer-events-none
-                                    "
-                                />
-
-                                {/* GLOW */}
-
-                                <span
-                                    className="
-                                        formation-inner-card__glow
-                                        absolute
-                                        inset-0
-                                        pointer-events-none
-                                    "
-                                />
-
-                                {/* DNC */}
+                                {/* =================================================
+                                    CARD 3 — FORMAÇÃO COMPLEMENTAR
+                                ================================================= */}
 
                                 <div
+                                    data-formation-card
                                     className="
+                                        formation-inner-card
                                         relative
-                                        z-[2]
                                         flex
                                         flex-col
                                         gap-3
+
+                                        border-y
+                                        border-graphite
+                                        pt-8
+
+                                        md:pt-10
+                                        md:pl-6
                                     "
                                 >
-                                    <div className="flex items-center gap-3">
+                                    {/* SPOTLIGHT */}
+
+                                    <span
+                                        className="
+                                            formation-inner-card__spotlight
+                                            absolute
+                                            inset-0
+                                            pointer-events-none
+                                        "
+                                    />
+
+                                    {/* GLOW */}
+
+                                    <span
+                                        className="
+                                            formation-inner-card__glow
+                                            absolute
+                                            inset-0
+                                            pointer-events-none
+                                        "
+                                    />
+
+                                    {/* LABEL */}
+
+                                    <div
+                                        className="
+                                            relative
+                                            z-[2]
+                                            flex
+                                            items-center
+                                            gap-3
+                                        "
+                                    >
                                         <span
                                             className="
                                                 h-1.5
@@ -739,8 +741,12 @@ function Formacao() {
                                         </p>
                                     </div>
 
+                                    {/* DESCRIÇÃO */}
+
                                     <p
                                         className="
+                                            relative
+                                            z-[2]
                                             text-sm
                                             leading-6
                                             text-steel
@@ -756,18 +762,60 @@ function Formacao() {
                                     </p>
                                 </div>
 
-                                {/* ADS */}
+                                {/* =================================================
+                                    CARD 4 — FORMAÇÃO ACADÊMICA
+                                ================================================= */}
 
                                 <div
+                                    data-formation-card
                                     className="
+                                        formation-inner-card
                                         relative
-                                        z-[2]
                                         flex
                                         flex-col
                                         gap-3
+
+                                        border-y
+                                        border-graphite
+                                        pt-8
+
+                                        md:pt-10
+                                        md:pl-6
                                     "
                                 >
-                                    <div className="flex items-center gap-3">
+                                    {/* SPOTLIGHT */}
+
+                                    <span
+                                        className="
+                                            formation-inner-card__spotlight
+                                            absolute
+                                            inset-0
+                                            pointer-events-none
+                                        "
+                                    />
+
+                                    {/* GLOW */}
+
+                                    <span
+                                        className="
+                                            formation-inner-card__glow
+                                            absolute
+                                            inset-0
+                                            pointer-events-none
+                                        "
+                                    />
+
+                                    {/* LABEL */}
+
+                                    <div
+                                        className="
+                                            relative
+                                            z-[2]
+                                            flex
+                                            items-center
+                                            gap-3
+                                        "
+                                    >
                                         <span
                                             className="
                                                 h-1.5
@@ -790,8 +838,12 @@ function Formacao() {
                                         </p>
                                     </div>
 
+                                    {/* DESCRIÇÃO */}
+
                                     <p
                                         className="
+                                            relative
+                                            z-[2]
                                             text-sm
                                             leading-6
                                             text-steel
@@ -808,6 +860,8 @@ function Formacao() {
 
                                     <p
                                         className="
+                                            relative
+                                            z-[2]
                                             text-xs
                                             italic
                                             leading-5

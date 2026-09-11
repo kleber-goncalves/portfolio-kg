@@ -40,7 +40,12 @@ SPOTLIGHT
 */
 
 .formation-inner-card__spotlight {
+    position: absolute;
+    inset: 0;
+
     z-index: 0;
+
+    pointer-events: none;
 
     opacity: var(--spotlight-opacity);
 
@@ -67,15 +72,20 @@ GLOW DA BORDA
 */
 
 .formation-inner-card__glow {
+    position: absolute;
+    inset: 0;
+
     z-index: 1;
 
-    padding: 1px;
+    pointer-events: none;
+
+    padding: 3px;
 
     opacity: var(--border-glow-opacity);
 
     background:
         radial-gradient(
-            220px circle at var(--mouse-x) var(--mouse-y),
+            420px circle at var(--mouse-x) var(--mouse-y),
             rgba(216, 194, 170, 1) 0%,
             rgba(196, 154, 120, 0.75) 15%,
             rgba(168, 120, 82, 0.4) 35%,
@@ -109,6 +119,8 @@ HOVER
     box-shadow:
         0 8px 25px rgba(0, 0, 0, 0.12),
         0 0 30px rgba(168, 120, 82, 0.05);
+
+        border-bottom: none !important;
 }
 
 
@@ -121,7 +133,6 @@ REDUCED MOTION
 @media (prefers-reduced-motion: reduce) {
     .formation-inner-card {
         transform: none !important;
-
         transition: none !important;
     }
 
