@@ -11,7 +11,7 @@ function HeroDesktop({ items }) {
                 min-h-[calc(100vh-2rem)]
                 w-full
                 overflow-hidden
-                bg-obsidian
+                bg-obsidian/20
             "
         >
             {/* =====================================================

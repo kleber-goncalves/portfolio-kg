@@ -36,7 +36,7 @@ function Hero() {
                 relative
                 w-full
                 overflow-hidden
-                bg-obsidian
+           
                 
             "
         >
