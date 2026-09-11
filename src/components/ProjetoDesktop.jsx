@@ -539,7 +539,7 @@ function ProjetoDesktop({ projetos }) {
                                 justify-between
                                 border-b
                                 border-graphite
-                                py-8
+                                
                                 transition-colors
                                 duration-500
                                 last:border-b
@@ -554,7 +554,7 @@ function ProjetoDesktop({ projetos }) {
                                    group
                                    w-full
                                    transition-colors
-                                   
+                                   py-8
                                     
                                 "
                             >
@@ -713,7 +713,7 @@ function ProjetoDesktop({ projetos }) {
                     h-[360px]
                     w-[560px]
                     overflow-hidden
-                    rounded-xl
+                
                     border
                     border-graphite
                     bg-carbon

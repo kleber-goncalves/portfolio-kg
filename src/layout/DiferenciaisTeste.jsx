@@ -1,4 +1,4 @@
-import Card2 from "../components/Card.2-teste";
+import Card2 from "../components/Card2";
 
 function Diferenciais() {
     const diferenciais = [
@@ -192,6 +192,7 @@ function Diferenciais() {
                             md:row-start-2
                             md:ml-auto
                             md:max-w-[90%]
+                            
                         "
                     />
 

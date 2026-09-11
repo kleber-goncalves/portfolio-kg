@@ -1,0 +1,330 @@
+/* =====================================================
+   MAGIC CARD
+   ===================================================== */
+
+.magic-card {
+    --glow-x: 50%;
+    --glow-y: 50%;
+
+    position: relative;
+
+    width: 100%;
+    min-height: 260px;
+
+    padding: 32px;
+
+    overflow: hidden;
+
+    background: #0d0d0d ;
+
+    border-bottom: 1px solid #242424;
+
+    border-radius: 2px;
+
+    transform-style: preserve-3d;
+
+    will-change:
+        transform,
+        box-shadow;
+
+    transition:
+        background-color 0.3s ease,
+        box-shadow 0.3s ease;
+
+    isolation: isolate;
+}
+
+
+/* =====================================================
+   SPOTLIGHT
+   ===================================================== */
+
+.magic-card__spotlight {
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    z-index: 0;
+
+    opacity: 0;
+
+    background:
+        radial-gradient(
+            300px circle at
+                var(--glow-x)
+                var(--glow-y),
+
+            rgba(196, 154, 120, 0.13),
+
+            rgba(168, 120, 82, 0.07) 30%,
+
+            rgba(168, 120, 82, 0.025) 50%,
+
+            transparent 72%
+        );
+
+    mix-blend-mode: screen;
+
+    transition:
+        opacity 0.25s ease;
+}
+
+
+/* =====================================================
+   BORDER GLOW
+   ===================================================== */
+
+.magic-card__border-glow {
+    position: absolute;
+
+    inset: 0;
+
+    padding: 3px;
+
+    pointer-events: none;
+
+    z-index: 1;
+
+    background:
+        radial-gradient(
+            220px circle at
+                var(--glow-x)
+                var(--glow-y),
+
+            rgba(216, 194, 170, 0.95) 0%,
+
+            rgba(196, 154, 120, 0.65) 18%,
+
+            rgba(168, 120, 82, 0.35) 35%,
+
+            transparent 65%
+        );
+
+    /*
+       Mantém apenas a borda.
+    */
+
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+
+    -webkit-mask-composite: xor;
+
+    mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+
+    mask-composite: exclude;
+
+    opacity: 0;
+
+    transition:
+        opacity 0.25s ease;
+}
+
+
+/* =====================================================
+   CONTEÚDO
+   ===================================================== */
+
+.magic-card__content {
+    position: relative;
+
+    z-index: 2;
+
+    display: grid;
+
+    grid-template-columns:
+        auto
+        1fr;
+
+    gap: 28px;
+
+    height: 100%;
+}
+
+
+/* =====================================================
+   NÚMERO
+   ===================================================== */
+
+.magic-card__number {
+    font-family: "Space Grotesk", sans-serif;
+
+    font-size: 12px;
+
+    letter-spacing: 0.15em;
+
+    color: #8b8b8b;
+
+    opacity: 0.55;
+
+    padding-top: 4px;
+}
+
+
+/* =====================================================
+   BODY
+   ===================================================== */
+
+.magic-card__body {
+    display: flex;
+
+    flex-direction: column;
+}
+
+
+/* =====================================================
+   CATEGORIA
+   ===================================================== */
+
+.magic-card__category {
+    display: block;
+
+    margin-bottom: 12px;
+
+    font-family: "Space Grotesk", sans-serif;
+
+    font-size: 10px;
+
+    font-weight: 500;
+
+    letter-spacing: 0.25em;
+
+    color: #a87852;
+}
+
+
+/* =====================================================
+   TÍTULO
+   ===================================================== */
+
+.magic-card__title {
+    margin: 0;
+
+    font-family: "Bebas Neue", sans-serif;
+
+    font-size: clamp(
+        2rem,
+        3vw,
+        3.2rem
+    );
+
+    font-weight: 400;
+
+    line-height: 0.95;
+
+    letter-spacing: 0.02em;
+
+    color: #f2f0ec;
+
+    transition:
+        color 0.3s ease;
+}
+
+
+/* =====================================================
+   DESCRIÇÃO
+   ===================================================== */
+
+.magic-card__description {
+    max-width: 520px;
+
+    margin-top: 20px;
+
+    font-family: "Space Grotesk", sans-serif;
+
+    font-size: 14px;
+
+    line-height: 1.7;
+
+    color: #8b8b8b;
+
+    transition:
+        color 0.3s ease;
+}
+
+
+/* =====================================================
+   HOVER
+   ===================================================== */
+
+
+
+.magic-card:hover
+.magic-card__spotlight {
+    opacity: 1;
+}
+
+
+.magic-card:hover
+.magic-card__border-glow {
+    opacity: 1;
+}
+
+
+.magic-card:hover
+.magic-card__title {
+    color: #c49a78;
+}
+
+
+/* =====================================================
+   MOBILE
+   ===================================================== */
+
+@media (max-width: 767px) {
+
+    .magic-card {
+        min-height: 220px;
+
+        padding: 24px;
+
+        transform: none !important;
+
+        box-shadow: none !important;
+    }
+
+    .magic-card__spotlight,
+    .magic-card__border-glow {
+        display: none;
+    }
+
+    .magic-card:hover {
+        background: #151515;
+    }
+
+    .magic-card__content {
+        gap: 18px;
+    }
+
+    .magic-card__title {
+        font-size: 2rem;
+    }
+
+    .magic-card__description {
+        font-size: 13px;
+        line-height: 1.6;
+    }
+}
+
+
+/* =====================================================
+   REDUÇÃO DE MOVIMENTO
+   ===================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .magic-card {
+        transform: none !important;
+
+        transition: none;
+    }
+
+    .magic-card__spotlight,
+    .magic-card__border-glow {
+        transition: none;
+    }
+}
