@@ -96,7 +96,7 @@ export default function MinhaTrajetoria({
 
                     scrub: 1,
 
-                    markers: true,
+                    markers: false,
                 },
             });
 

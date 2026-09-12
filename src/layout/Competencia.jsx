@@ -218,10 +218,10 @@ function Competencia() {
 
     return (
         <section ref={sectionRef} id="competencias" className="relative w-full overflow-hidden bg-obsidian  md:mt-30 p-5 md:p-10">
-            <div className="mx-auto flex w-full flex-col">
+            <div className="mx-auto flex w-full flex-col md:max-w-[1500px]">
                 {/* HEADER */}
 
-                <div data-competencia-header className="mb-14 flex w-full flex-row items-center gap-2 md:mb-20">
+                <div data-competencia-header className="mb-14 flex w-full flex-row items-center gap-2 md:mb-20 ">
                     <h2 data-competencia-title className="whitespace-nowrap text-sm uppercase tracking-wide text-steel md:text-7xl">
                         // COMPETENCIAS
                     </h2>
