@@ -2,6 +2,7 @@ import { useRef } from "react";
 
 import Socials from "../components/Socials";
 import DotField from "../components/DotField";
+import GradualBlur from "../components/GradualBlur";
 
 import { ArrowDownRight } from "lucide-react";
 
@@ -432,6 +433,12 @@ function HeroDesktop({ items }) {
                     <Socials />
                 </div>
             </div>
+
+            {/* =====================================================
+                GRADUAL BLUR DO HERO
+            ====================================================== */}
+
+            <GradualBlur target="parent" position="bottom" height="0.1rem" strength={1} divCount={0} curve="bezier" exponential={true} opacity={1} zIndex={20} className="hero-gradual-blur" />
         </section>
     );
 }

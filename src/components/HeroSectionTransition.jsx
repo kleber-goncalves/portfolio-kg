@@ -36,6 +36,12 @@ function HeroSectionTransition() {
             const heroArrow = hero.querySelector('[data-hero-element="arrow"]');
 
             /* =====================================================
+                BLUR GLOBAL
+            ====================================================== */
+
+            const globalBlur = document.querySelector(".global-gradual-blur");
+
+            /* =====================================================
                 ESTADO INICIAL
             ====================================================== */
 
@@ -51,6 +57,17 @@ function HeroSectionTransition() {
                 rotation: 0,
                 transformOrigin: "center center",
             });
+
+            /*
+                O blur global começa invisível porque o Hero
+                possui seu próprio blur maior.
+            */
+
+            if (globalBlur) {
+                gsap.set(globalBlur, {
+                    opacity: 0,
+                });
+            }
 
             /* =====================================================
                 TIMELINE PRINCIPAL
@@ -73,10 +90,6 @@ function HeroSectionTransition() {
                     invalidateOnRefresh: true,
 
                     markers: false,
-
-                    onUpdate: (self) => {
-                        console.log("🔄 TRANSIÇÃO:", self.progress.toFixed(3));
-                    },
                 },
             });
 
@@ -111,12 +124,6 @@ function HeroSectionTransition() {
             /* =====================================================
                 DOT FIELD
             ====================================================== */
-
-            /*
-                O DotField está dentro do Hero.
-                Por isso ele já acompanha automaticamente
-                a opacidade do Hero.
-            */
 
             if (heroDotField) {
                 gsap.set(heroDotField, {
@@ -174,7 +181,7 @@ function HeroSectionTransition() {
 
             /* =====================================================
                 SETA
-                ↘  →  ↓
+                ↘ → ↓
             ====================================================== */
 
             if (heroArrow) {
@@ -186,6 +193,27 @@ function HeroSectionTransition() {
                         duration: 1,
                     },
                     0,
+                );
+            }
+
+            /* =====================================================
+                BLUR GLOBAL
+            ====================================================== */
+
+            /*
+                Quando o Seclogs termina de cobrir o Hero,
+                o blur global aparece novamente.
+            */
+
+            if (globalBlur) {
+                tl.to(
+                    globalBlur,
+                    {
+                        opacity: 1,
+                        ease: "none",
+                        duration: 0.25,
+                    },
+                    1,
                 );
             }
 
