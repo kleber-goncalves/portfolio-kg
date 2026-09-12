@@ -1,6 +1,8 @@
 import { useRef } from "react";
 
 import Socials from "../components/Socials";
+import DotField from "../components/DotField";
+
 import { ArrowDownRight } from "lucide-react";
 
 import "../styles/looptextHero.css";
@@ -12,6 +14,8 @@ function HeroDesktop({ items }) {
     const heroTitleRef = useRef(null);
     const heroTextRef = useRef(null);
     const heroVisualRef = useRef(null);
+
+    const heroDotFieldRef = useRef(null);
 
     return (
         <section
@@ -26,12 +30,32 @@ function HeroDesktop({ items }) {
             "
         >
             {/* =====================================================
+                DOT FIELD
+            ====================================================== */}
+
+            <div
+                ref={heroDotFieldRef}
+                data-hero-element="dotfield"
+                aria-hidden="true"
+                className="
+                    pointer-events-none
+                    absolute
+                    inset-0
+                    z-0
+                    overflow-hidden
+                "
+            >
+                <DotField dotRadius={1} dotSpacing={18} cursorRadius={350} bulgeOnly={true} bulgeStrength={35} glowRadius={180} sparkle={false} waveAmplitude={0} gradientFrom="#0d0d0d" gradientTo="#0d0d0d" glowColor="#0D0B09" />
+            </div>
+
+            {/* =====================================================
                 CONTEÚDO DO HERO
             ====================================================== */}
 
             <div
                 className="
                     relative
+                    z-10
                     flex
                     h-full
                     w-full

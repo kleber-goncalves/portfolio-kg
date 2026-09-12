@@ -37,6 +37,8 @@ function HeroSectionTransition() {
 
             const heroVisual = hero.querySelector('[data-hero-element="visual"]');
 
+            const heroDotField = hero.querySelector('[data-hero-element="dotfield"]');
+
             console.log("====================================");
 
             console.log("🎬 HERO → SECLOGS TRANSITION");
@@ -50,6 +52,8 @@ function HeroSectionTransition() {
             console.log("Text:", heroText);
 
             console.log("Visual:", heroVisual);
+
+            console.log("DotField:", heroDotField);
 
             console.log("Seclogs:", seclogs);
 
@@ -67,6 +71,10 @@ function HeroSectionTransition() {
                 opacity: 1,
             });
 
+            gsap.set(heroDotField, {
+                opacity: 1,
+            });
+
             /*
             ============================================================
             ESCALA INICIAL
@@ -77,6 +85,7 @@ function HeroSectionTransition() {
 
             gsap.set(animatedElements, {
                 scale: 1,
+
                 transformOrigin: "center center",
             });
 
@@ -137,18 +146,38 @@ function HeroSectionTransition() {
             tl.to(
                 hero,
                 {
-                    opacity: 0.55,
+                    opacity: 0,
 
                     ease: "none",
 
                     duration: 1,
                 },
-                0,
+                +0.2,
             );
 
             /*
             ============================================================
-            3 — FOTO DIMINUI
+            3 — DOT FIELD PERDE OPACIDADE
+            ============================================================
+            */
+
+            if (heroDotField) {
+                tl.to(
+                    heroDotField,
+                    {
+                        opacity: 0.55,
+
+                        ease: "none",
+
+                        duration: 1,
+                    },
+                    0,
+                );
+            }
+
+            /*
+            ============================================================
+            4 — FOTO DIMINUI
             ============================================================
             */
 
@@ -168,7 +197,7 @@ function HeroSectionTransition() {
 
             /*
             ============================================================
-            4 — KLEBER DEV DIMINUI
+            5 — KLEBER DEV DIMINUI
             ============================================================
             */
 
@@ -188,7 +217,7 @@ function HeroSectionTransition() {
 
             /*
             ============================================================
-            5 — TEXTO DIMINUI
+            6 — TEXTO DIMINUI
             ============================================================
             */
 
@@ -208,7 +237,7 @@ function HeroSectionTransition() {
 
             /*
             ============================================================
-            6 — HOLD
+            7 — HOLD
             ============================================================
             */
 
