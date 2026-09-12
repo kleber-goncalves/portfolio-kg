@@ -90,7 +90,7 @@ function ProjetoDesktop({ projetos }) {
                     trigger: title,
                     start: "top 90%",
                     end: "top 65%",
-                    scrub: true,
+                    scrub: 1,
                     markers: false,
                 },
             });

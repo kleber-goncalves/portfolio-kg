@@ -217,7 +217,7 @@ function Competencia() {
     }, []);
 
     return (
-        <section ref={sectionRef} id="competencias" className="relative w-full overflow-hidden bg-obsidian md:mt-30 p-5 md:p-10">
+        <section ref={sectionRef} id="competencias" className="relative w-full overflow-hidden bg-obsidian  md:mt-30 p-5 md:p-10">
             <div className="mx-auto flex w-full flex-col">
                 {/* HEADER */}
 
