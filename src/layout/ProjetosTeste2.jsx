@@ -1,4 +1,8 @@
-import { useState } from "react";
+import { useState, useLayoutEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 // Lucide Icons
 import { MoveLeft, MoveRight } from "lucide-react";
@@ -27,22 +31,16 @@ import projeto01_03 from "../assets/projetos/projeto01/jason-3.webp";
 import projeto01_04 from "../assets/projetos/projeto01/lucia-1.webp";
 
 
-
-// ============================================================
-// PROJETOS
-// ============================================================
-
 function Projetos() {
-    // ============================================================
-    // ESTADO DO SLIDE ATUAL
-    // ============================================================
+    const sectionRef = useRef(null);
+    const titleRef = useRef(null);
+    const lineRef = useRef(null);
+    const contadorRef = useRef(null);
+    const swiperRef = useRef(null);
+
 
     const [slideAtual, setSlideAtual] = useState(0);
 
-
-    // ============================================================
-    // PROJETOS
-    // ============================================================
 
     const projetos = [
         {
@@ -144,12 +142,82 @@ function Projetos() {
         },
     ];
 
-    // ============================================================
-    // RENDER
-    // ============================================================
+    useLayoutEffect(() => {
+        const section = sectionRef.current;
+
+        if (!section) return;
+
+        const ctx = gsap.context(() => {
+            gsap.set(titleRef.current, {
+                opacity: 0,
+                x: -35,
+            });
+
+            gsap.set(lineRef.current, {
+                scaleX: 0,
+                transformOrigin: "left center",
+            });
+
+            gsap.set(contadorRef.current, {
+                opacity: 0,
+            });
+
+            gsap.set(swiperRef.current, {
+                y: 75,
+                opacity: 0,
+            });
+
+            const tl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: titleRef.current,
+                    start: "top 90%",
+                    end: "top 65%",
+                    scrub: 1,
+                },
+            });
+
+            tl.to(titleRef.current, {
+                opacity: 1,
+                x: 0,
+                duration: 1,
+                ease: "none",
+            });
+
+            tl.to(
+                lineRef.current,
+                {
+                    scaleX: 1,
+                    duration: 1,
+                    ease: "none",
+                },
+                "+=0.5",
+            );
+            tl.to(
+                contadorRef.current,
+                {
+                    opacity: 1,
+                    duration: 1.5,
+                    ease: "none",
+                },
+                "+=0.5",
+            );
+            tl.to(
+                swiperRef.current,
+                {
+                    y: 0,
+                    duration: 1.5,
+                    ease: "none",
+                    opacity: 3,
+                },
+                "+=0.5",
+            );
+        }, section);
+
+        return () => ctx.revert();
+    }, []);
 
     return (
-        <section className="w-full bg-obsidian">
+        <section ref={sectionRef} className="w-full md:mt-30 mt-30 bg-obsidian">
             {/* ==================================================
                 DESKTOP
             ================================================== */}
@@ -196,6 +264,7 @@ function Projetos() {
                     "
                 >
                     <h2
+                        ref={titleRef}
                         id="projetos"
                         className="
                             whitespace-nowrap
@@ -208,6 +277,7 @@ function Projetos() {
                     </h2>
 
                     <span
+                        ref={lineRef}
                         className="
                             h-0.5
                             flex-1
@@ -220,6 +290,7 @@ function Projetos() {
                     ================================================== */}
 
                     <div
+                        ref={contadorRef}
                         className="
                             flex
                             items-center
@@ -261,6 +332,7 @@ function Projetos() {
                 ================================================== */}
 
                 <Swiper
+                    ref={swiperRef}
                     modules={[EffectCoverflow]}
                     effect="coverflow"
                     slidesPerView="auto"

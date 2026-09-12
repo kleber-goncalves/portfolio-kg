@@ -1,6 +1,10 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useLayoutEffect } from "react";
 
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
+
 
 import { tecnologias } from "../data/tecnologias";
 
@@ -14,6 +18,10 @@ function ProjetoDesktop({ projetos }) {
     const previewRef = useRef(null);
     const previewTrackRef = useRef(null);
     const previewButtonRef = useRef(null);
+
+    const titleRef = useRef(null);
+    const lineRef = useRef(null);
+    const introRef = useRef(null);
 
     // ============================================================
     // POSIÇÃO GLOBAL DO MOUSE
@@ -43,6 +51,84 @@ function ProjetoDesktop({ projetos }) {
     // ============================================================
     // GSAP
     // ============================================================
+
+    useLayoutEffect(() => {
+        const container = containerRef.current;
+
+        if (!container) return;
+
+        const ctx = gsap.context(() => {
+            const title = titleRef.current;
+            const line = lineRef.current;
+            const intro = introRef.current;
+
+            // ================================================
+            // ESTADO INICIAL
+            // ================================================
+
+            gsap.set(title, {
+                opacity: 0,
+                x: -40,
+            });
+
+            gsap.set(line, {
+                scaleX: 0,
+                transformOrigin: "left center",
+            });
+
+            gsap.set(intro, {
+                opacity: 0,
+                x: 30,
+            });
+
+            // ================================================
+            // TIMELINE DO CABEÇALHO
+            // ================================================
+
+            const timeline = gsap.timeline({
+                scrollTrigger: {
+                    trigger: title,
+                    start: "top 90%",
+                    end: "top 65%",
+                    scrub: true,
+                    markers: false,
+                },
+            });
+
+            // 1 — TÍTULO
+            timeline.to(title, {
+                opacity: 1,
+                x: 0,
+                duration: 1,
+                ease: "none",
+            });
+
+            // 2 — LINHA
+            timeline.to(
+                line,
+                {
+                    scaleX: 1,
+                    duration: 1,
+                    ease: "none",
+                },
+                "-=0.65",
+            );
+
+            // 3 — TEXTO DE APOIO
+            timeline.to(
+                intro,
+                {
+                    opacity: 1,
+                    x: 0,
+                    duration: 0.8,
+                    ease: "none",
+                },
+                "-=0.55",
+            );
+        }, container);
+
+        return () => ctx.revert();
+    }, []);
 
     useEffect(() => {
         const container = containerRef.current;
@@ -481,6 +567,7 @@ function ProjetoDesktop({ projetos }) {
                 >
                     <div className="flex flex-row w-full items-center gap-3">
                         <h2
+                            ref={titleRef}
                             className="
                             
                                 text-7xl
@@ -493,6 +580,7 @@ function ProjetoDesktop({ projetos }) {
                             // Projetos
                         </h2>
                         <span
+                            ref={lineRef}
                             className="
                             h-0.5
                             flex-1
@@ -504,6 +592,7 @@ function ProjetoDesktop({ projetos }) {
                         />
 
                         <p
+                            ref={introRef}
                             className="
                             hidden
                             max-w-md
@@ -611,11 +700,12 @@ function ProjetoDesktop({ projetos }) {
                                             text-2xl
                                             font-semibold
                                             leading-tight
-                                            text-ivory
-                                            transition-transform
+                                            text-ivory/40
+                                            transition
                                             duration-500
                                             ease-out
                                             group-hover:translate-x-2
+                                            group-hover:text-ivory
                                             lg:text-4xl
                                         "
                                         >
