@@ -4,9 +4,23 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function MinhaTrajetoria({ titulo = "Evolução", subtitulo = "Minha Trajetória", descricao = "Aprendizado, prática e evolução contínua no desenvolvimento de software.", eventos = [] }) {
+export default function MinhaTrajetoria({
+    titulo = "Evolução",
+    subtitulo = "Minha Trajetória",
+    descricao = "Aprendizado, prática e evolução contínua no desenvolvimento de software.",
+    eventos = [],
+}) {
     const sectionRef = useRef(null);
     const timelineRef = useRef(null);
+
+    // ============================================================
+    // CABEÇALHO
+    // ============================================================
+
+    const headerRef = useRef(null);
+    const subtitleRef = useRef(null);
+    const titleRef = useRef(null);
+    const descriptionRef = useRef(null);
 
     // ============================================================
     // LINHAS
@@ -34,6 +48,121 @@ export default function MinhaTrajetoria({ titulo = "Evolução", subtitulo = "Mi
 
     /*
     ============================================================
+    ANIMAÇÃO DE ENTRADA — CABEÇALHO
+    ============================================================
+    */
+
+    useLayoutEffect(() => {
+        const ctx = gsap.context(() => {
+            const subtitle = subtitleRef.current;
+            const title = titleRef.current;
+            const description = descriptionRef.current;
+
+            if (!subtitle || !title || !description) return;
+
+            /*
+            ====================================================
+            ESTADO INICIAL
+            ====================================================
+            */
+
+            gsap.set(subtitle, {
+                opacity: 0,
+                y: 75,
+            });
+
+            gsap.set(title, {
+                opacity: 0,
+                y: 70,
+            });
+
+            gsap.set(description, {
+                opacity: 0,
+                y: 65,
+            });
+
+            /*
+            ====================================================
+            TIMELINE DO CABEÇALHO
+            ====================================================
+            */
+
+            const headerTimeline = gsap.timeline({
+                scrollTrigger: {
+                    trigger: headerRef.current,
+
+                    start: "top 90%",
+                    end: "top 65%",
+
+                    scrub: 1,
+
+                    markers: true,
+                },
+            });
+
+            /*
+            ====================================================
+            SUBTÍTULO
+            ====================================================
+            */
+
+            headerTimeline.to(
+                subtitle,
+                {
+                    opacity: 1,
+                    y: 0,
+
+                    duration: 1,
+
+                    ease: "none",
+                },
+                0
+            );
+
+            /*
+            ====================================================
+            TÍTULO
+            ====================================================
+            */
+
+            headerTimeline.to(
+                title,
+                {
+                    opacity: 1,
+                    y: 0,
+
+                    duration: 1,
+
+                    ease: "none",
+                },
+                0.12
+            );
+
+            /*
+            ====================================================
+            DESCRIÇÃO
+            ====================================================
+            */
+
+            headerTimeline.to(
+                description,
+                {
+                    opacity: 1,
+                    y: 0,
+
+                    duration: 1,
+
+                    ease: "none",
+                },
+                0.24
+            );
+        }, sectionRef);
+
+        return () => ctx.revert();
+    }, []);
+
+    /*
+    ============================================================
     CALCULA O TAMANHO DA LINHA DESKTOP
     ============================================================
 
@@ -50,13 +179,17 @@ export default function MinhaTrajetoria({ titulo = "Evolução", subtitulo = "Mi
 
         const lastDot = dots[dots.length - 1];
 
-        const timelineRect = timelineRef.current?.getBoundingClientRect();
+        const timelineRect =
+            timelineRef.current?.getBoundingClientRect();
 
         const dotRect = lastDot.getBoundingClientRect();
 
         if (!timelineRect) return;
 
-        const height = dotRect.top - timelineRect.top + dotRect.height / 2;
+        const height =
+            dotRect.top -
+            timelineRect.top +
+            dotRect.height / 2;
 
         gsap.set([line, lineBase], {
             height,
@@ -81,15 +214,21 @@ export default function MinhaTrajetoria({ titulo = "Evolução", subtitulo = "Mi
 
         const lastDot = dots[dots.length - 1];
 
-        const mobileContainer = lastDot.closest("[data-mobile-timeline]");
+        const mobileContainer = lastDot.closest(
+            "[data-mobile-timeline]"
+        );
 
         if (!mobileContainer) return;
 
-        const containerRect = mobileContainer.getBoundingClientRect();
+        const containerRect =
+            mobileContainer.getBoundingClientRect();
 
         const dotRect = lastDot.getBoundingClientRect();
 
-        const height = dotRect.top - containerRect.top + dotRect.height / 2;
+        const height =
+            dotRect.top -
+            containerRect.top +
+            dotRect.height / 2;
 
         gsap.set([line, lineBase], {
             height,
@@ -109,7 +248,7 @@ export default function MinhaTrajetoria({ titulo = "Evolução", subtitulo = "Mi
 
     /*
     ============================================================
-    GSAP / SCROLLTRIGGER
+    GSAP / SCROLLTRIGGER — TIMELINE
     ============================================================
     */
 
@@ -117,13 +256,17 @@ export default function MinhaTrajetoria({ titulo = "Evolução", subtitulo = "Mi
         const ctx = gsap.context(() => {
             const line = lineRef.current;
 
-            const desktopEvents = desktopEventsRef.current.filter(Boolean);
+            const desktopEvents =
+                desktopEventsRef.current.filter(Boolean);
 
-            const desktopDots = desktopDotsRef.current.filter(Boolean);
+            const desktopDots =
+                desktopDotsRef.current.filter(Boolean);
 
-            const mobileEvents = mobileEventsRef.current.filter(Boolean);
+            const mobileEvents =
+                mobileEventsRef.current.filter(Boolean);
 
-            const mobileDots = mobileDotsRef.current.filter(Boolean);
+            const mobileDots =
+                mobileDotsRef.current.filter(Boolean);
 
             if (!timelineRef.current) return;
 
@@ -195,7 +338,7 @@ export default function MinhaTrajetoria({ titulo = "Evolução", subtitulo = "Mi
                     start: "top 78%",
                     end: "bottom 68%",
 
-                    scrub: 0.7,
+                    scrub: 1,
 
                     invalidateOnRefresh: true,
 
@@ -214,11 +357,7 @@ export default function MinhaTrajetoria({ titulo = "Evolução", subtitulo = "Mi
             const dotDuration = 0.18;
 
             /*
-                0.001 representa aproximadamente 1ms
-                dentro da timeline do GSAP.
-
-                IMPORTANTE:
-                o conteúdo começa DEPOIS do término
+                O conteúdo começa depois do término
                 da animação da bolinha.
             */
 
@@ -238,7 +377,7 @@ export default function MinhaTrajetoria({ titulo = "Evolução", subtitulo = "Mi
                         duration: 1.5,
                         ease: "none",
                     },
-                    0,
+                    0
                 );
             }
 
@@ -249,17 +388,13 @@ export default function MinhaTrajetoria({ titulo = "Evolução", subtitulo = "Mi
             */
 
             eventos.forEach((evento, index) => {
-                const event = desktopEventsRef.current[index];
+                const event =
+                    desktopEventsRef.current[index];
 
-                const dot = desktopDotsRef.current[index];
+                const dot =
+                    desktopDotsRef.current[index];
 
                 if (!event || !dot) return;
-
-                /*
-                ------------------------------------------------
-                POSIÇÃO DO EVENTO
-                ------------------------------------------------
-                */
 
                 const position = index * 0.42;
 
@@ -267,8 +402,6 @@ export default function MinhaTrajetoria({ titulo = "Evolução", subtitulo = "Mi
                 ------------------------------------------------
                 BOLINHA
                 ------------------------------------------------
-
-                Primeiro a bolinha aparece.
                 */
 
                 desktopTimeline.to(
@@ -281,19 +414,13 @@ export default function MinhaTrajetoria({ titulo = "Evolução", subtitulo = "Mi
 
                         ease: "back.out(2)",
                     },
-                    position,
+                    position
                 );
 
                 /*
                 ------------------------------------------------
                 CONTEÚDO
                 ------------------------------------------------
-
-                A bolinha termina primeiro.
-
-                Depois esperamos aproximadamente 1ms.
-
-                Só então o conteúdo aparece.
                 */
 
                 desktopTimeline.to(
@@ -306,7 +433,9 @@ export default function MinhaTrajetoria({ titulo = "Evolução", subtitulo = "Mi
 
                         ease: "power2.out",
                     },
-                    position + dotDuration + contentDelay,
+                    position +
+                        dotDuration +
+                        contentDelay
                 );
             });
 
@@ -323,7 +452,7 @@ export default function MinhaTrajetoria({ titulo = "Evolução", subtitulo = "Mi
                     start: "top 78%",
                     end: "bottom 68%",
 
-                    scrub: 0.7,
+                    scrub: 1,
 
                     invalidateOnRefresh: true,
 
@@ -352,7 +481,7 @@ export default function MinhaTrajetoria({ titulo = "Evolução", subtitulo = "Mi
                         duration: 1.5,
                         ease: "none",
                     },
-                    0,
+                    0
                 );
             }
 
@@ -363,17 +492,13 @@ export default function MinhaTrajetoria({ titulo = "Evolução", subtitulo = "Mi
             */
 
             eventos.forEach((evento, index) => {
-                const event = mobileEventsRef.current[index];
+                const event =
+                    mobileEventsRef.current[index];
 
-                const dot = mobileDotsRef.current[index];
+                const dot =
+                    mobileDotsRef.current[index];
 
                 if (!event || !dot) return;
-
-                /*
-                ------------------------------------------------
-                POSIÇÃO
-                ------------------------------------------------
-                */
 
                 const position = index * 0.42;
 
@@ -393,25 +518,13 @@ export default function MinhaTrajetoria({ titulo = "Evolução", subtitulo = "Mi
 
                         ease: "back.out(2)",
                     },
-                    position,
+                    position
                 );
 
                 /*
                 ------------------------------------------------
                 CONTEÚDO
                 ------------------------------------------------
-
-                Primeiro:
-
-                ● bolinha
-
-                Depois:
-
-                1ms
-
-                Depois:
-
-                texto
                 */
 
                 mobileTimeline.to(
@@ -424,7 +537,9 @@ export default function MinhaTrajetoria({ titulo = "Evolução", subtitulo = "Mi
 
                         ease: "power2.out",
                     },
-                    position + dotDuration + contentDelay,
+                    position +
+                        dotDuration +
+                        contentDelay
                 );
             });
 
@@ -450,7 +565,10 @@ export default function MinhaTrajetoria({ titulo = "Evolução", subtitulo = "Mi
                 ScrollTrigger.refresh();
             };
 
-            window.addEventListener("resize", handleResize);
+            window.addEventListener(
+                "resize",
+                handleResize
+            );
 
             /*
             ====================================================
@@ -459,7 +577,10 @@ export default function MinhaTrajetoria({ titulo = "Evolução", subtitulo = "Mi
             */
 
             return () => {
-                window.removeEventListener("resize", handleResize);
+                window.removeEventListener(
+                    "resize",
+                    handleResize
+                );
             };
         }, sectionRef);
 
@@ -487,10 +608,25 @@ export default function MinhaTrajetoria({ titulo = "Evolução", subtitulo = "Mi
                 CABEÇALHO
             ================================================== */}
 
-            <header className="flex w-full flex-col gap-3">
+            <header
+                ref={headerRef}
+                className="
+                    flex
+                    w-full
+                    flex-col
+                    gap-3
+                "
+            >
                 {/* IDENTIFICADOR */}
 
-                <div className="flex items-center gap-3">
+                <div
+                    ref={subtitleRef}
+                    className="
+                        flex
+                        items-center
+                        gap-3
+                    "
+                >
                     <span
                         className="
                             h-2
@@ -518,6 +654,7 @@ export default function MinhaTrajetoria({ titulo = "Evolução", subtitulo = "Mi
                 {/* TÍTULO */}
 
                 <h2
+                    ref={titleRef}
                     className="
                         font-bold
                         bebas-neue-regular
@@ -535,6 +672,7 @@ export default function MinhaTrajetoria({ titulo = "Evolução", subtitulo = "Mi
                 {/* DESCRIÇÃO */}
 
                 <p
+                    ref={descriptionRef}
                     className="
                         mt-2
                         max-w-xl
@@ -625,11 +763,15 @@ export default function MinhaTrajetoria({ titulo = "Evolução", subtitulo = "Mi
                         "
                     >
                         {eventos.map((evento, index) => {
-                            const ladoEsquerdo = index % 2 === 0;
+                            const ladoEsquerdo =
+                                index % 2 === 0;
 
                             return (
                                 <div
-                                    key={evento.id ?? index}
+                                    key={
+                                        evento.id ??
+                                        index
+                                    }
                                     className="
                                         relative
                                         grid
@@ -646,13 +788,19 @@ export default function MinhaTrajetoria({ titulo = "Evolução", subtitulo = "Mi
                                         className={`
                                             flex
                                             w-full
-                                            ${ladoEsquerdo ? "justify-end" : "pointer-events-none"}
+                                            ${
+                                                ladoEsquerdo
+                                                    ? "justify-end"
+                                                    : "pointer-events-none"
+                                            }
                                         `}
                                     >
                                         {ladoEsquerdo && (
                                             <div
                                                 ref={(el) => {
-                                                    desktopEventsRef.current[index] = el;
+                                                    desktopEventsRef.current[
+                                                        index
+                                                    ] = el;
                                                 }}
                                                 className="
                                                     w-full
@@ -661,7 +809,10 @@ export default function MinhaTrajetoria({ titulo = "Evolução", subtitulo = "Mi
                                                     text-right
                                                 "
                                             >
-                                                <TimelineContent evento={evento} align="right" />
+                                                <TimelineContent
+                                                    evento={evento}
+                                                    align="right"
+                                                />
                                             </div>
                                         )}
                                     </div>
@@ -681,7 +832,9 @@ export default function MinhaTrajetoria({ titulo = "Evolução", subtitulo = "Mi
 
                                         <div
                                             ref={(el) => {
-                                                desktopDotsRef.current[index] = el;
+                                                desktopDotsRef.current[
+                                                    index
+                                                ] = el;
                                             }}
                                             className="
                                                 absolute
@@ -708,9 +861,7 @@ export default function MinhaTrajetoria({ titulo = "Evolução", subtitulo = "Mi
                                             />
                                         </div>
 
-                                        {/* ==================================================
-                                            EVENTO ATUAL
-                                        ================================================== */}
+                                        {/* EVENTO ATUAL */}
 
                                         {evento.atual && (
                                             <>
@@ -732,13 +883,13 @@ export default function MinhaTrajetoria({ titulo = "Evolução", subtitulo = "Mi
                                                     className="
                                                         pointer-events-none
                                                         absolute
-                                                        top-0
+                                                        top-1
                                                         z-[14]
                                                         h-4
                                                         w-4
                                                         animate-ping
                                                         rounded-full
-                                                        bg-bronze/20
+                                                        bg-bronze
                                                     "
                                                 />
                                             </>
@@ -753,13 +904,19 @@ export default function MinhaTrajetoria({ titulo = "Evolução", subtitulo = "Mi
                                         className={`
                                             flex
                                             w-full
-                                            ${!ladoEsquerdo ? "justify-start" : "pointer-events-none"}
+                                            ${
+                                                !ladoEsquerdo
+                                                    ? "justify-start"
+                                                    : "pointer-events-none"
+                                            }
                                         `}
                                     >
                                         {!ladoEsquerdo && (
                                             <div
                                                 ref={(el) => {
-                                                    desktopEventsRef.current[index] = el;
+                                                    desktopEventsRef.current[
+                                                        index
+                                                    ] = el;
                                                 }}
                                                 className="
                                                     w-full
@@ -768,7 +925,10 @@ export default function MinhaTrajetoria({ titulo = "Evolução", subtitulo = "Mi
                                                     text-left
                                                 "
                                             >
-                                                <TimelineContent evento={evento} align="left" />
+                                                <TimelineContent
+                                                    evento={evento}
+                                                    align="left"
+                                                />
                                             </div>
                                         )}
                                     </div>
@@ -788,6 +948,7 @@ export default function MinhaTrajetoria({ titulo = "Evolução", subtitulo = "Mi
                         relative
                         w-full
                         md:hidden
+                        ml-3
                     "
                 >
                     {/* ==================================================
@@ -842,11 +1003,19 @@ export default function MinhaTrajetoria({ titulo = "Evolução", subtitulo = "Mi
                     >
                         {eventos.map((evento, index) => (
                             <div
-                                key={evento.id ?? index}
+                                key={
+                                    evento.id ??
+                                    index
+                                }
                                 className={`
                                     relative
                                     pl-8
-                                    ${index === eventos.length - 1 ? "pb-2" : "pb-16"}
+                                    ${
+                                        index ===
+                                        eventos.length - 1
+                                            ? "pb-2"
+                                            : "pb-16"
+                                    }
                                 `}
                             >
                                 {/* ==================================================
@@ -858,13 +1027,13 @@ export default function MinhaTrajetoria({ titulo = "Evolução", subtitulo = "Mi
                                         className="
                                             pointer-events-none
                                             absolute
-                                            left-[-1px]
-                                            top-[-2px]
+                                            left-[0.1px]
+                                            top-[4px]
                                             h-4
                                             w-4
                                             animate-ping
                                             rounded-full
-                                            bg-bronze/20
+                                            bg-bronze
                                         "
                                     />
                                 )}
@@ -875,7 +1044,9 @@ export default function MinhaTrajetoria({ titulo = "Evolução", subtitulo = "Mi
 
                                 <div
                                     ref={(el) => {
-                                        mobileDotsRef.current[index] = el;
+                                        mobileDotsRef.current[
+                                            index
+                                        ] = el;
                                     }}
                                     className="
                                         absolute
@@ -909,14 +1080,19 @@ export default function MinhaTrajetoria({ titulo = "Evolução", subtitulo = "Mi
 
                                 <div
                                     ref={(el) => {
-                                        mobileEventsRef.current[index] = el;
+                                        mobileEventsRef.current[
+                                            index
+                                        ] = el;
                                     }}
                                     className="
                                         flex
                                         flex-col
                                     "
                                 >
-                                    <TimelineContent evento={evento} align="left" />
+                                    <TimelineContent
+                                        evento={evento}
+                                        align="left"
+                                    />
                                 </div>
                             </div>
                         ))}
@@ -933,7 +1109,10 @@ CONTEÚDO DO EVENTO
 ================================================================
 */
 
-function TimelineContent({ evento, align = "left" }) {
+function TimelineContent({
+    evento,
+    align = "left",
+}) {
     const isRight = align === "right";
 
     return (
@@ -941,7 +1120,11 @@ function TimelineContent({ evento, align = "left" }) {
             className={`
                 flex
                 flex-col
-                ${isRight ? "items-end text-right" : "items-start text-left"}
+                ${
+                    isRight
+                        ? "items-end text-right"
+                        : "items-start text-left"
+                }
             `}
         >
             {/* ==================================================
@@ -954,7 +1137,11 @@ function TimelineContent({ evento, align = "left" }) {
                     flex
                     items-center
                     gap-3
-                    ${isRight ? "justify-end" : "justify-start"}
+                    ${
+                        isRight
+                            ? "justify-end"
+                            : "justify-start"
+                    }
                 `}
             >
                 <span
@@ -1035,7 +1222,11 @@ function TimelineContent({ evento, align = "left" }) {
                         flex
                         flex-wrap
                         gap-2
-                        ${isRight ? "justify-end" : "justify-start"}
+                        ${
+                            isRight
+                                ? "justify-end"
+                                : "justify-start"
+                        }
                     `}
                 >
                     {evento.badges.map((badge) => (
