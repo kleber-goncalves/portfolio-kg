@@ -19,17 +19,11 @@ function HeroSectionTransition() {
             const hero = heroRef.current;
             const seclogs = seclogsRef.current;
 
-            if (!section || !hero || !seclogs) {
-                console.error("❌ Elementos da transição não encontrados.");
+            if (!section || !hero || !seclogs) return;
 
-                return;
-            }
-
-            /*
-            ============================================================
-            ELEMENTOS DO HERO
-            ============================================================
-            */
+            /* =====================================================
+                ELEMENTOS DO HERO
+            ====================================================== */
 
             const heroTitle = hero.querySelector('[data-hero-element="title"]');
 
@@ -39,29 +33,11 @@ function HeroSectionTransition() {
 
             const heroDotField = hero.querySelector('[data-hero-element="dotfield"]');
 
-            console.log("====================================");
+            const heroArrow = hero.querySelector('[data-hero-element="arrow"]');
 
-            console.log("🎬 HERO → SECLOGS TRANSITION");
-
-            console.log("====================================");
-
-            console.log("Hero:", hero);
-
-            console.log("Title:", heroTitle);
-
-            console.log("Text:", heroText);
-
-            console.log("Visual:", heroVisual);
-
-            console.log("DotField:", heroDotField);
-
-            console.log("Seclogs:", seclogs);
-
-            /*
-            ============================================================
-            ESTADO INICIAL
-            ============================================================
-            */
+            /* =====================================================
+                ESTADO INICIAL
+            ====================================================== */
 
             gsap.set(seclogs, {
                 yPercent: 100,
@@ -71,29 +47,14 @@ function HeroSectionTransition() {
                 opacity: 1,
             });
 
-            gsap.set(heroDotField, {
-                opacity: 1,
-            });
-
-            /*
-            ============================================================
-            ESCALA INICIAL
-            ============================================================
-            */
-
-            const animatedElements = [heroTitle, heroText, heroVisual].filter(Boolean);
-
-            gsap.set(animatedElements, {
-                scale: 1,
-
+            gsap.set(heroArrow, {
+                rotation: 0,
                 transformOrigin: "center center",
             });
 
-            /*
-            ============================================================
-            MASTER TIMELINE
-            ============================================================
-            */
+            /* =====================================================
+                TIMELINE PRINCIPAL
+            ====================================================== */
 
             const tl = gsap.timeline({
                 scrollTrigger: {
@@ -119,127 +80,118 @@ function HeroSectionTransition() {
                 },
             });
 
-            /*
-            ============================================================
-            1 — SECLOGS SOBE
-            ============================================================
-            */
+            /* =====================================================
+                SECLOGS
+            ====================================================== */
 
             tl.to(
                 seclogs,
                 {
                     yPercent: 0,
-
                     ease: "none",
-
                     duration: 1,
                 },
                 0,
             );
 
-            /*
-            ============================================================
-            2 — HERO PERDE OPACIDADE
-            ============================================================
-            */
+            /* =====================================================
+                OPACIDADE DO HERO
+            ====================================================== */
 
             tl.to(
                 hero,
                 {
-                    opacity: 0,
-
+                    opacity: 0.55,
                     ease: "none",
-
                     duration: 1,
                 },
-                +0.2,
+                0,
             );
 
+            /* =====================================================
+                DOT FIELD
+            ====================================================== */
+
             /*
-            ============================================================
-            3 — DOT FIELD PERDE OPACIDADE
-            ============================================================
+                O DotField está dentro do Hero.
+                Por isso ele já acompanha automaticamente
+                a opacidade do Hero.
             */
 
             if (heroDotField) {
-                tl.to(
-                    heroDotField,
-                    {
-                        opacity: 0.55,
-
-                        ease: "none",
-
-                        duration: 1,
-                    },
-                    0,
-                );
+                gsap.set(heroDotField, {
+                    opacity: 1,
+                });
             }
 
-            /*
-            ============================================================
-            4 — FOTO DIMINUI
-            ============================================================
-            */
+            /* =====================================================
+                FOTO
+            ====================================================== */
 
             if (heroVisual) {
                 tl.to(
                     heroVisual,
                     {
                         scale: 0.88,
-
                         ease: "none",
-
                         duration: 1,
                     },
                     0,
                 );
             }
 
-            /*
-            ============================================================
-            5 — KLEBER DEV DIMINUI
-            ============================================================
-            */
+            /* =====================================================
+                TÍTULO
+            ====================================================== */
 
             if (heroTitle) {
                 tl.to(
                     heroTitle,
                     {
                         scale: 0.84,
-
                         ease: "none",
-
                         duration: 1,
                     },
                     0,
                 );
             }
 
-            /*
-            ============================================================
-            6 — TEXTO DIMINUI
-            ============================================================
-            */
+            /* =====================================================
+                TEXTO
+            ====================================================== */
 
             if (heroText) {
                 tl.to(
                     heroText,
                     {
                         scale: 0.9,
-
                         ease: "none",
-
                         duration: 1,
                     },
                     0,
                 );
             }
 
-            /*
-            ============================================================
-            7 — HOLD
-            ============================================================
-            */
+            /* =====================================================
+                SETA
+                ↘  →  ↓
+            ====================================================== */
+
+            if (heroArrow) {
+                tl.to(
+                    heroArrow,
+                    {
+                        rotation: 45,
+                        ease: "none",
+                        duration: 1,
+                    },
+                    0,
+                );
+            }
+
+            /* =====================================================
+                HOLD
+            ====================================================== */
 
             tl.to(
                 {},
@@ -249,9 +201,7 @@ function HeroSectionTransition() {
             );
         }, sectionRef);
 
-        return () => {
-            ctx.revert();
-        };
+        return () => ctx.revert();
     }, []);
 
     return (
@@ -294,6 +244,7 @@ function HeroSectionTransition() {
                     w-full
                     h-auto
                     bg-obsidian
+                    shadow-[0_-25px_60px_rgba(0,0,0,0.55)]
                 "
             >
                 <Seclogs />

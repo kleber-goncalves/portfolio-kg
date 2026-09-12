@@ -341,7 +341,9 @@ function HeroDesktop({ items }) {
                         xl:w-[340px]
                     "
                 >
-                    {/* SETA */}
+                    {/* =================================================
+                        SETA
+                    ================================================== */}
 
                     <div
                         className="
@@ -351,6 +353,7 @@ function HeroDesktop({ items }) {
                         "
                     >
                         <ArrowDownRight
+                            data-hero-element="arrow"
                             className="
                                 h-8
                                 w-8
@@ -359,10 +362,15 @@ function HeroDesktop({ items }) {
 
                                 text-ivory/80
                             "
+                            style={{
+                                transformOrigin: "center center",
+                            }}
                         />
                     </div>
 
-                    {/* CARGO */}
+                    {/* =================================================
+                        CARGO
+                    ================================================== */}
 
                     <div
                         className="
