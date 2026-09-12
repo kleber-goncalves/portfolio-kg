@@ -13,6 +13,7 @@ import "./App.css";
 
 
 // Components
+import GradualBlur from "./components/GradualBlur";
 import HeroSectionTransition from "./components/HeroSectionTransition";
 import ButtonReset from "./components/buttonReset";
 import CursorTrail from "./components/CursorTrail";
@@ -21,6 +22,8 @@ function App() {
     return (
         <>
             <CursorTrail />
+            <GradualBlur target="page" position="bottom" height="5rem" strength={2} divCount={5} curve="bezier" exponential={false} opacity={1} />
+
             <SmoothScroll>
                 <div className="relative z-[1] w-full">
                     <ButtonReset />
