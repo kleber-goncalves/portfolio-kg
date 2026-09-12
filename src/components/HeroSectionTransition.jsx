@@ -21,215 +21,234 @@ function HeroSectionTransition() {
 
             if (!section || !hero || !seclogs) return;
 
-            /* =====================================================
-                ELEMENTOS DO HERO
-            ====================================================== */
-
-            const heroTitle = hero.querySelector('[data-hero-element="title"]');
-
-            const heroText = hero.querySelector('[data-hero-element="text"]');
-
-            const heroVisual = hero.querySelector('[data-hero-element="visual"]');
-
-            const heroDotField = hero.querySelector('[data-hero-element="dotfield"]');
-
-            const heroArrow = hero.querySelector('[data-hero-element="arrow"]');
-
-            /* =====================================================
-                BLUR GLOBAL
-            ====================================================== */
-
-            const globalBlur = document.querySelector(".global-gradual-blur");
-
-            /* =====================================================
-                ESTADO INICIAL
-            ====================================================== */
-
-            gsap.set(seclogs, {
-                yPercent: 100,
-            });
-
-            gsap.set(hero, {
-                opacity: 1,
-            });
-
-            gsap.set(heroArrow, {
-                rotation: 0,
-                transformOrigin: "center center",
-            });
-
             /*
-                O blur global começa invisível porque o Hero
-                possui seu próprio blur maior.
+            ============================================================
+            DESKTOP
+            ============================================================
+            O efeito inteiro só existe a partir de 768px.
             */
 
-            if (globalBlur) {
-                gsap.set(globalBlur, {
-                    opacity: 0,
+            const mm = gsap.matchMedia();
+
+            mm.add("(min-width: 768px)", () => {
+                /* =====================================================
+                    ELEMENTOS DO HERO
+                ====================================================== */
+
+                const heroTitle = hero.querySelector('[data-hero-element="title"]');
+
+                const heroText = hero.querySelector('[data-hero-element="text"]');
+
+                const heroVisual = hero.querySelector('[data-hero-element="visual"]');
+
+                const heroDotField = hero.querySelector('[data-hero-element="dotfield"]');
+
+                const heroArrow = hero.querySelector('[data-hero-element="arrow"]');
+
+                /* =====================================================
+                    BLUR GLOBAL
+                ====================================================== */
+
+                const globalBlur = document.querySelector(".global-gradual-blur");
+
+                /* =====================================================
+                    ESTADO INICIAL
+                ====================================================== */
+
+                gsap.set(seclogs, {
+                    yPercent: 100,
                 });
-            }
 
-            /* =====================================================
-                TIMELINE PRINCIPAL
-            ====================================================== */
-
-            const tl = gsap.timeline({
-                scrollTrigger: {
-                    trigger: section,
-
-                    start: "top top",
-
-                    end: "+=1800",
-
-                    scrub: true,
-
-                    pin: true,
-
-                    anticipatePin: 1,
-
-                    invalidateOnRefresh: true,
-
-                    markers: false,
-                },
-            });
-
-            /* =====================================================
-                SECLOGS
-            ====================================================== */
-
-            tl.to(
-                seclogs,
-                {
-                    yPercent: 0,
-                    ease: "none",
-                    duration: 1,
-                },
-                0,
-            );
-
-            /* =====================================================
-                OPACIDADE DO HERO
-            ====================================================== */
-
-            tl.to(
-                hero,
-                {
-                    opacity: 0.55,
-                    ease: "none",
-                    duration: 1,
-                },
-                0,
-            );
-
-            /* =====================================================
-                DOT FIELD
-            ====================================================== */
-
-            if (heroDotField) {
-                gsap.set(heroDotField, {
+                gsap.set(hero, {
                     opacity: 1,
                 });
-            }
 
-            /* =====================================================
-                FOTO
-            ====================================================== */
+                if (heroArrow) {
+                    gsap.set(heroArrow, {
+                        rotation: 0,
+                        transformOrigin: "center center",
+                    });
+                }
 
-            if (heroVisual) {
+                /*
+                O blur global começa invisível porque o Hero
+                possui seu próprio blur maior.
+                */
+
+                if (globalBlur) {
+                    gsap.set(globalBlur, {
+                        opacity: 0,
+                    });
+                }
+
+                /* =====================================================
+                    TIMELINE PRINCIPAL
+                ====================================================== */
+
+                const tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: section,
+
+                        start: "top top",
+
+                        end: "+=1800",
+
+                        scrub: true,
+
+                        pin: true,
+
+                        anticipatePin: 1,
+
+                        invalidateOnRefresh: true,
+
+                        markers: false,
+                    },
+                });
+
+                /* =====================================================
+                    SECLOGS
+                ====================================================== */
+
                 tl.to(
-                    heroVisual,
+                    seclogs,
                     {
-                        scale: 0.88,
+                        yPercent: 0,
                         ease: "none",
                         duration: 1,
                     },
                     0,
                 );
-            }
 
-            /* =====================================================
-                TÍTULO
-            ====================================================== */
+                /* =====================================================
+                    OPACIDADE DO HERO
+                ====================================================== */
 
-            if (heroTitle) {
                 tl.to(
-                    heroTitle,
+                    hero,
                     {
-                        scale: 0.84,
+                        opacity: 0.55,
                         ease: "none",
                         duration: 1,
                     },
                     0,
                 );
-            }
 
-            /* =====================================================
-                TEXTO
-            ====================================================== */
+                /* =====================================================
+                    DOT FIELD
+                ====================================================== */
 
-            if (heroText) {
-                tl.to(
-                    heroText,
-                    {
-                        scale: 0.9,
-                        ease: "none",
-                        duration: 1,
-                    },
-                    0,
-                );
-            }
-
-            /* =====================================================
-                SETA
-                ↘ → ↓
-            ====================================================== */
-
-            if (heroArrow) {
-                tl.to(
-                    heroArrow,
-                    {
-                        rotation: 45,
-                        ease: "none",
-                        duration: 1,
-                    },
-                    0,
-                );
-            }
-
-            /* =====================================================
-                BLUR GLOBAL
-            ====================================================== */
-
-            /*
-                Quando o Seclogs termina de cobrir o Hero,
-                o blur global aparece novamente.
-            */
-
-            if (globalBlur) {
-                tl.to(
-                    globalBlur,
-                    {
+                if (heroDotField) {
+                    gsap.set(heroDotField, {
                         opacity: 1,
-                        ease: "none",
-                        duration: 0.25,
+                    });
+                }
+
+                /* =====================================================
+                    FOTO
+                ====================================================== */
+
+                if (heroVisual) {
+                    tl.to(
+                        heroVisual,
+                        {
+                            scale: 0.88,
+                            ease: "none",
+                            duration: 1,
+                        },
+                        0,
+                    );
+                }
+
+                /* =====================================================
+                    TÍTULO
+                ====================================================== */
+
+                if (heroTitle) {
+                    tl.to(
+                        heroTitle,
+                        {
+                            scale: 0.84,
+                            ease: "none",
+                            duration: 1,
+                        },
+                        0,
+                    );
+                }
+
+                /* =====================================================
+                    TEXTO
+                ====================================================== */
+
+                if (heroText) {
+                    tl.to(
+                        heroText,
+                        {
+                            scale: 0.9,
+                            ease: "none",
+                            duration: 1,
+                        },
+                        0,
+                    );
+                }
+
+                /* =====================================================
+                    SETA
+                    ↘ → ↓
+                ====================================================== */
+
+                if (heroArrow) {
+                    tl.to(
+                        heroArrow,
+                        {
+                            rotation: 45,
+                            ease: "none",
+                            duration: 1,
+                        },
+                        0,
+                    );
+                }
+
+                /* =====================================================
+                    BLUR GLOBAL
+                ====================================================== */
+
+                if (globalBlur) {
+                    tl.to(
+                        globalBlur,
+                        {
+                            opacity: 1,
+                            ease: "none",
+                            duration: 0.25,
+                        },
+                        1,
+                    );
+                }
+
+                /* =====================================================
+                    HOLD
+                ====================================================== */
+
+                tl.to(
+                    {},
+                    {
+                        duration: 1.2,
                     },
-                    1,
                 );
-            }
 
-            /* =====================================================
-                HOLD
-            ====================================================== */
+                /*
+                O gsap.matchMedia() chama o cleanup automaticamente
+                quando sai do breakpoint.
+                */
 
-            tl.to(
-                {},
-                {
-                    duration: 1.2,
-                },
-            );
+                return () => {
+                    tl.kill();
+                };
+            });
         }, sectionRef);
 
-        return () => ctx.revert();
+        return () => {
+            ctx.revert();
+        };
     }, []);
 
     return (
@@ -238,8 +257,11 @@ function HeroSectionTransition() {
             className="
                 relative
                 w-full
-                h-screen
-                overflow-hidden
+
+                h-auto
+
+                md:h-screen
+                md:overflow-hidden
             "
         >
             {/* =====================================================
@@ -249,11 +271,13 @@ function HeroSectionTransition() {
             <div
                 ref={heroRef}
                 className="
-                    absolute
-                    inset-0
+                    relative
                     z-0
                     w-full
-                    h-full
+
+                    md:absolute
+                    md:inset-0
+                    md:h-full
                 "
             >
                 <Hero />
@@ -266,13 +290,15 @@ function HeroSectionTransition() {
             <div
                 ref={seclogsRef}
                 className="
-                    absolute
-                    inset-0
+                    relative
                     z-20
                     w-full
-                    h-auto
                     bg-obsidian
-                    shadow-[0_-25px_60px_rgba(0,0,0,0.55)]
+                    md:shadow-[0_-25px_60px_rgba(0,0,0,0.55)]
+
+                    md:absolute
+                    md:inset-0
+                    md:h-auto
                 "
             >
                 <Seclogs />

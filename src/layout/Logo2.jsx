@@ -160,8 +160,8 @@ function Seclogs() {
                 bg-obsidian
                 md:mt-34
                 mb-14
-                shadow-t-2xl
-                shadow-black
+                md:shadow-t-2xl
+                md:shadow-black
             "
             ref={(el) => {
                 if (!el) return;
