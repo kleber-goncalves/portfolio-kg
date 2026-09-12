@@ -22,7 +22,7 @@ function App() {
     return (
         <>
             <CursorTrail />
-            <GradualBlur target="page" position="bottom" height="8rem" strength={2} divCount={5} curve="bezier" exponential={false} opacity={1} zIndex={50} className="global-gradual-blur" />
+            <GradualBlur target="page" position="bottom" height="8rem" strength={2} divCount={5} curve="bezier" exponential={false} opacity={0} zIndex={50} className="global-gradual-blur" />
 
             <SmoothScroll>
                 <div className="relative z-[1] w-full">

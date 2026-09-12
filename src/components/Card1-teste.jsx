@@ -1,5 +1,7 @@
 import { useEffect, useRef } from "react";
+
 import { gsap } from "gsap";
+
 import "../styles/editorialCard.css";
 
 export default function Card1({ title, text, text_2, variant = "default", className = "", classNameText = "", classNameTitle = "", classNametext2 = "", ...props }) {
@@ -16,12 +18,17 @@ export default function Card1({ title, text, text_2, variant = "default", classN
 
         const handleMouseEnter = () => {
             card.style.setProperty("--spotlight-opacity", "1");
+
             card.style.setProperty("--border-glow-opacity", "1");
 
             gsap.to(card, {
                 y: -3,
+
                 duration: 0.35,
+
                 ease: "power2.out",
+
+                overwrite: false,
             });
         };
 
@@ -29,40 +36,32 @@ export default function Card1({ title, text, text_2, variant = "default", classN
             const rect = card.getBoundingClientRect();
 
             const x = e.clientX - rect.left;
+
             const y = e.clientY - rect.top;
 
-            /*
-             * --------------------------------
-             * SPOTLIGHT
-             * --------------------------------
-             */
+            /* =================================================
+                SPOTLIGHT
+            ================================================== */
 
             const percentX = (x / rect.width) * 100;
+
             const percentY = (y / rect.height) * 100;
 
             card.style.setProperty("--mouse-x", `${percentX}%`);
 
             card.style.setProperty("--mouse-y", `${percentY}%`);
 
-            /*
-             * --------------------------------
-             * TILT 3D
-             * --------------------------------
-             */
+            /* =================================================
+                TILT
+            ================================================== */
 
             const centerX = rect.width / 2;
+
             const centerY = rect.height / 2;
 
             const mouseX = x - centerX;
-            const mouseY = y - centerY;
 
-            /*
-             * Quanto maior o valor,
-             * mais forte o Tilt.
-             *
-             * 1.5 = bem sutil
-             * 3   = mais perceptível
-             */
+            const mouseY = y - centerY;
 
             const rotateX = (mouseY / centerY) * -1.5;
 
@@ -71,9 +70,13 @@ export default function Card1({ title, text, text_2, variant = "default", classN
             gsap.to(card, {
                 rotateX,
                 rotateY,
+
                 duration: 0.18,
+
                 ease: "power2.out",
+
                 transformPerspective: 500,
+
                 overwrite: true,
             });
         };
@@ -83,16 +86,16 @@ export default function Card1({ title, text, text_2, variant = "default", classN
 
             card.style.setProperty("--border-glow-opacity", "0");
 
-            /*
-             * Retorna para a posição original
-             */
-
             gsap.to(card, {
                 y: 0,
+
                 rotateX: 0,
                 rotateY: 0,
+
                 duration: 0.5,
+
                 ease: "power3.out",
+
                 overwrite: true,
             });
         };
@@ -114,11 +117,9 @@ export default function Card1({ title, text, text_2, variant = "default", classN
         };
     }, []);
 
-    /*
-     * --------------------------------
-     * VARIANTS ORIGINAIS
-     * --------------------------------
-     */
+    /* =====================================================
+        VARIANTS
+    ====================================================== */
 
     const variants = {
         default: {
@@ -142,6 +143,10 @@ export default function Card1({ title, text, text_2, variant = "default", classN
 
     const styles = variants[variant] || variants.default;
 
+    /* =====================================================
+        RENDER
+    ====================================================== */
+
     return (
         <article
             ref={cardRef}
@@ -150,18 +155,24 @@ export default function Card1({ title, text, text_2, variant = "default", classN
                 editorial-card
                 relative
                 w-full
+
                 border-t
                 md:border-t-0
                 md:border-b
+
                 border-graphite
+
                 py-7
                 md:py-10
-                
+
                 ${className}
             `}
             {...props}
         >
-            {/* Spotlight */}
+            {/* =================================================
+                SPOTLIGHT
+            ================================================== */}
+
             <span
                 className="
                     editorial-card__spotlight
@@ -171,7 +182,10 @@ export default function Card1({ title, text, text_2, variant = "default", classN
                 "
             />
 
-            {/* Glow da borda */}
+            {/* =================================================
+                GLOW
+            ================================================== */}
+
             <span
                 className="
                     editorial-card__glow
@@ -181,39 +195,59 @@ export default function Card1({ title, text, text_2, variant = "default", classN
                 "
             />
 
-            {/* Conteúdo ORIGINAL */}
+            {/* =================================================
+                CONTEÚDO
+            ================================================== */}
+
             <div
                 className="
                     relative
                     z-[2]
                     flex
                     w-full
+
                     md:min-h-[260px]
+
                     flex-col
                     items-start
+
                     gap-3
+
                     md:py-6
                     md:pl-6
                 "
             >
+                {/* =================================================
+                    CATEGORIA
+                ================================================== */}
+
                 <p
                     className={`
                         font-bebas
+
                         text-xs
                         uppercase
                         tracking-[0.2em]
+
                         md:text-sm
                         md:tracking-[0.25em]
+
                         transition-colors
                         duration-500
                         ease-out
+
                         group-hover:text-accent-hover
+
                         ${styles.text}
                         ${classNameText}
                     `}
                 >
                     {text}
                 </p>
+
+                {/* =================================================
+                    TÍTULO
+                ================================================== */}
 
                 <div
                     className="
@@ -227,14 +261,19 @@ export default function Card1({ title, text, text_2, variant = "default", classN
                     <h3
                         className={`
                             font-space
+
                             text-xl
                             font-[600]
                             leading-tight
+
                             md:text-4xl
+
                             transition-transform
                             duration-500
                             ease-out
+
                             group-hover:translate-x-1
+
                             ${styles.title}
                             ${classNameTitle}
                         `}
@@ -243,17 +282,26 @@ export default function Card1({ title, text, text_2, variant = "default", classN
                     </h3>
                 </div>
 
+                {/* =================================================
+                    DESCRIÇÃO
+                ================================================== */}
+
                 <p
                     className={`
                         max-w-3xl
+
                         text-sm
                         leading-relaxed
+
                         md:text-sm
                         md:leading-6
+
                         transition-colors
                         duration-500
                         ease-out
+
                         text-ivory/70
+
                         ${styles.description}
                         ${classNametext2}
                     `}
