@@ -1,31 +1,61 @@
 import { useEffect, useRef } from "react";
 
-import "../styles/DotField.css";
-
-export default function DotField({ dotRadius = 1, dotSpacing = 18, cursorRadius = 350, bulgeOnly = true, bulgeStrength = 35, glowRadius = 180, sparkle = false, waveAmplitude = 0, gradientFrom = "rgba(168, 120, 82, 0.12)", gradientTo = "rgba(216, 194, 170, 0.06)", glowColor = "#0D0B09" }) {
-    const containerRef = useRef(null);
+export default function DotField({ dotRadius = 1, dotSpacing = 18, cursorRadius = 350, bulgeOnly = true, bulgeStrength = 35, glowRadius = 180, sparkle = false, waveAmplitude = 0, gradientFrom = "#F2F0EC", gradientTo = "#8B8B8B", glowColor = "#0D0B09", frozen = false }) {
     const canvasRef = useRef(null);
+    const containerRef = useRef(null);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Estado do freeze
+    |--------------------------------------------------------------------------
+    */
+
+    const frozenRef = useRef(frozen);
 
     useEffect(() => {
-        const container = containerRef.current;
-        const canvas = canvasRef.current;
+        frozenRef.current = frozen;
 
-        if (!container || !canvas) return;
+        console.log("❄️ DOTFIELD FROZEN MUDOU:", frozen);
+    }, [frozen]);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Canvas
+    |--------------------------------------------------------------------------
+    */
+
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        const container = containerRef.current;
+
+        if (!canvas || !container) return;
 
         const ctx = canvas.getContext("2d");
 
         if (!ctx) return;
 
-        /* =====================================================
-            ESTADO
-        ====================================================== */
-
-        let animationFrame = null;
-
-        let dots = [];
+        /*
+        |--------------------------------------------------------------------------
+        | Dimensões
+        |--------------------------------------------------------------------------
+        */
 
         let width = 0;
         let height = 0;
+
+        /*
+        |--------------------------------------------------------------------------
+        | Animação
+        |--------------------------------------------------------------------------
+        */
+
+        let animationFrame = null;
+
+        /*
+        |--------------------------------------------------------------------------
+        | Mouse
+        |--------------------------------------------------------------------------
+        */
 
         let mouseX = -9999;
         let mouseY = -9999;
@@ -33,55 +63,41 @@ export default function DotField({ dotRadius = 1, dotSpacing = 18, cursorRadius 
         let targetMouseX = -9999;
         let targetMouseY = -9999;
 
-        let time = 0;
-
-        let isVisible = true;
-        let isAnimating = false;
-
-        /*
-         * IMPORTANTE:
-         * Controla se o mouse está realmente dentro da janela.
-         *
-         * Quando false:
-         * - as moléculas não sofrem influência do mouse
-         * - o efeito de "empurrar" as bolinhas desaparece
-         * - o cursor glow também desaparece
-         */
         let mouseActive = false;
 
-        /* =====================================================
-            DISPOSITIVO / MOTION
-        ====================================================== */
+        /*
+        |--------------------------------------------------------------------------
+        | Freeze
+        |--------------------------------------------------------------------------
+        */
+
+        let previousFrozen = frozenRef.current;
+
+        /*
+        |--------------------------------------------------------------------------
+        | Visibility
+        |--------------------------------------------------------------------------
+        */
+
+        let isVisible = true;
+
+        /*
+        |--------------------------------------------------------------------------
+        | Device
+        |--------------------------------------------------------------------------
+        */
 
         const isTouchDevice = window.matchMedia("(hover: none)").matches || window.matchMedia("(pointer: coarse)").matches;
 
         const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-        /* =====================================================
-            RESET DAS MOLÉCULAS / CURSOR
-        ====================================================== */
+        /*
+        |--------------------------------------------------------------------------
+        | Resize
+        |--------------------------------------------------------------------------
+        */
 
-        const resetCursor = () => {
-            /*
-             * Desativa completamente a interação.
-             */
-            mouseActive = false;
-
-            /*
-             * Coloca o mouse fora do canvas.
-             */
-            mouseX = -9999;
-            mouseY = -9999;
-
-            targetMouseX = -9999;
-            targetMouseY = -9999;
-        };
-
-        /* =====================================================
-            RESIZE
-        ====================================================== */
-
-        const resize = () => {
+        const resizeCanvas = () => {
             const rect = container.getBoundingClientRect();
 
             width = rect.width;
@@ -97,317 +113,141 @@ export default function DotField({ dotRadius = 1, dotSpacing = 18, cursorRadius 
 
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-            createDots();
+            console.log("📐 DOTFIELD RESIZE:", {
+                width: Math.round(width),
+                height: Math.round(height),
+            });
         };
 
-        /* =====================================================
-            CREATE DOTS
-        ====================================================== */
+        resizeCanvas();
 
-        const createDots = () => {
-            dots = [];
+        window.addEventListener("resize", resizeCanvas);
 
-            const columns = Math.ceil(width / dotSpacing) + 1;
-
-            const rows = Math.ceil(height / dotSpacing) + 1;
-
-            for (let row = 0; row < rows; row++) {
-                for (let column = 0; column < columns; column++) {
-                    const x = column * dotSpacing;
-
-                    const y = row * dotSpacing;
-
-                    dots.push({
-                        x,
-                        y,
-                        baseX: x,
-                        baseY: y,
-                        radius: dotRadius,
-                        opacity: 0.45,
-                        random: Math.random(),
-                    });
-                }
-            }
-        };
-
-        /* =====================================================
-            MOUSE MOVE
-        ====================================================== */
+        /*
+        |--------------------------------------------------------------------------
+        | Mouse Move
+        |--------------------------------------------------------------------------
+        */
 
         const handleMouseMove = (event) => {
             if (!isVisible) return;
 
-            /*
-             * O mouse voltou para dentro da janela.
-             */
-            mouseActive = true;
-
             const rect = container.getBoundingClientRect();
 
-            targetMouseX = event.clientX - rect.left;
+            const nextX = event.clientX - rect.left;
 
-            targetMouseY = event.clientY - rect.top;
+            const nextY = event.clientY - rect.top;
+
+            console.log("🖱️ DOTFIELD MOUSEMOVE:", {
+                mouseX: Math.round(nextX),
+                mouseY: Math.round(nextY),
+                frozen: frozenRef.current,
+                mouseActive,
+            });
+
+            /*
+            |--------------------------------------------------------------------------
+            | Se congelado, ignora o mouse
+            |--------------------------------------------------------------------------
+            */
+
+            if (frozenRef.current) {
+                return;
+            }
+
+            mouseActive = true;
+
+            targetMouseX = nextX;
+            targetMouseY = nextY;
         };
 
-        /* =====================================================
-            MOUSE SAI DA JANELA
-        ====================================================== */
+        /*
+        |--------------------------------------------------------------------------
+        | Reset do cursor
+        |--------------------------------------------------------------------------
+        */
+
+        const resetCursor = () => {
+            if (frozenRef.current) {
+                return;
+            }
+
+            mouseActive = false;
+
+            targetMouseX = -9999;
+            targetMouseY = -9999;
+        };
+
+        /*
+        |--------------------------------------------------------------------------
+        | Mouse saiu da janela
+        |--------------------------------------------------------------------------
+        */
 
         const handleWindowMouseLeave = () => {
-            /*
-             * Aqui acontece o principal reset.
-             *
-             * As moléculas deixam de receber
-             * influência da última posição do mouse.
-             */
+            if (frozenRef.current) {
+                return;
+            }
+
             resetCursor();
         };
 
-        /* =====================================================
-            MOUSE SAI DO DOCUMENT
-        ====================================================== */
+        /*
+        |--------------------------------------------------------------------------
+        | Mouse saiu do documento
+        |--------------------------------------------------------------------------
+        */
 
         const handleDocumentMouseOut = (event) => {
-            /*
-             * relatedTarget === null significa que o mouse
-             * saiu completamente da janela/documento.
-             */
-            if (event.relatedTarget === null) {
+            if (frozenRef.current) {
+                return;
+            }
+
+            if (!event.relatedTarget) {
                 resetCursor();
             }
         };
 
-        /* =====================================================
-            ABA / JANELA PERDE VISIBILIDADE
-        ====================================================== */
+        /*
+        |--------------------------------------------------------------------------
+        | Visibility
+        |--------------------------------------------------------------------------
+        */
 
         const handleVisibilityChange = () => {
-            if (document.visibilityState !== "visible") {
-                resetCursor();
+            if (document.hidden) {
+                isVisible = false;
+
+                mouseActive = false;
+
+                targetMouseX = -9999;
+                targetMouseY = -9999;
+            } else {
+                isVisible = true;
             }
         };
 
-        /* =====================================================
-            GRADIENT
-        ====================================================== */
-
-        const getGradient = () => {
-            const gradient = ctx.createRadialGradient(width * 0.5, height * 0.25, 0, width * 0.5, height * 0.25, Math.max(width, height));
-
-            gradient.addColorStop(0, gradientFrom);
-
-            gradient.addColorStop(1, gradientTo);
-
-            return gradient;
-        };
-
-        /* =====================================================
-            DRAW
-        ====================================================== */
-
-        const draw = () => {
-            /*
-             * Hero saiu da viewport.
-             */
-            if (!isVisible) {
-                isAnimating = false;
-                animationFrame = null;
-                return;
-            }
-
-            time += 0.008;
-
-            ctx.clearRect(0, 0, width, height);
-
-            /* =================================================
-                SMOOTH MOUSE
-            ================================================== */
-
-            if (mouseActive && !reducedMotion && !isTouchDevice) {
-                mouseX += (targetMouseX - mouseX) * 0.08;
-
-                mouseY += (targetMouseY - mouseY) * 0.08;
-            }
-
-            /* =================================================
-                BACKGROUND
-            ================================================== */
-
-            ctx.fillStyle = getGradient();
-
-            ctx.fillRect(0, 0, width, height);
-
-            /* =================================================
-                DOTS / MOLÉCULAS
-            ================================================== */
-
-            for (const dot of dots) {
-                /*
-                 * Por padrão, a molécula começa exatamente
-                 * na posição original.
-                 */
-                let x = dot.baseX;
-                let y = dot.baseY;
-
-                let radius = dot.radius;
-
-                let opacity = dot.opacity;
-
-                /* =============================================
-                    INFLUÊNCIA DO MOUSE
-                ============================================== */
-
-                /*
-                 * ATENÇÃO:
-                 *
-                 * mouseActive é obrigatório aqui.
-                 *
-                 * Se o mouse saiu da janela:
-                 *
-                 * mouseActive = false
-                 *
-                 * Então este bloco inteiro é ignorado.
-                 *
-                 * Resultado:
-                 * x = baseX
-                 * y = baseY
-                 *
-                 * As bolinhas voltam ao estado normal.
-                 */
-                if (mouseActive && !isTouchDevice && !reducedMotion) {
-                    const dx = mouseX - dot.baseX;
-
-                    const dy = mouseY - dot.baseY;
-
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-
-                    if (distance < cursorRadius) {
-                        const normalized = 1 - distance / cursorRadius;
-
-                        const influence = Math.pow(normalized, 2);
-
-                        if (bulgeOnly || bulgeStrength > 0) {
-                            const directionX = distance === 0 ? 0 : dx / distance;
-
-                            const directionY = distance === 0 ? 0 : dy / distance;
-
-                            x += directionX * influence * bulgeStrength;
-
-                            y += directionY * influence * bulgeStrength;
-                        }
-
-                        radius += influence * 0.8;
-
-                        opacity += influence * 0.45;
-                    }
-                }
-
-                /* =============================================
-                    WAVE
-                ============================================== */
-
-                if (waveAmplitude > 0 && !reducedMotion) {
-                    y += Math.sin(dot.baseX * 0.015 + time) * waveAmplitude;
-                }
-
-                /* =============================================
-                    SPARKLE
-                ============================================== */
-
-                if (sparkle && !reducedMotion) {
-                    const sparkleValue = Math.sin(time * 2 + dot.random * Math.PI * 2);
-
-                    opacity += Math.max(0, sparkleValue) * 0.15;
-                }
-
-                /* =============================================
-                    DOT GRADIENT
-                ============================================== */
-
-                const gradient = ctx.createRadialGradient(x, y, 0, x, y, Math.max(radius * 5, 8));
-
-                gradient.addColorStop(0, `rgba(216, 194, 170, ${opacity})`);
-
-                gradient.addColorStop(0.5, `rgba(168, 120, 82, ${opacity * 0.65})`);
-
-                gradient.addColorStop(1, "rgba(168, 120, 82, 0)");
-
-                ctx.fillStyle = gradient;
-
-                ctx.beginPath();
-
-                ctx.arc(x, y, radius, 0, Math.PI * 2);
-
-                ctx.fill();
-            }
-
-            /* =================================================
-                CURSOR GLOW
-            ================================================== */
-
-            /*
-             * O glow também depende de mouseActive.
-             *
-             * Portanto, quando o mouse sai da janela,
-             * ele desaparece junto com a influência
-             * das moléculas.
-             */
-            if (mouseActive && !isTouchDevice && !reducedMotion && mouseX > -1000 && mouseY > -1000) {
-                const glow = ctx.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, glowRadius);
-
-                glow.addColorStop(0, "rgba(168, 120, 82, 0.035)");
-
-                glow.addColorStop(0.45, "rgba(168, 120, 82, 0.018)");
-
-                glow.addColorStop(1, "rgba(168, 120, 82, 0)");
-
-                ctx.fillStyle = glow;
-
-                ctx.beginPath();
-
-                ctx.arc(mouseX, mouseY, glowRadius, 0, Math.PI * 2);
-
-                ctx.fill();
-            }
-
-            /* =================================================
-                PRÓXIMO FRAME
-            ================================================== */
-
-            animationFrame = requestAnimationFrame(draw);
-        };
-
-        /* =====================================================
-            START
-        ====================================================== */
-
-        const startAnimation = () => {
-            if (isAnimating || isTouchDevice || reducedMotion || !isVisible) {
-                return;
-            }
-
-            isAnimating = true;
-
-            animationFrame = requestAnimationFrame(draw);
-        };
-
-        /* =====================================================
-            STOP
-        ====================================================== */
-
-        const stopAnimation = () => {
-            isAnimating = false;
-
-            if (animationFrame !== null) {
-                cancelAnimationFrame(animationFrame);
-
-                animationFrame = null;
-            }
-        };
-
-        /* =====================================================
-            INTERSECTION OBSERVER
-        ====================================================== */
+        /*
+        |--------------------------------------------------------------------------
+        | Eventos
+        |--------------------------------------------------------------------------
+        */
+
+        if (!isTouchDevice) {
+            window.addEventListener("mousemove", handleMouseMove);
+
+            window.addEventListener("mouseleave", handleWindowMouseLeave);
+
+            document.addEventListener("mouseout", handleDocumentMouseOut);
+        }
+
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Intersection Observer
+        |--------------------------------------------------------------------------
+        */
 
         const observer = new IntersectionObserver(
             (entries) => {
@@ -415,98 +255,382 @@ export default function DotField({ dotRadius = 1, dotSpacing = 18, cursorRadius 
 
                 isVisible = entry.isIntersecting;
 
-                if (isVisible) {
-                    startAnimation();
-                } else {
-                    /*
-                     * Hero saiu da tela.
-                     *
-                     * Resetamos também as moléculas.
-                     */
-                    resetCursor();
-
-                    stopAnimation();
-                }
+                console.log("👁️ DOTFIELD VISIBLE:", isVisible);
             },
             {
                 threshold: 0,
             },
         );
 
-        /* =====================================================
-            EVENTS
-        ====================================================== */
-
-        window.addEventListener("resize", resize, { passive: true });
-
-        window.addEventListener("mousemove", handleMouseMove, { passive: true });
-
-        window.addEventListener("mouseleave", handleWindowMouseLeave, { passive: true });
-
-        /*
-         * Evento adicional para garantir que o navegador
-         * realmente detectou a saída do documento.
-         */
-        document.addEventListener("mouseout", handleDocumentMouseOut, { passive: true });
-
-        document.addEventListener("visibilitychange", handleVisibilityChange);
-
-        /* =====================================================
-            INITIALIZE
-        ====================================================== */
-
-        resize();
-
         observer.observe(container);
 
-        /* =====================================================
-            MOBILE / REDUCED MOTION
-        ====================================================== */
+        /*
+        |--------------------------------------------------------------------------
+        | Gradiente dos pontos
+        |--------------------------------------------------------------------------
+        */
 
-        if (isTouchDevice || reducedMotion) {
+        let gradient;
+
+        const createGradient = () => {
+            gradient = ctx.createLinearGradient(0, 0, width, height);
+
+            gradient.addColorStop(0, gradientFrom);
+
+            gradient.addColorStop(1, gradientTo);
+        };
+
+        createGradient();
+
+        /*
+        |--------------------------------------------------------------------------
+        | DRAW
+        |--------------------------------------------------------------------------
+        */
+
+        const draw = (time = 0) => {
+            const currentlyFrozen = frozenRef.current;
+
+            /*
+            |--------------------------------------------------------------------------
+            | Entrou no freeze
+            |--------------------------------------------------------------------------
+            */
+
+            if (currentlyFrozen && !previousFrozen) {
+                console.log("🔄 DOTFIELD: ENTROU NO FREEZE");
+
+                /*
+                |--------------------------------------------------------------------------
+                | Remove a posição do mouse.
+                |
+                | NÃO colocamos mouseX diretamente em -9999.
+                |
+                | O target vai para fora e mouseX acompanha
+                | suavemente.
+                |--------------------------------------------------------------------------
+                */
+
+                targetMouseX = -9999;
+                targetMouseY = -9999;
+
+                /*
+                | Mantemos mouseActive durante o retorno
+                | para que o efeito desapareça suavemente.
+                */
+
+                mouseActive = true;
+
+                console.log("🎯 RESET DO TARGET:", {
+                    targetMouseX,
+                    targetMouseY,
+                });
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Saiu do freeze
+            |--------------------------------------------------------------------------
+            */
+
+            if (!currentlyFrozen && previousFrozen) {
+                console.log("▶️ DOTFIELD: SAIU DO FREEZE");
+
+                /*
+                | O próximo mousemove assume o controle.
+                */
+
+                mouseActive = false;
+
+                mouseX = -9999;
+                mouseY = -9999;
+
+                targetMouseX = -9999;
+                targetMouseY = -9999;
+            }
+
+            previousFrozen = currentlyFrozen;
+
+            /*
+            |--------------------------------------------------------------------------
+            | Limpa canvas
+            |--------------------------------------------------------------------------
+            */
+
             ctx.clearRect(0, 0, width, height);
 
-            ctx.fillStyle = getGradient();
+            /*
+            |--------------------------------------------------------------------------
+            | Cria gradiente
+            |--------------------------------------------------------------------------
+            */
 
-            ctx.fillRect(0, 0, width, height);
+            createGradient();
 
-            for (const dot of dots) {
-                ctx.beginPath();
+            /*
+            |--------------------------------------------------------------------------
+            | Movimento do mouse
+            |--------------------------------------------------------------------------
+            */
 
-                ctx.fillStyle = "rgba(168, 120, 82, 0.18)";
+            if (!reducedMotion && !isTouchDevice) {
+                mouseX += (targetMouseX - mouseX) * 0.08;
 
-                ctx.arc(dot.baseX, dot.baseY, dot.radius, 0, Math.PI * 2);
-
-                ctx.fill();
+                mouseY += (targetMouseY - mouseY) * 0.08;
             }
-        } else {
-            startAnimation();
-        }
 
-        /* =====================================================
-            CLEANUP
-        ====================================================== */
+            /*
+            |--------------------------------------------------------------------------
+            | Pontos
+            |--------------------------------------------------------------------------
+            */
+
+            const columns = Math.ceil(width / dotSpacing) + 1;
+
+            const rows = Math.ceil(height / dotSpacing) + 1;
+
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < columns; col++) {
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Posição base
+                    |--------------------------------------------------------------------------
+                    */
+
+                    const baseX = col * dotSpacing;
+
+                    const baseY = row * dotSpacing;
+
+                    let x = baseX;
+                    let y = baseY;
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Distância do mouse
+                    |--------------------------------------------------------------------------
+                    */
+
+                    const dx = baseX - mouseX;
+
+                    const dy = baseY - mouseY;
+
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Influência
+                    |--------------------------------------------------------------------------
+                    */
+
+                    let influence = 0;
+
+                    if (mouseActive && distance < cursorRadius && !isTouchDevice) {
+                        influence = 1 - distance / cursorRadius;
+
+                        influence = influence * influence;
+                    }
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Bulge
+                    |--------------------------------------------------------------------------
+                    */
+
+                    if (influence > 0) {
+                        const angle = Math.atan2(dy, dx);
+
+                        if (bulgeOnly) {
+                            x += Math.cos(angle) * influence * bulgeStrength;
+
+                            y += Math.sin(angle) * influence * bulgeStrength;
+                        } else {
+                            x += (dx / (distance || 1)) * influence * bulgeStrength;
+
+                            y += (dy / (distance || 1)) * influence * bulgeStrength;
+                        }
+                    }
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Wave
+                    |--------------------------------------------------------------------------
+                    */
+
+                    if (waveAmplitude !== 0 && !reducedMotion && !currentlyFrozen) {
+                        y += Math.sin(time * 0.001 + col * 0.3 + row * 0.2) * waveAmplitude;
+                    }
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Radius
+                    |--------------------------------------------------------------------------
+                    */
+
+                    let radius = dotRadius;
+
+                    radius += influence * 0.8;
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Glow
+                    |--------------------------------------------------------------------------
+                    */
+
+                    if (glowRadius > 0 && influence > 0) {
+                        const glowInfluence = Math.max(0, 1 - distance / glowRadius);
+
+                        radius += glowInfluence * 0.5;
+                    }
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Opacidade
+                    |--------------------------------------------------------------------------
+                    */
+
+                    let alpha = 0.55;
+
+                    alpha += influence * 0.35;
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Sparkle
+                    |--------------------------------------------------------------------------
+                    */
+
+                    if (sparkle && !currentlyFrozen) {
+                        const sparkleValue = Math.sin(time * 0.002 + col * 1.7 + row * 2.1);
+
+                        alpha += Math.max(0, sparkleValue) * 0.2;
+                    }
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Cor dos pontos
+                    |--------------------------------------------------------------------------
+                    */
+
+                    ctx.fillStyle = gradient;
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Glow
+                    |--------------------------------------------------------------------------
+                    */
+
+                    if (influence > 0) {
+                        ctx.shadowBlur = influence * 8;
+
+                        ctx.shadowColor = glowColor;
+                    } else {
+                        ctx.shadowBlur = 0;
+                    }
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Opacidade
+                    |--------------------------------------------------------------------------
+                    */
+
+                    ctx.globalAlpha = Math.min(1, alpha);
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Desenha
+                    |--------------------------------------------------------------------------
+                    */
+
+                    ctx.beginPath();
+
+                    ctx.arc(x, y, radius, 0, Math.PI * 2);
+
+                    ctx.fill();
+
+                    ctx.shadowBlur = 0;
+                }
+            }
+
+            ctx.globalAlpha = 1;
+
+            /*
+            |--------------------------------------------------------------------------
+            | Debug
+            |--------------------------------------------------------------------------
+            */
+
+            if (currentlyFrozen) {
+                const now = performance.now();
+
+                if (!draw.lastFreezeLog || now - draw.lastFreezeLog > 700) {
+                    console.log("🧊 DOTFIELD CONGELADO:", {
+                        mouseX: Math.round(mouseX),
+
+                        mouseY: Math.round(mouseY),
+
+                        targetMouseX: Math.round(targetMouseX),
+
+                        targetMouseY: Math.round(targetMouseY),
+
+                        mouseActive,
+                    });
+
+                    draw.lastFreezeLog = now;
+                }
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Próximo frame
+            |--------------------------------------------------------------------------
+            */
+
+            animationFrame = requestAnimationFrame(draw);
+        };
+
+        /*
+        |--------------------------------------------------------------------------
+        | Inicia
+        |--------------------------------------------------------------------------
+        */
+
+        draw();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Cleanup
+        |--------------------------------------------------------------------------
+        */
 
         return () => {
-            stopAnimation();
+            if (animationFrame) {
+                cancelAnimationFrame(animationFrame);
+            }
 
-            observer.disconnect();
+            window.removeEventListener("resize", resizeCanvas);
 
-            window.removeEventListener("resize", resize);
+            if (!isTouchDevice) {
+                window.removeEventListener("mousemove", handleMouseMove);
 
-            window.removeEventListener("mousemove", handleMouseMove);
+                window.removeEventListener("mouseleave", handleWindowMouseLeave);
 
-            window.removeEventListener("mouseleave", handleWindowMouseLeave);
-
-            document.removeEventListener("mouseout", handleDocumentMouseOut);
+                document.removeEventListener("mouseout", handleDocumentMouseOut);
+            }
 
             document.removeEventListener("visibilitychange", handleVisibilityChange);
+
+            observer.disconnect();
         };
     }, [dotRadius, dotSpacing, cursorRadius, bulgeOnly, bulgeStrength, glowRadius, sparkle, waveAmplitude, gradientFrom, gradientTo, glowColor]);
 
+    /*
+    |--------------------------------------------------------------------------
+    | JSX
+    |--------------------------------------------------------------------------
+    */
+
     return (
-        <div ref={containerRef} className="dot-field" aria-hidden="true">
-            <canvas ref={canvasRef} className="dot-field__canvas" />
+        <div ref={containerRef} className="absolute inset-0 pointer-events-none">
+            <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
         </div>
     );
 }

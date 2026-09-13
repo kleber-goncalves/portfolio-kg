@@ -8,7 +8,7 @@ import { ArrowDownRight } from "lucide-react";
 import "../styles/looptextHero.css";
 import "../styles/heroParallax.css";
 
-function HeroDesktop({ items }) {
+function HeroDesktop({ items, dotFieldFrozen = false }) {
     const heroRef = useRef(null);
 
     const heroTitleRef = useRef(null);
@@ -16,6 +16,8 @@ function HeroDesktop({ items }) {
     const heroVisualRef = useRef(null);
 
     const heroDotFieldRef = useRef(null);
+
+    console.log("🎯 HERO DESKTOP dotFieldFrozen:", dotFieldFrozen);
 
     return (
         <section
@@ -45,7 +47,7 @@ function HeroDesktop({ items }) {
                     overflow-hidden
                 "
             >
-                <DotField dotRadius={1} dotSpacing={18} cursorRadius={350} bulgeOnly={true} bulgeStrength={35} glowRadius={180} sparkle={false} waveAmplitude={0} gradientFrom="#0d0d0d" gradientTo="#0d0d0d" glowColor="#0D0B09" />
+                <DotField dotRadius={1} dotSpacing={18} cursorRadius={350} bulgeOnly={true} bulgeStrength={35} glowRadius={180} sparkle={false} waveAmplitude={0} gradientFrom="#b37a07" gradientTo="#cf8e0c" glowColor="#0D0B09" frozen={dotFieldFrozen} />
             </div>
 
             {/* =====================================================
@@ -179,10 +181,6 @@ function HeroDesktop({ items }) {
                         "
                     />
 
-                    {/* =================================================
-                        GRADIENTE INFERIOR
-                    ================================================== */}
-
                     <div
                         aria-hidden="true"
                         className="
@@ -201,7 +199,7 @@ function HeroDesktop({ items }) {
                 </div>
 
                 {/* =================================================
-                    MARQUEE — NOME
+                    MARQUEE
                 ================================================== */}
 
                 <div
@@ -341,10 +339,6 @@ function HeroDesktop({ items }) {
                         xl:w-[340px]
                     "
                 >
-                    {/* =================================================
-                        SETA
-                    ================================================== */}
-
                     <div
                         className="
                             mb-10
@@ -367,10 +361,6 @@ function HeroDesktop({ items }) {
                             }}
                         />
                     </div>
-
-                    {/* =================================================
-                        CARGO
-                    ================================================== */}
 
                     <div
                         className="
@@ -432,10 +422,6 @@ function HeroDesktop({ items }) {
                     <Socials />
                 </div>
             </div>
-
-
-
-           
         </section>
     );
 }

@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -13,27 +13,26 @@ function HeroSectionTransition() {
     const heroRef = useRef(null);
     const seclogsRef = useRef(null);
 
+    const [dotFieldFrozen, setDotFieldFrozen] = useState(false);
+
     useLayoutEffect(() => {
         const ctx = gsap.context(() => {
             const section = sectionRef.current;
+
             const hero = heroRef.current;
+
             const seclogs = seclogsRef.current;
 
-            if (!section || !hero || !seclogs) return;
-
-            /*
-            ============================================================
-            DESKTOP
-            ============================================================
-            O efeito inteiro só existe a partir de 768px.
-            */
+            if (!section || !hero || !seclogs) {
+                return;
+            }
 
             const mm = gsap.matchMedia();
 
             mm.add("(min-width: 768px)", () => {
-                /* =====================================================
-                    ELEMENTOS DO HERO
-                ====================================================== */
+                /* =================================================
+                        ELEMENTOS
+                    ================================================== */
 
                 const heroTitle = hero.querySelector('[data-hero-element="title"]');
 
@@ -45,15 +44,11 @@ function HeroSectionTransition() {
 
                 const heroArrow = hero.querySelector('[data-hero-element="arrow"]');
 
-                /* =====================================================
-                    BLUR GLOBAL
-                ====================================================== */
-
                 const globalBlur = document.querySelector(".global-gradual-blur");
 
-                /* =====================================================
-                    ESTADO INICIAL
-                ====================================================== */
+                /* =================================================
+                        ESTADO INICIAL
+                    ================================================== */
 
                 gsap.set(seclogs, {
                     yPercent: 100,
@@ -70,20 +65,15 @@ function HeroSectionTransition() {
                     });
                 }
 
-                /*
-                O blur global começa invisível porque o Hero
-                possui seu próprio blur maior.
-                */
-
                 if (globalBlur) {
                     gsap.set(globalBlur, {
                         opacity: 0,
                     });
                 }
 
-                /* =====================================================
-                    TIMELINE PRINCIPAL
-                ====================================================== */
+                /* =================================================
+                        TIMELINE
+                    ================================================== */
 
                 const tl = gsap.timeline({
                     scrollTrigger: {
@@ -102,12 +92,95 @@ function HeroSectionTransition() {
                         invalidateOnRefresh: true,
 
                         markers: false,
+
+                        onUpdate: (self) => {
+                            /*
+                                    ========================================
+                                    QUANTO DA SEÇÃO 2 JÁ COBRIU DO HERO?
+                                    ========================================
+                                    */
+
+                            const seclogsRect = seclogs.getBoundingClientRect();
+
+                            const heroRect = hero.getBoundingClientRect();
+
+                            const coveredAmount = Math.max(0, heroRect.bottom - seclogsRect.top);
+
+                            /*
+                                    ========================================
+                                    REGRA
+                                    ========================================
+
+                                    0 → 299px
+                                    DotField acompanha mouse.
+
+                                    300px+
+                                    DotField congela.
+                                    ========================================
+                                    */
+
+                            const shouldFreeze = coveredAmount >= 300;
+
+                            console.log("📊 SCROLLTRIGGER", {
+                                progress: Number(self.progress.toFixed(3)),
+
+                                coveredAmount: Math.round(coveredAmount),
+
+                                shouldFreeze,
+                            });
+
+                            setDotFieldFrozen((previous) => {
+                                if (previous !== shouldFreeze) {
+                                    console.log(`❄️ ALTERANDO DOTFIELD: ${previous} → ${shouldFreeze}`);
+
+                                    return shouldFreeze;
+                                }
+
+                                return previous;
+                            });
+                        },
+
+                        /*
+                                ========================================
+                                QUANDO CHEGA AO FINAL
+                                ========================================
+                                */
+
+                        onLeave: () => {
+                            console.log("❄️ DOTFIELD: onLeave → TRUE");
+
+                            setDotFieldFrozen(true);
+                        },
+
+                        /*
+                                ========================================
+                                VOLTANDO PARA CIMA
+                                ========================================
+                                */
+
+                        onEnterBack: () => {
+                            const seclogsRect = seclogs.getBoundingClientRect();
+
+                            const heroRect = hero.getBoundingClientRect();
+
+                            const coveredAmount = Math.max(0, heroRect.bottom - seclogsRect.top);
+
+                            const shouldFreeze = coveredAmount >= 300;
+
+                            console.log("🔙 VOLTANDO", {
+                                coveredAmount: Math.round(coveredAmount),
+
+                                shouldFreeze,
+                            });
+
+                            setDotFieldFrozen(shouldFreeze);
+                        },
                     },
                 });
 
-                /* =====================================================
-                    SECLOGS
-                ====================================================== */
+                /* =================================================
+                        SECLOGS
+                    ================================================== */
 
                 tl.to(
                     seclogs,
@@ -119,9 +192,9 @@ function HeroSectionTransition() {
                     0,
                 );
 
-                /* =====================================================
-                    OPACIDADE DO HERO
-                ====================================================== */
+                /* =================================================
+                        OPACIDADE HERO
+                    ================================================== */
 
                 tl.to(
                     hero,
@@ -133,9 +206,9 @@ function HeroSectionTransition() {
                     0,
                 );
 
-                /* =====================================================
-                    DOT FIELD
-                ====================================================== */
+                /* =================================================
+                        DOT FIELD
+                    ================================================== */
 
                 if (heroDotField) {
                     gsap.set(heroDotField, {
@@ -143,9 +216,9 @@ function HeroSectionTransition() {
                     });
                 }
 
-                /* =====================================================
-                    FOTO
-                ====================================================== */
+                /* =================================================
+                        FOTO
+                    ================================================== */
 
                 if (heroVisual) {
                     tl.to(
@@ -159,9 +232,9 @@ function HeroSectionTransition() {
                     );
                 }
 
-                /* =====================================================
-                    TÍTULO
-                ====================================================== */
+                /* =================================================
+                        TÍTULO
+                    ================================================== */
 
                 if (heroTitle) {
                     tl.to(
@@ -175,9 +248,9 @@ function HeroSectionTransition() {
                     );
                 }
 
-                /* =====================================================
-                    TEXTO
-                ====================================================== */
+                /* =================================================
+                        TEXTO
+                    ================================================== */
 
                 if (heroText) {
                     tl.to(
@@ -191,10 +264,9 @@ function HeroSectionTransition() {
                     );
                 }
 
-                /* =====================================================
-                    SETA
-                    ↘ → ↓
-                ====================================================== */
+                /* =================================================
+                        SETA
+                    ================================================== */
 
                 if (heroArrow) {
                     tl.to(
@@ -208,9 +280,9 @@ function HeroSectionTransition() {
                     );
                 }
 
-                /* =====================================================
-                    BLUR GLOBAL
-                ====================================================== */
+                /* =================================================
+                        BLUR
+                    ================================================== */
 
                 if (globalBlur) {
                     tl.to(
@@ -224,13 +296,9 @@ function HeroSectionTransition() {
                     );
                 }
 
-                /* =====================================================
-                    HOLD
-                ====================================================== */
-                //
-                // A timeline simplesmente fica parada
-                // durante esse trecho.
-                //
+                /* =================================================
+                        HOLD
+                    ================================================== */
 
                 tl.to(
                     {},
@@ -238,11 +306,6 @@ function HeroSectionTransition() {
                         duration: 0.9,
                     },
                 );
-
-                /*
-                O gsap.matchMedia() chama o cleanup automaticamente
-                quando sai do breakpoint.
-                */
 
                 return () => {
                     tl.kill();
@@ -284,7 +347,7 @@ function HeroSectionTransition() {
                     md:h-full
                 "
             >
-                <Hero />
+                <Hero dotFieldFrozen={dotFieldFrozen} />
             </div>
 
             {/* =====================================================
