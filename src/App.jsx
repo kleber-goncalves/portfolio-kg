@@ -17,13 +17,16 @@ import HeroSectionTransition from "./components/HeroSectionTransition";
 import ButtonReset from "./components/buttonReset";
 import CursorTrail from "./components/CursorTrail";
 
+// Reduzir animações
+import ExperienceSelector from "./components/ExperienceSelector";
+
 function App() {
     return (
         <>
             <CursorTrail />
 
-
             <SmoothScroll>
+                <ExperienceSelector />
                 <div className="relative z-[1] w-full">
                     <ButtonReset />
 

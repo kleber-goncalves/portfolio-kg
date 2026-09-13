@@ -4,6 +4,8 @@ import gsap from "gsap";
 
 import { stopSmoothScroll, startSmoothScroll } from "../utils/lenisControl";
 
+import { getExperienceMode, setExperienceMode } from "../utils/experienceMode";
+
 function MenuDesktop({ items = [], showMenu = false }) {
     const [isOpen, setIsOpen] = useState(false);
 
@@ -12,6 +14,12 @@ function MenuDesktop({ items = [], showMenu = false }) {
     // =====================================
 
     const [activeHref, setActiveHref] = useState("#hero");
+
+    // =====================================
+    // MODO DE EXPERIÊNCIA
+    // =====================================
+
+    const [experienceMode, setExperienceModeState] = useState(() => getExperienceMode() || "full");
 
     // =====================================
     // REFS
@@ -58,8 +66,6 @@ function MenuDesktop({ items = [], showMenu = false }) {
 
     useEffect(() => {
         isOpenRef.current = isOpen;
-
-        console.log("🔴 MENU — isOpen mudou:", isOpen);
     }, [isOpen]);
 
     // =====================================
@@ -67,15 +73,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
     // =====================================
 
     useEffect(() => {
-        console.log("🟡 SCROLL LOCK — efeito executado | isOpen:", isOpen);
-
-        // =====================================
-        // MENU FECHADO
-        // =====================================
-
         if (!isOpen) {
-            console.log("🟢 SCROLL LOCK — menu fechado | Lenis START");
-
             startSmoothScroll();
 
             document.body.style.overflow = "";
@@ -84,22 +82,10 @@ function MenuDesktop({ items = [], showMenu = false }) {
         }
 
         // =====================================
-        // MENU ABERTO
-        // =====================================
-
-        console.log("🔒 SCROLL LOCK — INICIANDO BLOQUEIO");
-
-        console.log("📍 scrollY antes do bloqueio:", window.scrollY);
-
-        console.log("📐 body overflow antes:", document.body.style.overflow);
-
-        // =====================================
-        // PARA O LENIS
+        // PARA LENIS
         // =====================================
 
         stopSmoothScroll();
-
-        console.log("🛑 LENIS — STOP EXECUTADO");
 
         // =====================================
         // BLOQUEIO NATIVO
@@ -107,22 +93,12 @@ function MenuDesktop({ items = [], showMenu = false }) {
 
         document.body.style.overflow = "hidden";
 
-        console.log("📐 body overflow depois:", document.body.style.overflow);
-
         // =====================================
         // WHEEL
         // =====================================
 
         const handleWheel = (event) => {
-            console.log("🖱️ WHEEL DETECTADO", {
-                deltaY: event.deltaY,
-                scrollY: window.scrollY,
-                defaultPrevented: event.defaultPrevented,
-            });
-
             event.preventDefault();
-
-            console.log("🛑 WHEEL BLOQUEADO | scrollY:", window.scrollY);
         };
 
         // =====================================
@@ -130,11 +106,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
         // =====================================
 
         const handleTouchMove = (event) => {
-            console.log("📱 TOUCHMOVE DETECTADO | scrollY:", window.scrollY);
-
             event.preventDefault();
-
-            console.log("🛑 TOUCHMOVE BLOQUEADO");
         };
 
         window.addEventListener("wheel", handleWheel, {
@@ -146,55 +118,17 @@ function MenuDesktop({ items = [], showMenu = false }) {
         });
 
         // =====================================
-        // MONITORA MOVIMENTO REAL
-        // =====================================
-
-        let lastScrollY = window.scrollY;
-
-        const monitorScroll = () => {
-            const currentScrollY = window.scrollY;
-
-            if (currentScrollY !== lastScrollY) {
-                console.log("🚨 SCROLL REAL DETECTADO!", {
-                    anterior: lastScrollY,
-                    atual: currentScrollY,
-                    diferenca: currentScrollY - lastScrollY,
-                });
-
-                lastScrollY = currentScrollY;
-            }
-        };
-
-        window.addEventListener("scroll", monitorScroll, {
-            passive: true,
-        });
-
-        console.log("✅ SCROLL LOCK — listeners adicionados");
-
-        // =====================================
         // CLEANUP
         // =====================================
 
         return () => {
-            console.log("🔓 SCROLL LOCK — removendo bloqueio");
-
             document.body.style.overflow = "";
 
             window.removeEventListener("wheel", handleWheel);
 
             window.removeEventListener("touchmove", handleTouchMove);
 
-            window.removeEventListener("scroll", monitorScroll);
-
-            // =====================================
-            // VOLTA O LENIS
-            // =====================================
-
             startSmoothScroll();
-
-            console.log("▶️ LENIS — START EXECUTADO");
-
-            console.log("📐 body overflow restaurado:", document.body.style.overflow);
         };
     }, [isOpen]);
 
@@ -347,8 +281,6 @@ function MenuDesktop({ items = [], showMenu = false }) {
     const openMenu = () => {
         if (!showMenu) return;
 
-        console.log("📂 OPEN MENU — abrindo painel");
-
         isOpenRef.current = true;
 
         setIsOpen(true);
@@ -380,8 +312,6 @@ function MenuDesktop({ items = [], showMenu = false }) {
                 isOpenRef.current = false;
 
                 setIsOpen(false);
-
-                console.log("📕 CLOSE MENU — painel fechado");
             },
         });
 
@@ -660,12 +590,42 @@ function MenuDesktop({ items = [], showMenu = false }) {
     };
 
     // =====================================
+    // ALTERAR EXPERIÊNCIA
+    // =====================================
+
+    const handleExperienceChange = (mode) => {
+        if (mode === experienceMode) {
+            return;
+        }
+
+        console.log("⚙️ EXPERIÊNCIA ALTERADA:", mode);
+
+        // Salva preferência
+
+        setExperienceMode(mode);
+
+        // Atualiza estado do menu
+
+        setExperienceModeState(mode);
+
+        // Fecha menu
+
+        animateToHamburger();
+
+        closeMenu();
+
+        // Recarrega
+
+        window.setTimeout(() => {
+            window.location.reload();
+        }, 500);
+    };
+
+    // =====================================
     // TOGGLE
     // =====================================
 
     const handleToggle = () => {
-        console.log("🔘 TOGGLE — isOpen atual:", isOpen);
-
         if (isOpen) {
             animateToHamburger();
 
@@ -695,8 +655,6 @@ function MenuDesktop({ items = [], showMenu = false }) {
 
     const handleNavigation = (href, event) => {
         event.preventDefault();
-
-        console.log("🧭 NAVEGAÇÃO:", href);
 
         setActiveHref(href);
 
@@ -747,6 +705,10 @@ function MenuDesktop({ items = [], showMenu = false }) {
 
     const menuContent = (
         <div className="hidden md:block">
+            {/* =================================
+                OVERLAY + PAINEL
+            ================================= */}
+
             {isOpen && (
                 <div
                     className="
@@ -776,6 +738,10 @@ function MenuDesktop({ items = [], showMenu = false }) {
                             shadow-2xl
                         "
                     >
+                        {/* =========================
+                            HEADER
+                        ========================= */}
+
                         <div
                             className="
                                 mb-9
@@ -808,6 +774,10 @@ function MenuDesktop({ items = [], showMenu = false }) {
                                 KLEBER DEV
                             </p>
                         </div>
+
+                        {/* =========================
+                            NAVEGAÇÃO
+                        ========================= */}
 
                         <div
                             className="
@@ -871,7 +841,9 @@ function MenuDesktop({ items = [], showMenu = false }) {
                                                         tracking-wide
                                                         transition-colors
                                                         duration-300
+
                                                         ${isActive ? "text-bronze" : "text-ivory"}
+
                                                         group-hover:text-bronze
                                                     `}
                                             >
@@ -887,6 +859,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
                                                     duration-300
                                                     group-hover:translate-x-1
                                                     group-hover:text-bronze
+
                                                     ${isActive ? "text-bronze" : "text-steel"}
                                                 `}
                                         >
@@ -914,10 +887,131 @@ function MenuDesktop({ items = [], showMenu = false }) {
                             })}
                         </div>
 
+                        {/* =====================================
+                            EXPERIÊNCIA
+                        ===================================== */}
+
                         <div
                             className="
-                                mt-10
+                                mt-8
+                                border-t
+                                border-graphite
                                 pt-6
+                            "
+                        >
+                            <p
+                                className="
+                                    font-space
+                                    text-[10px]
+                                    uppercase
+                                    tracking-[0.25em]
+                                    text-steel
+                                "
+                            >
+                                Experiência
+                            </p>
+
+                            <div className="mt-4 flex gap-3">
+                                {/* =========================
+                                    COMPLETA
+                                ========================= */}
+
+                                <button
+                                    type="button"
+                                    onClick={() => handleExperienceChange("full")}
+                                    className={`
+                                        flex
+                                        flex-1
+                                        items-center
+                                        justify-between
+                                        border
+                                        px-4
+                                        py-3
+                                        transition-all
+                                        duration-300
+
+                                        ${experienceMode === "full" ? "border-bronze bg-obsidian text-bronze" : "border-graphite bg-obsidian/40 text-steel hover:border-steel/40 hover:text-ivory"}
+                                    `}
+                                >
+                                    <span
+                                        className="
+                                            font-space
+                                            text-[10px]
+                                            uppercase
+                                            tracking-[0.12em]
+                                        "
+                                    >
+                                        Completa
+                                    </span>
+
+                                    <span
+                                        className={`
+                                            h-2
+                                            w-2
+                                            rounded-full
+                                            transition-all
+                                            duration-300
+
+                                            ${experienceMode === "full" ? "bg-bronze shadow-[0_0_8px_rgba(196,154,120,0.7)]" : "bg-steel/30"}
+                                        `}
+                                    />
+                                </button>
+
+                                {/* =========================
+                                    ESSENCIAL
+                                ========================= */}
+
+                                <button
+                                    type="button"
+                                    onClick={() => handleExperienceChange("reduced")}
+                                    className={`
+                                        flex
+                                        flex-1
+                                        items-center
+                                        justify-between
+                                        border
+                                        px-4
+                                        py-3
+                                        transition-all
+                                        duration-300
+
+                                        ${experienceMode === "reduced" ? "border-bronze bg-obsidian text-bronze" : "border-graphite bg-obsidian/40 text-steel hover:border-steel/40 hover:text-ivory"}
+                                    `}
+                                >
+                                    <span
+                                        className="
+                                            font-space
+                                            text-[10px]
+                                            uppercase
+                                            tracking-[0.12em]
+                                        "
+                                    >
+                                        Essencial
+                                    </span>
+
+                                    <span
+                                        className={`
+                                            h-2
+                                            w-2
+                                            rounded-full
+                                            transition-all
+                                            duration-300
+
+                                            ${experienceMode === "reduced" ? "bg-bronze shadow-[0_0_8px_rgba(196,154,120,0.7)]" : "bg-steel/30"}
+                                        `}
+                                    />
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* =====================================
+                            FOOTER
+                        ===================================== */}
+
+                        <div
+                            className="
+                                mt-6
+                                pt-2
                             "
                         >
                             <p
@@ -935,6 +1029,10 @@ function MenuDesktop({ items = [], showMenu = false }) {
                     </nav>
                 </div>
             )}
+
+            {/* =====================================
+                BOTÃO HAMBÚRGUER
+            ===================================== */}
 
             <button
                 ref={buttonRef}
