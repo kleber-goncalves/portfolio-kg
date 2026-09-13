@@ -1,7 +1,11 @@
 import HeroMobile from "../components/HeroMobile";
 import HeroDesktop from "../components/HeroDesktop";
 
-function Hero({ dotFieldFrozen = false }) {
+function Hero({ dotFieldFrozen = false, onNavigate }) {
+    // ============================================================
+    // ITENS DO MENU
+    // ============================================================
+
     const menuItems = [
         {
             label: "Home",
@@ -31,20 +35,20 @@ function Hero({ dotFieldFrozen = false }) {
 
     return (
         <section id="hero" className="relative">
-            {/* =====================================================
+            {/* ==================================================
                 MOBILE
-            ====================================================== */}
+            ================================================== */}
 
             <div className="block md:hidden">
                 <HeroMobile items={menuItems} />
             </div>
 
-            {/* =====================================================
+            {/* ==================================================
                 DESKTOP
-            ====================================================== */}
+            ================================================== */}
 
             <div className="hidden md:block">
-                <HeroDesktop items={menuItems} dotFieldFrozen={dotFieldFrozen} />
+                <HeroDesktop items={menuItems} dotFieldFrozen={dotFieldFrozen} onNavigate={onNavigate} />
             </div>
         </section>
     );

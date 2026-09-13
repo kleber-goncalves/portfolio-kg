@@ -14,34 +14,30 @@ function HeroSectionTransition() {
     const heroRef = useRef(null);
     const seclogsRef = useRef(null);
 
-    // =========================================
-    // CONTROLES
-    // =========================================
+    // ============================================================
+    // CONFIGURAÇÕES
+    // ============================================================
 
-    // Quantos pixels o Seclogs precisa subir
-    // para o hambúrguer aparecer.
     const MENU_APPEAR_PX = 800;
-
-    // Quantos pixels o Seclogs precisa cobrir
-    // para o DotField congelar.
     const DOTFIELD_FREEZE_PX = 300;
 
-    // =========================================
+    // ============================================================
     // ESTADOS
-    // =========================================
+    // ============================================================
 
     const [showDesktopMenu, setShowDesktopMenu] = useState(false);
-
     const [dotFieldFrozen, setDotFieldFrozen] = useState(false);
 
-    // Refs para evitar setState a cada frame
-    const menuVisibleRef = useRef(false);
+    // ============================================================
+    // REFS DE CONTROLE
+    // ============================================================
 
+    const menuVisibleRef = useRef(false);
     const dotFieldFrozenRef = useRef(false);
 
-    // =========================================
+    // ============================================================
     // ITENS DO MENU
-    // =========================================
+    // ============================================================
 
     const menuItems = [
         {
@@ -70,23 +66,101 @@ function HeroSectionTransition() {
         },
     ];
 
-    // =========================================
-    // GSAP
-    // =========================================
+    // ============================================================
+    // NAVEGAÇÃO DO HERO
+    // ============================================================
+    //
+    // O Hero está dentro de uma área controlada pelo ScrollTrigger.
+    //
+    // Para #stack:
+    //
+    // NÃO usamos scrollIntoView().
+    //
+    // Levamos o scroll até o END do ScrollTrigger do Hero.
+    // Assim o usuário percorre a transição normalmente.
+    //
+    // ============================================================
+
+    const handleHeroNavigation = (href) => {
+        // ========================================================
+        // HOME
+        // ========================================================
+
+        if (href === "#hero") {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth",
+            });
+
+            return;
+        }
+
+        // ========================================================
+        // STACK
+        // ========================================================
+
+        if (href === "#stack") {
+            const heroTransition = ScrollTrigger.getById("heroTransition");
+
+            if (!heroTransition) {
+                console.warn("ScrollTrigger 'heroTransition' não encontrado.");
+
+                const section = document.querySelector("#stack");
+
+                if (section) {
+                    section.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                    });
+                }
+
+                return;
+            }
+
+            window.scrollTo({
+                top: heroTransition.end,
+                behavior: "smooth",
+            });
+
+            return;
+        }
+
+        // ========================================================
+        // OUTRAS SEÇÕES
+        // ========================================================
+
+        const section = document.querySelector(href);
+
+        if (!section) return;
+
+        section.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+        });
+    };
+
+    // ============================================================
+    // ANIMAÇÃO DA TRANSIÇÃO
+    // ============================================================
 
     useLayoutEffect(() => {
+        const section = sectionRef.current;
+
+        if (!section) return;
+
         const ctx = gsap.context(() => {
-            const section = sectionRef.current;
             const hero = heroRef.current;
             const seclogs = seclogsRef.current;
 
-            if (!section || !hero || !seclogs) {
-                return;
-            }
+            if (!hero || !seclogs) return;
 
             const mm = gsap.matchMedia();
 
             mm.add("(min-width: 768px)", () => {
+                // =================================================
+                // ELEMENTOS DO HERO
+                // =================================================
+
                 const heroTitle = hero.querySelector('[data-hero-element="title"]');
 
                 const heroText = hero.querySelector('[data-hero-element="text"]');
@@ -99,9 +173,9 @@ function HeroSectionTransition() {
 
                 const globalBlur = document.querySelector(".global-gradual-blur");
 
-                // =========================================
-                // ESTADO INICIAL
-                // =========================================
+                // =================================================
+                // ESTADOS INICIAIS
+                // =================================================
 
                 gsap.set(seclogs, {
                     yPercent: 100,
@@ -124,12 +198,20 @@ function HeroSectionTransition() {
                     });
                 }
 
-                // =========================================
+                if (heroDotField) {
+                    gsap.set(heroDotField, {
+                        opacity: 1,
+                    });
+                }
+
+                // =================================================
                 // TIMELINE
-                // =========================================
+                // =================================================
 
                 const tl = gsap.timeline({
                     scrollTrigger: {
+                        id: "heroTransition",
+
                         trigger: section,
 
                         start: "top top",
@@ -146,61 +228,22 @@ function HeroSectionTransition() {
 
                         markers: false,
 
-                        // =================================
-                        // CONTROLE POR PIXELS
-                        // =================================
+                        // =========================================
+                        // ATUALIZA MENU + DOTFIELD
+                        // =========================================
 
                         onUpdate: () => {
-                            if (!hero || !seclogs) {
-                                return;
-                            }
-
-                            // ---------------------------------
-                            // POSIÇÃO DO HERO
-                            // ---------------------------------
+                            if (!hero || !seclogs) return;
 
                             const heroRect = hero.getBoundingClientRect();
 
-                            // ---------------------------------
-                            // POSIÇÃO DO SECLOGS
-                            // ---------------------------------
-
                             const seclogsRect = seclogs.getBoundingClientRect();
-
-                            /*
-                             * Quando o Seclogs começa,
-                             * ele está abaixo do Hero.
-                             *
-                             * Conforme sobe:
-                             *
-                             * Seclogs.top
-                             * vai diminuindo.
-                             *
-                             * Hero.bottom
-                             * representa o final do Hero.
-                             *
-                             * A diferença entre eles
-                             * representa quanto o Seclogs
-                             * já entrou sobre o Hero.
-                             */
 
                             const coveredAmount = Math.max(0, heroRect.bottom - seclogsRect.top);
 
-                            // =================================
-                            // DEBUG
-                            // =================================
-
-                            // console.log(
-                            //     "📏 Cobertura:",
-                            //     Math.round(
-                            //         coveredAmount
-                            //     ),
-                            //     "px"
-                            // );
-
-                            // =================================
+                            // =====================================
                             // MENU
-                            // =================================
+                            // =====================================
 
                             const shouldShowMenu = coveredAmount >= MENU_APPEAR_PX;
 
@@ -208,16 +251,11 @@ function HeroSectionTransition() {
                                 menuVisibleRef.current = shouldShowMenu;
 
                                 setShowDesktopMenu(shouldShowMenu);
-
-                                console.log(shouldShowMenu ? "☰ MENU APARECEU" : "☰ MENU ESCONDEU", {
-                                    covered: Math.round(coveredAmount),
-                                    limite: MENU_APPEAR_PX,
-                                });
                             }
 
-                            // =================================
+                            // =====================================
                             // DOT FIELD
-                            // =================================
+                            // =====================================
 
                             const shouldFreezeDotField = coveredAmount >= DOTFIELD_FREEZE_PX;
 
@@ -225,19 +263,14 @@ function HeroSectionTransition() {
                                 dotFieldFrozenRef.current = shouldFreezeDotField;
 
                                 setDotFieldFrozen(shouldFreezeDotField);
-
-                                console.log(shouldFreezeDotField ? "❄️ DOTFIELD CONGELADO" : "🖱️ DOTFIELD DESCONGELADO", {
-                                    covered: Math.round(coveredAmount),
-                                    limite: DOTFIELD_FREEZE_PX,
-                                });
                             }
                         },
                     },
                 });
 
-                // =========================================
-                // SECTION 2
-                // =========================================
+                // =================================================
+                // STACK SOBE
+                // =================================================
 
                 tl.to(
                     seclogs,
@@ -249,9 +282,9 @@ function HeroSectionTransition() {
                     0,
                 );
 
-                // =========================================
-                // HERO
-                // =========================================
+                // =================================================
+                // HERO FICA MAIS TRANSPARENTE
+                // =================================================
 
                 tl.to(
                     hero,
@@ -263,19 +296,9 @@ function HeroSectionTransition() {
                     0,
                 );
 
-                // =========================================
-                // DOT FIELD
-                // =========================================
-
-                if (heroDotField) {
-                    gsap.set(heroDotField, {
-                        opacity: 1,
-                    });
-                }
-
-                // =========================================
+                // =================================================
                 // FOTO
-                // =========================================
+                // =================================================
 
                 if (heroVisual) {
                     tl.to(
@@ -289,9 +312,9 @@ function HeroSectionTransition() {
                     );
                 }
 
-                // =========================================
+                // =================================================
                 // TÍTULO
-                // =========================================
+                // =================================================
 
                 if (heroTitle) {
                     tl.to(
@@ -305,9 +328,9 @@ function HeroSectionTransition() {
                     );
                 }
 
-                // =========================================
+                // =================================================
                 // TEXTO
-                // =========================================
+                // =================================================
 
                 if (heroText) {
                     tl.to(
@@ -321,9 +344,9 @@ function HeroSectionTransition() {
                     );
                 }
 
-                // =========================================
+                // =================================================
                 // SETA
-                // =========================================
+                // =================================================
 
                 if (heroArrow) {
                     tl.to(
@@ -337,9 +360,9 @@ function HeroSectionTransition() {
                     );
                 }
 
-                // =========================================
+                // =================================================
                 // BLUR
-                // =========================================
+                // =================================================
 
                 if (globalBlur) {
                     tl.to(
@@ -353,9 +376,9 @@ function HeroSectionTransition() {
                     );
                 }
 
-                // =========================================
-                // HOLD
-                // =========================================
+                // =================================================
+                // PEQUENA PAUSA NO FINAL
+                // =================================================
 
                 tl.to(
                     {},
@@ -364,14 +387,18 @@ function HeroSectionTransition() {
                     },
                 );
 
-                // =========================================
+                // =================================================
                 // CLEANUP
-                // =========================================
+                // =================================================
 
                 return () => {
                     tl.kill();
                 };
             });
+
+            return () => {
+                mm.revert();
+            };
         }, sectionRef);
 
         return () => {
@@ -379,9 +406,9 @@ function HeroSectionTransition() {
         };
     }, []);
 
-    // =========================================
-    // RENDER
-    // =========================================
+    // ============================================================
+    // JSX
+    // ============================================================
 
     return (
         <section
@@ -395,9 +422,9 @@ function HeroSectionTransition() {
                 md:overflow-hidden
             "
         >
-            {/* =====================================
+            {/* ==================================================
                 HERO
-            ====================================== */}
+            ================================================== */}
 
             <div
                 ref={heroRef}
@@ -411,12 +438,12 @@ function HeroSectionTransition() {
                     md:h-full
                 "
             >
-                <Hero dotFieldFrozen={dotFieldFrozen} />
+                <Hero dotFieldFrozen={dotFieldFrozen} onNavigate={handleHeroNavigation} />
             </div>
 
-            {/* =====================================
-                SECTION 2
-            ====================================== */}
+            {/* ==================================================
+                STACK
+            ================================================== */}
 
             <div
                 ref={seclogsRef}
@@ -437,9 +464,9 @@ function HeroSectionTransition() {
                 <Seclogs />
             </div>
 
-            {/* =====================================
+            {/* ==================================================
                 MENU DESKTOP
-            ====================================== */}
+            ================================================== */}
 
             <MenuDesktop items={menuItems} showMenu={showDesktopMenu} />
         </section>

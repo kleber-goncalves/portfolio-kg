@@ -8,7 +8,7 @@ import { ArrowDownRight } from "lucide-react";
 import "../styles/looptextHero.css";
 import "../styles/heroParallax.css";
 
-function HeroDesktop({ items, dotFieldFrozen = false }) {
+function HeroDesktop({ items, dotFieldFrozen = false, onNavigate }) {
     const heroRef = useRef(null);
 
     const heroTitleRef = useRef(null);
@@ -17,11 +17,8 @@ function HeroDesktop({ items, dotFieldFrozen = false }) {
 
     const heroDotFieldRef = useRef(null);
 
-    console.log("🎯 HERO DESKTOP dotFieldFrozen:", dotFieldFrozen);
-
     return (
         <section
-            
             ref={heroRef}
             className="
                 hero-desktop
@@ -91,7 +88,14 @@ function HeroDesktop({ items, dotFieldFrozen = false }) {
                             lg:w-11
                         "
                     >
-                        <img src="/logo.svg" alt="Kleber Dev" className="h-full w-full" />
+                        <img
+                            src="/logo.svg"
+                            alt="Kleber Dev"
+                            className="
+                                h-full
+                                w-full
+                            "
+                        />
                     </div>
                 </div>
 
@@ -121,6 +125,11 @@ function HeroDesktop({ items, dotFieldFrozen = false }) {
                         <a
                             key={item.href}
                             href={item.href}
+                            onClick={(event) => {
+                                event.preventDefault();
+
+                                onNavigate?.(item.href);
+                            }}
                             className="
                                 group
                                 flex

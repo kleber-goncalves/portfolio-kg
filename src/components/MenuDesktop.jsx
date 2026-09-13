@@ -23,8 +23,6 @@ function MenuDesktop({ items = [], showMenu = false }) {
 
     const isOpenRef = useRef(false);
 
-    // Evita executar o cálculo várias vezes
-    // durante o mesmo frame de scroll.
     const scrollTickingRef = useRef(false);
 
     // =====================================
@@ -74,6 +72,19 @@ function MenuDesktop({ items = [], showMenu = false }) {
         if (!items.length) return;
 
         const updateActiveSection = () => {
+            /*
+             * Quando estamos no topo absoluto,
+             * Home deve ser a seção ativa.
+             */
+
+            if (window.scrollY <= 10) {
+                setActiveHref((previous) => (previous === "#hero" ? previous : "#hero"));
+
+                scrollTickingRef.current = false;
+
+                return;
+            }
+
             const viewportPosition = window.innerHeight * 0.35;
 
             let currentSection = "#hero";
@@ -90,11 +101,9 @@ function MenuDesktop({ items = [], showMenu = false }) {
                 const rect = section.getBoundingClientRect();
 
                 /*
-                 * Se o topo da seção já passou de 35%
-                 * da tela, consideramos essa a seção atual.
-                 *
-                 * Como percorremos na ordem do menu,
-                 * a última seção encontrada será a atual.
+                 * Se o topo da seção passou
+                 * de 35% da viewport,
+                 * consideramos essa seção atual.
                  */
 
                 if (rect.top <= viewportPosition) {
@@ -114,14 +123,15 @@ function MenuDesktop({ items = [], showMenu = false }) {
         };
 
         const handleScroll = () => {
-            if (scrollTickingRef.current) return;
+            if (scrollTickingRef.current) {
+                return;
+            }
 
             scrollTickingRef.current = true;
 
             requestAnimationFrame(updateActiveSection);
         };
 
-        // Executa uma vez ao montar
         updateActiveSection();
 
         window.addEventListener("scroll", handleScroll, { passive: true });
@@ -213,6 +223,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
         if (!showMenu) return;
 
         isOpenRef.current = true;
+
         setIsOpen(true);
     };
 
@@ -226,6 +237,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
         if (!menu) {
             isOpenRef.current = false;
             setIsOpen(false);
+
             return;
         }
 
@@ -236,6 +248,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
         const tl = gsap.timeline({
             onComplete: () => {
                 isOpenRef.current = false;
+
                 setIsOpen(false);
             },
         });
@@ -305,6 +318,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
         const handleKeyDown = (event) => {
             if (event.key === "Escape") {
                 animateToHamburger();
+
                 closeMenu();
             }
         };
@@ -401,7 +415,9 @@ function MenuDesktop({ items = [], showMenu = false }) {
     // =====================================
 
     useEffect(() => {
-        if (!isOpen || !menuRef.current) return;
+        if (!isOpen || !menuRef.current) {
+            return;
+        }
 
         const menu = menuRef.current;
 
@@ -459,7 +475,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
 
         gsap.to(button, {
             opacity: 0,
-            scale: 0.85,
+            scale: 0,
             duration: 0.3,
             ease: "power2.in",
             pointerEvents: "none",
@@ -476,6 +492,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
                 ease: "power3.inOut",
                 onComplete: () => {
                     isOpenRef.current = false;
+
                     setIsOpen(false);
                 },
             });
@@ -521,11 +538,6 @@ function MenuDesktop({ items = [], showMenu = false }) {
 
         gsap.killTweensOf(line);
 
-        // =================================
-        // SE FOR A SEÇÃO ATUAL,
-        // MANTÉM A LINHA
-        // =================================
-
         if (isActive) {
             gsap.to(line, {
                 scaleX: 1,
@@ -535,10 +547,6 @@ function MenuDesktop({ items = [], showMenu = false }) {
 
             return;
         }
-
-        // =================================
-        // CASO CONTRÁRIO, REMOVE
-        // =================================
 
         gsap.to(line, {
             scaleX: 0,
@@ -554,9 +562,11 @@ function MenuDesktop({ items = [], showMenu = false }) {
     const handleToggle = () => {
         if (isOpen) {
             animateToHamburger();
+
             closeMenu();
         } else {
             animateToClose();
+
             openMenu();
         }
     };
@@ -568,6 +578,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
     const handleOverlayClick = (event) => {
         if (event.target === event.currentTarget) {
             animateToHamburger();
+
             closeMenu();
         }
     };
@@ -577,6 +588,8 @@ function MenuDesktop({ items = [], showMenu = false }) {
     // =====================================
 
     const handleNavigation = (href, event) => {
+        event.preventDefault();
+
         // =================================
         // DEFINE IMEDIATAMENTE COMO ATIVO
         // =================================
@@ -606,21 +619,52 @@ function MenuDesktop({ items = [], showMenu = false }) {
         // =================================
 
         animateToHamburger();
+
         closeMenu();
 
         // =================================
-        // NAVEGA
+        // HERO
+        // =================================
+        //
+        // IMPORTANTE:
+        //
+        // O Hero está dentro de uma seção
+        // controlada pelo ScrollTrigger com
+        // pin + parallax.
+        //
+        // Por isso NÃO usamos:
+        //
+        // document.querySelector("#hero")
+        //     .scrollIntoView(...)
+        //
+        // Aqui voltamos diretamente para
+        // o início absoluto da página.
+        //
+
+        if (href === "#hero") {
+            setTimeout(() => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: "smooth",
+                });
+            }, 100);
+
+            return;
+        }
+
+        // =================================
+        // OUTRAS SEÇÕES
         // =================================
 
         setTimeout(() => {
             const section = document.querySelector(href);
 
-            if (section) {
-                section.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start",
-                });
-            }
+            if (!section) return;
+
+            section.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+            });
         }, 450);
     };
 
