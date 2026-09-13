@@ -534,7 +534,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
                     hover:border-bronze
                     hover:text-bronze
 
-                    lg:right-17
+                    lg:right-4
                     lg:top-10
                 "
             >
