@@ -3,37 +3,61 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-gsap.registerPlugin(ScrollTrigger);
-
 import Hero from "../layout/HeroTeste2";
 import Seclogs from "../layout/Logo2";
+import MenuDesktop from "../components/MenuDesktop";
+
+gsap.registerPlugin(ScrollTrigger);
 
 function HeroSectionTransition() {
     const sectionRef = useRef(null);
     const heroRef = useRef(null);
     const seclogsRef = useRef(null);
 
+    const [showDesktopMenu, setShowDesktopMenu] = useState(false);
+
     const [dotFieldFrozen, setDotFieldFrozen] = useState(false);
+
+    const dotFieldFrozenRef = useRef(false);
+
+    const menuItems = [
+        {
+            label: "Home",
+            href: "#hero",
+        },
+        {
+            label: "Stack",
+            href: "#stack",
+        },
+        {
+            label: "Competências",
+            href: "#competencias",
+        },
+        {
+            label: "Projetos",
+            href: "#projetos",
+        },
+        {
+            label: "Formação",
+            href: "#formacao",
+        },
+        {
+            label: "Trajetória",
+            href: "#trajetoria",
+        },
+    ];
 
     useLayoutEffect(() => {
         const ctx = gsap.context(() => {
             const section = sectionRef.current;
-
             const hero = heroRef.current;
-
             const seclogs = seclogsRef.current;
 
-            if (!section || !hero || !seclogs) {
-                return;
-            }
+            if (!section || !hero || !seclogs) return;
 
             const mm = gsap.matchMedia();
 
             mm.add("(min-width: 768px)", () => {
-                /* =================================================
-                        ELEMENTOS
-                    ================================================== */
-
                 const heroTitle = hero.querySelector('[data-hero-element="title"]');
 
                 const heroText = hero.querySelector('[data-hero-element="text"]');
@@ -46,9 +70,9 @@ function HeroSectionTransition() {
 
                 const globalBlur = document.querySelector(".global-gradual-blur");
 
-                /* =================================================
-                        ESTADO INICIAL
-                    ================================================== */
+                // =========================================
+                // ESTADO INICIAL
+                // =========================================
 
                 gsap.set(seclogs, {
                     yPercent: 100,
@@ -71,9 +95,9 @@ function HeroSectionTransition() {
                     });
                 }
 
-                /* =================================================
-                        TIMELINE
-                    ================================================== */
+                // =========================================
+                // TIMELINE
+                // =========================================
 
                 const tl = gsap.timeline({
                     scrollTrigger: {
@@ -81,7 +105,7 @@ function HeroSectionTransition() {
 
                         start: "top top",
 
-                        end: "+=1800",
+                        end: "+=1400",
 
                         scrub: true,
 
@@ -93,94 +117,62 @@ function HeroSectionTransition() {
 
                         markers: false,
 
+                        // =================================
+                        // CONTROLE
+                        // =================================
+
                         onUpdate: (self) => {
-                            /*
-                                    ========================================
-                                    QUANTO DA SEÇÃO 2 JÁ COBRIU DO HERO?
-                                    ========================================
-                                    */
+                            // -----------------------------
+                            // MENU
+                            // -----------------------------
 
-                            const seclogsRect = seclogs.getBoundingClientRect();
+                            const shouldShowMenu = self.progress > 0.1;
 
-                            const heroRect = hero.getBoundingClientRect();
+                            setShowDesktopMenu((current) => (current !== shouldShowMenu ? shouldShowMenu : current));
 
-                            const coveredAmount = Math.max(0, heroRect.bottom - seclogsRect.top);
-
-                            /*
-                                    ========================================
-                                    REGRA
-                                    ========================================
-
-                                    0 → 299px
-                                    DotField acompanha mouse.
-
-                                    300px+
-                                    DotField congela.
-                                    ========================================
-                                    */
-
-                            const shouldFreeze = coveredAmount >= 300;
-
-                            console.log("📊 SCROLLTRIGGER", {
-                                progress: Number(self.progress.toFixed(3)),
-
-                                coveredAmount: Math.round(coveredAmount),
-
-                                shouldFreeze,
-                            });
-
-                            setDotFieldFrozen((previous) => {
-                                if (previous !== shouldFreeze) {
-                                    console.log(`❄️ ALTERANDO DOTFIELD: ${previous} → ${shouldFreeze}`);
-
-                                    return shouldFreeze;
-                                }
-
-                                return previous;
-                            });
-                        },
-
-                        /*
-                                ========================================
-                                QUANDO CHEGA AO FINAL
-                                ========================================
-                                */
-
-                        onLeave: () => {
-                            console.log("❄️ DOTFIELD: onLeave → TRUE");
-
-                            setDotFieldFrozen(true);
-                        },
-
-                        /*
-                                ========================================
-                                VOLTANDO PARA CIMA
-                                ========================================
-                                */
-
-                        onEnterBack: () => {
-                            const seclogsRect = seclogs.getBoundingClientRect();
+                            // -----------------------------
+                            // DOT FIELD
+                            // -----------------------------
 
                             const heroRect = hero.getBoundingClientRect();
 
+                            const seclogsRect = seclogs.getBoundingClientRect();
+
+                            /*
+                             * Quanto do Hero o Seclogs
+                             * já cobriu.
+                             *
+                             * Exemplo:
+                             *
+                             * Hero = 808px
+                             *
+                             * Seclogs começou a subir
+                             * 300px
+                             *
+                             * covered = 300
+                             */
+
                             const coveredAmount = Math.max(0, heroRect.bottom - seclogsRect.top);
 
-                            const shouldFreeze = coveredAmount >= 300;
+                            const shouldFreezeDotField = coveredAmount >= 300;
 
-                            console.log("🔙 VOLTANDO", {
-                                coveredAmount: Math.round(coveredAmount),
+                            // Evita setState a cada frame
+                            if (dotFieldFrozenRef.current !== shouldFreezeDotField) {
+                                dotFieldFrozenRef.current = shouldFreezeDotField;
 
-                                shouldFreeze,
-                            });
+                                setDotFieldFrozen(shouldFreezeDotField);
 
-                            setDotFieldFrozen(shouldFreeze);
+                                console.log(shouldFreezeDotField ? "❄️ DOTFIELD CONGELADO" : "🖱️ DOTFIELD DESCONGELADO", {
+                                    covered: Math.round(coveredAmount),
+                                });
+                            }
                         },
                     },
                 });
 
-                /* =================================================
-                        SECLOGS
-                    ================================================== */
+                // =========================================
+                // SECTION 2
+                // =========================================
 
                 tl.to(
                     seclogs,
@@ -192,9 +184,9 @@ function HeroSectionTransition() {
                     0,
                 );
 
-                /* =================================================
-                        OPACIDADE HERO
-                    ================================================== */
+                // =========================================
+                // HERO
+                // =========================================
 
                 tl.to(
                     hero,
@@ -206,9 +198,9 @@ function HeroSectionTransition() {
                     0,
                 );
 
-                /* =================================================
-                        DOT FIELD
-                    ================================================== */
+                // =========================================
+                // DOT FIELD
+                // =========================================
 
                 if (heroDotField) {
                     gsap.set(heroDotField, {
@@ -216,9 +208,9 @@ function HeroSectionTransition() {
                     });
                 }
 
-                /* =================================================
-                        FOTO
-                    ================================================== */
+                // =========================================
+                // FOTO
+                // =========================================
 
                 if (heroVisual) {
                     tl.to(
@@ -232,9 +224,9 @@ function HeroSectionTransition() {
                     );
                 }
 
-                /* =================================================
-                        TÍTULO
-                    ================================================== */
+                // =========================================
+                // TÍTULO
+                // =========================================
 
                 if (heroTitle) {
                     tl.to(
@@ -248,9 +240,9 @@ function HeroSectionTransition() {
                     );
                 }
 
-                /* =================================================
-                        TEXTO
-                    ================================================== */
+                // =========================================
+                // TEXTO
+                // =========================================
 
                 if (heroText) {
                     tl.to(
@@ -264,9 +256,9 @@ function HeroSectionTransition() {
                     );
                 }
 
-                /* =================================================
-                        SETA
-                    ================================================== */
+                // =========================================
+                // SETA
+                // =========================================
 
                 if (heroArrow) {
                     tl.to(
@@ -280,9 +272,9 @@ function HeroSectionTransition() {
                     );
                 }
 
-                /* =================================================
-                        BLUR
-                    ================================================== */
+                // =========================================
+                // BLUR
+                // =========================================
 
                 if (globalBlur) {
                     tl.to(
@@ -296,14 +288,14 @@ function HeroSectionTransition() {
                     );
                 }
 
-                /* =================================================
-                        HOLD
-                    ================================================== */
+                // =========================================
+                // HOLD
+                // =========================================
 
                 tl.to(
                     {},
                     {
-                        duration: 0.9,
+                        duration: 0.1,
                     },
                 );
 
@@ -324,16 +316,15 @@ function HeroSectionTransition() {
             className="
                 relative
                 w-full
-
                 h-auto
 
                 md:h-screen
                 md:overflow-hidden
             "
         >
-            {/* =====================================================
+            {/* =========================================
                 HERO
-            ====================================================== */}
+            ========================================== */}
 
             <div
                 ref={heroRef}
@@ -350,9 +341,9 @@ function HeroSectionTransition() {
                 <Hero dotFieldFrozen={dotFieldFrozen} />
             </div>
 
-            {/* =====================================================
-                SECLOGS
-            ====================================================== */}
+            {/* =========================================
+                SECTION 2
+            ========================================== */}
 
             <div
                 ref={seclogsRef}
@@ -360,16 +351,24 @@ function HeroSectionTransition() {
                     relative
                     z-20
                     w-full
+
                     bg-obsidian
-                    md:shadow-[0_-25px_60px_rgba(0,0,0,0.55)]
 
                     md:absolute
                     md:inset-0
                     md:h-auto
+
+                    md:shadow-[0_-25px_60px_rgba(0,0,0,0.55)]
                 "
             >
                 <Seclogs />
             </div>
+
+            {/* =========================================
+                MENU DESKTOP
+            ========================================== */}
+
+            <MenuDesktop items={menuItems} showMenu={showDesktopMenu} />
         </section>
     );
 }

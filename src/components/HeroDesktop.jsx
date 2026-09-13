@@ -51,7 +51,7 @@ function HeroDesktop({ items, dotFieldFrozen = false }) {
             </div>
 
             {/* =====================================================
-                CONTEÚDO DO HERO
+                CONTEÚDO
             ====================================================== */}
 
             <div
@@ -95,7 +95,8 @@ function HeroDesktop({ items, dotFieldFrozen = false }) {
                 </div>
 
                 {/* =================================================
-                    NAVEGAÇÃO
+                    NAVBAR NORMAL
+                    SOMENTE NO HERO
                 ================================================== */}
 
                 <nav

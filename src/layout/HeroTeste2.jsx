@@ -4,8 +4,12 @@ import HeroDesktop from "../components/HeroDesktop";
 function Hero({ dotFieldFrozen = false }) {
     const menuItems = [
         {
-            label: "Hero",
+            label: "Home",
             href: "#hero",
+        },
+        {
+            label: "Stack",
+            href: "#stack",
         },
         {
             label: "Competências",
@@ -16,64 +20,22 @@ function Hero({ dotFieldFrozen = false }) {
             href: "#projetos",
         },
         {
-            label: "Diferenciais",
-            href: "#diferenciais",
-        },
-        {
             label: "Formação",
             href: "#formacao",
         },
         {
-            label: "Rodapé",
-            href: "#footer",
+            label: "Trajetória",
+            href: "#trajetoria",
         },
     ];
 
     return (
-        <section
-            id="hero"
-            className="
-                relative
-                w-full
-                overflow-visible
-            "
-            ref={(el) => {
-                if (!el) return;
-
-                const rect = el.getBoundingClientRect();
-
-                console.log("====================================");
-
-                console.log("🧱 HERO PAI");
-
-                console.log("====================================");
-
-                console.log("height:", rect.height);
-
-                console.log("top:", rect.top);
-
-                console.log("bottom:", rect.bottom);
-
-                const styles = window.getComputedStyle(el);
-
-                console.log("position:", styles.position);
-
-                console.log("overflow:", styles.overflow);
-
-                console.log("dotFieldFrozen:", dotFieldFrozen);
-            }}
-        >
+        <section id="hero" className="relative">
             {/* =====================================================
                 MOBILE
             ====================================================== */}
 
-            <div
-                className="
-                    block
-                    md:hidden
-                    p-4
-                "
-            >
+            <div className="block md:hidden">
                 <HeroMobile items={menuItems} />
             </div>
 
@@ -81,12 +43,7 @@ function Hero({ dotFieldFrozen = false }) {
                 DESKTOP
             ====================================================== */}
 
-            <div
-                className="
-                    hidden
-                    md:block
-                "
-            >
+            <div className="hidden md:block">
                 <HeroDesktop items={menuItems} dotFieldFrozen={dotFieldFrozen} />
             </div>
         </section>
