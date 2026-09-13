@@ -2,6 +2,8 @@ import { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
 import gsap from "gsap";
 
+import { stopSmoothScroll, startSmoothScroll } from "../utils/lenisControl";
+
 function MenuDesktop({ items = [], showMenu = false }) {
     const [isOpen, setIsOpen] = useState(false);
 
@@ -24,12 +26,6 @@ function MenuDesktop({ items = [], showMenu = false }) {
     const isOpenRef = useRef(false);
 
     const scrollTickingRef = useRef(false);
-
-    // =====================================
-    // CONFIGURAÇÕES
-    // =====================================
-
-    const LINE_COLOR = "#C49A78";
 
     // =====================================
     // POSIÇÃO INICIAL DOS DOIS TRAÇOS
@@ -62,6 +58,144 @@ function MenuDesktop({ items = [], showMenu = false }) {
 
     useEffect(() => {
         isOpenRef.current = isOpen;
+
+        console.log("🔴 MENU — isOpen mudou:", isOpen);
+    }, [isOpen]);
+
+    // =====================================
+    // BLOQUEIA A ROLAGEM
+    // =====================================
+
+    useEffect(() => {
+        console.log("🟡 SCROLL LOCK — efeito executado | isOpen:", isOpen);
+
+        // =====================================
+        // MENU FECHADO
+        // =====================================
+
+        if (!isOpen) {
+            console.log("🟢 SCROLL LOCK — menu fechado | Lenis START");
+
+            startSmoothScroll();
+
+            document.body.style.overflow = "";
+
+            return;
+        }
+
+        // =====================================
+        // MENU ABERTO
+        // =====================================
+
+        console.log("🔒 SCROLL LOCK — INICIANDO BLOQUEIO");
+
+        console.log("📍 scrollY antes do bloqueio:", window.scrollY);
+
+        console.log("📐 body overflow antes:", document.body.style.overflow);
+
+        // =====================================
+        // PARA O LENIS
+        // =====================================
+
+        stopSmoothScroll();
+
+        console.log("🛑 LENIS — STOP EXECUTADO");
+
+        // =====================================
+        // BLOQUEIO NATIVO
+        // =====================================
+
+        document.body.style.overflow = "hidden";
+
+        console.log("📐 body overflow depois:", document.body.style.overflow);
+
+        // =====================================
+        // WHEEL
+        // =====================================
+
+        const handleWheel = (event) => {
+            console.log("🖱️ WHEEL DETECTADO", {
+                deltaY: event.deltaY,
+                scrollY: window.scrollY,
+                defaultPrevented: event.defaultPrevented,
+            });
+
+            event.preventDefault();
+
+            console.log("🛑 WHEEL BLOQUEADO | scrollY:", window.scrollY);
+        };
+
+        // =====================================
+        // TOUCH
+        // =====================================
+
+        const handleTouchMove = (event) => {
+            console.log("📱 TOUCHMOVE DETECTADO | scrollY:", window.scrollY);
+
+            event.preventDefault();
+
+            console.log("🛑 TOUCHMOVE BLOQUEADO");
+        };
+
+        window.addEventListener("wheel", handleWheel, {
+            passive: false,
+        });
+
+        window.addEventListener("touchmove", handleTouchMove, {
+            passive: false,
+        });
+
+        // =====================================
+        // MONITORA MOVIMENTO REAL
+        // =====================================
+
+        let lastScrollY = window.scrollY;
+
+        const monitorScroll = () => {
+            const currentScrollY = window.scrollY;
+
+            if (currentScrollY !== lastScrollY) {
+                console.log("🚨 SCROLL REAL DETECTADO!", {
+                    anterior: lastScrollY,
+                    atual: currentScrollY,
+                    diferenca: currentScrollY - lastScrollY,
+                });
+
+                lastScrollY = currentScrollY;
+            }
+        };
+
+        window.addEventListener("scroll", monitorScroll, {
+            passive: true,
+        });
+
+        console.log("✅ SCROLL LOCK — listeners adicionados");
+
+        // =====================================
+        // CLEANUP
+        // =====================================
+
+        return () => {
+            console.log("🔓 SCROLL LOCK — removendo bloqueio");
+
+            document.body.style.overflow = "";
+
+            window.removeEventListener("wheel", handleWheel);
+
+            window.removeEventListener("touchmove", handleTouchMove);
+
+            window.removeEventListener("scroll", monitorScroll);
+
+            // =====================================
+            // VOLTA O LENIS
+            // =====================================
+
+            startSmoothScroll();
+
+            console.log("▶️ LENIS — START EXECUTADO");
+
+            console.log("📐 body overflow restaurado:", document.body.style.overflow);
+        };
     }, [isOpen]);
 
     // =====================================
@@ -72,11 +206,6 @@ function MenuDesktop({ items = [], showMenu = false }) {
         if (!items.length) return;
 
         const updateActiveSection = () => {
-            /*
-             * Quando estamos no topo absoluto,
-             * Home deve ser a seção ativa.
-             */
-
             if (window.scrollY <= 10) {
                 setActiveHref((previous) => (previous === "#hero" ? previous : "#hero"));
 
@@ -99,12 +228,6 @@ function MenuDesktop({ items = [], showMenu = false }) {
                 if (!section) return;
 
                 const rect = section.getBoundingClientRect();
-
-                /*
-                 * Se o topo da seção passou
-                 * de 35% da viewport,
-                 * consideramos essa seção atual.
-                 */
 
                 if (rect.top <= viewportPosition) {
                     currentSection = item.href;
@@ -134,7 +257,9 @@ function MenuDesktop({ items = [], showMenu = false }) {
 
         updateActiveSection();
 
-        window.addEventListener("scroll", handleScroll, { passive: true });
+        window.addEventListener("scroll", handleScroll, {
+            passive: true,
+        });
 
         window.addEventListener("resize", updateActiveSection);
 
@@ -222,9 +347,13 @@ function MenuDesktop({ items = [], showMenu = false }) {
     const openMenu = () => {
         if (!showMenu) return;
 
+        console.log("📂 OPEN MENU — abrindo painel");
+
         isOpenRef.current = true;
 
         setIsOpen(true);
+
+        animateToClose();
     };
 
     // =====================================
@@ -236,6 +365,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
 
         if (!menu) {
             isOpenRef.current = false;
+
             setIsOpen(false);
 
             return;
@@ -250,12 +380,10 @@ function MenuDesktop({ items = [], showMenu = false }) {
                 isOpenRef.current = false;
 
                 setIsOpen(false);
+
+                console.log("📕 CLOSE MENU — painel fechado");
             },
         });
-
-        // =================================
-        // LINHAS
-        // =================================
 
         underlineLines.forEach((line) => {
             const parent = line.closest("[data-desktop-menu-link]");
@@ -277,10 +405,6 @@ function MenuDesktop({ items = [], showMenu = false }) {
             }
         });
 
-        // =================================
-        // LINKS SAEM
-        // =================================
-
         tl.to(
             links,
             {
@@ -292,10 +416,6 @@ function MenuDesktop({ items = [], showMenu = false }) {
             },
             0,
         );
-
-        // =================================
-        // PAINEL SAI
-        // =================================
 
         tl.to(
             menu,
@@ -345,10 +465,6 @@ function MenuDesktop({ items = [], showMenu = false }) {
 
         const underlineLines = menu.querySelectorAll("[data-menu-line]");
 
-        // =================================
-        // ESTADO INICIAL
-        // =================================
-
         gsap.set(menu, {
             xPercent: 100,
         });
@@ -363,19 +479,11 @@ function MenuDesktop({ items = [], showMenu = false }) {
             transformOrigin: "left center",
         });
 
-        // =================================
-        // PAINEL
-        // =================================
-
         gsap.to(menu, {
             xPercent: 0,
             duration: 0.65,
             ease: "power3.out",
         });
-
-        // =================================
-        // LINKS
-        // =================================
 
         gsap.to(links, {
             opacity: 1,
@@ -385,10 +493,6 @@ function MenuDesktop({ items = [], showMenu = false }) {
             delay: 0.18,
             ease: "power2.out",
         });
-
-        // =================================
-        // MOSTRA A SEÇÃO ATUAL
-        // =================================
 
         requestAnimationFrame(() => {
             const activeLine = menu.querySelector(`[data-menu-line][data-active="true"]`);
@@ -560,6 +664,8 @@ function MenuDesktop({ items = [], showMenu = false }) {
     // =====================================
 
     const handleToggle = () => {
+        console.log("🔘 TOGGLE — isOpen atual:", isOpen);
+
         if (isOpen) {
             animateToHamburger();
 
@@ -590,19 +696,13 @@ function MenuDesktop({ items = [], showMenu = false }) {
     const handleNavigation = (href, event) => {
         event.preventDefault();
 
-        // =================================
-        // DEFINE IMEDIATAMENTE COMO ATIVO
-        // =================================
+        console.log("🧭 NAVEGAÇÃO:", href);
 
         setActiveHref(href);
 
         const button = event.currentTarget;
 
         const line = button.querySelector("[data-menu-line]");
-
-        // =================================
-        // FINALIZA LINHA
-        // =================================
 
         if (line) {
             gsap.killTweensOf(line);
@@ -614,32 +714,9 @@ function MenuDesktop({ items = [], showMenu = false }) {
             });
         }
 
-        // =================================
-        // FECHA
-        // =================================
-
         animateToHamburger();
 
         closeMenu();
-
-        // =================================
-        // HERO
-        // =================================
-        //
-        // IMPORTANTE:
-        //
-        // O Hero está dentro de uma seção
-        // controlada pelo ScrollTrigger com
-        // pin + parallax.
-        //
-        // Por isso NÃO usamos:
-        //
-        // document.querySelector("#hero")
-        //     .scrollIntoView(...)
-        //
-        // Aqui voltamos diretamente para
-        // o início absoluto da página.
-        //
 
         if (href === "#hero") {
             setTimeout(() => {
@@ -651,10 +728,6 @@ function MenuDesktop({ items = [], showMenu = false }) {
 
             return;
         }
-
-        // =================================
-        // OUTRAS SEÇÕES
-        // =================================
 
         setTimeout(() => {
             const section = document.querySelector(href);
@@ -674,17 +747,12 @@ function MenuDesktop({ items = [], showMenu = false }) {
 
     const menuContent = (
         <div className="hidden md:block">
-            {/* =================================
-                PAINEL
-            ================================= */}
-
             {isOpen && (
                 <div
                     className="
                         fixed
                         inset-0
                         z-[30]
-
                         bg-black/30
                     "
                     onClick={handleOverlayClick}
@@ -695,36 +763,24 @@ function MenuDesktop({ items = [], showMenu = false }) {
                             absolute
                             right-0
                             top-0
-
                             flex
                             h-full
                             w-[520px]
                             flex-col
-
                             overflow-hidden
-
                             border-l
                             border-graphite
-
                             bg-carbon
-
                             px-10
                             py-10
-
                             shadow-2xl
                         "
                     >
-                        {/* =========================
-                            HEADER
-                        ========================== */}
-
                         <div
                             className="
                                 mb-9
-
                                 border-b
                                 border-graphite
-
                                 pb-6
                             "
                         >
@@ -743,7 +799,6 @@ function MenuDesktop({ items = [], showMenu = false }) {
                             <p
                                 className="
                                     mt-2
-
                                     font-bebas
                                     text-2xl
                                     tracking-wide
@@ -753,10 +808,6 @@ function MenuDesktop({ items = [], showMenu = false }) {
                                 KLEBER DEV
                             </p>
                         </div>
-
-                        {/* =========================
-                            LINKS
-                        ========================== */}
 
                         <div
                             className="
@@ -779,32 +830,20 @@ function MenuDesktop({ items = [], showMenu = false }) {
                                         onClick={(event) => handleNavigation(item.href, event)}
                                         className="
                                                 group
-
                                                 relative
-
                                                 flex
                                                 items-center
                                                 justify-between
-
                                                 border-b
                                                 border-graphite
-
                                                 py-5
-
                                                 text-left
-
                                                 text-ivory
-
                                                 transition-colors
                                                 duration-300
-
                                                 hover:text-bronze
                                             "
                                     >
-                                        {/* =================
-                                                CONTEÚDO
-                                            ================== */}
-
                                         <div
                                             className="
                                                     flex
@@ -812,36 +851,27 @@ function MenuDesktop({ items = [], showMenu = false }) {
                                                     gap-5
                                                 "
                                         >
-                                            {/* NÚMERO */}
-
                                             <span
                                                 className="
                                                         font-space
                                                         text-xs
                                                         text-steel
-
                                                         transition-colors
                                                         duration-300
-
                                                         group-hover:text-bronze
                                                     "
                                             >
                                                 {String(index + 1).padStart(2, "0")}
                                             </span>
 
-                                            {/* NOME */}
-
                                             <span
                                                 className={`
                                                         font-bebas
                                                         text-4xl
                                                         tracking-wide
-
                                                         transition-colors
                                                         duration-300
-
                                                         ${isActive ? "text-bronze" : "text-ivory"}
-
                                                         group-hover:text-bronze
                                                     `}
                                             >
@@ -849,30 +879,19 @@ function MenuDesktop({ items = [], showMenu = false }) {
                                             </span>
                                         </div>
 
-                                        {/* =================
-                                                SETA
-                                            ================== */}
-
                                         <span
                                             className={`
                                                     font-space
                                                     text-xl
-
                                                     transition-all
                                                     duration-300
-
                                                     group-hover:translate-x-1
                                                     group-hover:text-bronze
-
                                                     ${isActive ? "text-bronze" : "text-steel"}
                                                 `}
                                         >
                                             ↗
                                         </span>
-
-                                        {/* =================
-                                                LINHA
-                                            ================== */}
 
                                         <span
                                             data-menu-line
@@ -880,18 +899,13 @@ function MenuDesktop({ items = [], showMenu = false }) {
                                             aria-hidden="true"
                                             className="
                                                     pointer-events-none
-
                                                     absolute
                                                     bottom-0
                                                     left-0
-
                                                     h-[1px]
                                                     w-full
-
                                                     origin-left
-
                                                     bg-[#C49A78]
-
                                                     shadow-[0_0_10px_rgba(196,154,120,0.35)]
                                                 "
                                         />
@@ -899,10 +913,6 @@ function MenuDesktop({ items = [], showMenu = false }) {
                                 );
                             })}
                         </div>
-
-                        {/* =========================
-                            FOOTER
-                        ========================== */}
 
                         <div
                             className="
@@ -926,11 +936,6 @@ function MenuDesktop({ items = [], showMenu = false }) {
                 </div>
             )}
 
-            {/* =================================
-                BOTÃO
-                Z 31
-            ================================= */}
-
             <button
                 ref={buttonRef}
                 type="button"
@@ -939,74 +944,48 @@ function MenuDesktop({ items = [], showMenu = false }) {
                 onClick={handleToggle}
                 className="
                     fixed
-
                     right-8
                     top-8
-
                     z-[31]
-
                     flex
                     h-14
                     w-14
-
                     items-center
                     justify-center
-
                     rounded-full
-
                     border
                     border-graphite
-
                     bg-carbon
-
                     text-ivory
-
                     shadow-xl
-
                     transition-colors
                     duration-300
-
                     hover:border-bronze
                     hover:text-bronze
-
                     lg:right-4
                     lg:top-10
                 "
             >
-                {/* =========================
-                    TRAÇO SUPERIOR
-                ========================== */}
-
                 <span
                     ref={lineTopRef}
                     className="
                         absolute
-
                         left-1/2
                         top-1/2
-
                         h-[1.5px]
                         w-7
-
                         bg-current
                     "
                 />
-
-                {/* =========================
-                    TRAÇO INFERIOR
-                ========================== */}
 
                 <span
                     ref={lineBottomRef}
                     className="
                         absolute
-
                         left-1/2
                         top-1/2
-
                         h-[1.5px]
                         w-7
-
                         bg-current
                     "
                 />
