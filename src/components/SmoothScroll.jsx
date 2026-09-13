@@ -3,12 +3,14 @@ import Lenis from "lenis";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+import { setLenisInstance, clearLenisInstance } from "../utils/lenisControl";
+
 gsap.registerPlugin(ScrollTrigger);
 
 function SmoothScroll({ children }) {
     useEffect(() => {
         const lenis = new Lenis({
-            duration: 0.8,
+            duration: 1.2,
 
             smoothWheel: true,
 
@@ -18,6 +20,12 @@ function SmoothScroll({ children }) {
 
             syncTouch: false,
         });
+
+        // =====================================================
+        // REGISTRA INSTÂNCIA DO LENIS
+        // =====================================================
+
+        setLenisInstance(lenis);
 
         // =====================================================
         // LENIS → SCROLLTRIGGER
@@ -48,6 +56,8 @@ function SmoothScroll({ children }) {
             lenis.off("scroll", ScrollTrigger.update);
 
             lenis.destroy();
+
+            clearLenisInstance(lenis);
         };
     }, []);
 

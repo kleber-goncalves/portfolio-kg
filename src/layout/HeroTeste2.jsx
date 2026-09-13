@@ -1,11 +1,19 @@
 import HeroMobile from "../components/HeroMobile";
 import HeroDesktop from "../components/HeroDesktop";
 
-function Hero() {
+function Hero({ dotFieldFrozen = false, onNavigate }) {
+    // ============================================================
+    // ITENS DO MENU
+    // ============================================================
+
     const menuItems = [
         {
-            label: "Hero",
+            label: "Home",
             href: "#hero",
+        },
+        {
+            label: "Stack",
+            href: "#stack",
         },
         {
             label: "Competências",
@@ -23,37 +31,24 @@ function Hero() {
             label: "Formação",
             href: "#formacao",
         },
-        {
-            label: "Rodapé",
-            href: "#footer",
-        },
     ];
 
     return (
-        <section
-            id="hero"
-            className="
-                relative
-                w-full
-                overflow-hidden
-           
-                
-            "
-        >
-            {/* =====================================================
+        <section id="hero" className="relative">
+            {/* ==================================================
                 MOBILE
-            ====================================================== */}
+            ================================================== */}
 
-            <div className="block md:hidden p-4">
+            <div className="block md:hidden">
                 <HeroMobile items={menuItems} />
             </div>
 
-            {/* =====================================================
+            {/* ==================================================
                 DESKTOP
-            ====================================================== */}
+            ================================================== */}
 
-            <div className="hidden md:block ">
-                <HeroDesktop items={menuItems} />
+            <div className="hidden md:block">
+                <HeroDesktop items={menuItems} dotFieldFrozen={dotFieldFrozen} onNavigate={onNavigate} />
             </div>
         </section>
     );

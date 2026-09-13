@@ -1,10 +1,30 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import "../styles/loopText.css";
 
+gsap.registerPlugin(ScrollTrigger);
+
 function Footer() {
     const [dateTime, setDateTime] = useState(new Date());
+
+    const footerRef = useRef(null);
+
+    const headerRef = useRef(null);
+
+    const labelRef = useRef(null);
+    const titleRef = useRef(null);
+    const descriptionRef = useRef(null);
+    const linksRef = useRef(null);
+
+    const infoRef = useRef(null);
+    const infoItemsRef = useRef([]);
+
+    const copyrightRef = useRef(null);
+
+    const marqueeSectionRef = useRef(null);
 
     /*
     ============================================================
@@ -32,8 +52,279 @@ function Footer() {
         second: "2-digit",
     });
 
+    /*
+    ============================================================
+    ANIMAÇÃO DO FOOTER
+    ============================================================
+    */
+
+    useLayoutEffect(() => {
+        const ctx = gsap.context(() => {
+            const header = headerRef.current;
+
+            const label = labelRef.current;
+            const title = titleRef.current;
+            const description = descriptionRef.current;
+            const links = linksRef.current;
+
+            const info = infoRef.current;
+            const infoItems = infoItemsRef.current.filter(Boolean);
+
+            const copyright = copyrightRef.current;
+
+            const marqueeSection = marqueeSectionRef.current;
+
+            /*
+            ====================================================
+            ESTADO INICIAL
+            ====================================================
+            */
+
+            gsap.set(header, {
+                opacity: 0,
+                y: 50,
+            });
+
+            gsap.set(label, {
+                opacity: 0,
+                y: 45,
+            });
+
+            gsap.set(title, {
+                opacity: 0,
+                y: 70,
+            });
+
+            gsap.set(description, {
+                opacity: 0,
+                y: 50,
+            });
+
+            gsap.set(links, {
+                opacity: 0,
+                y: 45,
+            });
+
+            gsap.set(info, {
+                opacity: 0,
+                y: 45,
+            });
+
+            gsap.set(infoItems, {
+                opacity: 0,
+                y: 30,
+            });
+
+            gsap.set(copyright, {
+                opacity: 0,
+                y: 35,
+            });
+
+            /*
+            ====================================================
+            MARQUEE
+            ====================================================
+            */
+
+            gsap.set(marqueeSection, {
+                opacity: 0,
+                y: 80,
+            });
+
+
+            /*
+            ====================================================
+            TIMELINE
+            ====================================================
+            */
+
+            const timeline = gsap.timeline({
+                scrollTrigger: {
+                    trigger: footerRef.current,
+
+                    start: "top 90%",
+                    end: "bottom 45%",
+
+                    scrub: 1,
+
+                    markers: false,
+                },
+            });
+
+            /*
+            ====================================================
+            HEADER
+            ====================================================
+            */
+
+            timeline.to(
+                header,
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.7,
+                    ease: "none",
+                },
+                0
+            );
+
+            /*
+            ====================================================
+            LABEL
+            ====================================================
+            */
+
+            timeline.to(
+                label,
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.7,
+                    ease: "none",
+                },
+                0.15
+            );
+
+            /*
+            ====================================================
+            TÍTULO
+            ====================================================
+            */
+
+            timeline.to(
+                title,
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.9,
+                    ease: "none",
+                },
+                0.3
+            );
+
+            /*
+            ====================================================
+            DESCRIÇÃO
+            ====================================================
+            */
+
+            timeline.to(
+                description,
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.7,
+                    ease: "none",
+                },
+                0.55
+            );
+
+            /*
+            ====================================================
+            LINKS
+            ====================================================
+            */
+
+            timeline.to(
+                links,
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.7,
+                    ease: "none",
+                },
+                0.7
+            );
+
+            /*
+            ====================================================
+            INFORMAÇÕES
+            ====================================================
+            */
+
+            timeline.to(
+                info,
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.7,
+                    ease: "none",
+                },
+                0.95
+            );
+
+            /*
+            ====================================================
+            ITENS DAS INFORMAÇÕES
+            ====================================================
+            */
+
+            infoItems.forEach((item, index) => {
+                timeline.to(
+                    item,
+                    {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.55,
+                        ease: "none",
+                    },
+                    1.05 + index * 0.08
+                );
+            });
+
+            /*
+            ====================================================
+            COPYRIGHT
+            ====================================================
+            */
+
+            timeline.to(
+                copyright,
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.7,
+                    ease: "none",
+                },
+                1.45
+            );
+
+            /*
+            ====================================================
+            MARQUEE
+            ====================================================
+            */
+
+            timeline.to(
+                marqueeSection,
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 1.4,
+                    ease: "none",
+                },
+                1.7
+            );
+
+            /*
+            ====================================================
+            REFRESH
+            ====================================================
+            */
+
+            requestAnimationFrame(() => {
+                ScrollTrigger.refresh();
+            });
+        }, footerRef);
+
+        return () => {
+            ctx.revert();
+        };
+    }, []);
+
     return (
         <footer
+            ref={footerRef}
             id="footer"
             className="
                 relative
@@ -42,12 +333,13 @@ function Footer() {
                 w-full
                 overflow-hidden
                 bg-obsidian
-                px-5
+               
                 py-5
 
                 md:min-h-[120vh]
-                md:px-10
+
                 md:py-1
+                mt-30
             "
         >
             {/* =====================================================
@@ -73,6 +365,7 @@ function Footer() {
                 ================================================= */}
 
                 <header
+                    ref={headerRef}
                     className="
                         flex
                         items-start
@@ -80,7 +373,8 @@ function Footer() {
                         border-t
                         border-graphite
                         pt-6
-
+                                         px-5
+                md:px-0
                         md:pt-8
                     "
                 >
@@ -148,20 +442,22 @@ function Footer() {
                 <div
                     className="
                         flex
-                        flex-1
+                       
                         flex-col
-                        justify-center
+                       
 
                         py-20
                         pb-[8vh]
-
+                                         px-5
+                md:px-0
                         md:py-24
-                        md:pb-24
+                        md:pb-30
                     "
                 >
                     {/* LABEL */}
 
                     <span
+                        ref={labelRef}
                         className="
                             font-space
                             text-xs
@@ -175,11 +471,10 @@ function Footer() {
                         Disponível para novos projetos
                     </span>
 
-                    {/* =================================================
-                        CTA
-                    ================================================= */}
+                    {/* CTA */}
 
                     <h2
+                        ref={titleRef}
                         className="
                             mt-5
                             max-w-5xl
@@ -192,8 +487,7 @@ function Footer() {
 
                             md:mt-7
                             md:text-7xl
-        lg:text-8xl
-        
+                            lg:text-8xl
                         "
                     >
                         Vamos construir
@@ -204,6 +498,7 @@ function Footer() {
                     {/* DESCRIÇÃO */}
 
                     <p
+                        ref={descriptionRef}
                         className="
                             mt-7
                             max-w-xl
@@ -214,7 +509,6 @@ function Footer() {
                             md:mt-8
                             md:text-base
                             md:leading-7
-                            
                         "
                     >
                         Desenvolvimento de aplicações web com foco em experiência, arquitetura e soluções que fazem sentido para o produto.
@@ -225,6 +519,7 @@ function Footer() {
                     ================================================= */}
 
                     <div
+                        ref={linksRef}
                         className="
                             mt-9
                             flex
@@ -358,14 +653,16 @@ function Footer() {
                 ================================================= */}
 
                 <div
+                    ref={infoRef}
                     className="
                         grid
                         grid-cols-2
-                        gap-y-8
+                        gap-y-4
                         border-t
                         border-graphite
                         py-6
-
+                                         px-5
+                md:px-0
                         md:grid-cols-4
                         md:gap-6
                         md:py-7
@@ -373,7 +670,12 @@ function Footer() {
                 >
                     {/* LOCAL */}
 
-                    <div className="flex flex-col gap-1">
+                    <div
+                        ref={(el) => {
+                            infoItemsRef.current[0] = el;
+                        }}
+                        className="flex flex-col gap-1"
+                    >
                         <span
                             className="
                                 font-bebas
@@ -400,7 +702,12 @@ function Footer() {
 
                     {/* DATA */}
 
-                    <div className="flex flex-col gap-1">
+                    <div
+                        ref={(el) => {
+                            infoItemsRef.current[1] = el;
+                        }}
+                        className="flex flex-col gap-1"
+                    >
                         <span
                             className="
                                 font-bebas
@@ -428,7 +735,12 @@ function Footer() {
 
                     {/* HORA */}
 
-                    <div className="flex flex-col gap-1">
+                    <div
+                        ref={(el) => {
+                            infoItemsRef.current[2] = el;
+                        }}
+                        className="flex flex-col gap-1"
+                    >
                         <span
                             className="
                                 font-bebas
@@ -457,7 +769,12 @@ function Footer() {
 
                     {/* STATUS */}
 
-                    <div className="flex flex-col gap-1">
+                    <div
+                        ref={(el) => {
+                            infoItemsRef.current[3] = el;
+                        }}
+                        className="flex flex-col gap-1"
+                    >
                         <span
                             className="
                                 font-bebas
@@ -516,6 +833,7 @@ function Footer() {
                 ================================================= */}
 
                 <div
+                    ref={copyrightRef}
                     className="
                         flex
                         flex-col
@@ -523,15 +841,18 @@ function Footer() {
                         border-t
                         border-graphite
                         py-5
+                        pb-0
                         text-[9px]
                         uppercase
                         tracking-[0.12em]
                         text-steel
-
+                                         px-5
+                md:px-0
                         md:flex-row
                         md:items-center
                         md:justify-between
                         md:text-[10px]
+                        md:pb-12
                     "
                 >
                     <span>© 2026 Kleber Dev</span>
@@ -540,52 +861,32 @@ function Footer() {
                 </div>
 
                 {/* =================================================
-                    ESPAÇO ENTRE COPYRIGHT E MARQUEE
+                    MARQUEE — AGORA FAZ PARTE DO LAYOUT
                 ================================================= */}
 
                 <div
+                    ref={marqueeSectionRef}
                     className="
-                        min-h-[12vh]
-                        flex-1
+        relative
+        left-1/2
+        md:left-192
+        w-screen
+        -translate-x-1/2
+        overflow-hidden
+        pb-23
+        md:pb-0
+    "
+                >
+                    <div  className="marquee-track">
+                        <div className="marquee-content">
+                            KLEBER DEV
+                            <span className="marquee-star">✦</span>
+                        </div>
 
-                        md:min-h-[48vh]
-                    "
-                />
-            </div>
-
-            {/* =====================================================
-                MARQUEE
-            ===================================================== */}
-
-            <div
-                className="
-                    pointer-events-none
-                    absolute
-                    bottom-0
-                    left-0
-                    z-0
-                    w-full
-                    overflow-hidden
-                    pb-7
-
-                    md:pb-0
-                "
-            >
-                <div className="marquee-track">
-                    {/* PRIMEIRA CÓPIA */}
-
-                    <div className="marquee-content">
-                        <span className="font-bebas">KLEBER DEV</span>
-
-                        <span className="marquee-star">✦</span>
-                    </div>
-
-                    {/* SEGUNDA CÓPIA */}
-
-                    <div className="marquee-content">
-                        <span className="font-bebas">KLEBER DEV</span>
-
-                        <span className="marquee-star">✦</span>
+                        <div className="marquee-content">
+                            KLEBER DEV
+                            <span className="marquee-star">✦</span>
+                        </div>
                     </div>
                 </div>
             </div>

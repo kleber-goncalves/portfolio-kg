@@ -1,28 +1,63 @@
+import { useRef } from "react";
+
 import Socials from "../components/Socials";
+import DotField from "../components/DotField";
+
 import { ArrowDownRight } from "lucide-react";
+
 import "../styles/looptextHero.css";
+import "../styles/heroParallax.css";
 
+function HeroDesktop({ items, dotFieldFrozen = false, onNavigate }) {
+    const heroRef = useRef(null);
 
-function HeroDesktop({ items }) {
+    const heroTitleRef = useRef(null);
+    const heroTextRef = useRef(null);
+    const heroVisualRef = useRef(null);
+
+    const heroDotFieldRef = useRef(null);
+
     return (
-        <div
+        <section
+            ref={heroRef}
             className="
+                hero-desktop
                 relative
-                min-h-[calc(100vh-2rem)]
+                z-0
                 w-full
+                h-screen
                 overflow-hidden
-                bg-obsidian/20
             "
         >
             {/* =====================================================
-                HERO
+                DOT FIELD
+            ====================================================== */}
+
+            <div
+                ref={heroDotFieldRef}
+                data-hero-element="dotfield"
+                aria-hidden="true"
+                className="
+                    pointer-events-none
+                    absolute
+                    inset-0
+                    z-0
+                    overflow-hidden
+                "
+            >
+                <DotField dotRadius={1} dotSpacing={18} cursorRadius={350} bulgeOnly={true} bulgeStrength={35} glowRadius={180} sparkle={false} waveAmplitude={0} gradientFrom="#b37a07" gradientTo="#cf8e0c" glowColor="#0D0B09" frozen={dotFieldFrozen} />
+            </div>
+
+            {/* =====================================================
+                CONTEÚDO
             ====================================================== */}
 
             <div
                 className="
                     relative
+                    z-10
                     flex
-                    min-h-[calc(100vh-2rem)]
+                    h-full
                     w-full
                     items-center
                     justify-center
@@ -53,12 +88,20 @@ function HeroDesktop({ items }) {
                             lg:w-11
                         "
                     >
-                        <img src="/logo.svg" alt="Kleber Dev" className="h-full w-full" />
+                        <img
+                            src="/logo.svg"
+                            alt="Kleber Dev"
+                            className="
+                                h-full
+                                w-full
+                            "
+                        />
                     </div>
                 </div>
 
                 {/* =================================================
-                    NAVEGAÇÃO
+                    NAVBAR NORMAL
+                    SOMENTE NO HERO
                 ================================================== */}
 
                 <nav
@@ -82,6 +125,11 @@ function HeroDesktop({ items }) {
                         <a
                             key={item.href}
                             href={item.href}
+                            onClick={(event) => {
+                                event.preventDefault();
+
+                                onNavigate?.(item.href);
+                            }}
                             className="
                                 group
                                 flex
@@ -103,20 +151,18 @@ function HeroDesktop({ items }) {
                                 lg:text-[10px]
                             "
                         >
-
-
                             <span>{item.label}</span>
                         </a>
                     ))}
                 </nav>
-
-
 
                 {/* =================================================
                     FOTO CENTRAL
                 ================================================== */}
 
                 <div
+                    ref={heroVisualRef}
+                    data-hero-element="visual"
                     className="
                         absolute
                         left-1/2
@@ -146,10 +192,6 @@ function HeroDesktop({ items }) {
                         "
                     />
 
-                    {/* =================================================
-                        GRADIENTE INFERIOR
-                    ================================================== */}
-
                     <div
                         aria-hidden="true"
                         className="
@@ -168,10 +210,12 @@ function HeroDesktop({ items }) {
                 </div>
 
                 {/* =================================================
-                    MARQUEE — NOME GIGANTE
+                    MARQUEE
                 ================================================== */}
 
                 <div
+                    ref={heroTitleRef}
+                    data-hero-element="title"
                     aria-hidden="true"
                     className="
                         pointer-events-none
@@ -186,27 +230,8 @@ function HeroDesktop({ items }) {
                         select-none
                     "
                 >
-                    {/* <div className="marquee-track">
-                      
-
-                        <div className="marquee-content">
-                            <span className="font-bebas">KLEBER DEV</span>
-
-                            <span className="marquee-star">✦</span>
-                        </div>
-
-                       
-
-                        <div className="marquee-content">
-                            <span className="font-bebas">KLEBER DEV</span>
-
-                            <span className="marquee-star">✦</span>
-                        </div>
-                    </div> */}
                     <div className="marquee-contentHero">
                         <span className="font-bebas">KLEBER DEV</span>
-
-                       
                     </div>
                 </div>
 
@@ -295,13 +320,7 @@ function HeroDesktop({ items }) {
                                 text-bronze
                             "
                         >
-                            <span
-                                className="
-                                    text-lg
-                                "
-                            >
-                                ◉
-                            </span>
+                            <span className="text-lg">◉</span>
                         </div>
                     </div>
                 </div>
@@ -311,6 +330,8 @@ function HeroDesktop({ items }) {
                 ================================================== */}
 
                 <div
+                    ref={heroTextRef}
+                    data-hero-element="text"
                     className="
                         absolute
                         right-[7%]
@@ -329,10 +350,6 @@ function HeroDesktop({ items }) {
                         xl:w-[340px]
                     "
                 >
-                    {/* =================================================
-                        SETA
-                    ================================================== */}
-
                     <div
                         className="
                             mb-10
@@ -341,6 +358,7 @@ function HeroDesktop({ items }) {
                         "
                     >
                         <ArrowDownRight
+                            data-hero-element="arrow"
                             className="
                                 h-8
                                 w-8
@@ -349,12 +367,11 @@ function HeroDesktop({ items }) {
 
                                 text-ivory/80
                             "
+                            style={{
+                                transformOrigin: "center center",
+                            }}
                         />
                     </div>
-
-                    {/* =================================================
-                        CARGO
-                    ================================================== */}
 
                     <div
                         className="
@@ -362,8 +379,6 @@ function HeroDesktop({ items }) {
                             flex-col
                         "
                     >
-
-
                         <h2
                             className="
                                 font-space
@@ -400,7 +415,6 @@ function HeroDesktop({ items }) {
                     </div>
                 </div>
 
-
                 {/* =================================================
                     SOCIALS
                 ================================================== */}
@@ -418,10 +432,8 @@ function HeroDesktop({ items }) {
                 >
                     <Socials />
                 </div>
-
- 
             </div>
-        </div>
+        </section>
     );
 }
 
