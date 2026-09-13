@@ -20,12 +20,12 @@ function Hero({ dotFieldFrozen = false }) {
             href: "#projetos",
         },
         {
-            label: "Formação",
-            href: "#formacao",
+            label: "Diferenciais",
+            href: "#diferenciais",
         },
         {
-            label: "Trajetória",
-            href: "#trajetoria",
+            label: "Formação",
+            href: "#formacao",
         },
     ];
 

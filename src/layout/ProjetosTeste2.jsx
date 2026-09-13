@@ -217,7 +217,7 @@ function Projetos() {
     }, []);
 
     return (
-        <section ref={sectionRef} className="w-full md:mt-30 mt-30 bg-obsidian">
+        <section id="projetos" ref={sectionRef} className="w-full md:mt-30 mt-30 bg-obsidian">
             {/* ==================================================
                 DESKTOP
             ================================================== */}

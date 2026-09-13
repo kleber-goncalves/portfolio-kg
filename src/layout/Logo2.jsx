@@ -378,6 +378,7 @@ function Seclogs() {
 
     return (
         <section
+            id="stack"
             ref={sectionRef}
             className="
                 relative

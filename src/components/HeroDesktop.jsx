@@ -21,6 +21,7 @@ function HeroDesktop({ items, dotFieldFrozen = false }) {
 
     return (
         <section
+            
             ref={heroRef}
             className="
                 hero-desktop

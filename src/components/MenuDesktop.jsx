@@ -5,6 +5,16 @@ import gsap from "gsap";
 function MenuDesktop({ items = [], showMenu = false }) {
     const [isOpen, setIsOpen] = useState(false);
 
+    // =====================================
+    // SEÇÃO ATUAL
+    // =====================================
+
+    const [activeHref, setActiveHref] = useState("#hero");
+
+    // =====================================
+    // REFS
+    // =====================================
+
     const menuRef = useRef(null);
     const buttonRef = useRef(null);
 
@@ -12,6 +22,20 @@ function MenuDesktop({ items = [], showMenu = false }) {
     const lineBottomRef = useRef(null);
 
     const isOpenRef = useRef(false);
+
+    // Evita executar o cálculo várias vezes
+    // durante o mesmo frame de scroll.
+    const scrollTickingRef = useRef(false);
+
+    // =====================================
+    // CONFIGURAÇÕES
+    // =====================================
+
+    const LINE_COLOR = "#C49A78";
+
+    // =====================================
+    // POSIÇÃO INICIAL DOS DOIS TRAÇOS
+    // =====================================
 
     useEffect(() => {
         const top = lineTopRef.current;
@@ -37,13 +61,84 @@ function MenuDesktop({ items = [], showMenu = false }) {
     // =====================================
     // SINCRONIZA REF COM ESTADO
     // =====================================
+
     useEffect(() => {
         isOpenRef.current = isOpen;
     }, [isOpen]);
 
     // =====================================
+    // DETECTA A SEÇÃO ATUAL
+    // =====================================
+
+    useEffect(() => {
+        if (!items.length) return;
+
+        const updateActiveSection = () => {
+            const viewportPosition = window.innerHeight * 0.35;
+
+            let currentSection = "#hero";
+
+            items.forEach((item) => {
+                if (!item.href || !item.href.startsWith("#")) {
+                    return;
+                }
+
+                const section = document.querySelector(item.href);
+
+                if (!section) return;
+
+                const rect = section.getBoundingClientRect();
+
+                /*
+                 * Se o topo da seção já passou de 35%
+                 * da tela, consideramos essa a seção atual.
+                 *
+                 * Como percorremos na ordem do menu,
+                 * a última seção encontrada será a atual.
+                 */
+
+                if (rect.top <= viewportPosition) {
+                    currentSection = item.href;
+                }
+            });
+
+            setActiveHref((previous) => {
+                if (previous === currentSection) {
+                    return previous;
+                }
+
+                return currentSection;
+            });
+
+            scrollTickingRef.current = false;
+        };
+
+        const handleScroll = () => {
+            if (scrollTickingRef.current) return;
+
+            scrollTickingRef.current = true;
+
+            requestAnimationFrame(updateActiveSection);
+        };
+
+        // Executa uma vez ao montar
+        updateActiveSection();
+
+        window.addEventListener("scroll", handleScroll, { passive: true });
+
+        window.addEventListener("resize", updateActiveSection);
+
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+
+            window.removeEventListener("resize", updateActiveSection);
+        };
+    }, [items]);
+
+    // =====================================
     // HAMBÚRGUER → X
     // =====================================
+
     const animateToClose = () => {
         const top = lineTopRef.current;
         const bottom = lineBottomRef.current;
@@ -57,7 +152,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
             {
                 rotation: 45,
                 y: 0,
-                duration: 0.5,
+                duration: 0.55,
                 ease: "power3.inOut",
             },
             0,
@@ -68,7 +163,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
             {
                 rotation: -45,
                 y: 0,
-                duration: 0.5,
+                duration: 0.55,
                 ease: "power3.inOut",
             },
             0,
@@ -78,6 +173,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
     // =====================================
     // X → HAMBÚRGUER
     // =====================================
+
     const animateToHamburger = () => {
         const top = lineTopRef.current;
         const bottom = lineBottomRef.current;
@@ -110,8 +206,9 @@ function MenuDesktop({ items = [], showMenu = false }) {
     };
 
     // =====================================
-    // ABRIR
+    // ABRIR MENU
     // =====================================
+
     const openMenu = () => {
         if (!showMenu) return;
 
@@ -120,8 +217,9 @@ function MenuDesktop({ items = [], showMenu = false }) {
     };
 
     // =====================================
-    // FECHAR
+    // FECHAR MENU
     // =====================================
+
     const closeMenu = () => {
         const menu = menuRef.current;
 
@@ -133,6 +231,8 @@ function MenuDesktop({ items = [], showMenu = false }) {
 
         const links = menu.querySelectorAll("[data-desktop-menu-link]");
 
+        const underlineLines = menu.querySelectorAll("[data-menu-line]");
+
         const tl = gsap.timeline({
             onComplete: () => {
                 isOpenRef.current = false;
@@ -140,16 +240,50 @@ function MenuDesktop({ items = [], showMenu = false }) {
             },
         });
 
-        // Links saem
-        tl.to(links, {
-            opacity: 0,
-            x: 20,
-            duration: 0.25,
-            stagger: 0.04,
-            ease: "power2.in",
+        // =================================
+        // LINHAS
+        // =================================
+
+        underlineLines.forEach((line) => {
+            const parent = line.closest("[data-desktop-menu-link]");
+
+            const href = parent?.dataset.href;
+
+            const isActive = href === activeHref;
+
+            if (!isActive) {
+                tl.to(
+                    line,
+                    {
+                        scaleX: 0,
+                        duration: 0.2,
+                        ease: "power2.in",
+                    },
+                    0,
+                );
+            }
         });
 
-        // Painel sai
+        // =================================
+        // LINKS SAEM
+        // =================================
+
+        tl.to(
+            links,
+            {
+                opacity: 0,
+                x: 20,
+                duration: 0.25,
+                stagger: 0.04,
+                ease: "power2.in",
+            },
+            0,
+        );
+
+        // =================================
+        // PAINEL SAI
+        // =================================
+
         tl.to(
             menu,
             {
@@ -164,6 +298,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
     // =====================================
     // ESC
     // =====================================
+
     useEffect(() => {
         if (!isOpen) return;
 
@@ -179,11 +314,12 @@ function MenuDesktop({ items = [], showMenu = false }) {
         return () => {
             document.removeEventListener("keydown", handleKeyDown);
         };
-    }, [isOpen]);
+    }, [isOpen, activeHref]);
 
     // =====================================
     // ABERTURA DO PAINEL
     // =====================================
+
     useEffect(() => {
         if (!isOpen) return;
 
@@ -192,6 +328,12 @@ function MenuDesktop({ items = [], showMenu = false }) {
         if (!menu) return;
 
         const links = menu.querySelectorAll("[data-desktop-menu-link]");
+
+        const underlineLines = menu.querySelectorAll("[data-menu-line]");
+
+        // =================================
+        // ESTADO INICIAL
+        // =================================
 
         gsap.set(menu, {
             xPercent: 100,
@@ -202,11 +344,24 @@ function MenuDesktop({ items = [], showMenu = false }) {
             x: 20,
         });
 
+        gsap.set(underlineLines, {
+            scaleX: 0,
+            transformOrigin: "left center",
+        });
+
+        // =================================
+        // PAINEL
+        // =================================
+
         gsap.to(menu, {
             xPercent: 0,
             duration: 0.65,
             ease: "power3.out",
         });
+
+        // =================================
+        // LINKS
+        // =================================
 
         gsap.to(links, {
             opacity: 1,
@@ -216,11 +371,75 @@ function MenuDesktop({ items = [], showMenu = false }) {
             delay: 0.18,
             ease: "power2.out",
         });
+
+        // =================================
+        // MOSTRA A SEÇÃO ATUAL
+        // =================================
+
+        requestAnimationFrame(() => {
+            const activeLine = menu.querySelector(`[data-menu-line][data-active="true"]`);
+
+            if (activeLine) {
+                gsap.fromTo(
+                    activeLine,
+                    {
+                        scaleX: 0,
+                    },
+                    {
+                        scaleX: 1,
+                        duration: 0.7,
+                        delay: 0.35,
+                        ease: "power3.out",
+                    },
+                );
+            }
+        });
     }, [isOpen]);
+
+    // =====================================
+    // ATUALIZA VISUAL DO LINK ATIVO
+    // =====================================
+
+    useEffect(() => {
+        if (!isOpen || !menuRef.current) return;
+
+        const menu = menuRef.current;
+
+        const links = menu.querySelectorAll("[data-desktop-menu-link]");
+
+        links.forEach((link) => {
+            const href = link.dataset.href;
+
+            const line = link.querySelector("[data-menu-line]");
+
+            if (!line) return;
+
+            const isActive = href === activeHref;
+
+            line.dataset.active = isActive ? "true" : "false";
+
+            gsap.killTweensOf(line);
+
+            if (isActive) {
+                gsap.to(line, {
+                    scaleX: 1,
+                    duration: 0.5,
+                    ease: "power3.out",
+                });
+            } else {
+                gsap.to(line, {
+                    scaleX: 0,
+                    duration: 0.35,
+                    ease: "power2.inOut",
+                });
+            }
+        });
+    }, [activeHref, isOpen]);
 
     // =====================================
     // MOSTRAR / ESCONDER BOTÃO
     // =====================================
+
     useEffect(() => {
         const button = buttonRef.current;
 
@@ -266,8 +485,72 @@ function MenuDesktop({ items = [], showMenu = false }) {
     }, [showMenu]);
 
     // =====================================
+    // HOVER — ENTRA
+    // =====================================
+
+    const handleLinkEnter = (event) => {
+        const button = event.currentTarget;
+
+        const line = button.querySelector("[data-menu-line]");
+
+        if (!line) return;
+
+        gsap.killTweensOf(line);
+
+        gsap.to(line, {
+            scaleX: 1,
+            duration: 0.65,
+            ease: "power3.out",
+        });
+    };
+
+    // =====================================
+    // HOVER — SAI
+    // =====================================
+
+    const handleLinkLeave = (event) => {
+        const button = event.currentTarget;
+
+        const line = button.querySelector("[data-menu-line]");
+
+        if (!line) return;
+
+        const href = button.dataset.href;
+
+        const isActive = href === activeHref;
+
+        gsap.killTweensOf(line);
+
+        // =================================
+        // SE FOR A SEÇÃO ATUAL,
+        // MANTÉM A LINHA
+        // =================================
+
+        if (isActive) {
+            gsap.to(line, {
+                scaleX: 1,
+                duration: 0.35,
+                ease: "power3.out",
+            });
+
+            return;
+        }
+
+        // =================================
+        // CASO CONTRÁRIO, REMOVE
+        // =================================
+
+        gsap.to(line, {
+            scaleX: 0,
+            duration: 0.45,
+            ease: "power3.inOut",
+        });
+    };
+
+    // =====================================
     // TOGGLE
     // =====================================
+
     const handleToggle = () => {
         if (isOpen) {
             animateToHamburger();
@@ -281,6 +564,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
     // =====================================
     // OVERLAY
     // =====================================
+
     const handleOverlayClick = (event) => {
         if (event.target === event.currentTarget) {
             animateToHamburger();
@@ -291,9 +575,42 @@ function MenuDesktop({ items = [], showMenu = false }) {
     // =====================================
     // NAVEGAÇÃO
     // =====================================
-    const handleNavigation = (href) => {
+
+    const handleNavigation = (href, event) => {
+        // =================================
+        // DEFINE IMEDIATAMENTE COMO ATIVO
+        // =================================
+
+        setActiveHref(href);
+
+        const button = event.currentTarget;
+
+        const line = button.querySelector("[data-menu-line]");
+
+        // =================================
+        // FINALIZA LINHA
+        // =================================
+
+        if (line) {
+            gsap.killTweensOf(line);
+
+            gsap.to(line, {
+                scaleX: 1,
+                duration: 0.35,
+                ease: "power3.out",
+            });
+        }
+
+        // =================================
+        // FECHA
+        // =================================
+
         animateToHamburger();
         closeMenu();
+
+        // =================================
+        // NAVEGA
+        // =================================
 
         setTimeout(() => {
             const section = document.querySelector(href);
@@ -310,17 +627,20 @@ function MenuDesktop({ items = [], showMenu = false }) {
     // =====================================
     // MENU
     // =====================================
+
     const menuContent = (
         <div className="hidden md:block">
             {/* =================================
-                PAINEL — Z 30
+                PAINEL
             ================================= */}
+
             {isOpen && (
                 <div
                     className="
                         fixed
                         inset-0
                         z-[30]
+
                         bg-black/30
                     "
                     onClick={handleOverlayClick}
@@ -334,7 +654,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
 
                             flex
                             h-full
-                            w-[420px]
+                            w-[520px]
                             flex-col
 
                             overflow-hidden
@@ -350,12 +670,17 @@ function MenuDesktop({ items = [], showMenu = false }) {
                             shadow-2xl
                         "
                     >
-                        {/* HEADER */}
+                        {/* =========================
+                            HEADER
+                        ========================== */}
+
                         <div
                             className="
-                                mb-16
+                                mb-9
+
                                 border-b
                                 border-graphite
+
                                 pb-6
                             "
                         >
@@ -374,6 +699,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
                             <p
                                 className="
                                     mt-2
+
                                     font-bebas
                                     text-2xl
                                     tracking-wide
@@ -384,7 +710,10 @@ function MenuDesktop({ items = [], showMenu = false }) {
                             </p>
                         </div>
 
-                        {/* LINKS */}
+                        {/* =========================
+                            LINKS
+                        ========================== */}
+
                         <div
                             className="
                                 flex
@@ -392,89 +721,148 @@ function MenuDesktop({ items = [], showMenu = false }) {
                                 flex-col
                             "
                         >
-                            {items.map((item, index) => (
-                                <button
-                                    key={item.href || index}
-                                    type="button"
-                                    data-desktop-menu-link
-                                    onClick={() => handleNavigation(item.href)}
-                                    className="
-                                        group
-                                        flex
-                                        items-center
-                                        justify-between
+                            {items.map((item, index) => {
+                                const isActive = item.href === activeHref;
 
-                                        border-b
-                                        border-graphite
-
-                                        py-5
-
-                                        text-left
-
-                                        transition-colors
-                                        duration-300
-
-                                        hover:text-bronze
-                                    "
-                                >
-                                    <div
+                                return (
+                                    <button
+                                        key={item.href || index}
+                                        type="button"
+                                        data-desktop-menu-link
+                                        data-href={item.href}
+                                        onMouseEnter={handleLinkEnter}
+                                        onMouseLeave={handleLinkLeave}
+                                        onClick={(event) => handleNavigation(item.href, event)}
                                         className="
-                                            flex
-                                            items-center
-                                            gap-5
-                                        "
-                                    >
-                                        <span
-                                            className="
-                                                font-space
-                                                text-xs
-                                                text-steel
-                                                transition-colors
-                                                duration-300
-                                                group-hover:text-bronze
-                                            "
-                                        >
-                                            0{index + 1}
-                                        </span>
+                                                group
 
-                                        <span
-                                            className="
-                                                font-bebas
-                                                text-4xl
-                                                tracking-wide
+                                                relative
+
+                                                flex
+                                                items-center
+                                                justify-between
+
+                                                border-b
+                                                border-graphite
+
+                                                py-5
+
+                                                text-left
+
                                                 text-ivory
+
                                                 transition-colors
                                                 duration-300
-                                                group-hover:text-bronze
-                                            "
-                                        >
-                                            {item.label}
-                                        </span>
-                                    </div>
 
-                                    <span
-                                        className="
-                                            font-space
-                                            text-xl
-                                            text-steel
-                                            transition-all
-                                            duration-300
-                                            group-hover:translate-x-1
-                                            group-hover:text-bronze
-                                        "
+                                                hover:text-bronze
+                                            "
                                     >
-                                        ↗
-                                    </span>
-                                </button>
-                            ))}
+                                        {/* =================
+                                                CONTEÚDO
+                                            ================== */}
+
+                                        <div
+                                            className="
+                                                    flex
+                                                    items-center
+                                                    gap-5
+                                                "
+                                        >
+                                            {/* NÚMERO */}
+
+                                            <span
+                                                className="
+                                                        font-space
+                                                        text-xs
+                                                        text-steel
+
+                                                        transition-colors
+                                                        duration-300
+
+                                                        group-hover:text-bronze
+                                                    "
+                                            >
+                                                {String(index + 1).padStart(2, "0")}
+                                            </span>
+
+                                            {/* NOME */}
+
+                                            <span
+                                                className={`
+                                                        font-bebas
+                                                        text-4xl
+                                                        tracking-wide
+
+                                                        transition-colors
+                                                        duration-300
+
+                                                        ${isActive ? "text-bronze" : "text-ivory"}
+
+                                                        group-hover:text-bronze
+                                                    `}
+                                            >
+                                                {item.label}
+                                            </span>
+                                        </div>
+
+                                        {/* =================
+                                                SETA
+                                            ================== */}
+
+                                        <span
+                                            className={`
+                                                    font-space
+                                                    text-xl
+
+                                                    transition-all
+                                                    duration-300
+
+                                                    group-hover:translate-x-1
+                                                    group-hover:text-bronze
+
+                                                    ${isActive ? "text-bronze" : "text-steel"}
+                                                `}
+                                        >
+                                            ↗
+                                        </span>
+
+                                        {/* =================
+                                                LINHA
+                                            ================== */}
+
+                                        <span
+                                            data-menu-line
+                                            data-active={isActive ? "true" : "false"}
+                                            aria-hidden="true"
+                                            className="
+                                                    pointer-events-none
+
+                                                    absolute
+                                                    bottom-0
+                                                    left-0
+
+                                                    h-[1px]
+                                                    w-full
+
+                                                    origin-left
+
+                                                    bg-[#C49A78]
+
+                                                    shadow-[0_0_10px_rgba(196,154,120,0.35)]
+                                                "
+                                        />
+                                    </button>
+                                );
+                            })}
                         </div>
 
-                        {/* FOOTER */}
+                        {/* =========================
+                            FOOTER
+                        ========================== */}
+
                         <div
                             className="
                                 mt-10
-                                border-t
-                                border-graphite
                                 pt-6
                             "
                         >
@@ -495,8 +883,10 @@ function MenuDesktop({ items = [], showMenu = false }) {
             )}
 
             {/* =================================
-                BOTÃO — Z 31
+                BOTÃO
+                Z 31
             ================================= */}
+
             <button
                 ref={buttonRef}
                 type="button"
@@ -505,6 +895,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
                 onClick={handleToggle}
                 className="
                     fixed
+
                     right-8
                     top-8
 
@@ -538,13 +929,15 @@ function MenuDesktop({ items = [], showMenu = false }) {
                     lg:top-10
                 "
             >
-                {/* =================================
+                {/* =========================
                     TRAÇO SUPERIOR
-                ================================= */}
+                ========================== */}
+
                 <span
                     ref={lineTopRef}
                     className="
                         absolute
+
                         left-1/2
                         top-1/2
 
@@ -555,13 +948,15 @@ function MenuDesktop({ items = [], showMenu = false }) {
                     "
                 />
 
-                {/* =================================
+                {/* =========================
                     TRAÇO INFERIOR
-                ================================= */}
+                ========================== */}
+
                 <span
                     ref={lineBottomRef}
                     className="
                         absolute
+
                         left-1/2
                         top-1/2
 
@@ -578,6 +973,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
     // =====================================
     // PORTAL
     // =====================================
+
     return createPortal(menuContent, document.body);
 }
 
