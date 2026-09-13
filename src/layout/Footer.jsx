@@ -147,7 +147,7 @@ function Footer() {
 
                     scrub: 1,
 
-                    markers: true,
+                    markers: false,
                 },
             });
 
@@ -657,7 +657,7 @@ function Footer() {
                     className="
                         grid
                         grid-cols-2
-                        gap-y-8
+                        gap-y-4
                         border-t
                         border-graphite
                         py-6
@@ -873,7 +873,7 @@ function Footer() {
         w-screen
         -translate-x-1/2
         overflow-hidden
-        pb-5
+        pb-23
         md:pb-0
     "
                 >

@@ -227,11 +227,15 @@ function HeroSectionTransition() {
                 /* =====================================================
                     HOLD
                 ====================================================== */
+                //
+                // A timeline simplesmente fica parada
+                // durante esse trecho.
+                //
 
                 tl.to(
                     {},
                     {
-                        duration: 1.2,
+                        duration: 0.9,
                     },
                 );
 

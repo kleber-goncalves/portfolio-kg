@@ -201,7 +201,7 @@ function Diferenciais() {
                 overflow-hidden
                 bg-obsidian
                 px-5
-                mt-30
+                mt-10
                 py-20
                 md:px-10
                 md:py-28
