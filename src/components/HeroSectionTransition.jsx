@@ -14,11 +14,34 @@ function HeroSectionTransition() {
     const heroRef = useRef(null);
     const seclogsRef = useRef(null);
 
+    // =========================================
+    // CONTROLES
+    // =========================================
+
+    // Quantos pixels o Seclogs precisa subir
+    // para o hambúrguer aparecer.
+    const MENU_APPEAR_PX = 800;
+
+    // Quantos pixels o Seclogs precisa cobrir
+    // para o DotField congelar.
+    const DOTFIELD_FREEZE_PX = 300;
+
+    // =========================================
+    // ESTADOS
+    // =========================================
+
     const [showDesktopMenu, setShowDesktopMenu] = useState(false);
 
     const [dotFieldFrozen, setDotFieldFrozen] = useState(false);
 
+    // Refs para evitar setState a cada frame
+    const menuVisibleRef = useRef(false);
+
     const dotFieldFrozenRef = useRef(false);
+
+    // =========================================
+    // ITENS DO MENU
+    // =========================================
 
     const menuItems = [
         {
@@ -47,13 +70,19 @@ function HeroSectionTransition() {
         },
     ];
 
+    // =========================================
+    // GSAP
+    // =========================================
+
     useLayoutEffect(() => {
         const ctx = gsap.context(() => {
             const section = sectionRef.current;
             const hero = heroRef.current;
             const seclogs = seclogsRef.current;
 
-            if (!section || !hero || !seclogs) return;
+            if (!section || !hero || !seclogs) {
+                return;
+            }
 
             const mm = gsap.matchMedia();
 
@@ -105,7 +134,7 @@ function HeroSectionTransition() {
 
                         start: "top top",
 
-                        end: "+=1400",
+                        end: "+=1800",
 
                         scrub: true,
 
@@ -118,45 +147,80 @@ function HeroSectionTransition() {
                         markers: false,
 
                         // =================================
-                        // CONTROLE
+                        // CONTROLE POR PIXELS
                         // =================================
 
-                        onUpdate: (self) => {
-                            // -----------------------------
-                            // MENU
-                            // -----------------------------
+                        onUpdate: () => {
+                            if (!hero || !seclogs) {
+                                return;
+                            }
 
-                            const shouldShowMenu = self.progress > 0.1;
-
-                            setShowDesktopMenu((current) => (current !== shouldShowMenu ? shouldShowMenu : current));
-
-                            // -----------------------------
-                            // DOT FIELD
-                            // -----------------------------
+                            // ---------------------------------
+                            // POSIÇÃO DO HERO
+                            // ---------------------------------
 
                             const heroRect = hero.getBoundingClientRect();
+
+                            // ---------------------------------
+                            // POSIÇÃO DO SECLOGS
+                            // ---------------------------------
 
                             const seclogsRect = seclogs.getBoundingClientRect();
 
                             /*
-                             * Quanto do Hero o Seclogs
-                             * já cobriu.
+                             * Quando o Seclogs começa,
+                             * ele está abaixo do Hero.
                              *
-                             * Exemplo:
+                             * Conforme sobe:
                              *
-                             * Hero = 808px
+                             * Seclogs.top
+                             * vai diminuindo.
                              *
-                             * Seclogs começou a subir
-                             * 300px
+                             * Hero.bottom
+                             * representa o final do Hero.
                              *
-                             * covered = 300
+                             * A diferença entre eles
+                             * representa quanto o Seclogs
+                             * já entrou sobre o Hero.
                              */
 
                             const coveredAmount = Math.max(0, heroRect.bottom - seclogsRect.top);
 
-                            const shouldFreezeDotField = coveredAmount >= 300;
+                            // =================================
+                            // DEBUG
+                            // =================================
 
-                            // Evita setState a cada frame
+                            // console.log(
+                            //     "📏 Cobertura:",
+                            //     Math.round(
+                            //         coveredAmount
+                            //     ),
+                            //     "px"
+                            // );
+
+                            // =================================
+                            // MENU
+                            // =================================
+
+                            const shouldShowMenu = coveredAmount >= MENU_APPEAR_PX;
+
+                            if (menuVisibleRef.current !== shouldShowMenu) {
+                                menuVisibleRef.current = shouldShowMenu;
+
+                                setShowDesktopMenu(shouldShowMenu);
+
+                                console.log(shouldShowMenu ? "☰ MENU APARECEU" : "☰ MENU ESCONDEU", {
+                                    covered: Math.round(coveredAmount),
+                                    limite: MENU_APPEAR_PX,
+                                });
+                            }
+
+                            // =================================
+                            // DOT FIELD
+                            // =================================
+
+                            const shouldFreezeDotField = coveredAmount >= DOTFIELD_FREEZE_PX;
+
                             if (dotFieldFrozenRef.current !== shouldFreezeDotField) {
                                 dotFieldFrozenRef.current = shouldFreezeDotField;
 
@@ -164,6 +228,7 @@ function HeroSectionTransition() {
 
                                 console.log(shouldFreezeDotField ? "❄️ DOTFIELD CONGELADO" : "🖱️ DOTFIELD DESCONGELADO", {
                                     covered: Math.round(coveredAmount),
+                                    limite: DOTFIELD_FREEZE_PX,
                                 });
                             }
                         },
@@ -295,9 +360,13 @@ function HeroSectionTransition() {
                 tl.to(
                     {},
                     {
-                        duration: 0.1,
+                        duration: 0.9,
                     },
                 );
+
+                // =========================================
+                // CLEANUP
+                // =========================================
 
                 return () => {
                     tl.kill();
@@ -309,6 +378,10 @@ function HeroSectionTransition() {
             ctx.revert();
         };
     }, []);
+
+    // =========================================
+    // RENDER
+    // =========================================
 
     return (
         <section
@@ -322,9 +395,9 @@ function HeroSectionTransition() {
                 md:overflow-hidden
             "
         >
-            {/* =========================================
+            {/* =====================================
                 HERO
-            ========================================== */}
+            ====================================== */}
 
             <div
                 ref={heroRef}
@@ -341,9 +414,9 @@ function HeroSectionTransition() {
                 <Hero dotFieldFrozen={dotFieldFrozen} />
             </div>
 
-            {/* =========================================
+            {/* =====================================
                 SECTION 2
-            ========================================== */}
+            ====================================== */}
 
             <div
                 ref={seclogsRef}
@@ -364,9 +437,9 @@ function HeroSectionTransition() {
                 <Seclogs />
             </div>
 
-            {/* =========================================
+            {/* =====================================
                 MENU DESKTOP
-            ========================================== */}
+            ====================================== */}
 
             <MenuDesktop items={menuItems} showMenu={showDesktopMenu} />
         </section>
