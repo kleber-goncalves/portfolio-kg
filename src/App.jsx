@@ -42,7 +42,7 @@ function App() {
 
                     <Competencia experienceMode={experienceMode} />
 
-                    <ProjetoT />
+                    <ProjetoT experienceMode={experienceMode} />
 
                     <Diferenciais experienceMode={experienceMode} />
 
