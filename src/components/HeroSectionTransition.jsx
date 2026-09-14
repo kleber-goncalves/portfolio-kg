@@ -7,6 +7,8 @@ import Hero from "../layout/HeroTeste2";
 import Seclogs from "../layout/Logo2";
 import MenuDesktop from "../components/MenuDesktop";
 
+import { getExperienceMode } from "../utils/experienceMode";
+
 gsap.registerPlugin(ScrollTrigger);
 
 function HeroSectionTransition() {
@@ -25,14 +27,25 @@ function HeroSectionTransition() {
     // ESTADOS
     // ============================================================
 
-    const [showDesktopMenu, setShowDesktopMenu] = useState(false);
+    const [experienceMode] = useState(() => getExperienceMode() || "full");
+
+    /*
+     * No modo FULL:
+     * o menu começa escondido e aparece durante a transição.
+     *
+     * No modo REDUCED:
+     * o menu fica disponível desde o início.
+     */
+    const [showDesktopMenu, setShowDesktopMenu] = useState(() => experienceMode === "reduced");
+
     const [dotFieldFrozen, setDotFieldFrozen] = useState(false);
 
     // ============================================================
     // REFS DE CONTROLE
     // ============================================================
 
-    const menuVisibleRef = useRef(false);
+    const menuVisibleRef = useRef(experienceMode === "reduced");
+
     const dotFieldFrozenRef = useRef(false);
 
     // ============================================================
@@ -69,17 +82,6 @@ function HeroSectionTransition() {
     // ============================================================
     // NAVEGAÇÃO DO HERO
     // ============================================================
-    //
-    // O Hero está dentro de uma área controlada pelo ScrollTrigger.
-    //
-    // Para #stack:
-    //
-    // NÃO usamos scrollIntoView().
-    //
-    // Levamos o scroll até o END do ScrollTrigger do Hero.
-    // Assim o usuário percorre a transição normalmente.
-    //
-    // ============================================================
 
     const handleHeroNavigation = (href) => {
         // ========================================================
@@ -100,27 +102,48 @@ function HeroSectionTransition() {
         // ========================================================
 
         if (href === "#stack") {
-            const heroTransition = ScrollTrigger.getById("heroTransition");
+            // ----------------------------------------------------
+            // EXPERIÊNCIA COMPLETA
+            // ----------------------------------------------------
 
-            if (!heroTransition) {
-                console.warn("ScrollTrigger 'heroTransition' não encontrado.");
+            if (experienceMode === "full") {
+                const heroTransition = ScrollTrigger.getById("heroTransition");
 
-                const section = document.querySelector("#stack");
+                if (!heroTransition) {
+                    console.warn("ScrollTrigger 'heroTransition' não encontrado.");
 
-                if (section) {
-                    section.scrollIntoView({
-                        behavior: "smooth",
-                        block: "start",
-                    });
+                    const section = document.querySelector("#stack");
+
+                    if (section) {
+                        section.scrollIntoView({
+                            behavior: "smooth",
+                            block: "start",
+                        });
+                    }
+
+                    return;
                 }
+
+                window.scrollTo({
+                    top: heroTransition.end,
+                    behavior: "smooth",
+                });
 
                 return;
             }
 
-            window.scrollTo({
-                top: heroTransition.end,
-                behavior: "smooth",
-            });
+            // ----------------------------------------------------
+            // EXPERIÊNCIA REDUZIDA
+            // ----------------------------------------------------
+
+            const section = document.querySelector("#stack");
+
+            if (section) {
+                section.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                });
+            }
 
             return;
         }
@@ -147,6 +170,37 @@ function HeroSectionTransition() {
         const section = sectionRef.current;
 
         if (!section) return;
+
+        // ========================================================
+        // EXPERIÊNCIA REDUZIDA
+        // ========================================================
+        //
+        // Não criamos:
+        //
+        // - ScrollTrigger
+        // - pin
+        // - parallax
+        // - animação do Stack
+        // - redução do Hero
+        // - scale
+        // - rotação
+        // - blur progressivo
+        //
+        // Hero e Stack ficam no fluxo normal.
+        //
+        // O MENU CONTINUA VISÍVEL.
+        // ========================================================
+
+        if (experienceMode === "reduced") {
+            setShowDesktopMenu(true);
+            setDotFieldFrozen(false);
+
+            return;
+        }
+
+        // ========================================================
+        // EXPERIÊNCIA COMPLETA
+        // ========================================================
 
         const ctx = gsap.context(() => {
             const hero = heroRef.current;
@@ -403,8 +457,68 @@ function HeroSectionTransition() {
 
         return () => {
             ctx.revert();
+
+            const heroTransition = ScrollTrigger.getById("heroTransition");
+
+            if (heroTransition) {
+                heroTransition.kill();
+            }
         };
-    }, []);
+    }, [experienceMode]);
+
+    // ============================================================
+    // CLASSES DEPENDENTES DO MODO
+    // ============================================================
+
+    /*
+     * FULL
+     * ----
+     * Hero e Stack ficam sobrepostos para a transição.
+     *
+     * REDUCED
+     * -------
+     * Hero e Stack ficam no fluxo normal.
+     */
+
+    const isFullExperience = experienceMode === "full";
+
+    const heroWrapperClass = isFullExperience
+        ? `
+            relative
+            z-0
+            w-full
+
+            md:absolute
+            md:inset-0
+            md:h-full
+        `
+        : `
+            relative
+            z-0
+            w-full
+        `;
+
+    const stackWrapperClass = isFullExperience
+        ? `
+            relative
+            z-20
+            w-full
+
+            bg-obsidian
+
+            md:absolute
+            md:inset-0
+            md:h-auto
+
+            md:shadow-[0_-25px_60px_rgba(0,0,0,0.55)]
+        `
+        : `
+            relative
+            z-20
+            w-full
+
+            bg-obsidian
+        `;
 
     // ============================================================
     // JSX
@@ -413,54 +527,39 @@ function HeroSectionTransition() {
     return (
         <section
             ref={sectionRef}
-            className="
-                relative
-                w-full
-                h-auto
+            className={
+                isFullExperience
+                    ? `
+                        relative
+                        w-full
+                        h-auto
 
-                md:h-screen
-                md:overflow-hidden
-            "
+                        md:h-screen
+                        md:overflow-hidden
+                    `
+                    : `
+                        relative
+                        w-full
+                        h-auto
+
+                        md:h-auto
+                        md:overflow-visible
+                    `
+            }
         >
             {/* ==================================================
                 HERO
             ================================================== */}
 
-            <div
-                ref={heroRef}
-                className="
-                    relative
-                    z-0
-                    w-full
-
-                    md:absolute
-                    md:inset-0
-                    md:h-full
-                "
-            >
-                <Hero dotFieldFrozen={dotFieldFrozen} onNavigate={handleHeroNavigation} />
+            <div ref={heroRef} className={heroWrapperClass}>
+                <Hero dotFieldFrozen={dotFieldFrozen} onNavigate={handleHeroNavigation} experienceMode={experienceMode} />
             </div>
 
             {/* ==================================================
                 STACK
             ================================================== */}
 
-            <div
-                ref={seclogsRef}
-                className="
-                    relative
-                    z-20
-                    w-full
-
-                    bg-obsidian
-
-                    md:absolute
-                    md:inset-0
-                    md:h-auto
-
-                    md:shadow-[0_-25px_60px_rgba(0,0,0,0.55)]
-                "
-            >
+            <div ref={seclogsRef} className={stackWrapperClass}>
                 <Seclogs />
             </div>
 

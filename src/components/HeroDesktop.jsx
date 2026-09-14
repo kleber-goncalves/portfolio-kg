@@ -8,7 +8,7 @@ import { ArrowDownRight } from "lucide-react";
 import "../styles/looptextHero.css";
 import "../styles/heroParallax.css";
 
-function HeroDesktop({ items, dotFieldFrozen = false, onNavigate }) {
+function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode = "full" }) {
     const heroRef = useRef(null);
 
     const heroTitleRef = useRef(null);
@@ -17,36 +17,47 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate }) {
 
     const heroDotFieldRef = useRef(null);
 
+    // ============================================================
+    // MODO DE EXPERIÊNCIA
+    // ============================================================
+
+    const isReducedExperience = experienceMode === "reduced";
+
     return (
         <section
             ref={heroRef}
-            className="
+            className={`
                 hero-desktop
                 relative
                 z-0
                 w-full
                 h-screen
                 overflow-hidden
-            "
+
+                ${isReducedExperience ? "bg-[#0D0B09]" : ""}
+            `}
         >
             {/* =====================================================
                 DOT FIELD
+                SOMENTE NA EXPERIÊNCIA COMPLETA
             ====================================================== */}
 
-            <div
-                ref={heroDotFieldRef}
-                data-hero-element="dotfield"
-                aria-hidden="true"
-                className="
-                    pointer-events-none
-                    absolute
-                    inset-0
-                    z-0
-                    overflow-hidden
-                "
-            >
-                <DotField dotRadius={1} dotSpacing={18} cursorRadius={350} bulgeOnly={true} bulgeStrength={35} glowRadius={180} sparkle={false} waveAmplitude={0} gradientFrom="#b37a07" gradientTo="#cf8e0c" glowColor="#0D0B09" frozen={dotFieldFrozen} />
-            </div>
+            {!isReducedExperience && (
+                <div
+                    ref={heroDotFieldRef}
+                    data-hero-element="dotfield"
+                    aria-hidden="true"
+                    className="
+                        pointer-events-none
+                        absolute
+                        inset-0
+                        z-0
+                        overflow-hidden
+                    "
+                >
+                    <DotField dotRadius={1} dotSpacing={18} cursorRadius={350} bulgeOnly={true} bulgeStrength={35} glowRadius={180} sparkle={false} waveAmplitude={0} gradientFrom="#b37a07" gradientTo="#cf8e0c" glowColor="#0D0B09" frozen={dotFieldFrozen} />
+                </div>
+            )}
 
             {/* =====================================================
                 CONTEÚDO
