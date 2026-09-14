@@ -7,12 +7,15 @@ import "../styles/formationCard.css";
 
 gsap.registerPlugin(ScrollTrigger);
 
-function Formacao() {
+function Formacao({ experienceMode = "full" }) {
     const sectionRef = useRef(null);
     const formationCardRef = useRef(null);
 
     const titleRef = useRef(null);
     const lineRef = useRef(null);
+
+
+    const isReducedExperience = experienceMode === "reduced";
 
     /*
     ============================================================
@@ -150,6 +153,9 @@ function Formacao() {
 
             if (!formationCard) return;
 
+            if (isReducedExperience) {
+                return;
+            }
             /*
             ====================================================
             ELEMENTOS QUE RECEBEM O EFEITO
@@ -315,7 +321,7 @@ function Formacao() {
         }, sectionRef);
 
         return () => ctx.revert();
-    }, []);
+    }, [isReducedExperience]);
 
     return (
         <section
@@ -470,6 +476,7 @@ function Formacao() {
                                             h-full
                                         "
                                     >
+                                        
                                         {/* SPOTLIGHT */}
 
                                         <span

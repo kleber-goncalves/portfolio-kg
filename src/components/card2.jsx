@@ -3,8 +3,10 @@ import { ArrowUpRight } from "lucide-react";
 import { gsap } from "gsap";
 import "../styles/editorialCard2.css";
 
-export default function Card2({ title, number, text, variant = "default", className = "", classNameNumber = "", classNameTitle = "", classNameText = "", ...props }) {
+export default function Card2({ title, number, text, variant = "default", className = "", classNameNumber = "", classNameTitle = "", classNameText = "", experienceMode = "full", ...props }) {
     const cardRef = useRef(null);
+
+    const isReducedExperience = experienceMode === "reduced";
 
     /*
     =========================================================
@@ -18,8 +20,34 @@ export default function Card2({ title, number, text, variant = "default", classN
         if (!card) return;
 
         /*
-         * Só ativa o efeito em dispositivos que realmente
-         * possuem mouse/hover.
+         * =====================================================
+         * REDUCED
+         * =====================================================
+         *
+         * Não registramos nenhum listener de mouse.
+         *
+         * Isso elimina:
+         *
+         * - mouseenter
+         * - mousemove
+         * - mouseleave
+         * - getBoundingClientRect()
+         * - cálculo de posição
+         * - cálculo de tilt
+         * - GSAP provocado pelo cursor
+         *
+         * As animações de entrada da seção continuam
+         * funcionando normalmente no Diferenciais.jsx.
+         */
+
+        if (isReducedExperience) {
+            return;
+        }
+
+        /*
+         * =====================================================
+         * DETECÇÃO DE MOUSE
+         * =====================================================
          */
 
         const mediaQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
@@ -27,9 +55,9 @@ export default function Card2({ title, number, text, variant = "default", classN
         if (!mediaQuery.matches) return;
 
         /*
-         * ================================================
+         * =====================================================
          * ENTRADA DO MOUSE
-         * ================================================
+         * =====================================================
          */
 
         const handleMouseEnter = () => {
@@ -46,9 +74,9 @@ export default function Card2({ title, number, text, variant = "default", classN
         };
 
         /*
-         * ================================================
+         * =====================================================
          * MOVIMENTO DO MOUSE
-         * ================================================
+         * =====================================================
          */
 
         const handleMouseMove = (event) => {
@@ -58,9 +86,9 @@ export default function Card2({ title, number, text, variant = "default", classN
             const y = event.clientY - rect.top;
 
             /*
-             * ============================================
+             * =================================================
              * POSIÇÃO DO SPOTLIGHT
-             * ============================================
+             * =================================================
              */
 
             const percentX = (x / rect.width) * 100;
@@ -72,9 +100,9 @@ export default function Card2({ title, number, text, variant = "default", classN
             card.style.setProperty("--mouse-y", `${percentY}%`);
 
             /*
-             * ============================================
+             * =================================================
              * TILT 3D
-             * ============================================
+             * =================================================
              */
 
             const centerX = rect.width / 2;
@@ -84,10 +112,8 @@ export default function Card2({ title, number, text, variant = "default", classN
             const mouseY = y - centerY;
 
             /*
-             * Intensidade do Tilt.
-             *
-             * Mantemos baixo para continuar com
-             * aparência editorial/premium.
+             * Intensidade baixa para manter
+             * a aparência editorial/premium.
              */
 
             const rotateX = (mouseY / centerY) * -1.5;
@@ -109,9 +135,9 @@ export default function Card2({ title, number, text, variant = "default", classN
         };
 
         /*
-         * ================================================
+         * =====================================================
          * SAÍDA DO MOUSE
-         * ================================================
+         * =====================================================
          */
 
         const handleMouseLeave = () => {
@@ -136,6 +162,12 @@ export default function Card2({ title, number, text, variant = "default", classN
             });
         };
 
+        /*
+         * =====================================================
+         * EVENT LISTENERS
+         * =====================================================
+         */
+
         card.addEventListener("mouseenter", handleMouseEnter);
 
         card.addEventListener("mousemove", handleMouseMove);
@@ -143,9 +175,9 @@ export default function Card2({ title, number, text, variant = "default", classN
         card.addEventListener("mouseleave", handleMouseLeave);
 
         /*
-         * ================================================
+         * =====================================================
          * CLEANUP
-         * ================================================
+         * =====================================================
          */
 
         return () => {
@@ -157,7 +189,7 @@ export default function Card2({ title, number, text, variant = "default", classN
 
             gsap.killTweensOf(card);
         };
-    }, []);
+    }, [isReducedExperience]);
 
     /*
     =========================================================
@@ -217,38 +249,41 @@ export default function Card2({ title, number, text, variant = "default", classN
                 duration-500
                 ease-out
 
-                
-                
-
                 ${className}
             `}
             {...props}
         >
             {/* =====================================================
                 SPOTLIGHT
+
+                No Reduced, esses elementos nem entram no DOM.
             ===================================================== */}
 
-            <span
-                className="
-                    editorial-card-2__spotlight
-                    absolute
-                    inset-0
-                    pointer-events-none
-                "
-            />
+            {!isReducedExperience && (
+                <>
+                    <span
+                        className="
+                            editorial-card-2__spotlight
+                            absolute
+                            inset-0
+                            pointer-events-none
+                        "
+                    />
 
-            {/* =====================================================
-                GLOW DA BORDA
-            ===================================================== */}
+                    {/* =================================================
+                        GLOW DA BORDA
+                    ================================================= */}
 
-            <span
-                className="
-                    editorial-card-2__glow
-                    absolute
-                    inset-0
-                    pointer-events-none
-                "
-            />
+                    <span
+                        className="
+                            editorial-card-2__glow
+                            absolute
+                            inset-0
+                            pointer-events-none
+                        "
+                    />
+                </>
+            )}
 
             {/* =====================================================
                 LINHA DE DESTAQUE
@@ -297,8 +332,6 @@ export default function Card2({ title, number, text, variant = "default", classN
                     items-start
                     md:pr-6
                     md:pl-6
-
-                    
                 "
             >
                 {/* =================================================
@@ -347,8 +380,6 @@ export default function Card2({ title, number, text, variant = "default", classN
                         transition-transform
                         duration-500
                         ease-out
-
-                        
 
                         group-hover:translate-x-1
                         group-active:translate-x-1

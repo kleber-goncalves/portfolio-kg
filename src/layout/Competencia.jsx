@@ -6,7 +6,7 @@ import Card1 from "../components/Card1-teste";
 
 gsap.registerPlugin(ScrollTrigger);
 
-function Competencia() {
+function Competencia({ experienceMode = "full" }) {
     const sectionRef = useRef(null);
 
     const competencias = [
@@ -104,7 +104,6 @@ function Competencia() {
                     trigger: header,
                     start: "top 85%",
                     toggleActions: "play none none reverse",
-                    
                 },
             });
 
@@ -201,7 +200,6 @@ function Competencia() {
                     trigger: footer,
                     start: "top 90%",
                     toggleActions: "play none none reverse",
-                    
                 },
             });
 
@@ -217,43 +215,149 @@ function Competencia() {
     }, []);
 
     return (
-        <section ref={sectionRef} id="competencias" className="relative w-full overflow-hidden bg-obsidian  mt-30 p-5 md:p-10">
-            <div className="mx-auto flex w-full flex-col md:max-w-[1500px]">
-                {/* HEADER */}
+        <section
+            ref={sectionRef}
+            id="competencias"
+            className="
+                relative
+                mt-30
+                w-full
+                overflow-hidden
+                bg-obsidian
+                p-5
+                md:p-10
+            "
+        >
+            <div
+                className="
+                    mx-auto
+                    flex
+                    w-full
+                    flex-col
+                    md:max-w-[1500px]
+                "
+            >
+                {/* ==================================================
+                    HEADER
+                ================================================== */}
 
-                <div data-competencia-header className="mb-14 flex w-full flex-row items-center gap-2 md:mb-20 ">
-                    <h2 data-competencia-title className="whitespace-nowrap text-sm uppercase tracking-wide text-steel md:text-7xl">
+                <div
+                    data-competencia-header
+                    className="
+                        mb-14
+                        flex
+                        w-full
+                        flex-row
+                        items-center
+                        gap-2
+                        md:mb-20
+                    "
+                >
+                    <h2
+                        data-competencia-title
+                        className="
+                            whitespace-nowrap
+                            text-sm
+                            uppercase
+                            tracking-wide
+                            text-steel
+                            md:text-7xl
+                        "
+                    >
                         // COMPETENCIAS
                     </h2>
 
-                    <span data-competencia-line className="h-0.5 flex-1 bg-gradientaa md:h-1" />
+                    <span
+                        data-competencia-line
+                        className="
+                            h-0.5
+                            flex-1
+                            bg-gradientaa
+                            md:h-1
+                        "
+                    />
 
-                    <p data-competencia-intro-desktop className="hidden max-w-md text-steel md:block md:text-sm md:leading-6">
+                    <p
+                        data-competencia-intro-desktop
+                        className="
+                            hidden
+                            max-w-md
+                            text-steel
+                            md:block
+                            md:text-sm
+                            md:leading-6
+                        "
+                    >
                         Eu posso te ajudar com...
                     </p>
                 </div>
 
-                {/* INTRO MOBILE */}
+                {/* ==================================================
+                    INTRO MOBILE
+                ================================================== */}
 
-                <div className="mb-16 flex max-w-3xl flex-col gap-4 md:hidden">
-                    <p data-competencia-intro-mobile className="text-base leading-6 text-steel">
+                <div
+                    className="
+                        mb-16
+                        flex
+                        max-w-3xl
+                        flex-col
+                        gap-4
+                        md:hidden
+                    "
+                >
+                    <p
+                        data-competencia-intro-mobile
+                        className="
+                            text-base
+                            leading-6
+                            text-steel
+                        "
+                    >
                         Eu posso te ajudar com...
                     </p>
                 </div>
 
-                {/* CARDS */}
+                {/* ==================================================
+                    CARDS
+                ================================================== */}
 
-                <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 md:gap-y-5">
+                <div
+                    className="
+                        grid
+                        w-full
+                        grid-cols-1
+                        gap-4
+                        md:grid-cols-2
+                        md:gap-y-5
+                    "
+                >
                     {competencias.map((competencia) => (
                         <div key={competencia.numero} data-competencia-card className="w-full">
-                            <Card1 numero={competencia.numero} variant="default" text={competencia.text} title={competencia.title} text_2={competencia.description} />
+                            <Card1 numero={competencia.numero} variant="default" text={competencia.text} title={competencia.title} text_2={competencia.description} experienceMode={experienceMode} />
                         </div>
                     ))}
                 </div>
 
-                {/* FOOTER */}
+                {/* ==================================================
+                    FOOTER
+                ================================================== */}
 
-                <div data-competencia-footer className="mt-10 flex items-center justify-between text-[10px] uppercase tracking-[0.25em] text-steel/60 md:mt-10 md:text-[10px]">
+                <div
+                    data-competencia-footer
+                    className="
+                        mt-10
+                        flex
+                        items-center
+                        justify-between
+                        text-[10px]
+                        uppercase
+                        tracking-[0.25em]
+                        text-steel/60
+                        md:mt-10
+                        md:text-[10px]
+                    "
+                >
                     <span></span>
 
                     <span>Desenvolvimento contínuo</span>

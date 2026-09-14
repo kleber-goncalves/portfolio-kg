@@ -31,16 +31,14 @@ import projeto01_03 from "../assets/projetos/projeto01/jason-3.webp";
 import projeto01_04 from "../assets/projetos/projeto01/lucia-1.webp";
 
 
-function Projetos() {
+function Projetos({ experienceMode = "full" }) {
     const sectionRef = useRef(null);
     const titleRef = useRef(null);
     const lineRef = useRef(null);
     const contadorRef = useRef(null);
     const swiperRef = useRef(null);
 
-
     const [slideAtual, setSlideAtual] = useState(0);
-
 
     const projetos = [
         {
@@ -223,7 +221,7 @@ function Projetos() {
             ================================================== */}
 
             <div className="hidden md:block  ">
-                <ProjetoDesktop projetos={projetos} />
+                <ProjetoDesktop projetos={projetos} experienceMode={experienceMode} />
             </div>
 
             {/* ==================================================

@@ -9,7 +9,7 @@ import MenuDesktop from "../components/MenuDesktop";
 
 gsap.registerPlugin(ScrollTrigger);
 
-function HeroSectionTransition() {
+function HeroSectionTransition({ experienceMode = "full" }) {
     const sectionRef = useRef(null);
     const heroRef = useRef(null);
     const seclogsRef = useRef(null);
@@ -25,14 +25,27 @@ function HeroSectionTransition() {
     // ESTADOS
     // ============================================================
 
+    /*
+     * No FULL:
+     * o menu começa escondido e aparece durante a transição.
+     *
+     * No REDUCED:
+     * o menu fica disponível desde o início.
+     */
     const [showDesktopMenu, setShowDesktopMenu] = useState(false);
+
     const [dotFieldFrozen, setDotFieldFrozen] = useState(false);
 
     // ============================================================
     // REFS DE CONTROLE
     // ============================================================
 
-    const menuVisibleRef = useRef(false);
+    /*
+     * Esses refs evitam chamar setState repetidamente
+     * durante o onUpdate do ScrollTrigger.
+     */
+    const menuVisibleRef = useRef(experienceMode === "reduced");
+
     const dotFieldFrozenRef = useRef(false);
 
     // ============================================================
@@ -69,17 +82,6 @@ function HeroSectionTransition() {
     // ============================================================
     // NAVEGAÇÃO DO HERO
     // ============================================================
-    //
-    // O Hero está dentro de uma área controlada pelo ScrollTrigger.
-    //
-    // Para #stack:
-    //
-    // NÃO usamos scrollIntoView().
-    //
-    // Levamos o scroll até o END do ScrollTrigger do Hero.
-    // Assim o usuário percorre a transição normalmente.
-    //
-    // ============================================================
 
     const handleHeroNavigation = (href) => {
         // ========================================================
@@ -100,27 +102,60 @@ function HeroSectionTransition() {
         // ========================================================
 
         if (href === "#stack") {
-            const heroTransition = ScrollTrigger.getById("heroTransition");
+            // ----------------------------------------------------
+            // EXPERIÊNCIA COMPLETA
+            // ----------------------------------------------------
 
-            if (!heroTransition) {
-                console.warn("ScrollTrigger 'heroTransition' não encontrado.");
+            if (experienceMode === "full") {
+                const heroTransition = ScrollTrigger.getById("heroTransition");
 
-                const section = document.querySelector("#stack");
+                if (!heroTransition) {
+                    console.warn("ScrollTrigger 'heroTransition' não encontrado.");
 
-                if (section) {
-                    section.scrollIntoView({
-                        behavior: "smooth",
-                        block: "start",
-                    });
+                    const section = document.querySelector("#stack");
+
+                    if (section) {
+                        section.scrollIntoView({
+                            behavior: "smooth",
+                            block: "start",
+                        });
+                    }
+
+                    return;
                 }
+
+                /*
+                 * No Full, o Stack faz parte da transição
+                 * pinada do Hero.
+                 *
+                 * Por isso navegamos até o final
+                 * do ScrollTrigger da transição.
+                 */
+                window.scrollTo({
+                    top: heroTransition.end,
+                    behavior: "smooth",
+                });
 
                 return;
             }
 
-            window.scrollTo({
-                top: heroTransition.end,
-                behavior: "smooth",
-            });
+            // ----------------------------------------------------
+            // EXPERIÊNCIA REDUZIDA
+            // ----------------------------------------------------
+
+            /*
+             * No Reduced não existe a transição pinada.
+             *
+             * Hero e Stack estão no fluxo normal.
+             */
+            const section = document.querySelector("#stack");
+
+            if (section) {
+                section.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                });
+            }
 
             return;
         }
@@ -148,6 +183,75 @@ function HeroSectionTransition() {
 
         if (!section) return;
 
+        // ========================================================
+        // EXPERIÊNCIA REDUZIDA
+        // ========================================================
+
+        /*
+         * No Reduced NÃO criamos:
+         *
+         * - ScrollTrigger da transição
+         * - pin
+         * - parallax
+         * - Stack subindo
+         * - redução do Hero
+         * - scale
+         * - rotação
+         * - blur progressivo
+         *
+         * Hero e Stack permanecem no fluxo normal.
+         */
+
+        if (experienceMode === "reduced") {
+            const hero = heroRef.current;
+
+            if (!hero) return;
+
+            const updateReducedMenu = () => {
+                const heroRect = hero.getBoundingClientRect();
+
+                /*
+                 * Quando o final do Hero começa a sair
+                 * da viewport, o menu aparece.
+                 *
+                 * Ajuste esse valor conforme o ponto
+                 * visual desejado.
+                 */
+                const shouldShowMenu = heroRect.bottom <= window.innerHeight * 0.85;
+
+                if (menuVisibleRef.current !== shouldShowMenu) {
+                    menuVisibleRef.current = shouldShowMenu;
+
+                    setShowDesktopMenu(shouldShowMenu);
+                }
+            };
+
+            /*
+             * Estado inicial
+             */
+            updateReducedMenu();
+
+            /*
+             * Atualiza enquanto o usuário rola.
+             */
+            window.addEventListener("scroll", updateReducedMenu, { passive: true });
+
+            /*
+             * Atualiza em resize.
+             */
+            window.addEventListener("resize", updateReducedMenu);
+
+            return () => {
+                window.removeEventListener("scroll", updateReducedMenu);
+
+                window.removeEventListener("resize", updateReducedMenu);
+            };
+        }
+
+        // ========================================================
+        // EXPERIÊNCIA COMPLETA
+        // ========================================================
+
         const ctx = gsap.context(() => {
             const hero = heroRef.current;
             const seclogs = seclogsRef.current;
@@ -155,6 +259,10 @@ function HeroSectionTransition() {
             if (!hero || !seclogs) return;
 
             const mm = gsap.matchMedia();
+
+            // ====================================================
+            // DESKTOP
+            // ====================================================
 
             mm.add("(min-width: 768px)", () => {
                 // =================================================
@@ -177,14 +285,23 @@ function HeroSectionTransition() {
                 // ESTADOS INICIAIS
                 // =================================================
 
+                /*
+                 * Stack começa abaixo.
+                 */
                 gsap.set(seclogs, {
                     yPercent: 100,
                 });
 
+                /*
+                 * Hero começa totalmente visível.
+                 */
                 gsap.set(hero, {
                     opacity: 1,
                 });
 
+                /*
+                 * Seta começa na posição original.
+                 */
                 if (heroArrow) {
                     gsap.set(heroArrow, {
                         rotation: 0,
@@ -192,12 +309,18 @@ function HeroSectionTransition() {
                     });
                 }
 
+                /*
+                 * Blur começa invisível.
+                 */
                 if (globalBlur) {
                     gsap.set(globalBlur, {
                         opacity: 0,
                     });
                 }
 
+                /*
+                 * DotField começa visível.
+                 */
                 if (heroDotField) {
                     gsap.set(heroDotField, {
                         opacity: 1,
@@ -233,12 +356,18 @@ function HeroSectionTransition() {
                         // =========================================
 
                         onUpdate: () => {
-                            if (!hero || !seclogs) return;
+                            if (!hero || !seclogs) {
+                                return;
+                            }
 
                             const heroRect = hero.getBoundingClientRect();
 
                             const seclogsRect = seclogs.getBoundingClientRect();
 
+                            /*
+                             * Mede quanto o Stack já cobriu
+                             * do Hero.
+                             */
                             const coveredAmount = Math.max(0, heroRect.bottom - seclogsRect.top);
 
                             // =====================================
@@ -247,6 +376,10 @@ function HeroSectionTransition() {
 
                             const shouldShowMenu = coveredAmount >= MENU_APPEAR_PX;
 
+                            /*
+                             * Só atualiza o React quando
+                             * o valor realmente mudou.
+                             */
                             if (menuVisibleRef.current !== shouldShowMenu) {
                                 menuVisibleRef.current = shouldShowMenu;
 
@@ -259,6 +392,10 @@ function HeroSectionTransition() {
 
                             const shouldFreezeDotField = coveredAmount >= DOTFIELD_FREEZE_PX;
 
+                            /*
+                             * Só atualiza o React quando
+                             * o valor realmente mudou.
+                             */
                             if (dotFieldFrozenRef.current !== shouldFreezeDotField) {
                                 dotFieldFrozenRef.current = shouldFreezeDotField;
 
@@ -388,7 +525,7 @@ function HeroSectionTransition() {
                 );
 
                 // =================================================
-                // CLEANUP
+                // CLEANUP DA TIMELINE
                 // =================================================
 
                 return () => {
@@ -396,15 +533,102 @@ function HeroSectionTransition() {
                 };
             });
 
+            // ====================================================
+            // CLEANUP MATCHMEDIA
+            // ====================================================
+
             return () => {
                 mm.revert();
             };
         }, sectionRef);
 
+        // ========================================================
+        // CLEANUP GSAP CONTEXT
+        // ========================================================
+
         return () => {
             ctx.revert();
+
+            const heroTransition = ScrollTrigger.getById("heroTransition");
+
+            if (heroTransition) {
+                heroTransition.kill();
+            }
         };
-    }, []);
+    }, [experienceMode]);
+
+    // ============================================================
+    // MODO ATUAL
+    // ============================================================
+
+    const isFullExperience = experienceMode === "full";
+
+    // ============================================================
+    // WRAPPER DO HERO
+    // ============================================================
+
+    /*
+     * FULL:
+     *
+     * Hero fica sobreposto ao Stack.
+     *
+     * REDUCED:
+     *
+     * Hero volta para o fluxo normal.
+     */
+
+    const heroWrapperClass = isFullExperience
+        ? `
+                relative
+                z-0
+                w-full
+
+                md:absolute
+                md:inset-0
+                md:h-full
+            `
+        : `
+                relative
+                z-0
+                w-full
+            `;
+
+    // ============================================================
+    // WRAPPER DO STACK
+    // ============================================================
+
+    /*
+     * FULL:
+     *
+     * Stack fica sobreposto e é movimentado
+     * pelo GSAP.
+     *
+     * REDUCED:
+     *
+     * Stack fica no fluxo normal da página.
+     */
+
+    const stackWrapperClass = isFullExperience
+        ? `
+                relative
+                z-20
+                w-full
+
+                bg-obsidian
+
+                md:absolute
+                md:inset-0
+                md:h-auto
+
+                md:shadow-[0_-25px_60px_rgba(0,0,0,0.55)]
+            `
+        : `
+                relative
+                z-20
+                w-full
+
+                bg-obsidian
+            `;
 
     // ============================================================
     // JSX
@@ -413,54 +637,55 @@ function HeroSectionTransition() {
     return (
         <section
             ref={sectionRef}
-            className="
-                relative
-                w-full
-                h-auto
+            className={
+                isFullExperience
+                    ? `
+                        relative
+                        w-full
+                        h-auto
 
-                md:h-screen
-                md:overflow-hidden
-            "
+                        md:h-screen
+                        md:overflow-hidden
+                    `
+                    : `
+                        relative
+                        w-full
+                        h-auto
+
+                        md:h-auto
+                        md:overflow-visible
+                    `
+            }
         >
             {/* ==================================================
                 HERO
             ================================================== */}
 
-            <div
-                ref={heroRef}
-                className="
-                    relative
-                    z-0
-                    w-full
-
-                    md:absolute
-                    md:inset-0
-                    md:h-full
-                "
-            >
-                <Hero dotFieldFrozen={dotFieldFrozen} onNavigate={handleHeroNavigation} />
+            <div ref={heroRef} className={heroWrapperClass}>
+                <Hero dotFieldFrozen={dotFieldFrozen} onNavigate={handleHeroNavigation} experienceMode={experienceMode} />
+                {isFullExperience === false && (
+                    <div
+                        className="
+                             pointer-events-none
+            absolute
+            inset-x-0
+            bottom-0
+            z-20
+            h-40
+            bg-gradient-to-b
+            from-transparent
+            via-obsidian/50
+            to-obsidian
+            "
+                    />
+                )}
             </div>
 
             {/* ==================================================
                 STACK
             ================================================== */}
 
-            <div
-                ref={seclogsRef}
-                className="
-                    relative
-                    z-20
-                    w-full
-
-                    bg-obsidian
-
-                    md:absolute
-                    md:inset-0
-                    md:h-auto
-
-                    md:shadow-[0_-25px_60px_rgba(0,0,0,0.55)]
-                "
-            >
+            <div ref={seclogsRef} className={stackWrapperClass}>
                 <Seclogs />
             </div>
 

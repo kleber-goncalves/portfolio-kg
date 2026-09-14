@@ -1,7 +1,7 @@
 import HeroMobile from "../components/HeroMobile";
 import HeroDesktop from "../components/HeroDesktop";
 
-function Hero({ dotFieldFrozen = false, onNavigate }) {
+function Hero({ dotFieldFrozen = false, onNavigate, experienceMode = "full" }) {
     // ============================================================
     // ITENS DO MENU
     // ============================================================
@@ -39,7 +39,7 @@ function Hero({ dotFieldFrozen = false, onNavigate }) {
                 MOBILE
             ================================================== */}
 
-            <div className="block md:hidden">
+            <div className="block md:hidden p-5">
                 <HeroMobile items={menuItems} />
             </div>
 
@@ -48,7 +48,7 @@ function Hero({ dotFieldFrozen = false, onNavigate }) {
             ================================================== */}
 
             <div className="hidden md:block">
-                <HeroDesktop items={menuItems} dotFieldFrozen={dotFieldFrozen} onNavigate={onNavigate} />
+                <HeroDesktop items={menuItems} dotFieldFrozen={dotFieldFrozen} onNavigate={onNavigate} experienceMode={experienceMode} />
             </div>
         </section>
     );

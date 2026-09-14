@@ -4,17 +4,59 @@ import { gsap } from "gsap";
 
 import "../styles/editorialCard.css";
 
-export default function Card1({ title, text, text_2, variant = "default", className = "", classNameText = "", classNameTitle = "", classNametext2 = "", ...props }) {
+export default function Card1({ title, text, text_2, variant = "default", className = "", classNameText = "", classNameTitle = "", classNametext2 = "", experienceMode = "full", ...props }) {
     const cardRef = useRef(null);
+
+    /*
+    ============================================================
+    EXPERIENCE MODE
+    ============================================================
+    */
+
+    const isReducedExperience = experienceMode === "reduced";
+
+    /*
+    ============================================================
+    MOUSE EFFECTS
+    ============================================================
+    */
 
     useEffect(() => {
         const card = cardRef.current;
 
         if (!card) return;
 
+        /*
+        --------------------------------------------------------
+        REDUCED EXPERIENCE
+        --------------------------------------------------------
+
+        No modo reduzido os efeitos de mouse não são
+        registrados nem executados.
+        */
+
+        if (isReducedExperience) {
+            return;
+        }
+
+        /*
+        --------------------------------------------------------
+        DESKTOP / MOUSE
+        --------------------------------------------------------
+
+        Só ativa quando o dispositivo possui mouse/trackpad
+        real.
+        */
+
         const mediaQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
 
         if (!mediaQuery.matches) return;
+
+        /*
+        ========================================================
+        MOUSE ENTER
+        ========================================================
+        */
 
         const handleMouseEnter = () => {
             card.style.setProperty("--spotlight-opacity", "1");
@@ -32,6 +74,12 @@ export default function Card1({ title, text, text_2, variant = "default", classN
             });
         };
 
+        /*
+        ========================================================
+        MOUSE MOVE
+        ========================================================
+        */
+
         const handleMouseMove = (e) => {
             const rect = card.getBoundingClientRect();
 
@@ -39,9 +87,11 @@ export default function Card1({ title, text, text_2, variant = "default", classN
 
             const y = e.clientY - rect.top;
 
-            /* =================================================
-                SPOTLIGHT
-            ================================================== */
+            /*
+            ----------------------------------------------------
+            SPOTLIGHT
+            ----------------------------------------------------
+            */
 
             const percentX = (x / rect.width) * 100;
 
@@ -51,9 +101,11 @@ export default function Card1({ title, text, text_2, variant = "default", classN
 
             card.style.setProperty("--mouse-y", `${percentY}%`);
 
-            /* =================================================
-                TILT
-            ================================================== */
+            /*
+            ----------------------------------------------------
+            TILT
+            ----------------------------------------------------
+            */
 
             const centerX = rect.width / 2;
 
@@ -81,6 +133,12 @@ export default function Card1({ title, text, text_2, variant = "default", classN
             });
         };
 
+        /*
+        ========================================================
+        MOUSE LEAVE
+        ========================================================
+        */
+
         const handleMouseLeave = () => {
             card.style.setProperty("--spotlight-opacity", "0");
 
@@ -100,11 +158,23 @@ export default function Card1({ title, text, text_2, variant = "default", classN
             });
         };
 
+        /*
+        ========================================================
+        EVENT LISTENERS
+        ========================================================
+        */
+
         card.addEventListener("mouseenter", handleMouseEnter);
 
         card.addEventListener("mousemove", handleMouseMove);
 
         card.addEventListener("mouseleave", handleMouseLeave);
+
+        /*
+        ========================================================
+        CLEANUP
+        ========================================================
+        */
 
         return () => {
             card.removeEventListener("mouseenter", handleMouseEnter);
@@ -115,11 +185,13 @@ export default function Card1({ title, text, text_2, variant = "default", classN
 
             gsap.killTweensOf(card);
         };
-    }, []);
+    }, [isReducedExperience]);
 
-    /* =====================================================
-        VARIANTS
-    ====================================================== */
+    /*
+    ============================================================
+    VARIANTS
+    ============================================================
+    */
 
     const variants = {
         default: {
@@ -143,9 +215,11 @@ export default function Card1({ title, text, text_2, variant = "default", classN
 
     const styles = variants[variant] || variants.default;
 
-    /* =====================================================
-        RENDER
-    ====================================================== */
+    /*
+    ============================================================
+    RENDER
+    ============================================================
+    */
 
     return (
         <article
@@ -169,7 +243,7 @@ export default function Card1({ title, text, text_2, variant = "default", classN
             `}
             {...props}
         >
-            {/* =================================================
+            {/* ==================================================
                 SPOTLIGHT
             ================================================== */}
 
@@ -182,7 +256,7 @@ export default function Card1({ title, text, text_2, variant = "default", classN
                 "
             />
 
-            {/* =================================================
+            {/* ==================================================
                 GLOW
             ================================================== */}
 
@@ -195,7 +269,7 @@ export default function Card1({ title, text, text_2, variant = "default", classN
                 "
             />
 
-            {/* =================================================
+            {/* ==================================================
                 CONTEÚDO
             ================================================== */}
 
@@ -217,7 +291,7 @@ export default function Card1({ title, text, text_2, variant = "default", classN
                     md:pl-6
                 "
             >
-                {/* =================================================
+                {/* ==================================================
                     CATEGORIA
                 ================================================== */}
 
@@ -245,7 +319,7 @@ export default function Card1({ title, text, text_2, variant = "default", classN
                     {text}
                 </p>
 
-                {/* =================================================
+                {/* ==================================================
                     TÍTULO
                 ================================================== */}
 
@@ -282,7 +356,7 @@ export default function Card1({ title, text, text_2, variant = "default", classN
                     </h3>
                 </div>
 
-                {/* =================================================
+                {/* ==================================================
                     DESCRIÇÃO
                 ================================================== */}
 

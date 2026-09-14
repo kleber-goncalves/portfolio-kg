@@ -46,63 +46,25 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
 
     const experienceMenuRef = useRef(null);
 
-    const experienceMenuMotionRef = useRef(null);
-    useLayoutEffect(() => {
-
-        gsap.fromTo(
-            experienceMenuMotionRef.current,
-            {
-                opacity: 0,
-                scale: 0.92,
-                y: -8,
-            },
-            {
-                opacity: 1,
-                scale: 1,
-                y: 0,
-                duration: 0.45,
-                ease: "back.out(1.7)",
-            },
-        );
-    }, [experienceMenuOpen]);
-
     // ============================================================
-    // DEBUG
-    // ============================================================
-
-    const debugIdRef = useRef(`HERO-${Math.random().toString(36).slice(2, 7)}`);
-
-    const debugId = debugIdRef.current;
-
-    // ============================================================
-    // EXPERIENCE — ALTERAR MODO
+    // TROCAR EXPERIÊNCIA
     // ============================================================
 
     const handleExperienceChange = (mode) => {
-        // Se clicar no modo que já está ativo,
-        // apenas fecha o menu.
-
         if (mode === experienceMode) {
             setExperienceMenuOpen(false);
             return;
         }
 
-        // Fecha o menu
-
         setExperienceMenuOpen(false);
 
-        // Salva o novo modo
-
         setExperienceMode(mode);
-
-        // Recarrega para que todos os componentes
-        // sejam inicializados no novo modo.
 
         window.location.reload();
     };
 
     // ============================================================
-    // EXPERIENCE — CLIQUE FORA
+    // FECHAR MENU AO CLICAR FORA
     // ============================================================
 
     useLayoutEffect(() => {
@@ -118,6 +80,14 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, []);
+
+    // ============================================================
+    // DEBUG
+    // ============================================================
+
+    const debugIdRef = useRef(`HERO-${Math.random().toString(36).slice(2, 7)}`);
+
+    const debugId = debugIdRef.current;
 
     // ============================================================
     // ANIMAÇÃO DE ENTRADA
@@ -176,6 +146,48 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
             };
 
             // ========================================================
+            // ESTADO INICIAL
+            // ========================================================
+
+            const setInitialHiddenState = () => {
+                gsap.set(logo, {
+                    opacity: 0,
+                    y: -18,
+                });
+
+                gsap.set(nav, {
+                    opacity: 0,
+                    y: -18,
+                });
+
+                gsap.set(visual, {
+                    opacity: 0,
+                    y: 45,
+                    scale: 0.985,
+                });
+
+                gsap.set(title, {
+                    opacity: 0,
+                    y: 35,
+                });
+
+                gsap.set(location, {
+                    opacity: 0,
+                    x: -30,
+                });
+
+                gsap.set(text, {
+                    opacity: 0,
+                    y: 35,
+                });
+
+                gsap.set(socials, {
+                    opacity: 0,
+                    y: 20,
+                });
+            };
+
+            // ========================================================
             // INICIALIZAÇÃO DA ENTRADA
             // ========================================================
 
@@ -185,7 +197,6 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                 const heroRect = hero.getBoundingClientRect();
 
                 const heroTop = heroRect.top;
-
                 const heroBottom = heroRect.bottom;
 
                 const heroIsVisible = heroBottom > 0 && heroTop < window.innerHeight;
@@ -244,41 +255,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
 
                 console.log(`[HERO DEBUG ${debugId}] Aplicando estados iniciais`);
 
-                gsap.set(logo, {
-                    opacity: 0,
-                    y: -18,
-                });
-
-                gsap.set(nav, {
-                    opacity: 0,
-                    y: -18,
-                });
-
-                gsap.set(visual, {
-                    opacity: 0,
-                    y: 45,
-                    scale: 0.985,
-                });
-
-                gsap.set(title, {
-                    opacity: 0,
-                    y: 35,
-                });
-
-                gsap.set(location, {
-                    opacity: 0,
-                    x: -30,
-                });
-
-                gsap.set(text, {
-                    opacity: 0,
-                    y: 35,
-                });
-
-                gsap.set(socials, {
-                    opacity: 0,
-                    y: 20,
-                });
+                setInitialHiddenState();
 
                 // ====================================================
                 // TIMELINE DE ENTRADA
@@ -450,19 +427,6 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
 
             console.log(`%c[HERO DEBUG ${debugId}] ⏳ aguardando restauração do scroll...`, "color:#795548;font-weight:bold");
 
-            /*
-            ============================================================
-            IMPORTANTE
-
-            Não confiamos mais em apenas 2 RAF.
-
-            O navegador pode restaurar o scroll depois disso.
-
-            Vamos observar alguns frames e procurar uma posição
-            estável antes de decidir se a entrada deve acontecer.
-            ============================================================
-            */
-
             let frameId = null;
             let animationCleanup = null;
 
@@ -473,7 +437,67 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
             let previousScroll = null;
             let stableFrames = 0;
 
+            let decisionMade = false;
+
+            // ========================================================
+            // DETECTA SCROLL IMEDIATAMENTE
+            // ========================================================
+
+            const handleScrollDuringRestore = () => {
+                if (decisionMade || window.scrollY <= 50) {
+                    return;
+                }
+
+                decisionMade = true;
+
+                if (frameId !== null) {
+                    cancelAnimationFrame(frameId);
+                }
+
+                console.log(`%c[HERO DEBUG ${debugId}] 🟡 restauração detectada durante espera`, "color:#ffc107;font-weight:bold");
+
+                console.log(`[HERO DEBUG ${debugId}] scrollY detectado:`, window.scrollY);
+
+                setVisibleState();
+            };
+
+            window.addEventListener("scroll", handleScrollDuringRestore, {
+                passive: true,
+            });
+
+            // ========================================================
+            // APLICA ESTADO INICIAL ANTES DO PRIMEIRO PAINT
+            // ========================================================
+
+            const initialScroll = window.scrollY;
+
+            const initialHeroTop = hero.getBoundingClientRect().top;
+
+            if (initialScroll > 50 || initialHeroTop < -50) {
+                console.log(`%c[HERO DEBUG ${debugId}] 🟡 página iniciou fora do topo`, "color:#ffc107;font-weight:bold");
+
+                console.log(`[HERO DEBUG ${debugId}] scroll inicial:`, initialScroll);
+
+                console.log(`[HERO DEBUG ${debugId}] hero.top inicial:`, initialHeroTop);
+
+                decisionMade = true;
+
+                setVisibleState();
+            } else {
+                console.log(`%c[HERO DEBUG ${debugId}] 🎬 aplicando estado inicial antes do paint`, "color:#00bcd4;font-weight:bold");
+
+                setInitialHiddenState();
+            }
+
+            // ========================================================
+            // OBSERVAÇÃO DA RESTAURAÇÃO
+            // ========================================================
+
             const waitForScrollRestoration = () => {
+                if (decisionMade) {
+                    return;
+                }
+
                 frameCount++;
 
                 const currentScroll = window.scrollY;
@@ -494,15 +518,16 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
 
                 previousScroll = currentScroll;
 
-                /*
-                 * Precisamos de alguns frames consecutivos
-                 * sem mudança significativa.
-                 */
+                // ====================================================
+                // POSIÇÃO ESTÁVEL
+                // ====================================================
 
                 if (stableFrames >= 3) {
                     console.log(`%c[HERO DEBUG ${debugId}] 🟢 posição do scroll estabilizou`, "color:#00e676;font-weight:bold");
 
                     console.log(`[HERO DEBUG ${debugId}] scroll final detectado:`, currentScroll);
+
+                    decisionMade = true;
 
                     animationCleanup = initializeEntry();
 
@@ -517,6 +542,8 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                     console.log(`%c[HERO DEBUG ${debugId}] ⚠️ limite de frames atingido`, "color:#ff9800;font-weight:bold");
 
                     console.log(`[HERO DEBUG ${debugId}] scrollY no limite:`, currentScroll);
+
+                    decisionMade = true;
 
                     animationCleanup = initializeEntry();
 
@@ -534,7 +561,9 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
             // PRIMEIRO FRAME
             // ========================================================
 
-            frameId = requestAnimationFrame(waitForScrollRestoration);
+            if (!decisionMade) {
+                frameId = requestAnimationFrame(waitForScrollRestoration);
+            }
 
             // ========================================================
             // CLEANUP
@@ -548,6 +577,8 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                 }
 
                 window.removeEventListener("scroll", handleScrollDebug);
+
+                window.removeEventListener("scroll", handleScrollDuringRestore);
 
                 if (animationCleanup) {
                     animationCleanup();
@@ -593,17 +624,12 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
 
         const ctx = gsap.context(() => {
             const title = heroTitleRef.current;
-
             const text = heroTextRef.current;
-
             const visual = heroVisualRef.current;
 
             const logo = logoRef.current;
-
             const nav = navRef.current;
-
             const location = locationRef.current;
-
             const socials = socialsRef.current;
 
             // ========================================================
@@ -919,440 +945,34 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                 ================================================== */}
 
                 <div
+                    ref={logoRef}
                     className="
                         absolute
                         left-8
                         top-8
                         z-40
 
-                        flex
-                        items-center
-                        gap-5
-
                         lg:left-18
                         lg:top-10
-                        lg:gap-12
                     "
                 >
                     <div
-                        ref={logoRef}
                         className="
-                    "
-                    >
-                        <div
-                            className="
                             h-10
                             w-10
 
                             lg:h-11
                             lg:w-11
                         "
-                        >
-                            <img
-                                src="/logo.svg"
-                                alt="Kleber Dev"
-                                className="
+                    >
+                        <img
+                            src="/logo.svg"
+                            alt="Kleber Dev"
+                            className="
                                 h-full
                                 w-full
                             "
-                            />
-                        </div>
-                    </div>
-                    <div
-                        ref={experienceMenuRef}
-                        className="
-        relative
-        flex
-        items-center
-    "
-                    >
-                        {/* =================================================
-        BOTÃO EXPERIENCE
-    ================================================== */}
-
-                        <button
-                            type="button"
-                            aria-expanded={experienceMenuOpen}
-                            aria-haspopup="menu"
-                            onClick={() => setExperienceMenuOpen((previous) => !previous)}
-                            className="
-            group
-            relative
-            flex
-            items-center
-            gap-2
-
-            font-space
-            text-[9px]
-            uppercase
-            tracking-[0.14em]
-
-            text-steel
-
-            transition-colors
-            duration-300
-
-            hover:text-ivory
-
-            lg:text-[10px]
-        "
-                        >
-                            <span>Experience</span>
-
-                            {/* Indicador */}
-
-                            <ChevronDown
-                                className={`
-                h-3
-                w-3
-
-                stroke-[1.5]
-
-                transition-all
-                duration-300
-
-                ${experienceMenuOpen ? "rotate-180 text-bronze" : "rotate-0 text-steel"}
-            `}
-                            />
-
-                            {/* Linha inferior */}
-
-                            <span
-                                className={`
-                absolute
-                -bottom-2
-                left-0
-
-                h-px
-
-                bg-bronze
-
-                transition-all
-                duration-300
-
-                ${experienceMenuOpen ? "w-full opacity-100" : "w-0 opacity-0"}
-            `}
-                            />
-                        </button>
-
-                        {/* =================================================
-        DROPDOWN
-    ================================================== */}
-
-                        {experienceMenuOpen && (
-                            <div
-                                ref={experienceMenuMotionRef}
-                                role="menu"
-                                className="
-                absolute
-                left-1/2
-                top-full
-                z-50
-
-                mt-5
-                w-[190px]
-
-                -translate-x-1/2
-
-                overflow-hidden
-
-                border
-                border-graphite/80
-
-                bg-carbon/95
-                backdrop-blur-xl
-                
-                shadow-2xl
-                shadow-black/30
-            "
-                            >
-                                {/* =================================================
-                CABEÇALHO
-            ================================================== */}
-
-
-
-                                {/* =================================================
-                OPÇÕES
-            ================================================== */}
-
-                                <div className="p-1.5">
-                                    {/* FULL */}
-
-                                    <button
-                                        type="button"
-                                        role="menuitem"
-                                        onClick={() => handleExperienceChange("full")}
-                                        className={`
-                        group
-                        relative
-
-                        flex
-                        w-full
-                        items-center
-                        justify-between
-
-                        px-3
-                        py-3
-
-                        text-left
-
-                        transition-all
-                        duration-300
-
-                        ${
-                            experienceMode === "full"
-                                ? `
-                                    bg-obsidian
-                                    text-ivory
-                                `
-                                : `
-                                    text-steel
-                                    hover:bg-obsidian/70
-                                    hover:text-ivory
-                                `
-                        }
-                    `}
-                                    >
-                                        {/* Indicador lateral */}
-
-                                        <span
-                                            className={`
-                            absolute
-                            left-0
-                            top-1/2
-
-                            h-5
-                            w-px
-
-                            -translate-y-1/2
-
-                            bg-bronze
-
-                            transition-all
-                            duration-300
-
-                            ${experienceMode === "full" ? "opacity-100" : "opacity-0 group-hover:opacity-50"}
-                        `}
-                                        />
-
-                                        <div
-                                            className="
-                            flex
-                            flex-col
-                            gap-1
-                        "
-                                        >
-                                            <span
-                                                className="
-                                font-space
-                                text-[10px]
-                                uppercase
-                                tracking-[0.14em]
-                            "
-                                            >
-                                                Full
-                                            </span>
-
-                                            <span
-                                                className={`
-                                                                                                                font-space
-                                text-[9px]
-                                tracking-wide
-                                group-hover:text-warm-bronze
-                                group-hover:opacity-100
-                                ${experienceMode === "full" ? "text-warm-bronze" : "text-steel"}
-                                                    `}
-                                            >
-                                                Full experience
-                                            </span>
-                                        </div>
-
-                                        {/* Status */}
-
-                                        <span
-                                            className={`
-                            flex
-                            h-4
-                            w-4
-                            items-center
-                            justify-center
-
-                            rounded-full
-
-                            border
-
-                            transition-all
-                            duration-300
-
-                            ${
-                                experienceMode === "full"
-                                    ? `
-                                        border-bronze
-                                        bg-bronze/10
-                                    `
-                                    : `
-                                        border-graphite
-                                        group-hover:border-steel/50
-                                    `
-                            }
-                        `}
-                                        >
-                                            <span
-                                                className={`
-                                h-1.5
-                                w-1.5
-                                rounded-full
-
-                                transition-all
-                                duration-300
-
-                                ${experienceMode === "full" ? "scale-100 bg-bronze" : "scale-0 bg-bronze"}
-                            `}
-                                            />
-                                        </span>
-                                    </button>
-
-                                    {/* REDUCED */}
-
-                                    <button
-                                        type="button"
-                                        role="menuitem"
-                                        onClick={() => handleExperienceChange("reduced")}
-                                        className={`
-                        group
-                        relative
-
-                        mt-1
-
-                        flex
-                        w-full
-                        items-center
-                        justify-between
-
-                        px-3
-                        py-3
-
-                        text-left
-
-                        transition-all
-                        duration-300
-
-                        ${
-                            experienceMode === "reduced"
-                                ? `
-                                    bg-obsidian
-                                    text-ivory
-                                `
-                                : `
-                                    text-steel
-                                    hover:bg-obsidian/70
-                                    hover:text-ivory
-                                `
-                        }
-                    `}
-                                    >
-                                        {/* Indicador lateral */}
-
-                                        <span
-                                            className={`
-                            absolute
-                            left-0
-                            top-1/2
-
-                            h-5
-                            w-px
-
-                            -translate-y-1/2
-
-                            bg-bronze
-
-                            transition-all
-                            duration-300
-
-                            ${experienceMode === "reduced" ? "opacity-100" : "opacity-0 group-hover:opacity-50"}
-                        `}
-                                        />
-
-                                        <div
-                                            className="
-                            flex
-                            flex-col
-                            gap-1
-                        "
-                                        >
-                                            <span
-                                                className="
-                                font-space
-                                text-[9px]
-                                uppercase
-                                tracking-[0.14em]
-                            "
-                                            >
-                                                Reduced
-                                            </span>
-
-                                            <span
-                                                 className={`
-                                                                                                                font-space
-                                text-[9px]
-                                tracking-wide
-                                group-hover:text-warm-bronze
-                                group-hover:opacity-100
-                                ${experienceMode === "reduced" ? "text-warm-bronze" : "text-steel"}
-                                                    `}
-                                            >
-                                                Lightweight mode
-                                            </span>
-                                        </div>
-
-                                        {/* Status */}
-
-                                        <span
-                                            className={`
-                            flex
-                            h-4
-                            w-4
-                            items-center
-                            justify-center
-
-                            rounded-full
-
-                            border
-
-                            transition-all
-                            duration-300
-
-                            ${
-                                experienceMode === "reduced"
-                                    ? `
-                                        border-bronze
-                                        bg-bronze/10
-                                    `
-                                    : `
-                                        border-graphite
-                                        group-hover:border-steel/50
-                                    `
-                            }
-                        `}
-                                        >
-                                            <span
-                                                className={`
-                                h-1.5
-                                w-1.5
-                                rounded-full
-
-                                transition-all
-                                duration-300
-
-                                ${experienceMode === "reduced" ? "scale-100 bg-bronze" : "scale-0 bg-bronze"}
-                            `}
-                                            />
-                                        </span>
-                                    </button>
-                                </div>
-                            </div>
-                        )}
+                        />
                     </div>
                 </div>
 
@@ -1415,6 +1035,174 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                     {/* =================================================
                         EXPERIENCE
                     ================================================== */}
+
+                    <div
+                        ref={experienceMenuRef}
+                        className="
+                            relative
+                            flex
+                            items-center
+                        "
+                    >
+                        {/* =================================================
+                            BOTÃO EXPERIENCE
+                        ================================================== */}
+
+                        <button
+                            type="button"
+                            aria-expanded={experienceMenuOpen}
+                            aria-haspopup="menu"
+                            onClick={() => setExperienceMenuOpen((previous) => !previous)}
+                            className="
+                                group
+                                flex
+                                items-center
+                                gap-1.5
+
+                                font-space
+                                text-[9px]
+                                uppercase
+                                tracking-[0.12em]
+
+                                text-steel
+
+                                transition-colors
+                                duration-300
+
+                                hover:text-bronze
+
+                                lg:text-[10px]
+                            "
+                        >
+                            <span>Experience</span>
+
+                            <ChevronDown
+                                className={`
+                                    h-3
+                                    w-3
+                                    stroke-[1.5]
+
+                                    transition-transform
+                                    duration-300
+
+                                    ${experienceMenuOpen ? "rotate-180" : "rotate-0"}
+                                `}
+                            />
+                        </button>
+
+                        {/* =================================================
+                            MENU
+                        ================================================== */}
+
+                        {experienceMenuOpen && (
+                            <div
+                                role="menu"
+                                className="
+                                    absolute
+                                    right-0
+                                    top-full
+                                    mt-4
+
+                                    min-w-[170px]
+
+                                    overflow-hidden
+
+                                    rounded-lg
+
+                                    border
+                                    border-graphite
+
+                                    bg-carbon
+
+                                    shadow-2xl
+                                "
+                            >
+                                {/* =================================================
+                                    FULL
+                                ================================================== */}
+
+                                <button
+                                    type="button"
+                                    role="menuitem"
+                                    onClick={() => handleExperienceChange("full")}
+                                    className={`
+                                        flex
+                                        w-full
+                                        items-center
+                                        justify-between
+
+                                        px-4
+                                        py-3
+
+                                        font-space
+                                        text-[9px]
+                                        uppercase
+                                        tracking-[0.12em]
+
+                                        transition-colors
+                                        duration-200
+
+                                        ${experienceMode === "full" ? "bg-obsidian text-bronze" : "text-steel hover:bg-obsidian hover:text-ivory"}
+                                    `}
+                                >
+                                    <span>Full</span>
+
+                                    {experienceMode === "full" && (
+                                        <span
+                                            className="
+                                                h-1.5
+                                                w-1.5
+                                                rounded-full
+                                                bg-bronze
+                                            "
+                                        />
+                                    )}
+                                </button>
+
+                                {/* =================================================
+                                    REDUCED
+                                ================================================== */}
+
+                                <button
+                                    type="button"
+                                    role="menuitem"
+                                    onClick={() => handleExperienceChange("reduced")}
+                                    className={`
+                                        flex
+                                        w-full
+                                        items-center
+                                        justify-between
+
+                                        px-4
+                                        py-3
+
+                                        font-space
+                                        text-[9px]
+                                        uppercase
+                                        tracking-[0.12em]
+
+                                        transition-colors
+                                        duration-200
+
+                                        ${experienceMode === "reduced" ? "bg-obsidian text-bronze" : "text-steel hover:bg-obsidian hover:text-ivory"}
+                                    `}
+                                >
+                                    <span>Reduced</span>
+
+                                    {experienceMode === "reduced" && (
+                                        <span
+                                            className="
+                                                h-1.5
+                                                w-1.5
+                                                rounded-full
+                                                bg-bronze
+                                            "
+                                        />
+                                    )}
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </nav>
 
                 {/* =================================================
