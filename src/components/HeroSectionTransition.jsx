@@ -203,8 +203,7 @@ function HeroSectionTransition({ experienceMode = "full" }) {
          */
 
         if (experienceMode === "reduced") {
-            setShowDesktopMenu(true);
-            setDotFieldFrozen(false);
+
 
             menuVisibleRef.current = true;
             dotFieldFrozenRef.current = false;
@@ -627,6 +626,22 @@ function HeroSectionTransition({ experienceMode = "full" }) {
 
             <div ref={heroRef} className={heroWrapperClass}>
                 <Hero dotFieldFrozen={dotFieldFrozen} onNavigate={handleHeroNavigation} experienceMode={experienceMode} />
+                {isFullExperience === false && (
+                    <div
+                        className="
+                             pointer-events-none
+            absolute
+            inset-x-0
+            bottom-0
+            z-20
+            h-40
+            bg-gradient-to-b
+            from-transparent
+            via-obsidian/50
+            to-obsidian
+            "
+                    />
+                )}
             </div>
 
             {/* ==================================================

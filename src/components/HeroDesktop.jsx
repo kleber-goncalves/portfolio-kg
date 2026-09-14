@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import Socials from "../components/Socials";
 import DotField from "../components/DotField";
@@ -8,6 +9,8 @@ import { ArrowDownRight } from "lucide-react";
 
 import "../styles/looptextHero.css";
 import "../styles/heroParallax.css";
+
+gsap.registerPlugin(ScrollTrigger);
 
 function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode = "full" }) {
     // ============================================================
@@ -34,13 +37,31 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
     const isReducedExperience = experienceMode === "reduced";
 
     // ============================================================
+    // DEBUG
+    // ============================================================
+
+    const debugIdRef = useRef(`HERO-${Math.random().toString(36).slice(2, 7)}`);
+
+    const debugId = debugIdRef.current;
+
+    // ============================================================
     // ANIMAÇÃO DE ENTRADA
     // ============================================================
 
     useLayoutEffect(() => {
         const hero = heroRef.current;
 
-        if (!hero) return;
+        if (!hero) {
+            console.log(`%c[HERO DEBUG ${debugId}] ❌ heroRef não existe`, "color:red;font-weight:bold");
+
+            return;
+        }
+
+        console.log(`%c[HERO DEBUG ${debugId}] 🚀 useLayoutEffect ENTRADA iniciou`, "color:#00bcd4;font-weight:bold");
+
+        console.log(`[HERO DEBUG ${debugId}] scrollY no início:`, window.scrollY);
+
+        console.log(`[HERO DEBUG ${debugId}] experienceMode:`, experienceMode);
 
         const ctx = gsap.context(() => {
             const title = heroTitleRef.current;
@@ -52,231 +73,711 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
             const location = locationRef.current;
             const socials = socialsRef.current;
 
-            /*
-            ========================================================
-            ELEMENTOS
-            ========================================================
-            */
-
             const elements = [logo, nav, visual, title, location, text, socials].filter(Boolean);
 
-            if (!elements.length) return;
+            console.log(`[HERO DEBUG ${debugId}] elementos encontrados:`, elements.length);
+
+            if (!elements.length) {
+                console.log(`%c[HERO DEBUG ${debugId}] ❌ Nenhum elemento encontrado`, "color:red;font-weight:bold");
+
+                return;
+            }
+
+            // ========================================================
+            // ESTADO VISÍVEL
+            // ========================================================
+
+            const setVisibleState = () => {
+                console.log(`%c[HERO DEBUG ${debugId}] 👁️ setVisibleState()`, "color:#4caf50;font-weight:bold");
+
+                console.log(`[HERO DEBUG ${debugId}] scrollY ao definir visível:`, window.scrollY);
+
+                gsap.set(elements, {
+                    opacity: 1,
+                    x: 0,
+                    y: 0,
+                    scale: 1,
+                });
+            };
+
+            // ========================================================
+            // INICIALIZAÇÃO DA ENTRADA
+            // ========================================================
+
+            const initializeEntry = () => {
+                const currentScroll = window.scrollY;
+
+                const heroRect = hero.getBoundingClientRect();
+
+                const heroTop = heroRect.top;
+                const heroBottom = heroRect.bottom;
+
+                const heroIsVisible = heroBottom > 0 && heroTop < window.innerHeight;
+
+                console.log(`%c[HERO DEBUG ${debugId}] 📍 initializeEntry()`, "color:#ff9800;font-weight:bold");
+
+                console.log(`[HERO DEBUG ${debugId}] scrollY:`, currentScroll);
+
+                console.log(`[HERO DEBUG ${debugId}] hero.top:`, heroTop);
+
+                console.log(`[HERO DEBUG ${debugId}] hero.bottom:`, heroBottom);
+
+                console.log(`[HERO DEBUG ${debugId}] hero.height:`, heroRect.height);
+
+                console.log(`[HERO DEBUG ${debugId}] viewport.height:`, window.innerHeight);
+
+                console.log(`[HERO DEBUG ${debugId}] heroIsVisible:`, heroIsVisible);
+
+                // ====================================================
+                // SE O SCROLL FOI RESTAURADO
+                // ====================================================
+
+                if (currentScroll > 50) {
+                    console.log(`%c[HERO DEBUG ${debugId}] 🟡 NÃO executar entrada`, "color:#ffc107;font-weight:bold");
+
+                    console.log(`[HERO DEBUG ${debugId}] Motivo: scrollY (${currentScroll}) > 50`);
+
+                    setVisibleState();
+
+                    return null;
+                }
+
+                // ====================================================
+                // SE O HERO NÃO ESTÁ NO TOPO
+                // ====================================================
+
+                if (heroTop < -50) {
+                    console.log(`%c[HERO DEBUG ${debugId}] 🟡 NÃO executar entrada`, "color:#ffc107;font-weight:bold");
+
+                    console.log(`[HERO DEBUG ${debugId}] Motivo: hero.top (${heroTop}) < -50`);
+
+                    setVisibleState();
+
+                    return null;
+                }
+
+                // ====================================================
+                // ENTRADA
+                // ====================================================
+
+                console.log(`%c[HERO DEBUG ${debugId}] 🟢 EXECUTANDO ANIMAÇÃO DE ENTRADA`, "color:#00e676;font-weight:bold");
+
+                // ====================================================
+                // ESTADO INICIAL
+                // ====================================================
+
+                console.log(`[HERO DEBUG ${debugId}] Aplicando estados iniciais`);
+
+                gsap.set(logo, {
+                    opacity: 0,
+                    y: -18,
+                });
+
+                gsap.set(nav, {
+                    opacity: 0,
+                    y: -18,
+                });
+
+                gsap.set(visual, {
+                    opacity: 0,
+                    y: 45,
+                    scale: 0.985,
+                });
+
+                gsap.set(title, {
+                    opacity: 0,
+                    y: 35,
+                });
+
+                gsap.set(location, {
+                    opacity: 0,
+                    x: -30,
+                });
+
+                gsap.set(text, {
+                    opacity: 0,
+                    y: 35,
+                });
+
+                gsap.set(socials, {
+                    opacity: 0,
+                    y: 20,
+                });
+
+                // ====================================================
+                // TIMELINE DE ENTRADA
+                // ====================================================
+
+                const timeline = gsap.timeline({
+                    defaults: {
+                        ease: "power3.out",
+                    },
+
+                    onStart: () => {
+                        console.log(`%c[HERO DEBUG ${debugId}] ▶️ TIMELINE DE ENTRADA START`, "color:#2196f3;font-weight:bold");
+                    },
+
+                    onComplete: () => {
+                        console.log(`%c[HERO DEBUG ${debugId}] ✅ TIMELINE DE ENTRADA COMPLETE`, "color:#2196f3;font-weight:bold");
+
+                        console.log(`[HERO DEBUG ${debugId}] scrollY no final da entrada:`, window.scrollY);
+                    },
+                });
+
+                // ====================================================
+                // LOGO
+                // ====================================================
+
+                if (logo) {
+                    timeline.to(
+                        logo,
+                        {
+                            opacity: 1,
+                            y: 0,
+                            duration: 0.75,
+                        },
+                        0.05,
+                    );
+                }
+
+                // ====================================================
+                // NAVBAR
+                // ====================================================
+
+                if (nav) {
+                    timeline.to(
+                        nav,
+                        {
+                            opacity: 1,
+                            y: 0,
+                            duration: 0.8,
+                        },
+                        0.12,
+                    );
+                }
+
+                // ====================================================
+                // FOTO
+                // ====================================================
+
+                if (visual) {
+                    timeline.to(
+                        visual,
+                        {
+                            opacity: 1,
+                            y: 0,
+                            scale: 1,
+                            duration: 1.2,
+                            ease: "power3.out",
+                        },
+                        0.15,
+                    );
+                }
+
+                // ====================================================
+                // MARQUEE
+                // ====================================================
+
+                if (title) {
+                    timeline.to(
+                        title,
+                        {
+                            opacity: 1,
+                            y: 0,
+                            duration: 0.95,
+                            ease: "power3.out",
+                        },
+                        0.35,
+                    );
+                }
+
+                // ====================================================
+                // LOCALIZAÇÃO
+                // ====================================================
+
+                if (location) {
+                    timeline.to(
+                        location,
+                        {
+                            opacity: 1,
+                            x: 0,
+                            duration: 0.85,
+                            ease: "power3.out",
+                        },
+                        0.42,
+                    );
+                }
+
+                // ====================================================
+                // SOFTWARE DEVELOPER
+                // ====================================================
+
+                if (text) {
+                    timeline.to(
+                        text,
+                        {
+                            opacity: 1,
+                            y: 0,
+                            duration: 0.95,
+                            ease: "power3.out",
+                        },
+                        0.5,
+                    );
+                }
+
+                // ====================================================
+                // SOCIALS
+                // ====================================================
+
+                if (socials) {
+                    timeline.to(
+                        socials,
+                        {
+                            opacity: 1,
+                            y: 0,
+                            duration: 0.75,
+                        },
+                        0.68,
+                    );
+                }
+
+                console.log(`[HERO DEBUG ${debugId}] duração total da entrada:`, timeline.duration());
+
+                return () => {
+                    console.log(`%c[HERO DEBUG ${debugId}] 🧹 cleanup timeline ENTRADA`, "color:#9c27b0;font-weight:bold");
+
+                    timeline.kill();
+                };
+            };
+
+            // ========================================================
+            // OBSERVAÇÃO DO SCROLL
+            // ========================================================
+
+            let scrollLogCount = 0;
+
+            const handleScrollDebug = () => {
+                scrollLogCount++;
+
+                if (scrollLogCount <= 15) {
+                    console.log(`[HERO DEBUG ${debugId}] 📜 scroll event #${scrollLogCount} → scrollY:`, window.scrollY);
+                }
+            };
+
+            window.addEventListener("scroll", handleScrollDebug, {
+                passive: true,
+            });
+
+            // ========================================================
+            // RESTAURAÇÃO DO SCROLL
+            // ========================================================
+
+            console.log(`%c[HERO DEBUG ${debugId}] ⏳ aguardando restauração do scroll...`, "color:#795548;font-weight:bold");
 
             /*
-            ========================================================
-            ESTADO INICIAL
-            ========================================================
+            ============================================================
+            IMPORTANTE
 
-            Tudo começa ligeiramente abaixo da posição final.
+            Não confiamos mais em apenas 2 RAF.
 
-            O movimento é pequeno propositalmente.
-            A ideia é parecer uma interface refinada entrando,
-            e não uma animação chamativa.
+            O navegador pode restaurar o scroll depois disso.
+
+            Vamos observar alguns frames e procurar uma posição
+            estável antes de decidir se a entrada deve acontecer.
+            ============================================================
             */
 
-            gsap.set(logo, {
-                opacity: 0,
-                y: -18,
+            let frameId = null;
+            let animationCleanup = null;
+
+            let frameCount = 0;
+
+            const MAX_FRAMES = 20;
+
+            let previousScroll = null;
+            let stableFrames = 0;
+
+            const waitForScrollRestoration = () => {
+                frameCount++;
+
+                const currentScroll = window.scrollY;
+
+                const heroRect = hero.getBoundingClientRect();
+
+                console.log(`[HERO DEBUG ${debugId}] Frame ${frameCount} → scrollY:`, currentScroll, "| hero.top:", heroRect.top, "| hero.bottom:", heroRect.bottom);
+
+                // ====================================================
+                // DETECTA POSIÇÃO ESTÁVEL
+                // ====================================================
+
+                if (previousScroll !== null && Math.abs(currentScroll - previousScroll) < 1) {
+                    stableFrames++;
+                } else {
+                    stableFrames = 0;
+                }
+
+                previousScroll = currentScroll;
+
+                /*
+                 * Precisamos de alguns frames consecutivos
+                 * sem mudança significativa.
+                 */
+
+                if (stableFrames >= 3) {
+                    console.log(`%c[HERO DEBUG ${debugId}] 🟢 posição do scroll estabilizou`, "color:#00e676;font-weight:bold");
+
+                    console.log(`[HERO DEBUG ${debugId}] scroll final detectado:`, currentScroll);
+
+                    animationCleanup = initializeEntry();
+
+                    return;
+                }
+
+                // ====================================================
+                // LIMITE DE SEGURANÇA
+                // ====================================================
+
+                if (frameCount >= MAX_FRAMES) {
+                    console.log(`%c[HERO DEBUG ${debugId}] ⚠️ limite de frames atingido`, "color:#ff9800;font-weight:bold");
+
+                    console.log(`[HERO DEBUG ${debugId}] scrollY no limite:`, currentScroll);
+
+                    animationCleanup = initializeEntry();
+
+                    return;
+                }
+
+                // ====================================================
+                // PRÓXIMO FRAME
+                // ====================================================
+
+                frameId = requestAnimationFrame(waitForScrollRestoration);
+            };
+
+            // ========================================================
+            // PRIMEIRO FRAME
+            // ========================================================
+
+            frameId = requestAnimationFrame(waitForScrollRestoration);
+
+            // ========================================================
+            // CLEANUP
+            // ========================================================
+
+            return () => {
+                console.log(`%c[HERO DEBUG ${debugId}] 🧹 cleanup useLayoutEffect ENTRADA`, "color:#9c27b0;font-weight:bold");
+
+                if (frameId !== null) {
+                    cancelAnimationFrame(frameId);
+                }
+
+                window.removeEventListener("scroll", handleScrollDebug);
+
+                if (animationCleanup) {
+                    animationCleanup();
+                }
+            };
+        }, hero);
+
+        return () => {
+            ctx.revert();
+        };
+    }, []);
+
+    
+
+    // ============================================================
+    // ANIMAÇÃO DE SAÍDA — SOMENTE REDUCED
+    // ============================================================
+
+    useLayoutEffect(() => {
+        console.log(`%c[HERO DEBUG ${debugId}] 🚀 useLayoutEffect SAÍDA iniciou`, "color:#e91e63;font-weight:bold");
+
+        console.log(`[HERO DEBUG ${debugId}] saída — experienceMode:`, experienceMode);
+
+        console.log(`[HERO DEBUG ${debugId}] saída — isReducedExperience:`, isReducedExperience);
+
+        console.log(`[HERO DEBUG ${debugId}] saída — scrollY inicial:`, window.scrollY);
+
+        // ========================================================
+        // FULL
+        // ========================================================
+
+        if (!isReducedExperience) {
+            console.log(`%c[HERO DEBUG ${debugId}] ⏭️ SAÍDA ignorada porque modo = FULL`, "color:#607d8b;font-weight:bold");
+
+            return;
+        }
+
+        const hero = heroRef.current;
+
+        if (!hero) {
+            console.log(`%c[HERO DEBUG ${debugId}] ❌ SAÍDA: heroRef não existe`, "color:red;font-weight:bold");
+
+            return;
+        }
+
+        const ctx = gsap.context(() => {
+            const title = heroTitleRef.current;
+            const text = heroTextRef.current;
+            const visual = heroVisualRef.current;
+
+            const logo = logoRef.current;
+            const nav = navRef.current;
+            const location = locationRef.current;
+            const socials = socialsRef.current;
+
+            // ========================================================
+            // TIMELINE DE SAÍDA
+            // ========================================================
+
+            console.log(`%c[HERO DEBUG ${debugId}] 🔴 criando TIMELINE DE SAÍDA`, "color:#f44336;font-weight:bold");
+
+            const exitTimeline = gsap.timeline({
+                paused: true,
             });
 
-            gsap.set(nav, {
-                opacity: 0,
-                y: -18,
-            });
-
-            gsap.set(visual, {
-                opacity: 0,
-                y: 45,
-                scale: 0.985,
-            });
-
-            gsap.set(title, {
-                opacity: 0,
-                y: 35,
-            });
-
-            gsap.set(location, {
-                opacity: 0,
-                x: -30,
-            });
-
-            gsap.set(text, {
-                opacity: 0,
-                y: 35,
-            });
-
-            gsap.set(socials, {
-                opacity: 0,
-                y: 20,
-            });
-
-            /*
-            ========================================================
-            TIMELINE
-            ========================================================
-
-            A animação é executada apenas uma vez.
-
-            Não usa ScrollTrigger.
-            Não usa loop.
-            Não usa mouse tracking.
-
-            Portanto continua leve mesmo no modo reduzido.
-            */
-
-            const timeline = gsap.timeline({
-                defaults: {
-                    ease: "power3.out",
-                },
-            });
-
-            /*
-            ========================================================
-            LOGO
-            ========================================================
-            */
+            // ========================================================
+            // LOGO
+            // ========================================================
 
             if (logo) {
-                timeline.to(
+                exitTimeline.to(
                     logo,
                     {
-                        opacity: 1,
-                        y: 0,
-
-                        duration: 0.75,
+                        opacity: 0,
+                        y: -35,
+                        duration: 0.55,
+                        ease: "power2.inOut",
                     },
-                    0.05,
+                    0,
                 );
             }
 
-            /*
-            ========================================================
-            NAVBAR
-            ========================================================
-            */
+            // ========================================================
+            // NAVBAR
+            // ========================================================
 
             if (nav) {
-                timeline.to(
+                exitTimeline.to(
                     nav,
                     {
-                        opacity: 1,
-                        y: 0,
+                        opacity: 0,
+                        y: -30,
+                        duration: 0.6,
+                        ease: "power2.inOut",
+                    },
+                    0.04,
+                );
+            }
 
-                        duration: 0.8,
+            // ========================================================
+            // LOCALIZAÇÃO
+            // ========================================================
+
+            if (location) {
+                exitTimeline.to(
+                    location,
+                    {
+                        opacity: 0,
+                        x: -55,
+                        y: -20,
+                        duration: 0.65,
+                        ease: "power2.inOut",
+                    },
+                    0.08,
+                );
+            }
+
+            // ========================================================
+            // MARQUEE
+            // ========================================================
+
+            if (title) {
+                exitTimeline.to(
+                    title,
+                    {
+                        opacity: 0,
+                        y: -75,
+                        duration: 0.58,
+                        ease: "power2.out",
                     },
                     0.12,
                 );
             }
 
-            /*
-            ========================================================
-            FOTO CENTRAL
-            ========================================================
-            */
-
-            if (visual) {
-                timeline.to(
-                    visual,
-                    {
-                        opacity: 1,
-                        y: 0,
-                        scale: 1,
-
-                        duration: 1.2,
-
-                        ease: "power3.out",
-                    },
-                    0.15,
-                );
-            }
-
-            /*
-            ========================================================
-            MARQUEE
-            ========================================================
-            */
-
-            if (title) {
-                timeline.to(
-                    title,
-                    {
-                        opacity: 1,
-                        y: 0,
-
-                        duration: 0.95,
-
-                        ease: "power3.out",
-                    },
-                    0.35,
-                );
-            }
-
-            /*
-            ========================================================
-            LOCALIZAÇÃO
-            ========================================================
-            */
-
-            if (location) {
-                timeline.to(
-                    location,
-                    {
-                        opacity: 1,
-                        x: 0,
-
-                        duration: 0.85,
-
-                        ease: "power3.out",
-                    },
-                    0.42,
-                );
-            }
-
-            /*
-            ========================================================
-            BLOCO SOFTWARE DEVELOPER
-            ========================================================
-            */
+            // ========================================================
+            // SOFTWARE DEVELOPER
+            // ========================================================
 
             if (text) {
-                timeline.to(
+                exitTimeline.to(
                     text,
                     {
-                        opacity: 1,
-                        y: 0,
-
-                        duration: 0.95,
-
-                        ease: "power3.out",
+                        opacity: 0,
+                        y: -45,
+                        duration: 0.72,
+                        ease: "power2.inOut",
                     },
-                    0.5,
+                    0.16,
                 );
             }
 
-            /*
-            ========================================================
-            SOCIALS
-            ========================================================
-            */
+            // ========================================================
+            // FOTO CENTRAL
+            // ========================================================
+
+            if (visual) {
+                exitTimeline.to(
+                    visual,
+                    {
+                        opacity: 0,
+                        y: -35,
+                        scale: 0.96,
+                        duration: 0.9,
+                        ease: "power2.inOut",
+                    },
+                    0.18,
+                );
+            }
+
+            // ========================================================
+            // SOCIALS
+            // ========================================================
 
             if (socials) {
-                timeline.to(
+                exitTimeline.to(
                     socials,
                     {
-                        opacity: 1,
-                        y: 0,
-
-                        duration: 0.75,
-
-                        ease: "power3.out",
+                        opacity: 0,
+                        y: 30,
+                        duration: 0.65,
+                        ease: "power2.inOut",
                     },
-                    0.68,
+                    0.28,
                 );
             }
+
+            console.log(`[HERO DEBUG ${debugId}] duração total da saída:`, exitTimeline.duration());
+
+            // ========================================================
+            // SCROLLTRIGGER
+            // ========================================================
+
+            const scrollTrigger = ScrollTrigger.create({
+                trigger: hero,
+
+                start: "bottom bottom",
+                end: "bottom top",
+
+                scrub: 1,
+
+                invalidateOnRefresh: true,
+
+                animation: exitTimeline,
+
+                markers: false,
+
+                onEnter: (self) => {
+                    console.log(`%c[HERO DEBUG ${debugId}] 🔴 SAÍDA onEnter`, "color:#f44336;font-weight:bold");
+
+                    console.log(`[HERO DEBUG ${debugId}] progress:`, self.progress);
+
+                    console.log(`[HERO DEBUG ${debugId}] scrollY:`, window.scrollY);
+                },
+
+                onUpdate: (self) => {
+                    const roundedProgress = Math.round(self.progress * 20) / 20;
+
+                    if (scrollTrigger._lastDebugProgress !== roundedProgress) {
+                        scrollTrigger._lastDebugProgress = roundedProgress;
+
+                        console.log(`%c[HERO DEBUG ${debugId}] 🔄 SAÍDA onUpdate`, "color:#ff5722;font-weight:bold");
+
+                        console.log(`[HERO DEBUG ${debugId}] progress:`, roundedProgress);
+
+                        console.log(`[HERO DEBUG ${debugId}] scrollY:`, window.scrollY);
+
+                        console.log(`[HERO DEBUG ${debugId}] start:`, self.start);
+
+                        console.log(`[HERO DEBUG ${debugId}] end:`, self.end);
+                    }
+                },
+
+                onLeave: (self) => {
+                    console.log(`%c[HERO DEBUG ${debugId}] 🔴 SAÍDA onLeave`, "color:#f44336;font-weight:bold");
+
+                    console.log(`[HERO DEBUG ${debugId}] progress:`, self.progress);
+
+                    console.log(`[HERO DEBUG ${debugId}] scrollY:`, window.scrollY);
+                },
+
+                onEnterBack: (self) => {
+                    console.log(`%c[HERO DEBUG ${debugId}] 🔵 SAÍDA onEnterBack`, "color:#2196f3;font-weight:bold");
+
+                    console.log(`[HERO DEBUG ${debugId}] progress:`, self.progress);
+
+                    console.log(`[HERO DEBUG ${debugId}] scrollY:`, window.scrollY);
+                },
+
+                onLeaveBack: (self) => {
+                    console.log(`%c[HERO DEBUG ${debugId}] 🟢 SAÍDA onLeaveBack`, "color:#4caf50;font-weight:bold");
+
+                    console.log(`[HERO DEBUG ${debugId}] progress:`, self.progress);
+
+                    console.log(`[HERO DEBUG ${debugId}] scrollY:`, window.scrollY);
+                },
+            });
+
+            console.log(`%c[HERO DEBUG ${debugId}] ✅ ScrollTrigger de SAÍDA criado`, "color:#8bc34a;font-weight:bold");
+
+            console.log(`[HERO DEBUG ${debugId}] trigger:`, scrollTrigger.trigger);
+
+            console.log(`[HERO DEBUG ${debugId}] start:`, scrollTrigger.start);
+
+            console.log(`[HERO DEBUG ${debugId}] end:`, scrollTrigger.end);
+
+            console.log(`[HERO DEBUG ${debugId}] progress inicial:`, scrollTrigger.progress);
+
+            // ========================================================
+            // PRIMEIRO REFRESH
+            // ========================================================
+
+            requestAnimationFrame(() => {
+                console.log(`%c[HERO DEBUG ${debugId}] 🔄 ScrollTrigger.refresh()`, "color:#00bcd4;font-weight:bold");
+
+                console.log(`[HERO DEBUG ${debugId}] scrollY antes do refresh:`, window.scrollY);
+
+                ScrollTrigger.refresh();
+
+                console.log(`[HERO DEBUG ${debugId}] scrollY depois do refresh:`, window.scrollY);
+
+                console.log(`[HERO DEBUG ${debugId}] progress depois do refresh:`, scrollTrigger.progress);
+
+                console.log(`[HERO DEBUG ${debugId}] start depois do refresh:`, scrollTrigger.start);
+
+                console.log(`[HERO DEBUG ${debugId}] end depois do refresh:`, scrollTrigger.end);
+            });
+
+            // ========================================================
+            // CLEANUP
+            // ========================================================
+
+            return () => {
+                console.log(`%c[HERO DEBUG ${debugId}] 🧹 cleanup SAÍDA`, "color:#9c27b0;font-weight:bold");
+
+                console.log(`[HERO DEBUG ${debugId}] progress no cleanup:`, scrollTrigger.progress);
+
+                scrollTrigger.kill();
+
+                exitTimeline.kill();
+            };
         }, hero);
 
-        return () => ctx.revert();
-    }, []);
+        return () => {
+            ctx.revert();
+        };
+    }, [isReducedExperience]);
 
     // ============================================================
     // RENDER
@@ -293,7 +794,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                 w-full
                 overflow-hidden
 
-                ${isReducedExperience ? "bg-[#0D0B09]" : ""}
+                ${isReducedExperience ? "bg-[#0d0d0d]" : ""}
             `}
         >
             {/* =====================================================
@@ -371,8 +872,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                 </div>
 
                 {/* =================================================
-                    NAVBAR NORMAL
-                    SOMENTE NO HERO
+                    NAVBAR
                 ================================================== */}
 
                 <nav
