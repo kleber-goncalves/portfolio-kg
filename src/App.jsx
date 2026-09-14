@@ -46,7 +46,7 @@ function App() {
 
                     <Diferenciais experienceMode={experienceMode} />
 
-                    <Formacao />
+                    <Formacao experienceMode={experienceMode} />
 
                     <Footer />
                 </div>
