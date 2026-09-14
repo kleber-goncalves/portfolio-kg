@@ -7,11 +7,9 @@ import Hero from "../layout/HeroTeste2";
 import Seclogs from "../layout/Logo2";
 import MenuDesktop from "../components/MenuDesktop";
 
-import { getExperienceMode } from "../utils/experienceMode";
-
 gsap.registerPlugin(ScrollTrigger);
 
-function HeroSectionTransition() {
+function HeroSectionTransition({ experienceMode = "full" }) {
     const sectionRef = useRef(null);
     const heroRef = useRef(null);
     const seclogsRef = useRef(null);
@@ -27,13 +25,11 @@ function HeroSectionTransition() {
     // ESTADOS
     // ============================================================
 
-    const [experienceMode] = useState(() => getExperienceMode() || "full");
-
     /*
-     * No modo FULL:
+     * No FULL:
      * o menu começa escondido e aparece durante a transição.
      *
-     * No modo REDUCED:
+     * No REDUCED:
      * o menu fica disponível desde o início.
      */
     const [showDesktopMenu, setShowDesktopMenu] = useState(() => experienceMode === "reduced");
@@ -44,6 +40,10 @@ function HeroSectionTransition() {
     // REFS DE CONTROLE
     // ============================================================
 
+    /*
+     * Esses refs evitam chamar setState repetidamente
+     * durante o onUpdate do ScrollTrigger.
+     */
     const menuVisibleRef = useRef(experienceMode === "reduced");
 
     const dotFieldFrozenRef = useRef(false);
@@ -124,6 +124,13 @@ function HeroSectionTransition() {
                     return;
                 }
 
+                /*
+                 * No Full, o Stack faz parte da transição
+                 * pinada do Hero.
+                 *
+                 * Por isso navegamos até o final
+                 * do ScrollTrigger da transição.
+                 */
                 window.scrollTo({
                     top: heroTransition.end,
                     behavior: "smooth",
@@ -136,6 +143,11 @@ function HeroSectionTransition() {
             // EXPERIÊNCIA REDUZIDA
             // ----------------------------------------------------
 
+            /*
+             * No Reduced não existe a transição pinada.
+             *
+             * Hero e Stack estão no fluxo normal.
+             */
             const section = document.querySelector("#stack");
 
             if (section) {
@@ -174,26 +186,28 @@ function HeroSectionTransition() {
         // ========================================================
         // EXPERIÊNCIA REDUZIDA
         // ========================================================
-        //
-        // Não criamos:
-        //
-        // - ScrollTrigger
-        // - pin
-        // - parallax
-        // - animação do Stack
-        // - redução do Hero
-        // - scale
-        // - rotação
-        // - blur progressivo
-        //
-        // Hero e Stack ficam no fluxo normal.
-        //
-        // O MENU CONTINUA VISÍVEL.
-        // ========================================================
+
+        /*
+         * No Reduced NÃO criamos:
+         *
+         * - ScrollTrigger da transição
+         * - pin
+         * - parallax
+         * - Stack subindo
+         * - redução do Hero
+         * - scale
+         * - rotação
+         * - blur progressivo
+         *
+         * Hero e Stack permanecem no fluxo normal.
+         */
 
         if (experienceMode === "reduced") {
             setShowDesktopMenu(true);
             setDotFieldFrozen(false);
+
+            menuVisibleRef.current = true;
+            dotFieldFrozenRef.current = false;
 
             return;
         }
@@ -209,6 +223,10 @@ function HeroSectionTransition() {
             if (!hero || !seclogs) return;
 
             const mm = gsap.matchMedia();
+
+            // ====================================================
+            // DESKTOP
+            // ====================================================
 
             mm.add("(min-width: 768px)", () => {
                 // =================================================
@@ -231,14 +249,23 @@ function HeroSectionTransition() {
                 // ESTADOS INICIAIS
                 // =================================================
 
+                /*
+                 * Stack começa abaixo.
+                 */
                 gsap.set(seclogs, {
                     yPercent: 100,
                 });
 
+                /*
+                 * Hero começa totalmente visível.
+                 */
                 gsap.set(hero, {
                     opacity: 1,
                 });
 
+                /*
+                 * Seta começa na posição original.
+                 */
                 if (heroArrow) {
                     gsap.set(heroArrow, {
                         rotation: 0,
@@ -246,12 +273,18 @@ function HeroSectionTransition() {
                     });
                 }
 
+                /*
+                 * Blur começa invisível.
+                 */
                 if (globalBlur) {
                     gsap.set(globalBlur, {
                         opacity: 0,
                     });
                 }
 
+                /*
+                 * DotField começa visível.
+                 */
                 if (heroDotField) {
                     gsap.set(heroDotField, {
                         opacity: 1,
@@ -287,12 +320,18 @@ function HeroSectionTransition() {
                         // =========================================
 
                         onUpdate: () => {
-                            if (!hero || !seclogs) return;
+                            if (!hero || !seclogs) {
+                                return;
+                            }
 
                             const heroRect = hero.getBoundingClientRect();
 
                             const seclogsRect = seclogs.getBoundingClientRect();
 
+                            /*
+                             * Mede quanto o Stack já cobriu
+                             * do Hero.
+                             */
                             const coveredAmount = Math.max(0, heroRect.bottom - seclogsRect.top);
 
                             // =====================================
@@ -301,6 +340,10 @@ function HeroSectionTransition() {
 
                             const shouldShowMenu = coveredAmount >= MENU_APPEAR_PX;
 
+                            /*
+                             * Só atualiza o React quando
+                             * o valor realmente mudou.
+                             */
                             if (menuVisibleRef.current !== shouldShowMenu) {
                                 menuVisibleRef.current = shouldShowMenu;
 
@@ -313,6 +356,10 @@ function HeroSectionTransition() {
 
                             const shouldFreezeDotField = coveredAmount >= DOTFIELD_FREEZE_PX;
 
+                            /*
+                             * Só atualiza o React quando
+                             * o valor realmente mudou.
+                             */
                             if (dotFieldFrozenRef.current !== shouldFreezeDotField) {
                                 dotFieldFrozenRef.current = shouldFreezeDotField;
 
@@ -442,7 +489,7 @@ function HeroSectionTransition() {
                 );
 
                 // =================================================
-                // CLEANUP
+                // CLEANUP DA TIMELINE
                 // =================================================
 
                 return () => {
@@ -450,10 +497,18 @@ function HeroSectionTransition() {
                 };
             });
 
+            // ====================================================
+            // CLEANUP MATCHMEDIA
+            // ====================================================
+
             return () => {
                 mm.revert();
             };
         }, sectionRef);
+
+        // ========================================================
+        // CLEANUP GSAP CONTEXT
+        // ========================================================
 
         return () => {
             ctx.revert();
@@ -467,58 +522,77 @@ function HeroSectionTransition() {
     }, [experienceMode]);
 
     // ============================================================
-    // CLASSES DEPENDENTES DO MODO
+    // MODO ATUAL
     // ============================================================
-
-    /*
-     * FULL
-     * ----
-     * Hero e Stack ficam sobrepostos para a transição.
-     *
-     * REDUCED
-     * -------
-     * Hero e Stack ficam no fluxo normal.
-     */
 
     const isFullExperience = experienceMode === "full";
 
+    // ============================================================
+    // WRAPPER DO HERO
+    // ============================================================
+
+    /*
+     * FULL:
+     *
+     * Hero fica sobreposto ao Stack.
+     *
+     * REDUCED:
+     *
+     * Hero volta para o fluxo normal.
+     */
+
     const heroWrapperClass = isFullExperience
         ? `
-            relative
-            z-0
-            w-full
+                relative
+                z-0
+                w-full
 
-            md:absolute
-            md:inset-0
-            md:h-full
-        `
+                md:absolute
+                md:inset-0
+                md:h-full
+            `
         : `
-            relative
-            z-0
-            w-full
-        `;
+                relative
+                z-0
+                w-full
+            `;
+
+    // ============================================================
+    // WRAPPER DO STACK
+    // ============================================================
+
+    /*
+     * FULL:
+     *
+     * Stack fica sobreposto e é movimentado
+     * pelo GSAP.
+     *
+     * REDUCED:
+     *
+     * Stack fica no fluxo normal da página.
+     */
 
     const stackWrapperClass = isFullExperience
         ? `
-            relative
-            z-20
-            w-full
+                relative
+                z-20
+                w-full
 
-            bg-obsidian
+                bg-obsidian
 
-            md:absolute
-            md:inset-0
-            md:h-auto
+                md:absolute
+                md:inset-0
+                md:h-auto
 
-            md:shadow-[0_-25px_60px_rgba(0,0,0,0.55)]
-        `
+                md:shadow-[0_-25px_60px_rgba(0,0,0,0.55)]
+            `
         : `
-            relative
-            z-20
-            w-full
+                relative
+                z-20
+                w-full
 
-            bg-obsidian
-        `;
+                bg-obsidian
+            `;
 
     // ============================================================
     // JSX

@@ -44,7 +44,7 @@ function App() {
 
                     <ProjetoT />
 
-                    <Diferenciais />
+                    <Diferenciais experienceMode={experienceMode} />
 
                     <Formacao />
 

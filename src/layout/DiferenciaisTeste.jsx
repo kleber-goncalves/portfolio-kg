@@ -6,7 +6,7 @@ import Card2 from "../components/card2";
 
 gsap.registerPlugin(ScrollTrigger);
 
-function Diferenciais() {
+function Diferenciais({ experienceMode = "full" }) {
     const sectionRef = useRef(null);
 
     const titleRef = useRef(null);
@@ -59,7 +59,6 @@ function Diferenciais() {
             const line = lineRef.current;
             const introDesk = introDeskRef.current;
             const introMob = introMobRef.current;
-            
 
             gsap.set(title, {
                 opacity: 0,
@@ -74,9 +73,9 @@ function Diferenciais() {
             gsap.set(introDesk, {
                 opacity: 0,
             });
+
             gsap.set(introMob, {
                 opacity: 0,
-                
             });
 
             const headerTimeline = gsap.timeline({
@@ -89,7 +88,10 @@ function Diferenciais() {
                 },
             });
 
+            // ====================================================
             // TÍTULO
+            // ====================================================
+
             headerTimeline.to(title, {
                 opacity: 1,
                 x: 0,
@@ -97,7 +99,10 @@ function Diferenciais() {
                 ease: "none",
             });
 
+            // ====================================================
             // LINHA
+            // ====================================================
+
             headerTimeline.to(
                 line,
                 {
@@ -108,17 +113,20 @@ function Diferenciais() {
                 "<",
             );
 
-            // TEXTO
-            headerTimeline.to(
-                introDesk,
-                {
-                    opacity: 1,
-                   
-                    duration: 1.8,
-                    ease: "none",
-                },
-                
-            );
+            // ====================================================
+            // TEXTO DESKTOP
+            // ====================================================
+
+            headerTimeline.to(introDesk, {
+                opacity: 1,
+                duration: 1.8,
+                ease: "none",
+            });
+
+            // ====================================================
+            // TEXTO MOBILE
+            // ====================================================
+
             headerTimeline.to(
                 introMob,
                 {
@@ -159,11 +167,9 @@ function Diferenciais() {
                 });
             });
 
-            /*
-            ============================================================
-            FOOTER
-            ============================================================
-            */
+            // ====================================================
+            // FOOTER
+            // ====================================================
 
             const footer = footerRef.current;
 
@@ -261,7 +267,9 @@ function Diferenciais() {
                         "
                     />
 
-                    {/* DESKTOP */}
+                    {/* =================================================
+                        DESKTOP
+                    ================================================= */}
 
                     <p
                         ref={introDeskRef}
@@ -330,7 +338,7 @@ function Diferenciais() {
                             md:max-w-[90%]
                         "
                     >
-                        <Card2 number={diferenciais[0].numero} title={diferenciais[0].titulo} text={diferenciais[0].texto} variant="default" className="w-full" />
+                        <Card2 number={diferenciais[0].numero} title={diferenciais[0].titulo} text={diferenciais[0].texto} variant="default" experienceMode={experienceMode} className="w-full" />
                     </div>
 
                     {/* =================================================
@@ -347,7 +355,7 @@ function Diferenciais() {
                             md:max-w-[90%]
                         "
                     >
-                        <Card2 number={diferenciais[1].numero} title={diferenciais[1].titulo} text={diferenciais[1].texto} variant="default" className="w-full" />
+                        <Card2 number={diferenciais[1].numero} title={diferenciais[1].titulo} text={diferenciais[1].texto} variant="default" experienceMode={experienceMode} className="w-full" />
                     </div>
 
                     {/* =================================================
@@ -363,7 +371,7 @@ function Diferenciais() {
                             md:max-w-[90%]
                         "
                     >
-                        <Card2 number={diferenciais[2].numero} title={diferenciais[2].titulo} text={diferenciais[2].texto} variant="default" className="w-full" />
+                        <Card2 number={diferenciais[2].numero} title={diferenciais[2].titulo} text={diferenciais[2].texto} variant="default" experienceMode={experienceMode} className="w-full" />
                     </div>
 
                     {/* =================================================
@@ -380,7 +388,7 @@ function Diferenciais() {
                             md:max-w-[90%]
                         "
                     >
-                        <Card2 number={diferenciais[3].numero} title={diferenciais[3].titulo} text={diferenciais[3].texto} variant="default" className="w-full" />
+                        <Card2 number={diferenciais[3].numero} title={diferenciais[3].titulo} text={diferenciais[3].texto} variant="default" experienceMode={experienceMode} className="w-full" />
                     </div>
                 </div>
 
