@@ -39,7 +39,7 @@ function Hero({ dotFieldFrozen = false, onNavigate, experienceMode = "full" }) {
                 MOBILE
             ================================================== */}
 
-            <div className="block md:hidden">
+            <div className="block md:hidden p-5">
                 <HeroMobile items={menuItems} />
             </div>
 
