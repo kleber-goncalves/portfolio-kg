@@ -1,4 +1,5 @@
-import { useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
+import gsap from "gsap";
 
 import Socials from "../components/Socials";
 import DotField from "../components/DotField";
@@ -9,6 +10,10 @@ import "../styles/looptextHero.css";
 import "../styles/heroParallax.css";
 
 function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode = "full" }) {
+    // ============================================================
+    // REFS
+    // ============================================================
+
     const heroRef = useRef(null);
 
     const heroTitleRef = useRef(null);
@@ -17,11 +22,265 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
 
     const heroDotFieldRef = useRef(null);
 
+    const logoRef = useRef(null);
+    const navRef = useRef(null);
+    const locationRef = useRef(null);
+    const socialsRef = useRef(null);
+
     // ============================================================
     // MODO DE EXPERIÊNCIA
     // ============================================================
 
     const isReducedExperience = experienceMode === "reduced";
+
+    // ============================================================
+    // ANIMAÇÃO DE ENTRADA
+    // ============================================================
+
+    useLayoutEffect(() => {
+        const hero = heroRef.current;
+
+        if (!hero) return;
+
+        const ctx = gsap.context(() => {
+            const title = heroTitleRef.current;
+            const text = heroTextRef.current;
+            const visual = heroVisualRef.current;
+
+            const logo = logoRef.current;
+            const nav = navRef.current;
+            const location = locationRef.current;
+            const socials = socialsRef.current;
+
+            /*
+            ========================================================
+            ELEMENTOS
+            ========================================================
+            */
+
+            const elements = [logo, nav, visual, title, location, text, socials].filter(Boolean);
+
+            if (!elements.length) return;
+
+            /*
+            ========================================================
+            ESTADO INICIAL
+            ========================================================
+
+            Tudo começa ligeiramente abaixo da posição final.
+
+            O movimento é pequeno propositalmente.
+            A ideia é parecer uma interface refinada entrando,
+            e não uma animação chamativa.
+            */
+
+            gsap.set(logo, {
+                opacity: 0,
+                y: -18,
+            });
+
+            gsap.set(nav, {
+                opacity: 0,
+                y: -18,
+            });
+
+            gsap.set(visual, {
+                opacity: 0,
+                y: 45,
+                scale: 0.985,
+            });
+
+            gsap.set(title, {
+                opacity: 0,
+                y: 35,
+            });
+
+            gsap.set(location, {
+                opacity: 0,
+                x: -30,
+            });
+
+            gsap.set(text, {
+                opacity: 0,
+                y: 35,
+            });
+
+            gsap.set(socials, {
+                opacity: 0,
+                y: 20,
+            });
+
+            /*
+            ========================================================
+            TIMELINE
+            ========================================================
+
+            A animação é executada apenas uma vez.
+
+            Não usa ScrollTrigger.
+            Não usa loop.
+            Não usa mouse tracking.
+
+            Portanto continua leve mesmo no modo reduzido.
+            */
+
+            const timeline = gsap.timeline({
+                defaults: {
+                    ease: "power3.out",
+                },
+            });
+
+            /*
+            ========================================================
+            LOGO
+            ========================================================
+            */
+
+            if (logo) {
+                timeline.to(
+                    logo,
+                    {
+                        opacity: 1,
+                        y: 0,
+
+                        duration: 0.75,
+                    },
+                    0.05,
+                );
+            }
+
+            /*
+            ========================================================
+            NAVBAR
+            ========================================================
+            */
+
+            if (nav) {
+                timeline.to(
+                    nav,
+                    {
+                        opacity: 1,
+                        y: 0,
+
+                        duration: 0.8,
+                    },
+                    0.12,
+                );
+            }
+
+            /*
+            ========================================================
+            FOTO CENTRAL
+            ========================================================
+            */
+
+            if (visual) {
+                timeline.to(
+                    visual,
+                    {
+                        opacity: 1,
+                        y: 0,
+                        scale: 1,
+
+                        duration: 1.2,
+
+                        ease: "power3.out",
+                    },
+                    0.15,
+                );
+            }
+
+            /*
+            ========================================================
+            MARQUEE
+            ========================================================
+            */
+
+            if (title) {
+                timeline.to(
+                    title,
+                    {
+                        opacity: 1,
+                        y: 0,
+
+                        duration: 0.95,
+
+                        ease: "power3.out",
+                    },
+                    0.35,
+                );
+            }
+
+            /*
+            ========================================================
+            LOCALIZAÇÃO
+            ========================================================
+            */
+
+            if (location) {
+                timeline.to(
+                    location,
+                    {
+                        opacity: 1,
+                        x: 0,
+
+                        duration: 0.85,
+
+                        ease: "power3.out",
+                    },
+                    0.42,
+                );
+            }
+
+            /*
+            ========================================================
+            BLOCO SOFTWARE DEVELOPER
+            ========================================================
+            */
+
+            if (text) {
+                timeline.to(
+                    text,
+                    {
+                        opacity: 1,
+                        y: 0,
+
+                        duration: 0.95,
+
+                        ease: "power3.out",
+                    },
+                    0.5,
+                );
+            }
+
+            /*
+            ========================================================
+            SOCIALS
+            ========================================================
+            */
+
+            if (socials) {
+                timeline.to(
+                    socials,
+                    {
+                        opacity: 1,
+                        y: 0,
+
+                        duration: 0.75,
+
+                        ease: "power3.out",
+                    },
+                    0.68,
+                );
+            }
+        }, hero);
+
+        return () => ctx.revert();
+    }, []);
+
+    // ============================================================
+    // RENDER
+    // ============================================================
 
     return (
         <section
@@ -30,8 +289,8 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                 hero-desktop
                 relative
                 z-0
-                w-full
                 h-screen
+                w-full
                 overflow-hidden
 
                 ${isReducedExperience ? "bg-[#0D0B09]" : ""}
@@ -80,6 +339,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                 ================================================== */}
 
                 <div
+                    ref={logoRef}
                     className="
                         absolute
                         left-8
@@ -116,6 +376,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                 ================================================== */}
 
                 <nav
+                    ref={navRef}
                     aria-label="Navegação principal"
                     className="
                         absolute
@@ -251,6 +512,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                 ================================================== */}
 
                 <div
+                    ref={locationRef}
                     className="
                         absolute
                         left-0
@@ -431,6 +693,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                 ================================================== */}
 
                 <div
+                    ref={socialsRef}
                     className="
                         absolute
                         bottom-8
