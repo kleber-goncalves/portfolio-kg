@@ -32,7 +32,7 @@ function HeroSectionTransition({ experienceMode = "full" }) {
      * No REDUCED:
      * o menu fica disponível desde o início.
      */
-    const [showDesktopMenu, setShowDesktopMenu] = useState(() => experienceMode === "reduced");
+    const [showDesktopMenu, setShowDesktopMenu] = useState(false);
 
     const [dotFieldFrozen, setDotFieldFrozen] = useState(false);
 
@@ -203,12 +203,49 @@ function HeroSectionTransition({ experienceMode = "full" }) {
          */
 
         if (experienceMode === "reduced") {
+            const hero = heroRef.current;
 
+            if (!hero) return;
 
-            menuVisibleRef.current = true;
-            dotFieldFrozenRef.current = false;
+            const updateReducedMenu = () => {
+                const heroRect = hero.getBoundingClientRect();
 
-            return;
+                /*
+                 * Quando o final do Hero começa a sair
+                 * da viewport, o menu aparece.
+                 *
+                 * Ajuste esse valor conforme o ponto
+                 * visual desejado.
+                 */
+                const shouldShowMenu = heroRect.bottom <= window.innerHeight * 0.85;
+
+                if (menuVisibleRef.current !== shouldShowMenu) {
+                    menuVisibleRef.current = shouldShowMenu;
+
+                    setShowDesktopMenu(shouldShowMenu);
+                }
+            };
+
+            /*
+             * Estado inicial
+             */
+            updateReducedMenu();
+
+            /*
+             * Atualiza enquanto o usuário rola.
+             */
+            window.addEventListener("scroll", updateReducedMenu, { passive: true });
+
+            /*
+             * Atualiza em resize.
+             */
+            window.addEventListener("resize", updateReducedMenu);
+
+            return () => {
+                window.removeEventListener("scroll", updateReducedMenu);
+
+                window.removeEventListener("resize", updateReducedMenu);
+            };
         }
 
         // ========================================================

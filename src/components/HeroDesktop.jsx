@@ -46,6 +46,26 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
 
     const experienceMenuRef = useRef(null);
 
+    const experienceMenuMotionRef = useRef(null);
+    useLayoutEffect(() => {
+
+        gsap.fromTo(
+            experienceMenuMotionRef.current,
+            {
+                opacity: 0,
+                scale: 0.92,
+                y: -8,
+            },
+            {
+                opacity: 1,
+                scale: 1,
+                y: 0,
+                duration: 0.45,
+                ease: "back.out(1.7)",
+            },
+        );
+    }, [experienceMenuOpen]);
+
     // ============================================================
     // DEBUG
     // ============================================================
@@ -981,8 +1001,6 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
 
                             {/* Indicador */}
 
-
-
                             <ChevronDown
                                 className={`
                 h-3
@@ -1023,6 +1041,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
 
                         {experienceMenuOpen && (
                             <div
+                                ref={experienceMenuMotionRef}
                                 role="menu"
                                 className="
                 absolute
@@ -1042,7 +1061,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
 
                 bg-carbon/95
                 backdrop-blur-xl
-
+                
                 shadow-2xl
                 shadow-black/30
             "
@@ -1051,36 +1070,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                 CABEÇALHO
             ================================================== */}
 
-                                <div
-                                    className="
-                    border-b
-                    border-graphite/70
 
-                    px-4
-                    py-3.5
-                "
-                                >
-                                    <div
-                                        className="
-                        flex
-                        items-center
-                        justify-between
-                    "
-                                    >
-                                        <span
-                                            className="
-                            font-space
-                            text-[8px]
-                            uppercase
-                            tracking-[0.18em]
-                            text-steel
-                        "
-                                        >
-                                            Experience
-                                        </span>
-
-                                    </div>
-                                </div>
 
                                 {/* =================================================
                 OPÇÕES
@@ -1156,7 +1146,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                                             <span
                                                 className="
                                 font-space
-                                text-[9px]
+                                text-[10px]
                                 uppercase
                                 tracking-[0.14em]
                             "
@@ -1165,12 +1155,14 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                                             </span>
 
                                             <span
-                                                className="
-                                font-space
-                                text-[8px]
+                                                className={`
+                                                                                                                font-space
+                                text-[9px]
                                 tracking-wide
-                                text-steel/70
-                            "
+                                group-hover:text-warm-bronze
+                                group-hover:opacity-100
+                                ${experienceMode === "full" ? "text-warm-bronze" : "text-steel"}
+                                                    `}
                                             >
                                                 Full experience
                                             </span>
@@ -1301,12 +1293,14 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                                             </span>
 
                                             <span
-                                                className="
-                                font-space
-                                text-[8px]
+                                                 className={`
+                                                                                                                font-space
+                                text-[9px]
                                 tracking-wide
-                                text-steel/70
-                            "
+                                group-hover:text-warm-bronze
+                                group-hover:opacity-100
+                                ${experienceMode === "reduced" ? "text-warm-bronze" : "text-steel"}
+                                                    `}
                                             >
                                                 Lightweight mode
                                             </span>
