@@ -1266,7 +1266,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                                 h-8
                                 w-8
 
-                                stroke-[1]
+                                stroke-[1.8px]
 
                                 text-ivory/80
                             "
