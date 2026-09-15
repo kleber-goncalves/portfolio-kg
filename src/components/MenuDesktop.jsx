@@ -893,9 +893,8 @@ function MenuDesktop({ items = [], showMenu = false }) {
 
                         <div
                             className="
-                                mt-8
-                                border-t
-                                border-graphite
+                                mt-2
+                               
                                 pt-6
                             "
                         >
