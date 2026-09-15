@@ -36,6 +36,51 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
     const locationRef = useRef(null);
     const socialsRef = useRef(null);
 
+    const [activeHref, setActiveHref] = useState(null);
+
+    // ============================================================
+    // ACTIVE NAVIGATION
+    // ============================================================
+
+    useLayoutEffect(() => {
+        const updateActiveSection = () => {
+            const viewportPosition = window.innerHeight * 0.35;
+
+            let currentSection = null;
+
+            items.forEach((item) => {
+                if (!item.href?.startsWith("#")) return;
+
+                const id = item.href.slice(1);
+
+                const section = document.getElementById(id);
+
+                if (!section) return;
+
+                const rect = section.getBoundingClientRect();
+
+                if (rect.top <= viewportPosition && rect.bottom >= viewportPosition) {
+                    currentSection = item.href;
+                }
+            });
+
+            setActiveHref(currentSection);
+        };
+
+        updateActiveSection();
+
+        window.addEventListener("scroll", updateActiveSection, {
+            passive: true,
+        });
+
+        window.addEventListener("resize", updateActiveSection);
+
+        return () => {
+            window.removeEventListener("scroll", updateActiveSection);
+
+            window.removeEventListener("resize", updateActiveSection);
+        };
+    }, [items]);
     // ============================================================
     // MODO DE EXPERIÊNCIA
     // ============================================================
@@ -52,7 +97,6 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
 
     const experienceMenuMotionRef = useRef(null);
     useLayoutEffect(() => {
-
         gsap.fromTo(
             experienceMenuMotionRef.current,
             {
@@ -986,23 +1030,28 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
         lg:gap-7
     "
                 >
-                    {items.map((item) => (
-                        <MagneticLink
-                            key={item.href}
-                            href={item.href}
-                            onNavigate={onNavigate}
-                            className="
-                font-space
-                text-[9px]
-                uppercase
-                tracking-[0.12em]
+                    {items.map((item) => {
+                        const isActive = activeHref === item.href;
 
-                lg:text-[10px]
-            "
-                        >
-                            {item.label}
-                        </MagneticLink>
-                    ))}
+                        return (
+                            <MagneticLink
+                                key={item.href}
+                                href={item.href}
+                                onNavigate={onNavigate}
+                                className="
+                                    font-space
+                                    text-[9px]
+                                    uppercase
+                                    tracking-[0.12em]
+
+                                    lg:text-[10px]
+                                "
+                                isActive={isActive}
+                            >
+                                {item.label}
+                            </MagneticLink>
+                        );
+                    })}
 
                     {/* =================================================
         EXPERIENCE
