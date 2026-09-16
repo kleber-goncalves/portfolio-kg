@@ -279,8 +279,6 @@ function HeroSectionTransition({ experienceMode = "full" }) {
 
                 const heroArrow = hero.querySelector('[data-hero-element="arrow"]');
 
-                const globalBlur = document.querySelector(".global-gradual-blur");
-
                 // =================================================
                 // ESTADOS INICIAIS
                 // =================================================
@@ -309,14 +307,6 @@ function HeroSectionTransition({ experienceMode = "full" }) {
                     });
                 }
 
-                /*
-                 * Blur começa invisível.
-                 */
-                if (globalBlur) {
-                    gsap.set(globalBlur, {
-                        opacity: 0,
-                    });
-                }
 
                 /*
                  * DotField começa visível.
@@ -346,6 +336,8 @@ function HeroSectionTransition({ experienceMode = "full" }) {
                         pin: true,
 
                         anticipatePin: 1,
+
+                        pinType: "transform",
 
                         invalidateOnRefresh: true,
 
@@ -498,29 +490,13 @@ function HeroSectionTransition({ experienceMode = "full" }) {
                 }
 
                 // =================================================
-                // BLUR
-                // =================================================
-
-                if (globalBlur) {
-                    tl.to(
-                        globalBlur,
-                        {
-                            opacity: 1,
-                            ease: "none",
-                            duration: 0.25,
-                        },
-                        1,
-                    );
-                }
-
-                // =================================================
                 // PEQUENA PAUSA NO FINAL
                 // =================================================
 
                 tl.to(
                     {},
                     {
-                        duration: 0.9,
+                        duration: 0,
                     },
                 );
 

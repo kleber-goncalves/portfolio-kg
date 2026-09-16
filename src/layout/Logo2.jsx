@@ -3,7 +3,7 @@ import { useLayoutEffect, useRef } from "react";
 import LogoLoop from "../components/logoLoop";
 import FlowingMenu from "../components/FlowingMenu";
 
-import { Html5, CssNew, Javascript, Gsap, React, TailwindCss, Nodejs, Figma, Nextdotjs, Vitejs, Typescript, Supabase, Postgresql, Sqlite, Vercel, Git, Github } from "@thesvg/react";
+import { Html5, CssNew, Javascript, Gsap, React, TailwindCss, Nodejs, Figma, Nextdotjs, Vitejs, Typescript, Supabase, Postgresql, Sqlite, Vercel, Git, Github, Motion, Prisma } from "@thesvg/react";
 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -62,6 +62,11 @@ const stackLogos = [
         title: "GSAP",
         href: "https://gsap.com/",
     },
+    {
+        node: <Motion variant="light" className="h-10 w-10 fill-current text-[#ffffff]" />,
+        title: "Motion",
+        href: "https://gsap.com/",
+    },
 ];
 
 // ============================================================
@@ -78,6 +83,11 @@ const backendLogos = [
     {
         node: <Supabase className="h-10 w-10 fill-current text-ivory" />,
         title: "Supabase",
+        href: "https://supabase.com/",
+    },
+    {
+        node: <Prisma variant="light" className="h-10 w-10 fill-current text-ivory" />,
+        title: "Prisma",
         href: "https://supabase.com/",
     },
 
@@ -118,7 +128,7 @@ const toolsLogos = [
     },
 
     {
-        node: <Github className="h-10 w-10 fill-current text-ivory" variant="dark" />,
+        node: <Github className="h-10 w-10 fill-current text-black" variant="mono" />,
         title: "GitHub",
         href: "https://github.com/",
     },

@@ -2,15 +2,22 @@ import { useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+
+import ExperienceDropdown from "./ExperienceDropdown";
+
 import Socials from "../components/Socials";
 import DotField from "../components/DotField";
 
-import { ArrowDownRight, ChevronDown } from "lucide-react";
+import { ArrowDownRight } from "lucide-react";
 
 import { setExperienceMode } from "../utils/experienceMode";
 
+import MagneticLink from "../components/MagneticNavLink";
+
 import "../styles/looptextHero.css";
 import "../styles/heroParallax.css";
+import GlobeIcon from "./GlobeIcon";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -32,6 +39,53 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
     const locationRef = useRef(null);
     const socialsRef = useRef(null);
 
+
+    const [activeHref, setActiveHref] = useState(null);
+
+
+    // ============================================================
+    // ACTIVE NAVIGATION
+    // ============================================================
+
+    useLayoutEffect(() => {
+        const updateActiveSection = () => {
+            const viewportPosition = window.innerHeight * 0.35;
+
+            let currentSection = null;
+
+            items.forEach((item) => {
+                if (!item.href?.startsWith("#")) return;
+
+                const id = item.href.slice(1);
+
+                const section = document.getElementById(id);
+
+                if (!section) return;
+
+                const rect = section.getBoundingClientRect();
+
+                if (rect.top <= viewportPosition && rect.bottom >= viewportPosition) {
+                    currentSection = item.href;
+                }
+            });
+
+            setActiveHref(currentSection);
+        };
+
+        updateActiveSection();
+
+        window.addEventListener("scroll", updateActiveSection, {
+            passive: true,
+        });
+
+        window.addEventListener("resize", updateActiveSection);
+
+        return () => {
+            window.removeEventListener("scroll", updateActiveSection);
+
+            window.removeEventListener("resize", updateActiveSection);
+        };
+    }, [items]);
     // ============================================================
     // MODO DE EXPERIÊNCIA
     // ============================================================
@@ -48,7 +102,6 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
 
     const experienceMenuMotionRef = useRef(null);
     useLayoutEffect(() => {
-
         gsap.fromTo(
             experienceMenuMotionRef.current,
             {
@@ -958,402 +1011,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                             />
                         </div>
                     </div>
-                    <div
-                        ref={experienceMenuRef}
-                        className="
-        relative
-        flex
-        items-center
-    "
-                    >
-                        {/* =================================================
-        BOTÃO EXPERIENCE
-    ================================================== */}
-
-                        <button
-                            type="button"
-                            aria-expanded={experienceMenuOpen}
-                            aria-haspopup="menu"
-                            onClick={() => setExperienceMenuOpen((previous) => !previous)}
-                            className="
-            group
-            relative
-            flex
-            items-center
-            gap-2
-
-            font-space
-            text-[9px]
-            uppercase
-            tracking-[0.14em]
-
-            text-steel
-
-            transition-colors
-            duration-300
-
-            hover:text-ivory
-
-            lg:text-[10px]
-        "
-                        >
-                            <span>Experience</span>
-
-                            {/* Indicador */}
-
-                            <ChevronDown
-                                className={`
-                h-3
-                w-3
-
-                stroke-[1.5]
-
-                transition-all
-                duration-300
-
-                ${experienceMenuOpen ? "rotate-180 text-bronze" : "rotate-0 text-steel"}
-            `}
-                            />
-
-                            {/* Linha inferior */}
-
-                            <span
-                                className={`
-                absolute
-                -bottom-2
-                left-0
-
-                h-px
-
-                bg-bronze
-
-                transition-all
-                duration-300
-
-                ${experienceMenuOpen ? "w-full opacity-100" : "w-0 opacity-0"}
-            `}
-                            />
-                        </button>
-
-                        {/* =================================================
-        DROPDOWN
-    ================================================== */}
-
-                        {experienceMenuOpen && (
-                            <div
-                                ref={experienceMenuMotionRef}
-                                role="menu"
-                                className="
-                absolute
-                left-1/2
-                top-full
-                z-50
-
-                mt-5
-                w-[190px]
-
-                -translate-x-1/2
-
-                overflow-hidden
-
-                border
-                border-graphite/80
-
-                bg-carbon/95
-                backdrop-blur-xl
-                
-                shadow-2xl
-                shadow-black/30
-            "
-                            >
-                                {/* =================================================
-                CABEÇALHO
-            ================================================== */}
-
-
-
-                                {/* =================================================
-                OPÇÕES
-            ================================================== */}
-
-                                <div className="p-1.5">
-                                    {/* FULL */}
-
-                                    <button
-                                        type="button"
-                                        role="menuitem"
-                                        onClick={() => handleExperienceChange("full")}
-                                        className={`
-                        group
-                        relative
-
-                        flex
-                        w-full
-                        items-center
-                        justify-between
-
-                        px-3
-                        py-3
-
-                        text-left
-
-                        transition-all
-                        duration-300
-
-                        ${
-                            experienceMode === "full"
-                                ? `
-                                    bg-obsidian
-                                    text-ivory
-                                `
-                                : `
-                                    text-steel
-                                    hover:bg-obsidian/70
-                                    hover:text-ivory
-                                `
-                        }
-                    `}
-                                    >
-                                        {/* Indicador lateral */}
-
-                                        <span
-                                            className={`
-                            absolute
-                            left-0
-                            top-1/2
-
-                            h-5
-                            w-px
-
-                            -translate-y-1/2
-
-                            bg-bronze
-
-                            transition-all
-                            duration-300
-
-                            ${experienceMode === "full" ? "opacity-100" : "opacity-0 group-hover:opacity-50"}
-                        `}
-                                        />
-
-                                        <div
-                                            className="
-                            flex
-                            flex-col
-                            gap-1
-                        "
-                                        >
-                                            <span
-                                                className="
-                                font-space
-                                text-[10px]
-                                uppercase
-                                tracking-[0.14em]
-                            "
-                                            >
-                                                Full
-                                            </span>
-
-                                            <span
-                                                className={`
-                                                                                                                font-space
-                                text-[9px]
-                                tracking-wide
-                                group-hover:text-warm-bronze
-                                group-hover:opacity-100
-                                ${experienceMode === "full" ? "text-warm-bronze" : "text-steel"}
-                                                    `}
-                                            >
-                                                Full experience
-                                            </span>
-                                        </div>
-
-                                        {/* Status */}
-
-                                        <span
-                                            className={`
-                            flex
-                            h-4
-                            w-4
-                            items-center
-                            justify-center
-
-                            rounded-full
-
-                            border
-
-                            transition-all
-                            duration-300
-
-                            ${
-                                experienceMode === "full"
-                                    ? `
-                                        border-bronze
-                                        bg-bronze/10
-                                    `
-                                    : `
-                                        border-graphite
-                                        group-hover:border-steel/50
-                                    `
-                            }
-                        `}
-                                        >
-                                            <span
-                                                className={`
-                                h-1.5
-                                w-1.5
-                                rounded-full
-
-                                transition-all
-                                duration-300
-
-                                ${experienceMode === "full" ? "scale-100 bg-bronze" : "scale-0 bg-bronze"}
-                            `}
-                                            />
-                                        </span>
-                                    </button>
-
-                                    {/* REDUCED */}
-
-                                    <button
-                                        type="button"
-                                        role="menuitem"
-                                        onClick={() => handleExperienceChange("reduced")}
-                                        className={`
-                        group
-                        relative
-
-                        mt-1
-
-                        flex
-                        w-full
-                        items-center
-                        justify-between
-
-                        px-3
-                        py-3
-
-                        text-left
-
-                        transition-all
-                        duration-300
-
-                        ${
-                            experienceMode === "reduced"
-                                ? `
-                                    bg-obsidian
-                                    text-ivory
-                                `
-                                : `
-                                    text-steel
-                                    hover:bg-obsidian/70
-                                    hover:text-ivory
-                                `
-                        }
-                    `}
-                                    >
-                                        {/* Indicador lateral */}
-
-                                        <span
-                                            className={`
-                            absolute
-                            left-0
-                            top-1/2
-
-                            h-5
-                            w-px
-
-                            -translate-y-1/2
-
-                            bg-bronze
-
-                            transition-all
-                            duration-300
-
-                            ${experienceMode === "reduced" ? "opacity-100" : "opacity-0 group-hover:opacity-50"}
-                        `}
-                                        />
-
-                                        <div
-                                            className="
-                            flex
-                            flex-col
-                            gap-1
-                        "
-                                        >
-                                            <span
-                                                className="
-                                font-space
-                                text-[9px]
-                                uppercase
-                                tracking-[0.14em]
-                            "
-                                            >
-                                                Reduced
-                                            </span>
-
-                                            <span
-                                                 className={`
-                                                                                                                font-space
-                                text-[9px]
-                                tracking-wide
-                                group-hover:text-warm-bronze
-                                group-hover:opacity-100
-                                ${experienceMode === "reduced" ? "text-warm-bronze" : "text-steel"}
-                                                    `}
-                                            >
-                                                Lightweight mode
-                                            </span>
-                                        </div>
-
-                                        {/* Status */}
-
-                                        <span
-                                            className={`
-                            flex
-                            h-4
-                            w-4
-                            items-center
-                            justify-center
-
-                            rounded-full
-
-                            border
-
-                            transition-all
-                            duration-300
-
-                            ${
-                                experienceMode === "reduced"
-                                    ? `
-                                        border-bronze
-                                        bg-bronze/10
-                                    `
-                                    : `
-                                        border-graphite
-                                        group-hover:border-steel/50
-                                    `
-                            }
-                        `}
-                                        >
-                                            <span
-                                                className={`
-                                h-1.5
-                                w-1.5
-                                rounded-full
-
-                                transition-all
-                                duration-300
-
-                                ${experienceMode === "reduced" ? "scale-100 bg-bronze" : "scale-0 bg-bronze"}
-                            `}
-                                            />
-                                        </span>
-                                    </button>
-                                </div>
-                            </div>
-                        )}
-                    </div>
+                    <ExperienceDropdown experienceMode={experienceMode} />
                 </div>
 
                 {/* =================================================
@@ -1364,57 +1022,45 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                     ref={navRef}
                     aria-label="Navegação principal"
                     className="
-                        absolute
-                        right-8
-                        top-8
-                        z-40
+        absolute
+        right-8
+        top-8
+        z-40
+        flex
+        items-center
+        gap-5
 
-                        flex
-                        items-center
-                        gap-5
-
-                        lg:right-17
-                        lg:top-10
-                        lg:gap-7
-                    "
+        lg:right-17
+        lg:top-10
+        lg:gap-7
+    "
                 >
-                    {items.map((item) => (
-                        <a
-                            key={item.href}
-                            href={item.href}
-                            onClick={(event) => {
-                                event.preventDefault();
+                    {items.map((item) => {
+                        const isActive = activeHref === item.href;
 
-                                onNavigate?.(item.href);
-                            }}
-                            className="
-                                group
-                                flex
-                                items-center
-                                gap-2
+                        return (
+                            <MagneticLink
+                                key={item.href}
+                                href={item.href}
+                                onNavigate={onNavigate}
+                                className="
+                                    font-space
+                                    text-[9px]
+                                    uppercase
+                                    tracking-[0.12em]
 
-                                font-space
-                                text-[9px]
-                                uppercase
-                                tracking-[0.12em]
-
-                                text-steel
-
-                                transition-colors
-                                duration-300
-
-                                hover:text-bronze
-
-                                lg:text-[10px]
-                            "
-                        >
-                            <span>{item.label}</span>
-                        </a>
-                    ))}
+                                    lg:text-[10px]
+                                "
+                                isActive={isActive}
+                            >
+                                {item.label}
+                            </MagneticLink>
+                        );
+                    })}
 
                     {/* =================================================
-                        EXPERIENCE
-                    ================================================== */}
+        EXPERIENCE
+    ================================================== */}
                 </nav>
 
                 {/* =================================================
@@ -1565,24 +1211,20 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
 
                         <div
                             className="
-                                ml-6
-                                flex
-                                h-12
-                                w-12
-                                items-center
-                                justify-center
-
-                                rounded-full
-
-                                border
-                                border-graphite
-
-                                bg-obsidian
-
-                                text-bronze
-                            "
+        ml-6
+        flex
+        h-22
+        w-22
+        items-center
+        justify-center
+        overflow-hidden
+        rounded-full
+        border
+        border-graphite
+        bg-obsidian
+    "
                         >
-                            <span className="text-lg">◉</span>
+                            <GlobeIcon />
                         </div>
                     </div>
                 </div>
@@ -1625,7 +1267,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                                 h-8
                                 w-8
 
-                                stroke-[1]
+                                stroke-[1.8px]
 
                                 text-ivory/80
                             "

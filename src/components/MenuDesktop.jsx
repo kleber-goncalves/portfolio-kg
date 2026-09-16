@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
-import gsap from "gsap";
-
+import { motion, useMotionValue, useSpring } from "motion/react";
 import { stopSmoothScroll, startSmoothScroll } from "../utils/lenisControl";
 
 import { getExperienceMode, setExperienceMode } from "../utils/experienceMode";
@@ -14,7 +13,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
     // =====================================
 
     const [activeHref, setActiveHref] = useState("#hero");
-
+    const [hoveredHref, setHoveredHref] = useState(null);
     // =====================================
     // MODO DE EXPERIÊNCIA
     // =====================================
@@ -28,37 +27,49 @@ function MenuDesktop({ items = [], showMenu = false }) {
     const menuRef = useRef(null);
     const buttonRef = useRef(null);
 
-    const lineTopRef = useRef(null);
-    const lineBottomRef = useRef(null);
-
     const isOpenRef = useRef(false);
-
     const scrollTickingRef = useRef(false);
 
     // =====================================
-    // POSIÇÃO INICIAL DOS DOIS TRAÇOS
+    // MAGNETIC DO BOTÃO
     // =====================================
 
-    useEffect(() => {
-        const top = lineTopRef.current;
-        const bottom = lineBottomRef.current;
+    const buttonX = useMotionValue(0);
+    const buttonY = useMotionValue(0);
 
-        if (!top || !bottom) return;
+    const buttonSpringX = useSpring(buttonX, {
+        stiffness: 580,
+        damping: 11,
+        mass: 1.2,
+    });
 
-        gsap.set(top, {
-            xPercent: -50,
-            yPercent: -50,
-            y: -5,
-            rotation: 0,
-        });
+    const buttonSpringY = useSpring(buttonY, {
+        stiffness: 280,
+        damping: 12,
+        mass: 1.2,
+    });
 
-        gsap.set(bottom, {
-            xPercent: -50,
-            yPercent: -50,
-            y: 5,
-            rotation: 0,
-        });
-    }, []);
+    const magneticStrength = 0.40;
+
+    const handleButtonMouseMove = (event) => {
+        const button = event.currentTarget;
+        const rect = button.getBoundingClientRect();
+
+        const mouseX = event.clientX - rect.left;
+        const mouseY = event.clientY - rect.top;
+
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        buttonX.set((mouseX - centerX) * magneticStrength);
+
+        buttonY.set((mouseY - centerY) * magneticStrength);
+    };
+
+    const handleButtonMouseLeave = () => {
+        buttonX.set(0);
+        buttonY.set(0);
+    };
 
     // =====================================
     // SINCRONIZA REF COM ESTADO
@@ -205,157 +216,13 @@ function MenuDesktop({ items = [], showMenu = false }) {
     }, [items]);
 
     // =====================================
-    // HAMBÚRGUER → X
-    // =====================================
-
-    const animateToClose = () => {
-        const top = lineTopRef.current;
-        const bottom = lineBottomRef.current;
-
-        if (!top || !bottom) return;
-
-        const tl = gsap.timeline();
-
-        tl.to(
-            top,
-            {
-                rotation: 45,
-                y: 0,
-                duration: 0.55,
-                ease: "power3.inOut",
-            },
-            0,
-        );
-
-        tl.to(
-            bottom,
-            {
-                rotation: -45,
-                y: 0,
-                duration: 0.55,
-                ease: "power3.inOut",
-            },
-            0,
-        );
-    };
-
-    // =====================================
-    // X → HAMBÚRGUER
-    // =====================================
-
-    const animateToHamburger = () => {
-        const top = lineTopRef.current;
-        const bottom = lineBottomRef.current;
-
-        if (!top || !bottom) return;
-
-        const tl = gsap.timeline();
-
-        tl.to(
-            top,
-            {
-                rotation: 0,
-                y: -5,
-                duration: 0.45,
-                ease: "power3.inOut",
-            },
-            0,
-        );
-
-        tl.to(
-            bottom,
-            {
-                rotation: 0,
-                y: 5,
-                duration: 0.45,
-                ease: "power3.inOut",
-            },
-            0,
-        );
-    };
-
-    // =====================================
-    // ABRIR MENU
-    // =====================================
-
-    const openMenu = () => {
-        if (!showMenu) return;
-
-        isOpenRef.current = true;
-
-        setIsOpen(true);
-
-        animateToClose();
-    };
-
-    // =====================================
     // FECHAR MENU
     // =====================================
 
     const closeMenu = () => {
-        const menu = menuRef.current;
+        // Esconde o conteúdo imediatamente
 
-        if (!menu) {
-            isOpenRef.current = false;
-
-            setIsOpen(false);
-
-            return;
-        }
-
-        const links = menu.querySelectorAll("[data-desktop-menu-link]");
-
-        const underlineLines = menu.querySelectorAll("[data-menu-line]");
-
-        const tl = gsap.timeline({
-            onComplete: () => {
-                isOpenRef.current = false;
-
-                setIsOpen(false);
-            },
-        });
-
-        underlineLines.forEach((line) => {
-            const parent = line.closest("[data-desktop-menu-link]");
-
-            const href = parent?.dataset.href;
-
-            const isActive = href === activeHref;
-
-            if (!isActive) {
-                tl.to(
-                    line,
-                    {
-                        scaleX: 0,
-                        duration: 0.2,
-                        ease: "power2.in",
-                    },
-                    0,
-                );
-            }
-        });
-
-        tl.to(
-            links,
-            {
-                opacity: 0,
-                x: 20,
-                duration: 0.25,
-                stagger: 0.04,
-                ease: "power2.in",
-            },
-            0,
-        );
-
-        tl.to(
-            menu,
-            {
-                xPercent: 100,
-                duration: 0.45,
-                ease: "power3.inOut",
-            },
-            "-=.05",
-        );
+        setIsOpen(false);
     };
 
     // =====================================
@@ -367,8 +234,6 @@ function MenuDesktop({ items = [], showMenu = false }) {
 
         const handleKeyDown = (event) => {
             if (event.key === "Escape") {
-                animateToHamburger();
-
                 closeMenu();
             }
         };
@@ -378,216 +243,17 @@ function MenuDesktop({ items = [], showMenu = false }) {
         return () => {
             document.removeEventListener("keydown", handleKeyDown);
         };
-    }, [isOpen, activeHref]);
-
-    // =====================================
-    // ABERTURA DO PAINEL
-    // =====================================
-
-    useEffect(() => {
-        if (!isOpen) return;
-
-        const menu = menuRef.current;
-
-        if (!menu) return;
-
-        const links = menu.querySelectorAll("[data-desktop-menu-link]");
-
-        const underlineLines = menu.querySelectorAll("[data-menu-line]");
-
-        gsap.set(menu, {
-            xPercent: 100,
-        });
-
-        gsap.set(links, {
-            opacity: 0,
-            x: 20,
-        });
-
-        gsap.set(underlineLines, {
-            scaleX: 0,
-            transformOrigin: "left center",
-        });
-
-        gsap.to(menu, {
-            xPercent: 0,
-            duration: 0.65,
-            ease: "power3.out",
-        });
-
-        gsap.to(links, {
-            opacity: 1,
-            x: 0,
-            duration: 0.55,
-            stagger: 0.12,
-            delay: 0.18,
-            ease: "power2.out",
-        });
-
-        requestAnimationFrame(() => {
-            const activeLine = menu.querySelector(`[data-menu-line][data-active="true"]`);
-
-            if (activeLine) {
-                gsap.fromTo(
-                    activeLine,
-                    {
-                        scaleX: 0,
-                    },
-                    {
-                        scaleX: 1,
-                        duration: 0.7,
-                        delay: 0.35,
-                        ease: "power3.out",
-                    },
-                );
-            }
-        });
     }, [isOpen]);
-
-    // =====================================
-    // ATUALIZA VISUAL DO LINK ATIVO
-    // =====================================
-
-    useEffect(() => {
-        if (!isOpen || !menuRef.current) {
-            return;
-        }
-
-        const menu = menuRef.current;
-
-        const links = menu.querySelectorAll("[data-desktop-menu-link]");
-
-        links.forEach((link) => {
-            const href = link.dataset.href;
-
-            const line = link.querySelector("[data-menu-line]");
-
-            if (!line) return;
-
-            const isActive = href === activeHref;
-
-            line.dataset.active = isActive ? "true" : "false";
-
-            gsap.killTweensOf(line);
-
-            if (isActive) {
-                gsap.to(line, {
-                    scaleX: 1,
-                    duration: 0.5,
-                    ease: "power3.out",
-                });
-            } else {
-                gsap.to(line, {
-                    scaleX: 0,
-                    duration: 0.35,
-                    ease: "power2.inOut",
-                });
-            }
-        });
-    }, [activeHref, isOpen]);
 
     // =====================================
     // MOSTRAR / ESCONDER BOTÃO
     // =====================================
 
     useEffect(() => {
-        const button = buttonRef.current;
-
-        if (!button) return;
-
-        if (showMenu) {
-            gsap.to(button, {
-                opacity: 1,
-                scale: 1,
-                duration: 0.4,
-                ease: "power3.out",
-                pointerEvents: "auto",
-            });
-
-            return;
-        }
-
-        gsap.to(button, {
-            opacity: 0,
-            scale: 0,
-            duration: 0.3,
-            ease: "power2.in",
-            pointerEvents: "none",
-        });
-
-        if (isOpenRef.current && menuRef.current) {
-            const menu = menuRef.current;
-
-            gsap.killTweensOf(menu);
-
-            gsap.to(menu, {
-                xPercent: 100,
-                duration: 0.35,
-                ease: "power3.inOut",
-                onComplete: () => {
-                    isOpenRef.current = false;
-
-                    setIsOpen(false);
-                },
-            });
-
-            animateToHamburger();
+        if (!showMenu && isOpenRef.current) {
+            setIsOpen(false);
         }
     }, [showMenu]);
-
-    // =====================================
-    // HOVER — ENTRA
-    // =====================================
-
-    const handleLinkEnter = (event) => {
-        const button = event.currentTarget;
-
-        const line = button.querySelector("[data-menu-line]");
-
-        if (!line) return;
-
-        gsap.killTweensOf(line);
-
-        gsap.to(line, {
-            scaleX: 1,
-            duration: 0.65,
-            ease: "power3.out",
-        });
-    };
-
-    // =====================================
-    // HOVER — SAI
-    // =====================================
-
-    const handleLinkLeave = (event) => {
-        const button = event.currentTarget;
-
-        const line = button.querySelector("[data-menu-line]");
-
-        if (!line) return;
-
-        const href = button.dataset.href;
-
-        const isActive = href === activeHref;
-
-        gsap.killTweensOf(line);
-
-        if (isActive) {
-            gsap.to(line, {
-                scaleX: 1,
-                duration: 0.35,
-                ease: "power3.out",
-            });
-
-            return;
-        }
-
-        gsap.to(line, {
-            scaleX: 0,
-            duration: 0.45,
-            ease: "power3.inOut",
-        });
-    };
 
     // =====================================
     // ALTERAR EXPERIÊNCIA
@@ -600,21 +266,27 @@ function MenuDesktop({ items = [], showMenu = false }) {
 
         console.log("⚙️ EXPERIÊNCIA ALTERADA:", mode);
 
-        // Salva preferência
+        // =====================================
+        // SALVA PREFERÊNCIA
+        // =====================================
 
         setExperienceMode(mode);
 
-        // Atualiza estado do menu
+        // =====================================
+        // ATUALIZA ESTADO
+        // =====================================
 
         setExperienceModeState(mode);
 
-        // Fecha menu
-
-        animateToHamburger();
+        // =====================================
+        // FECHA MENU
+        // =====================================
 
         closeMenu();
 
-        // Recarrega
+        // =====================================
+        // RECARREGA
+        // =====================================
 
         window.setTimeout(() => {
             window.location.reload();
@@ -626,15 +298,25 @@ function MenuDesktop({ items = [], showMenu = false }) {
     // =====================================
 
     const handleToggle = () => {
-        if (isOpen) {
-            animateToHamburger();
+        setIsOpen((previous) => {
+            const next = !previous;
 
-            closeMenu();
-        } else {
-            animateToClose();
+            // Se estiver fechando,
+            // esconde o conteúdo imediatamente.
 
-            openMenu();
-        }
+            /*
+            ====================================================
+            ABERTURA
+
+            O conteúdo NÃO é liberado aqui.
+
+            Ele possui seu próprio delay através
+            da variável contentDelay abaixo.
+            ====================================================
+            */
+
+            return next;
+        });
     };
 
     // =====================================
@@ -643,8 +325,6 @@ function MenuDesktop({ items = [], showMenu = false }) {
 
     const handleOverlayClick = (event) => {
         if (event.target === event.currentTarget) {
-            animateToHamburger();
-
             closeMenu();
         }
     };
@@ -658,36 +338,20 @@ function MenuDesktop({ items = [], showMenu = false }) {
 
         setActiveHref(href);
 
-        const button = event.currentTarget;
-
-        const line = button.querySelector("[data-menu-line]");
-
-        if (line) {
-            gsap.killTweensOf(line);
-
-            gsap.to(line, {
-                scaleX: 1,
-                duration: 0.35,
-                ease: "power3.out",
-            });
-        }
-
-        animateToHamburger();
-
         closeMenu();
 
         if (href === "#hero") {
-            setTimeout(() => {
+            window.setTimeout(() => {
                 window.scrollTo({
                     top: 0,
                     behavior: "smooth",
                 });
-            }, 100);
+            }, 450);
 
             return;
         }
 
-        setTimeout(() => {
+        window.setTimeout(() => {
             const section = document.querySelector(href);
 
             if (!section) return;
@@ -700,346 +364,764 @@ function MenuDesktop({ items = [], showMenu = false }) {
     };
 
     // =====================================
+    // MOTION
+    // =====================================
+
+    // =====================================
+    // MOLA DO PAINEL
+    // =====================================
+
+    const panelSpring = {
+        type: "spring",
+        stiffness: 130,
+        damping: 20,
+        mass: 1.2,
+    };
+
+    // =====================================
+    // MOLA DOS ELEMENTOS
+    // =====================================
+
+    const elementSpring = {
+        type: "spring",
+        stiffness: 420,
+        damping: 25,
+        mass: 1.5,
+    };
+
+    // =====================================
+    // MOLA SUAVE
+    // =====================================
+
+    const softSpring = {
+        type: "spring",
+        stiffness: 220,
+        damping: 13,
+        mass: 1.1,
+    };
+
+    // =====================================
+    // MOLA HOVER
+    // =====================================
+
+    const hoverSpring = {
+        type: "spring",
+        stiffness: 220,
+        damping: 12,
+        mass: 1.5,
+    };
+
+    // =====================================
+    // MOLA DA LINHA
+    // =====================================
+
+    const lineSpring = {
+        type: "spring",
+        stiffness: 380,
+        damping: 24,
+        mass: 0.5,
+    };
+    const HoverlineSpring = {
+        type: "spring",
+        stiffness: 160,
+        damping: 18,
+        mass: 0.8,
+    };
+
+    // =====================================
+    // MOMENTO DO CONTEÚDO
+    // =====================================
+
+    /*
+    ============================================================
+    CONTROLE PRINCIPAL
+
+    O painel começa a abrir imediatamente.
+
+    O conteúdo começa depois de 0.28s.
+
+    Como o painel usa spring, esse valor é aproximado,
+    mas visualmente coloca o conteúdo próximo dos
+    80–90% da abertura.
+
+    0.20 → mais cedo
+    0.28 → aproximadamente 80–90%
+    0.35 → mais tarde
+    0.45 → muito próximo do final
+    ============================================================
+    */
+
+    const contentDelay = 0.28;
+
+    // =====================================
+    // VARIANT DO PAINEL
+    // =====================================
+
+    const panelVariants = {
+        closed: {
+            x: "100%",
+        },
+
+        open: {
+            x: 0,
+        },
+    };
+
+    // =====================================
+    // VARIANT DO OVERLAY
+    // =====================================
+
+    const overlayVariants = {
+        closed: {
+            opacity: 0,
+        },
+
+        open: {
+            opacity: 1,
+        },
+    };
+
+    // =====================================
+    // VARIANT DO HEADER
+    // =====================================
+
+    const headerVariants = {
+        closed: {
+            opacity: 0,
+            x: 65,
+        },
+
+        open: {
+            opacity: 1,
+            x: 0,
+        },
+    };
+
+    // =====================================
+    // VARIANT DOS LINKS
+    // =====================================
+
+    const linkVariants = {
+        closed: {
+            opacity: 0,
+            x: 35,
+        },
+
+        open: {
+            opacity: 1,
+            x: 0,
+        },
+
+        tap: {
+            scale: 0.985,
+        },
+    };
+
+    // =====================================
+    // VARIANT DO ÍNDICE
+    // =====================================
+
+    const indexVariants = {
+        rest: {
+            opacity: 0.45,
+            x: 0,
+        },
+
+        hover: {
+            opacity: 1,
+            x: 4,
+        },
+    };
+
+    // =====================================
+    // VARIANT DO TÍTULO
+    // =====================================
+
+    const titleVariants = {
+        rest: {
+            x: 0,
+        },
+
+        hover: {
+            x: 7,
+        },
+    };
+
+    // =====================================
+    // VARIANT DA SETA
+    // =====================================
+
+    const arrowVariants = {
+        rest: {
+            x: 0,
+            opacity: 0.45,
+            rotate: 0,
+        },
+
+        hover: {
+            x: 5,
+            opacity: 1,
+            rotate: 3,
+        },
+    };
+
+    // =====================================
+    // VARIANT DA LINHA
+    // =====================================
+
+    const lineVariants = {
+        rest: {
+            scaleX: 0,
+            opacity: 0,
+        },
+
+        hover: {
+            scaleX: 1,
+            opacity: 1,
+        },
+    };
+
+    const hoverLineVariants = {
+        rest: {
+            scaleX: 0,
+            opacity: 0,
+        },
+
+        hover: {
+            scaleX: 1,
+            opacity: 1,
+        },
+    };
+
+    // =====================================
+    // VARIANT DO HAMBÚRGUER
+    // =====================================
+
+    const hamburgerTopVariants = {
+        closed: {
+            y: -5,
+            rotate: 0,
+        },
+
+        open: {
+            y: 0,
+            rotate: 45,
+        },
+
+        hover: {
+            scaleX: 1.08,
+        },
+    };
+
+    const hamburgerBottomVariants = {
+        closed: {
+            y: 5,
+            rotate: 0,
+        },
+
+        open: {
+            y: 0,
+            rotate: -45,
+        },
+
+        hover: {
+            scaleX: 1.08,
+        },
+    };
+
+    // =====================================
     // MENU
     // =====================================
 
     const menuContent = (
         <div className="hidden md:block">
             {/* =================================
-                OVERLAY + PAINEL
+                OVERLAY
             ================================= */}
 
-            {isOpen && (
-                <div
+            <motion.div
+                variants={overlayVariants}
+                initial="closed"
+                animate={isOpen ? "open" : "closed"}
+                transition={{
+                    duration: 0.3,
+                    ease: "easeOut",
+                }}
+                className="
+                    fixed
+                    inset-0
+                    z-[30]
+                    bg-black/30
+                "
+                style={{
+                    pointerEvents: isOpen ? "auto" : "none",
+                }}
+                onClick={handleOverlayClick}
+            >
+                {/* =================================
+                    PAINEL
+                ================================= */}
+
+                <motion.nav
+                    ref={menuRef}
+                    variants={panelVariants}
+                    initial="closed"
+                    animate={isOpen ? "open" : "closed"}
+                    transition={panelSpring}
+                    aria-hidden={!isOpen}
                     className="
-                        fixed
-                        inset-0
-                        z-[30]
-                        bg-black/30
+                        absolute
+                        right-0
+                        top-0
+                        flex
+                        h-full
+                        w-[520px]
+                        flex-col
+                        overflow-hidden
+                        border-l
+                        border-graphite
+                        bg-carbon
+                        px-10
+                        py-10
+                        shadow-2xl
                     "
-                    onClick={handleOverlayClick}
                 >
-                    <nav
-                        ref={menuRef}
+                    {/* =========================
+                        HEADER
+                    ========================= */}
+
+                    <motion.div
+                        variants={headerVariants}
+                        initial="closed"
+                        animate={isOpen ? "open" : "closed"}
+                        transition={{
+                            ...elementSpring,
+                            delay: isOpen ? contentDelay : 0,
+                        }}
                         className="
-                            absolute
-                            right-0
-                            top-0
-                            flex
-                            h-full
-                            w-[520px]
-                            flex-col
-                            overflow-hidden
-                            border-l
-                            border-graphite
-                            bg-carbon
-                            px-10
-                            py-10
-                            shadow-2xl
+                            mb-2
+                           
+                            pb-6
                         "
                     >
-                        {/* =========================
-                            HEADER
-                        ========================= */}
-
-                        <div
+                        <p
                             className="
-                                mb-9
-                                border-b
-                                border-graphite
-                                pb-6
+                                font-space
+                                text-[10px]
+                                uppercase
+                                tracking-[0.25em]
+                                text-steel
                             "
                         >
-                            <p
-                                className="
-                                    font-space
-                                    text-[10px]
-                                    uppercase
-                                    tracking-[0.25em]
-                                    text-steel
-                                "
-                            >
-                                Navigation
-                            </p>
+                            Navigation
+                        </p>
 
-                            <p
-                                className="
-                                    mt-2
-                                    font-bebas
-                                    text-2xl
-                                    tracking-wide
-                                    text-ivory
-                                "
-                            >
-                                KLEBER DEV
-                            </p>
-                        </div>
-
-                        {/* =========================
-                            NAVEGAÇÃO
-                        ========================= */}
-
-                        <div
+                        <p
                             className="
-                                flex
-                                flex-1
-                                flex-col
+                                mt-2
+                                font-bebas
+                                text-2xl
+                                tracking-wide
+                                text-ivory
                             "
                         >
-                            {items.map((item, index) => {
-                                const isActive = item.href === activeHref;
+                            KLEBER DEV
+                        </p>
+                    </motion.div>
 
-                                return (
-                                    <button
-                                        key={item.href || index}
-                                        type="button"
-                                        data-desktop-menu-link
-                                        data-href={item.href}
-                                        onMouseEnter={handleLinkEnter}
-                                        onMouseLeave={handleLinkLeave}
-                                        onClick={(event) => handleNavigation(item.href, event)}
+                    {/* =========================
+                        NAVEGAÇÃO
+                    ========================= */}
+
+                    <motion.div
+                        className="
+                            flex
+                            flex-1
+                            flex-col
+                        "
+                    >
+                        {items.map((item, index) => {
+                            const isActive = item.href === activeHref;
+
+                            return (
+                                <motion.button
+                                    key={item.href || index}
+                                    type="button"
+                                    data-desktop-menu-link
+                                    data-href={item.href}
+                                    variants={linkVariants}
+                                    initial="closed"
+                                    animate={isOpen ? "open" : "closed"}
+                                    whileHover="hover"
+                                    whileTap="tap"
+                                    transition={{
+                                        ...elementSpring,
+                                        delay: isOpen ? contentDelay + 0.08 + index * 0.055 : 0,
+                                    }}
+                                    onHoverStart={() => {
+                                        if (!isActive) {
+                                            setHoveredHref(item.href);
+                                        }
+                                    }}
+                                    onHoverEnd={() => {
+                                        setHoveredHref(null);
+                                    }}
+                                    onClick={(event) => handleNavigation(item.href, event)}
+                                    className="
+                                            group
+                                            relative
+                                            flex
+                                            cursor-pointer
+                                            items-center
+                                            justify-between
+                                            border-b
+                                            border-graphite
+                                            py-5
+                                            text-left
+                                            text-ivory
+                                            transition-colors
+                                            duration-300
+                                            hover:text-bronze
+                                        "
+                                >
+                                    {/* =========================
+                                            ESQUERDA
+                                        ========================= */}
+
+                                    <div
                                         className="
-                                                group
-                                                relative
                                                 flex
                                                 items-center
-                                                justify-between
-                                                border-b
-                                                border-graphite
-                                                py-5
-                                                text-left
-                                                text-ivory
-                                                transition-colors
-                                                duration-300
-                                                hover:text-bronze
+                                                gap-5
                                             "
                                     >
-                                        <div
+                                        {/* ÍNDICE */}
+
+                                        <motion.span
+                                            variants={indexVariants}
+                                            transition={hoverSpring}
                                             className="
-                                                    flex
-                                                    items-center
-                                                    gap-5
+                                                    font-space
+                                                    text-xs
+                                                    text-steel
+                                                    transition-colors
+                                                    duration-300
+                                                    group-hover:text-bronze
                                                 "
                                         >
-                                            <span
-                                                className="
-                                                        font-space
-                                                        text-xs
-                                                        text-steel
-                                                        transition-colors
-                                                        duration-300
-                                                        group-hover:text-bronze
-                                                    "
-                                            >
-                                                {String(index + 1).padStart(2, "0")}
-                                            </span>
+                                            {String(index + 1).padStart(2, "0")}
+                                        </motion.span>
 
-                                            <span
-                                                className={`
-                                                        font-bebas
-                                                        text-4xl
-                                                        tracking-wide
-                                                        transition-colors
-                                                        duration-300
+                                        {/* TÍTULO */}
 
-                                                        ${isActive ? "text-bronze" : "text-ivory"}
-
-                                                        group-hover:text-bronze
-                                                    `}
-                                            >
-                                                {item.label}
-                                            </span>
-                                        </div>
-
-                                        <span
+                                        <motion.span
+                                            variants={titleVariants}
+                                            transition={hoverSpring}
                                             className={`
-                                                    font-space
-                                                    text-xl
-                                                    transition-all
+                                                    font-bebas
+                                                    text-4xl
+                                                    tracking-wide
+                                                    transition-colors
                                                     duration-300
-                                                    group-hover:translate-x-1
-                                                    group-hover:text-bronze
 
-                                                    ${isActive ? "text-bronze" : "text-steel"}
+                                                    ${isActive ? "text-bronze" : "text-ivory"}
+
+                                                    group-hover:text-bronze
                                                 `}
                                         >
-                                            ↗
-                                        </span>
+                                            {item.label}
+                                        </motion.span>
+                                    </div>
 
-                                        <span
-                                            data-menu-line
-                                            data-active={isActive ? "true" : "false"}
+                                    {/* =========================
+                                            SETA
+                                        ========================= */}
+
+                                    <motion.span
+                                        variants={arrowVariants}
+                                        transition={hoverSpring}
+                                        className={`
+                                                font-space
+                                                text-xl
+                                                transition-colors
+                                                duration-300
+
+                                                ${isActive ? "text-bronze" : "text-steel"}
+                                            `}
+                                    >
+                                        ↗
+                                    </motion.span>
+
+                                    {/* =========================
+                                            LINHA
+                                        ========================= */}
+
+                                    <motion.span
+                                        data-menu-line
+                                        data-active={isActive ? "true" : "false"}
+                                        aria-hidden="true"
+                                        variants={lineVariants}
+                                        animate={isActive ? "hover" : "rest"}
+                                        transition={lineSpring}
+                                        style={{
+                                            transformOrigin: "left center",
+                                        }}
+                                        className="
+                                                pointer-events-none
+                                                absolute
+                                                bottom-0
+                                                left-0
+                                                h-[1px]
+                                                w-full
+                                                bg-[#C49A78]
+                                                shadow-[0_0_10px_rgba(196,154,120,0.35)]
+                                            "
+                                    />
+
+                                    {/* =========================
+                                        LINHA HOVER
+                                    ========================= */}
+
+                                    {!isActive && (
+                                        <motion.span
                                             aria-hidden="true"
+                                            initial="rest"
+                                            animate={hoveredHref === item.href ? "hover" : "rest"}
+                                            variants={hoverLineVariants}
+                                            transition={HoverlineSpring}
+                                            style={{
+                                                transformOrigin: "left center",
+                                            }}
                                             className="
-                                                    pointer-events-none
-                                                    absolute
-                                                    bottom-0
-                                                    left-0
-                                                    h-[1px]
-                                                    w-full
-                                                    origin-left
-                                                    bg-[#C49A78]
-                                                    shadow-[0_0_10px_rgba(196,154,120,0.35)]
-                                                "
+                                                pointer-events-none
+                                                absolute
+                                                bottom-0
+                                                left-0
+                                                h-[1px]
+                                                w-full
+                                                bg-[#C49A78]
+                                            "
                                         />
-                                    </button>
-                                );
-                            })}
-                        </div>
+                                    )}
+                                </motion.button>
+                            );
+                        })}
+                    </motion.div>
 
-                        {/* =====================================
-                            EXPERIÊNCIA
-                        ===================================== */}
+                    {/* =====================================
+                        EXPERIÊNCIA
+                    ===================================== */}
+
+                    <motion.div
+                        variants={headerVariants}
+                        initial="closed"
+                        animate={isOpen ? "open" : "closed"}
+                        transition={{
+                            ...elementSpring,
+                            delay: isOpen ? contentDelay + 0.12 : 0,
+                        }}
+                        className="
+                            mt-2
+                            pt-6
+                            
+                        "
+                    >
+                        <p
+                            className="
+                                font-space
+                                text-[10px]
+                                uppercase
+                                tracking-[0.25em]
+                                text-steel
+                            "
+                        >
+                            Experiência
+                        </p>
 
                         <div
                             className="
-                                mt-8
-                                border-t
-                                border-graphite
-                                pt-6
+                                mt-4
+                                flex
+                                gap-3
                             "
                         >
-                            <p
-                                className="
-                                    font-space
-                                    text-[10px]
-                                    uppercase
-                                    tracking-[0.25em]
-                                    text-steel
-                                "
+                            {/* =========================
+                                COMPLETA
+                            ========================= */}
+
+                            <motion.button
+                                type="button"
+                                onClick={() => handleExperienceChange("full")}
+                                whileHover={{
+                                    y: -2,
+                                }}
+                                whileTap={{
+                                    scale: 0.98,
+                                }}
+                                transition={softSpring}
+                                className={`
+                                    flex
+                                    flex-1
+                                    items-center
+                                    justify-between
+                                    border
+                                    px-4
+                                    py-3
+                                    cursor-pointer
+                                    rounded-sm
+                                    transition-colors
+                                    duration-300
+
+                                    ${experienceMode === "full" ? "border-bronze bg-obsidian text-bronze" : "border-graphite bg-obsidian/40 text-steel hover:border-steel/40 hover:text-ivory"}
+                                `}
                             >
-                                Experiência
-                            </p>
-
-                            <div className="mt-4 flex gap-3">
-                                {/* =========================
-                                    COMPLETA
-                                ========================= */}
-
-                                <button
-                                    type="button"
-                                    onClick={() => handleExperienceChange("full")}
-                                    className={`
-                                        flex
-                                        flex-1
-                                        items-center
-                                        justify-between
-                                        border
-                                        px-4
-                                        py-3
-                                        transition-all
-                                        duration-300
-
-                                        ${experienceMode === "full" ? "border-bronze bg-obsidian text-bronze" : "border-graphite bg-obsidian/40 text-steel hover:border-steel/40 hover:text-ivory"}
-                                    `}
+                                <span
+                                    className="
+                                        font-space
+                                        text-[10px]
+                                        uppercase
+                                        tracking-[0.12em]
+                                    "
                                 >
-                                    <span
-                                        className="
-                                            font-space
-                                            text-[10px]
-                                            uppercase
-                                            tracking-[0.12em]
-                                        "
-                                    >
-                                        Completa
-                                    </span>
+                                    Completa
+                                </span>
 
-                                    <span
-                                        className={`
-                                            h-2
-                                            w-2
-                                            rounded-full
-                                            transition-all
-                                            duration-300
+                                <motion.span
+                                    animate={{
+                                        scale: experienceMode === "full" ? 1 : 0.8,
 
-                                            ${experienceMode === "full" ? "bg-bronze shadow-[0_0_8px_rgba(196,154,120,0.7)]" : "bg-steel/30"}
-                                        `}
-                                    />
-                                </button>
-
-                                {/* =========================
-                                    ESSENCIAL
-                                ========================= */}
-
-                                <button
-                                    type="button"
-                                    onClick={() => handleExperienceChange("reduced")}
+                                        opacity: experienceMode === "full" ? 1 : 0.3,
+                                    }}
+                                    transition={softSpring}
                                     className={`
-                                        flex
-                                        flex-1
-                                        items-center
-                                        justify-between
-                                        border
-                                        px-4
-                                        py-3
-                                        transition-all
-                                        duration-300
+                                        h-2
+                                        w-2
+                                        rounded-full
 
-                                        ${experienceMode === "reduced" ? "border-bronze bg-obsidian text-bronze" : "border-graphite bg-obsidian/40 text-steel hover:border-steel/40 hover:text-ivory"}
+                                        ${experienceMode === "full" ? "bg-bronze shadow-[0_0_8px_rgba(196,154,120,0.7)]" : "bg-steel/30"}
                                     `}
+                                />
+                            </motion.button>
+
+                            {/* =========================
+                                ESSENCIAL
+                            ========================= */}
+
+                            <motion.button
+                                type="button"
+                                onClick={() => handleExperienceChange("reduced")}
+                                whileHover={{
+                                    y: -2,
+                                }}
+                                whileTap={{
+                                    scale: 0.98,
+                                }}
+                                transition={softSpring}
+                                className={`
+                                    flex
+                                    flex-1
+                                    items-center
+                                    justify-between
+                                    border
+                                    px-4
+                                    py-3
+                                    cursor-pointer
+                                    rounded-sm
+                                    transition-colors
+                                    duration-300
+
+                                    ${experienceMode === "reduced" ? "border-bronze bg-obsidian text-bronze" : "border-graphite bg-obsidian/40 text-steel hover:border-steel/40 hover:text-ivory"}
+                                `}
+                            >
+                                <span
+                                    className="
+                                        font-space
+                                        text-[10px]
+                                        uppercase
+                                        tracking-[0.12em]
+                                    "
                                 >
-                                    <span
-                                        className="
-                                            font-space
-                                            text-[10px]
-                                            uppercase
-                                            tracking-[0.12em]
-                                        "
-                                    >
-                                        Essencial
-                                    </span>
+                                    Essencial
+                                </span>
 
-                                    <span
-                                        className={`
-                                            h-2
-                                            w-2
-                                            rounded-full
-                                            transition-all
-                                            duration-300
+                                <motion.span
+                                    animate={{
+                                        scale: experienceMode === "reduced" ? 1 : 0.8,
 
-                                            ${experienceMode === "reduced" ? "bg-bronze shadow-[0_0_8px_rgba(196,154,120,0.7)]" : "bg-steel/30"}
-                                        `}
-                                    />
-                                </button>
-                            </div>
+                                        opacity: experienceMode === "reduced" ? 1 : 0.3,
+                                    }}
+                                    transition={softSpring}
+                                    className={`
+                                        h-2
+                                        w-2
+                                        rounded-full
+
+                                        ${experienceMode === "reduced" ? "bg-bronze shadow-[0_0_8px_rgba(196,154,120,0.7)]" : "bg-steel/30"}
+                                    `}
+                                />
+                            </motion.button>
                         </div>
+                    </motion.div>
 
-                        {/* =====================================
-                            FOOTER
-                        ===================================== */}
+                    {/* =====================================
+                        FOOTER
+                    ===================================== */}
 
-                        <div
+                    <motion.div
+                        variants={headerVariants}
+                        initial="closed"
+                        animate={isOpen ? "open" : "closed"}
+                        transition={{
+                            ...elementSpring,
+                            delay: isOpen ? contentDelay + 0.18 : 0,
+                        }}
+                        className="
+                            mt-6
+                            pt-2
+                        "
+                    >
+                        <p
                             className="
-                                mt-6
-                                pt-2
+                                font-space
+                                text-[10px]
+                                uppercase
+                                tracking-[0.25em]
+                                text-steel
                             "
                         >
-                            <p
-                                className="
-                                    font-space
-                                    text-[10px]
-                                    uppercase
-                                    tracking-[0.25em]
-                                    text-steel
-                                "
-                            >
-                                Kleber Dev · Portfolio
-                            </p>
-                        </div>
-                    </nav>
-                </div>
-            )}
+                            Kleber Dev · Portfolio
+                        </p>
+                    </motion.div>
+                </motion.nav>
+            </motion.div>
 
             {/* =====================================
                 BOTÃO HAMBÚRGUER
             ===================================== */}
 
-            <button
+            <motion.button
                 ref={buttonRef}
                 type="button"
                 aria-label={isOpen ? "Fechar menu" : "Abrir menu"}
                 aria-expanded={isOpen}
                 onClick={handleToggle}
+                onMouseMove={handleButtonMouseMove}
+                onMouseLeave={handleButtonMouseLeave}
+                initial={{
+                    opacity: 0,
+                    scale: 10,
+                }}
+                animate={{
+                    opacity: showMenu ? 1 : 0,
+                    scale: showMenu ? 1 : 0,
+                }}
+                whileHover={{
+                    scale: 1.04,
+                }}
+                whileTap={{
+                    scale: 0.94,
+                }}
+                transition={softSpring}
                 className="
                     fixed
                     right-8
@@ -1048,6 +1130,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
                     flex
                     h-14
                     w-14
+                    cursor-pointer
                     items-center
                     justify-center
                     rounded-full
@@ -1063,31 +1146,56 @@ function MenuDesktop({ items = [], showMenu = false }) {
                     lg:right-4
                     lg:top-10
                 "
+                style={{
+                    pointerEvents: showMenu ? "auto" : "none",
+                    x: buttonSpringX,
+                    y: buttonSpringY,
+                }}
             >
-                <span
-                    ref={lineTopRef}
+                {/* =====================================
+                    TRAÇO SUPERIOR
+                ===================================== */}
+
+                <motion.span
+                    initial="closed"
+                    animate={isOpen ? "open" : "closed"}
+                    whileHover="hover"
+                    transition={hoverSpring}
+                    variants={hamburgerTopVariants}
                     className="
                         absolute
-                        left-1/2
                         top-1/2
                         h-[1.5px]
                         w-7
                         bg-current
                     "
+                    style={{
+                        transformOrigin: "center center",
+                    }}
                 />
 
-                <span
-                    ref={lineBottomRef}
+                {/* =====================================
+                    TRAÇO INFERIOR
+                ===================================== */}
+
+                <motion.span
+                    initial="closed"
+                    animate={isOpen ? "open" : "closed"}
+                    whileHover="hover"
+                    transition={hoverSpring}
+                    variants={hamburgerBottomVariants}
                     className="
                         absolute
-                        left-1/2
                         top-1/2
                         h-[1.5px]
                         w-7
                         bg-current
                     "
+                    style={{
+                        transformOrigin: "center center",
+                    }}
                 />
-            </button>
+            </motion.button>
         </div>
     );
 
