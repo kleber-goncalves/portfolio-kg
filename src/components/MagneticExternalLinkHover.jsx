@@ -60,15 +60,15 @@ function MagneticExternalLinkHover({
     const y = useMotionValue(0);
 
     const springX = useSpring(x, {
-        stiffness: 280,
+        stiffness: 230,
         damping: 12,
         mass: 1.1,
     });
 
     const springY = useSpring(y, {
-        stiffness: 280,
+        stiffness: 630,
         damping: 12,
-        mass: 1.1,
+        mass: 0.9,
     });
 
     // ============================================================
@@ -191,31 +191,7 @@ function MagneticExternalLinkHover({
                 }}
             />
 
-            {/* =====================================================
-                BRILHO INTERNO
-            ====================================================== */}
 
-            <span
-                aria-hidden="true"
-                className="
-                    pointer-events-none
-                    absolute
-                    inset-0
-                    z-[1]
-
-                    rounded-sm
-
-                    bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08),transparent_60%)]
-
-                    opacity-0
-
-                    transition-opacity
-                    duration-300
-                    ease-out
-
-                    group-hover/preview:opacity-100
-                "
-            />
 
             {/* =====================================================
                 CONTEÚDO

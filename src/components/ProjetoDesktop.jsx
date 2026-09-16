@@ -913,33 +913,9 @@ function ProjetoDesktop({ projetos, experienceMode = "full" }) {
                                                 ========================================== */}
 
                                             {projeto.github && (
-                                                <a
-                                                    href={projeto.github}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="
-                                                            inline-flex
-                                                            items-center
-                                                            justify-center
-                                                            rounded-full
-                                                            border
-                                                            border-graphite
-                                                            px-4
-                                                            py-2.5
-                                                            font-bebas
-                                                            text-xs
-                                                            uppercase
-                                                            tracking-[0.15em]
-                                                            text-steel
-                                                            transition-all
-                                                            duration-300
-                                                            hover:border-bronze
-                                                            hover:bg-bronze/5
-                                                            hover:text-bronze
-                                                        "
-                                                >
-                                                    GitHub ↗
-                                                </a>
+                                                <MagneticExternalLinkHover href={projeto.github} px="px-3" py="py-2" accent="transparent" borderColor="#242424" hoverBorderColor="#F2F0EC" textColor="#8B8B8B" hoverTextColor="#F2F0EC" Icon={ArrowUpRight}>
+                                                    GitHub
+                                                </MagneticExternalLinkHover>
                                             )}
                                         </div>
                                     )}
