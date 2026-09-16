@@ -241,7 +241,7 @@ export default function Card2({ title, number, text, variant = "default", classN
                 border-gray-700
 
                 py-7
-
+                
                 md:py-9
                 lg:py-13
 
@@ -263,6 +263,7 @@ export default function Card2({ title, number, text, variant = "default", classN
                 <>
                     <span
                         className="
+                        
                             editorial-card-2__spotlight
                             absolute
                             inset-0
@@ -303,7 +304,7 @@ export default function Card2({ title, number, text, variant = "default", classN
                     transition-all
                     duration-700
                     ease-out
-
+                    
                     group-hover:w-full
                     group-active:w-full
                 "

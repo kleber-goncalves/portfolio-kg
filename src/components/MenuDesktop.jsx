@@ -737,6 +737,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
                                             group
                                             relative
                                             flex
+                                            cursor-pointer
                                             items-center
                                             justify-between
                                             border-b
@@ -888,6 +889,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
                         className="
                             mt-2
                             pt-6
+                            
                         "
                     >
                         <p
@@ -931,6 +933,8 @@ function MenuDesktop({ items = [], showMenu = false }) {
                                     border
                                     px-4
                                     py-3
+                                    cursor-pointer
+                                    rounded-sm
                                     transition-colors
                                     duration-300
 
@@ -987,6 +991,8 @@ function MenuDesktop({ items = [], showMenu = false }) {
                                     border
                                     px-4
                                     py-3
+                                    cursor-pointer
+                                    rounded-sm
                                     transition-colors
                                     duration-300
 
@@ -1088,6 +1094,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
                     flex
                     h-14
                     w-14
+                    cursor-pointer
                     items-center
                     justify-center
                     rounded-full

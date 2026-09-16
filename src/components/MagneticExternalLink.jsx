@@ -1,25 +1,27 @@
 import { motion, useMotionValue, useSpring } from "motion/react";
+
 import { useState } from "react";
 
-function MagneticLink({
+function MagneticExternalLink({
     href = "#",
     children,
-    onClick,
-    onNavigate,
-
-    // ============================================================
-    // ACTIVE
-    // ============================================================
-
-    isActive = false,
 
     accent = "#A87852",
-    textColor = "#8B8B8B",
+    borderColor = "#242424",
+    textColor = "#F2F0EC",
     hoverTextColor = "#0D0D0D",
 
-    magneticStrength = 0.22,
+    magneticStrength = 0.2,
+
+    px="px-5",
+    py="py-3",
 
     className = "",
+
+    target = "_blank",
+    rel = "noopener noreferrer",
+
+    Icon,
 }) {
     // ============================================================
     // ESTADO
@@ -30,32 +32,13 @@ function MagneticLink({
 
     /*
     ------------------------------------------------------------
-    INTERAÇÃO
-    ------------------------------------------------------------
-
-    Hover e focus continuam sendo estados de interação.
-
-    O isActive representa a seção atualmente ativa.
-
-    Quando qualquer um deles estiver ativo, o link recebe
-    o mesmo tratamento visual.
-    */
-
-    const isInteractive = isHovered || isFocused;
-
-    /*
-    ------------------------------------------------------------
     ESTADO VISUAL
     ------------------------------------------------------------
 
-    O link fica visualmente ativo quando:
-
-    - está em hover
-    - está focado
-    - ou pertence à seção atual
+    Hover e focus possuem o mesmo tratamento visual.
     */
 
-    const isVisuallyActive = isInteractive || isActive;
+    const isInteractive = isHovered || isFocused;
 
     // ============================================================
     // MOVIMENTO MAGNÉTICO
@@ -69,9 +52,9 @@ function MagneticLink({
     // ============================================================
 
     const springX = useSpring(x, {
-        stiffness: 650,
-        damping: 18,
-        mass: 0.45,
+        stiffness: 280,
+        damping: 12,
+        mass: 1.1,
     });
 
     // ============================================================
@@ -79,9 +62,9 @@ function MagneticLink({
     // ============================================================
 
     const springY = useSpring(y, {
-        stiffness: 600,
-        damping: 18,
-        mass: 0.45,
+        stiffness: 280,
+        damping: 12,
+        mass: 1.1,
     });
 
     // ============================================================
@@ -154,30 +137,14 @@ function MagneticLink({
 
         /*
         --------------------------------------------------------
-        IMPORTANTE
+        RETORNO MAGNÉTICO
         --------------------------------------------------------
 
-        Apenas alteramos o destino.
-
-        O useSpring controla o retorno.
+        O spring faz o retorno suavemente.
         */
 
         x.set(0);
         y.set(0);
-    };
-
-    // ============================================================
-    // CLICK
-    // ============================================================
-
-    const handleClick = (event) => {
-        if (onNavigate) {
-            event.preventDefault();
-
-            onNavigate(href);
-        }
-
-        onClick?.(event);
     };
 
     // ============================================================
@@ -187,7 +154,8 @@ function MagneticLink({
     return (
         <motion.a
             href={href}
-            onClick={handleClick}
+            target={target}
+            rel={rel}
             onMouseEnter={handleMouseEnter}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
@@ -196,18 +164,26 @@ function MagneticLink({
             style={{
                 x: springX,
                 y: springY,
+                borderColor,
             }}
             className={`
                 group
                 relative
-                flex
+                inline-flex
                 items-center
                 justify-center
+                gap-2
                 overflow-hidden
                 rounded-sm
-                py-1
-                px-2
-                
+                border
+               
+                ${px}
+                ${py}
+
+                text-xs
+                font-medium
+                uppercase
+                tracking-[0.12em]
 
                 ${className}
             `}
@@ -221,9 +197,9 @@ function MagneticLink({
                 className="
                     pointer-events-none
                     absolute
-                    
                     inset-[-5px]
                     z-0
+                    rounded-sm
                 "
                 style={{
                     backgroundColor: accent,
@@ -235,20 +211,21 @@ function MagneticLink({
                     opacity: 0,
                 }}
                 animate={{
-                    scale: isVisuallyActive ? 1 : 0,
-                    opacity: isVisuallyActive ? 1 : 0,
+                    scale: isInteractive ? 1 : 0,
+
+                    opacity: isInteractive ? 1 : 0,
                 }}
                 transition={{
                     scale: {
                         type: "spring",
-                        stiffness: 300,
-                        damping: 23,
-                        mass: 0.65,
+                        stiffness: 150,
+                        damping: 22,
+                        mass: 0.75,
                     },
 
                     opacity: {
-                        duration: 0.16,
-                        ease: "easeOut",
+                        duration: 0.25,
+                        ease: [0.16, 1, 0.3, 1],
                     },
                 }}
             />
@@ -262,15 +239,16 @@ function MagneticLink({
                 className="
                     pointer-events-none
                     absolute
-                    inset-[-5px]
+                    inset-0
                     z-[1]
+                    rounded-sm
                     border
                 "
                 style={{
                     borderColor: accent,
                 }}
                 animate={{
-                    opacity: isVisuallyActive ? 1 : 0,
+                    opacity: isInteractive ? 1 : 0,
                 }}
                 transition={{
                     duration: 0.2,
@@ -279,44 +257,25 @@ function MagneticLink({
             />
 
             {/* =================================================
-                BRILHO
-            ================================================== */}
-
-            <motion.span
-                aria-hidden="true"
-                className="
-                    pointer-events-none
-                    absolute
-                    inset-0
-                    z-[2]
-                    bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08),transparent_60%)]
-                "
-                animate={{
-                    opacity: isVisuallyActive ? 1 : 0,
-                }}
-                transition={{
-                    duration: 0.25,
-                    ease: [0.16, 1, 0.3, 1],
-                }}
-            />
-
-            {/* =================================================
-                TEXTO
+                CONTEÚDO
             ================================================== */}
 
             <motion.span
                 className="
                     relative
                     z-10
-                    block
+                    inline-flex
+                    items-center
+                    gap-2
+                    
                 "
                 style={{
-                    color: isVisuallyActive ? hoverTextColor : textColor,
+                    color: isInteractive ? hoverTextColor : textColor,
                 }}
                 animate={{
-                    y: isVisuallyActive ? -0.5 : 0,
+                    y: isInteractive ? -0.5 : 0,
 
-                    letterSpacing: isVisuallyActive ? "0.14em" : "0.12em",
+                    letterSpacing: isInteractive ? "0.14em" : "0.12em",
                 }}
                 transition={{
                     y: {
@@ -332,44 +291,48 @@ function MagneticLink({
                     },
                 }}
             >
-                {children}
+                {/* =================================================
+                    TEXTO
+                ================================================== */}
+
+                <span>{children}</span>
+
+                {/* =================================================
+                    ÍCONE
+                ================================================== */}
+
+                {Icon && (
+                    <motion.span
+                        className="
+                            inline-flex
+                            items-center
+                            justify-center
+                        "
+                        animate={{
+                            x: isInteractive ? 2 : 0,
+
+                            y: isInteractive ? -2 : 0,
+
+                            scale: isInteractive ? 1.05 : 1,
+                        }}
+                        transition={{
+                            type: "spring",
+                            stiffness: 420,
+                            damping: 17,
+                            mass: 0.35,
+                        }}
+                    >
+                        <Icon
+                            className="
+                                h-3.5
+                                w-3.5
+                            "
+                        />
+                    </motion.span>
+                )}
             </motion.span>
-
-            {/* =================================================
-                ACTIVE — INDICADOR
-            ================================================== */}
-
-            <motion.span
-                aria-hidden="true"
-                className="
-                    pointer-events-none
-                    absolute
-                    bottom-0
-                    left-0
-                    h-px
-                    w-full
-                    
-                    
-                 
-                "
-                initial={{
-                    scaleX: 0,
-                    opacity: 0,
-                }}
-                animate={{
-                    scaleX: isActive ? 1 : 0,
-                    opacity: isActive ? 1 : 0,
-                }}
-                transition={{
-                    duration: 0.35,
-                    ease: [0.16, 1, 0.3, 1],
-                }}
-                style={{
-                    transformOrigin: "left center",
-                }}
-            />
         </motion.a>
     );
 }
 
-export default MagneticLink;
+export default MagneticExternalLink;

@@ -4,6 +4,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import "../styles/loopText.css";
+import MagneticExternalLink from "../components/MagneticExternalLink";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -531,120 +532,23 @@ function Footer() {
                     >
                         {/* GITHUB */}
 
-                        <a
-                            href="https://github.com/kleber-goncalves"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="
-                                group
-                                inline-flex
-                                items-center
-                                gap-2
-                                rounded-full
-                                border
-                                border-graphite
-                                px-5
-                                py-3
-                                text-xs
-                                font-medium
-                                uppercase
-                                tracking-[0.12em]
-                                text-ivory
-                                transition-all
-                                duration-300
-                                hover:border-bronze
-                                hover:text-bronze
-                            "
-                        >
+                        <MagneticExternalLink href="https://github.com/kleber-goncalves" Icon={ArrowUpRight}>
                             GitHub
-                            <ArrowUpRight
-                                className="
-                                    h-3.5
-                                    w-3.5
-                                    transition-transform
-                                    duration-300
-                                    group-hover:-translate-y-0.5
-                                    group-hover:translate-x-0.5
-                                "
-                            />
-                        </a>
+                        </MagneticExternalLink>
 
                         {/* LINKEDIN */}
 
-                        <a
-                            href="https://www.linkedin.com/in/kleber-goncalve-s/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="
-                                group
-                                inline-flex
-                                items-center
-                                gap-2
-                                rounded-full
-                                border
-                                border-graphite
-                                px-5
-                                py-3
-                                text-xs
-                                font-medium
-                                uppercase
-                                tracking-[0.12em]
-                                text-ivory
-                                transition-all
-                                duration-300
-                                hover:border-bronze
-                                hover:text-bronze
-                            "
-                        >
+                        <MagneticExternalLink href="https://www.linkedin.com/in/kleber-goncalve-s/" Icon={ArrowUpRight}>
                             LinkedIn
-                            <ArrowUpRight
-                                className="
-                                    h-3.5
-                                    w-3.5
-                                    transition-transform
-                                    duration-300
-                                    group-hover:-translate-y-0.5
-                                    group-hover:translate-x-0.5
-                                "
-                            />
-                        </a>
+                        </MagneticExternalLink>
 
                         {/* CONTATO */}
 
-                        <a
-                            href="mailto:seuemail@email.com"
-                            className="
-                                group
-                                inline-flex
-                                items-center
-                                gap-2
-                                pointer-events-none
-                                rounded-full
-                                bg-ivory
-                                px-5
-                                py-3
-                                text-xs
-                                font-medium
-                                uppercase
-                                tracking-[0.12em]
-                                text-obsidian
-                                transition-all
-                                duration-300
-                                hover:bg-champagne
-                            "
-                        >
+                       
+
+                        <MagneticExternalLink href="https://www.linkedin.com/in/kleber-goncalve-s/" accent="black" textColor="black"  hoverTextColor="white" className="bg-ivory px-5 py-3" borderColor="transparent" Icon={ArrowUpRight}>
                             Entrar em contato
-                            <ArrowUpRight
-                                className="
-                                    h-3.5
-                                    w-3.5
-                                    transition-transform
-                                    duration-300
-                                    group-hover:-translate-y-0.5
-                                    group-hover:translate-x-0.5
-                                "
-                            />
-                        </a>
+                        </MagneticExternalLink>
                     </div>
                 </div>
 
@@ -877,7 +781,7 @@ function Footer() {
         md:pb-0
     "
                 >
-                    <div  className="marquee-track">
+                    <div className="marquee-track">
                         <div className="marquee-content">
                             KLEBER DEV
                             <span className="marquee-star">✦</span>

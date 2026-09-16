@@ -6,6 +6,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 import { tecnologias } from "../data/tecnologias";
+import { ArrowUpRight } from "lucide-react";
+import MagneticExternalLinkHover from "./MagneticExternalLinkHover";
 
 function ProjetoDesktop({ projetos, experienceMode = "full" }) {
     // ============================================================
@@ -686,6 +688,7 @@ function ProjetoDesktop({ projetos, experienceMode = "full" }) {
                                         duration-500
                                         last:border-b
                                         hover:border-bronze/50
+                                        
                                     "
                             >
                                 {/* ==================================================
@@ -694,6 +697,7 @@ function ProjetoDesktop({ projetos, experienceMode = "full" }) {
 
                                 <div
                                     className="
+                                     group/preview
                                             flex
                                             w-full
                                             items-center
@@ -731,6 +735,8 @@ function ProjetoDesktop({ projetos, experienceMode = "full" }) {
                                                 flex-1
                                                 py-8
                                                 transition-colors
+                                               
+                                              
                                             "
                                     >
                                         <div
@@ -838,25 +844,25 @@ function ProjetoDesktop({ projetos, experienceMode = "full" }) {
                                                             <span
                                                                 key={tecnologia}
                                                                 className={`
-                                                                                inline-flex
-                                                                                h-fit
-                                                                                w-fit
-                                                                                items-center
-                                                                                gap-1.5
-                                                                                rounded-full
-                                                                                border
-                                                                                border-transparent
-                                                                                px-3
-                                                                                py-2
-                                                                                text-[11px]
-                                                                                tracking-[0.15em]
-                                                                                text-steel/60
-                                                                                transition-all
-                                                                                duration-500
-                                                                                ease-out
-                                                                                group-hover:translate-x-2
-                                                                                ${tech.hoverBorder}
-                                                                                group-hover:text-white
+                                                                                                                                    inline-flex
+                                                                                                                                    h-fit
+                                                                                                                                    w-fit
+                                                                                                                                    items-center
+                                                                                                                                    gap-1.5
+                                                                                                                                    rounded-sm
+                                                                                                                                    border
+                                                                                                                                    border-transparent
+                                                                                                                                    px-3
+                                                                                                                                    py-1.5
+                                                                                                                                    text-[11px]
+                                                                                                                                    tracking-[0.15em]
+                                                                                                                                    text-steel/60
+                                                                                                                                    transition-all
+                                                                                                                                    duration-500
+                                                                                                                                    ease-out
+                                                                                                                                    group-hover:translate-x-2
+                                                                                                                                    ${tech.hoverBorder}
+                                                                                                                                    group-hover:text-white
                                                                             `}
                                                             >
                                                                 {Icon && (
@@ -897,33 +903,9 @@ function ProjetoDesktop({ projetos, experienceMode = "full" }) {
                                                 ========================================== */}
 
                                             {projeto.demo && (
-                                                <a
-                                                    href={projeto.demo}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="
-                                                            inline-flex
-                                                            items-center
-                                                            justify-center
-                                                            rounded-full
-                                                            border
-                                                            border-graphite
-                                                            px-4
-                                                            py-2.5
-                                                            font-bebas
-                                                            text-xs
-                                                            uppercase
-                                                            tracking-[0.15em]
-                                                            text-steel
-                                                            transition-all
-                                                            duration-300
-                                                            hover:border-bronze
-                                                            hover:bg-bronze/5
-                                                            hover:text-bronze
-                                                        "
-                                                >
-                                                    Demo ↗
-                                                </a>
+                                                <MagneticExternalLinkHover href={projeto.demo} px="px-3" py="py-2" accent="#A87852" borderColor="#242424" hoverBorderColor="#A87852" textColor="#8B8B8B" hoverTextColor="#0D0D0D" Icon={ArrowUpRight}>
+                                                    Preview
+                                                </MagneticExternalLinkHover>
                                             )}
 
                                             {/* ==========================================

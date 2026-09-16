@@ -186,9 +186,9 @@ function ExperienceDropdown({ experienceMode = getExperienceMode() || "full", on
                     flex
                     items-center
                     gap-2
-
+                    cursor-pointer
                     overflow-hidden
-
+                    rounded-sm
                     px-2
                     py-1
 
@@ -209,6 +209,7 @@ function ExperienceDropdown({ experienceMode = getExperienceMode() || "full", on
                     className="
                         pointer-events-none
                         absolute
+                        rounded-sm
                         inset-0
                         z-0
                     "
@@ -248,6 +249,7 @@ function ExperienceDropdown({ experienceMode = getExperienceMode() || "full", on
                         pointer-events-none
                         absolute
                         inset-0
+                        
                         z-[1]
                         border
                     "
@@ -364,7 +366,7 @@ function ExperienceDropdown({ experienceMode = getExperienceMode() || "full", on
                             left-23
                             top-full
                             z-50
-
+                            rounded-sm
                             mt-5
                             w-[190px]
 
@@ -423,12 +425,12 @@ function ExperienceOption({ mode, currentMode, title, description, onSelect }) {
             className={`
                 group
                 relative
-
+                cursor-pointer
                 flex
                 w-full
                 items-center
                 justify-between
-
+                rounded-sm
                 px-3
                 py-3
 

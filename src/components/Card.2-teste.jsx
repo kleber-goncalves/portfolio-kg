@@ -40,7 +40,7 @@ export default function Card2({ title, number, text, variant = "default", classN
 
                 md:py-9
                 lg:py-13
-
+                
                 transition-colors
                 duration-500
                 ease-out
@@ -67,7 +67,7 @@ export default function Card2({ title, number, text, variant = "default", classN
                     transition-all
                     duration-700
                     ease-out
-
+                    
                     group-hover:w-full
                     group-active:w-full
                 "
