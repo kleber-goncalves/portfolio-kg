@@ -1,15 +1,12 @@
 import { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
-import { motion } from "motion/react";
-
+import { motion, useMotionValue, useSpring } from "motion/react";
 import { stopSmoothScroll, startSmoothScroll } from "../utils/lenisControl";
 
 import { getExperienceMode, setExperienceMode } from "../utils/experienceMode";
 
 function MenuDesktop({ items = [], showMenu = false }) {
     const [isOpen, setIsOpen] = useState(false);
-
-
 
     // =====================================
     // SEÇÃO ATUAL
@@ -32,6 +29,47 @@ function MenuDesktop({ items = [], showMenu = false }) {
 
     const isOpenRef = useRef(false);
     const scrollTickingRef = useRef(false);
+
+    // =====================================
+    // MAGNETIC DO BOTÃO
+    // =====================================
+
+    const buttonX = useMotionValue(0);
+    const buttonY = useMotionValue(0);
+
+    const buttonSpringX = useSpring(buttonX, {
+        stiffness: 580,
+        damping: 11,
+        mass: 1.2,
+    });
+
+    const buttonSpringY = useSpring(buttonY, {
+        stiffness: 280,
+        damping: 12,
+        mass: 1.2,
+    });
+
+    const magneticStrength = 0.40;
+
+    const handleButtonMouseMove = (event) => {
+        const button = event.currentTarget;
+        const rect = button.getBoundingClientRect();
+
+        const mouseX = event.clientX - rect.left;
+        const mouseY = event.clientY - rect.top;
+
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        buttonX.set((mouseX - centerX) * magneticStrength);
+
+        buttonY.set((mouseY - centerY) * magneticStrength);
+    };
+
+    const handleButtonMouseLeave = () => {
+        buttonX.set(0);
+        buttonY.set(0);
+    };
 
     // =====================================
     // SINCRONIZA REF COM ESTADO
@@ -357,9 +395,9 @@ function MenuDesktop({ items = [], showMenu = false }) {
 
     const softSpring = {
         type: "spring",
-        stiffness: 420,
-        damping: 25,
-        mass: 1.5,
+        stiffness: 220,
+        damping: 13,
+        mass: 1.1,
     };
 
     // =====================================
@@ -435,7 +473,6 @@ function MenuDesktop({ items = [], showMenu = false }) {
 
     const overlayVariants = {
         closed: {
-            
             opacity: 0,
         },
 
@@ -474,8 +511,6 @@ function MenuDesktop({ items = [], showMenu = false }) {
             opacity: 1,
             x: 0,
         },
-
-
 
         tap: {
             scale: 0.985,
@@ -545,7 +580,6 @@ function MenuDesktop({ items = [], showMenu = false }) {
             opacity: 1,
         },
     };
-
 
     const hoverLineVariants = {
         rest: {
@@ -1071,13 +1105,15 @@ function MenuDesktop({ items = [], showMenu = false }) {
                 aria-label={isOpen ? "Fechar menu" : "Abrir menu"}
                 aria-expanded={isOpen}
                 onClick={handleToggle}
+                onMouseMove={handleButtonMouseMove}
+                onMouseLeave={handleButtonMouseLeave}
                 initial={{
                     opacity: 0,
-                    scale: 0.9,
+                    scale: 10,
                 }}
                 animate={{
                     opacity: showMenu ? 1 : 0,
-                    scale: showMenu ? 1 : 0.9,
+                    scale: showMenu ? 1 : 0,
                 }}
                 whileHover={{
                     scale: 1.04,
@@ -1112,6 +1148,8 @@ function MenuDesktop({ items = [], showMenu = false }) {
                 "
                 style={{
                     pointerEvents: showMenu ? "auto" : "none",
+                    x: buttonSpringX,
+                    y: buttonSpringY,
                 }}
             >
                 {/* =====================================
