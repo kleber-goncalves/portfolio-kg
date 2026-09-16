@@ -1208,30 +1208,13 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                                 Brasil
                             </span>
                         </div>
+
                         <div
                             className="
         ml-6
         flex
         h-22
         w-22
-        items-center
-        justify-center
-        overflow-hidden
-        rounded-full
-        border
-        border-graphite
-        bg-obsidian
-        text-bronze
-    "
-                        >
-                            <DotLottieReact src="/Scene.lottie" autoplay loop className="h-56 w-500" />
-                        </div>
-                        <div
-                            className="
-        ml-6
-        flex
-        h-12
-        w-12
         items-center
         justify-center
         overflow-hidden
