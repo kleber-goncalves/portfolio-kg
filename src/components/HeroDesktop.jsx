@@ -2,6 +2,8 @@ import { useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+
 import ExperienceDropdown from "./ExperienceDropdown";
 
 import Socials from "../components/Socials";
@@ -15,6 +17,7 @@ import MagneticLink from "../components/MagneticNavLink";
 
 import "../styles/looptextHero.css";
 import "../styles/heroParallax.css";
+import GlobeIcon from "./GlobeIcon";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -36,7 +39,9 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
     const locationRef = useRef(null);
     const socialsRef = useRef(null);
 
+
     const [activeHref, setActiveHref] = useState(null);
+
 
     // ============================================================
     // ACTIVE NAVIGATION
@@ -1203,27 +1208,40 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                                 Brasil
                             </span>
                         </div>
-
                         <div
                             className="
-                                ml-6
-                                flex
-                                h-12
-                                w-12
-                                items-center
-                                justify-center
-
-                                rounded-full
-
-                                border
-                                border-graphite
-
-                                bg-obsidian
-
-                                text-bronze
-                            "
+        ml-6
+        flex
+        h-22
+        w-22
+        items-center
+        justify-center
+        overflow-hidden
+        rounded-full
+        border
+        border-graphite
+        bg-obsidian
+        text-bronze
+    "
                         >
-                            <span className="text-lg">◉</span>
+                            <DotLottieReact src="/Scene.lottie" autoplay loop className="h-56 w-500" />
+                        </div>
+                        <div
+                            className="
+        ml-6
+        flex
+        h-12
+        w-12
+        items-center
+        justify-center
+        overflow-hidden
+        rounded-full
+        border
+        border-graphite
+        bg-obsidian
+    "
+                        >
+                            <GlobeIcon />
                         </div>
                     </div>
                 </div>
