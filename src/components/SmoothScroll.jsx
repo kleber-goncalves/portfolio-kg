@@ -1,33 +1,36 @@
 import { useEffect } from "react";
+
 import Lenis from "lenis";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+import { setLenisInstance, clearLenisInstance } from "../utils/lenisControl";
+
+import { isReducedMotion } from "../utils/experienceMode";
 
 gsap.registerPlugin(ScrollTrigger);
 
 function SmoothScroll({ children }) {
     useEffect(() => {
+        const reducedMotion = isReducedMotion();
+
+        // Modo reduzido:
+        // não inicializa o Lenis.
+        if (reducedMotion) {
+            return;
+        }
+
         const lenis = new Lenis({
-            duration: 0.8,
-
+            duration: 1,
             smoothWheel: true,
-
             wheelMultiplier: 1,
-
             touchMultiplier: 1,
-
             syncTouch: false,
         });
 
-        // =====================================================
-        // LENIS → SCROLLTRIGGER
-        // =====================================================
+        setLenisInstance(lenis);
 
         lenis.on("scroll", ScrollTrigger.update);
-
-        // =====================================================
-        // LENIS → GSAP TICKER
-        // =====================================================
 
         const update = (time) => {
             lenis.raf(time * 1000);
@@ -35,12 +38,7 @@ function SmoothScroll({ children }) {
 
         gsap.ticker.add(update);
 
-        // Evita atraso adicional causado pelo lag smoothing
         gsap.ticker.lagSmoothing(0);
-
-        // =====================================================
-        // CLEANUP
-        // =====================================================
 
         return () => {
             gsap.ticker.remove(update);
@@ -48,6 +46,8 @@ function SmoothScroll({ children }) {
             lenis.off("scroll", ScrollTrigger.update);
 
             lenis.destroy();
+
+            clearLenisInstance(lenis);
         };
     }, []);
 

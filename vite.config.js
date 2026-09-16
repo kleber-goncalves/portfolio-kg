@@ -6,10 +6,10 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
     server: {
         host: "0.0.0.0", // não usa loopback
-        port: 30001, // porta ALTA (fora de políticas)
+        port: 5173, // porta ALTA (fora de políticas)
         strictPort: true,
         hmr: {
-            port: 30001,
+            port: 5173,
             protocol: "ws",
         },
     },

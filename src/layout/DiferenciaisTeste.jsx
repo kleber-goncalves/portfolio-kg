@@ -1,6 +1,20 @@
-import Card2 from "../components/Card.2-teste";
+import { useLayoutEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-function Diferenciais() {
+import Card2 from "../components/card2";
+
+gsap.registerPlugin(ScrollTrigger);
+
+function Diferenciais({ experienceMode = "full" }) {
+    const sectionRef = useRef(null);
+
+    const titleRef = useRef(null);
+    const lineRef = useRef(null);
+    const introDeskRef = useRef(null);
+    const introMobRef = useRef(null);
+    const footerRef = useRef(null);
+
     const diferenciais = [
         {
             numero: "01",
@@ -27,23 +41,178 @@ function Diferenciais() {
         },
     ];
 
+    // ============================================================
+    // ANIMAÇÕES
+    // ============================================================
+
+    useLayoutEffect(() => {
+        const section = sectionRef.current;
+
+        if (!section) return;
+
+        const ctx = gsap.context(() => {
+            // ====================================================
+            // CABEÇALHO
+            // ====================================================
+
+            const title = titleRef.current;
+            const line = lineRef.current;
+            const introDesk = introDeskRef.current;
+            const introMob = introMobRef.current;
+
+            gsap.set(title, {
+                opacity: 0,
+                x: -35,
+            });
+
+            gsap.set(line, {
+                scaleX: 0,
+                transformOrigin: "left center",
+            });
+
+            gsap.set(introDesk, {
+                opacity: 0,
+            });
+
+            gsap.set(introMob, {
+                opacity: 0,
+            });
+
+            const headerTimeline = gsap.timeline({
+                scrollTrigger: {
+                    trigger: title,
+                    start: "top 90%",
+                    end: "top 65%",
+                    scrub: 1,
+                    markers: false,
+                },
+            });
+
+            // ====================================================
+            // TÍTULO
+            // ====================================================
+
+            headerTimeline.to(title, {
+                opacity: 1,
+                x: 0,
+                duration: 1,
+                ease: "none",
+            });
+
+            // ====================================================
+            // LINHA
+            // ====================================================
+
+            headerTimeline.to(
+                line,
+                {
+                    scaleX: 1,
+                    duration: 1,
+                    ease: "none",
+                },
+                "<",
+            );
+
+            // ====================================================
+            // TEXTO DESKTOP
+            // ====================================================
+
+            headerTimeline.to(introDesk, {
+                opacity: 1,
+                duration: 1.8,
+                ease: "none",
+            });
+
+            // ====================================================
+            // TEXTO MOBILE
+            // ====================================================
+
+            headerTimeline.to(
+                introMob,
+                {
+                    opacity: 1,
+                    duration: 0.8,
+                    ease: "none",
+                },
+                "<-=0.35",
+            );
+
+            // ====================================================
+            // CARDS
+            // ====================================================
+
+            const cards = section.querySelectorAll("[data-diferencial-card]");
+
+            cards.forEach((card) => {
+                gsap.set(card, {
+                    opacity: 0,
+                    y: 75,
+                });
+
+                const cardTimeline = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: card,
+                        start: "top 95%",
+                        end: "top 55%",
+                        scrub: 1,
+                        markers: false,
+                    },
+                });
+
+                cardTimeline.to(card, {
+                    opacity: 1,
+                    y: 0,
+                    duration: 1,
+                    ease: "none",
+                });
+            });
+
+            // ====================================================
+            // FOOTER
+            // ====================================================
+
+            const footer = footerRef.current;
+
+            gsap.set(footer, {
+                opacity: 0,
+                y: 25,
+            });
+
+            const footerTimeline = gsap.timeline({
+                scrollTrigger: {
+                    trigger: footer,
+                    start: "top 90%",
+                    toggleActions: "play none none reverse",
+                },
+            });
+
+            footerTimeline.to(footer, {
+                opacity: 1,
+                y: 0,
+                duration: 0.55,
+                ease: "power3.out",
+            });
+        }, section);
+
+        return () => ctx.revert();
+    }, []);
+
     return (
         <section
+            ref={sectionRef}
             id="diferenciais"
             className="
                 relative
                 w-full
                 overflow-hidden
-
                 bg-obsidian
-
                 px-5
+                mt-10
                 py-20
-
                 md:px-10
                 md:py-28
-
                 lg:py-32
+                md:mt-30
             "
         >
             {/* =====================================================
@@ -71,19 +240,17 @@ function Diferenciais() {
                         flex-row
                         items-center
                         gap-2
-
                         md:mb-20
                     "
                 >
                     <h2
+                        ref={titleRef}
                         className="
                             whitespace-nowrap
-
                             text-sm
                             uppercase
                             tracking-wide
                             text-steel
-
                             md:text-7xl
                         "
                     >
@@ -91,25 +258,25 @@ function Diferenciais() {
                     </h2>
 
                     <span
+                        ref={lineRef}
                         className="
                             h-0.5
                             flex-1
-
                             bg-gradientaa
-
                             md:h-1
                         "
                     />
 
-                    {/* DESKTOP */}
+                    {/* =================================================
+                        DESKTOP
+                    ================================================= */}
 
                     <p
+                        ref={introDeskRef}
                         className="
                             hidden
                             max-w-md
-
                             text-steel
-
                             md:block
                             md:text-sm
                             md:leading-6
@@ -124,13 +291,13 @@ function Diferenciais() {
                 ================================================= */}
 
                 <div
+                    ref={introMobRef}
                     className="
                         mb-16
                         flex
                         max-w-3xl
                         flex-col
                         gap-4
-
                         md:hidden
                     "
                 >
@@ -153,9 +320,7 @@ function Diferenciais() {
                     className="
                         grid
                         w-full
-
                         grid-cols-1
-
                         md:grid-cols-2
                         md:grid-rows-4
                     "
@@ -164,28 +329,24 @@ function Diferenciais() {
                         CARD 01
                     ================================================= */}
 
-                    <Card2
-                        number={diferenciais[0].numero}
-                        title={diferenciais[0].titulo}
-                        text={diferenciais[0].texto}
-                        variant="default"
+                    <div
+                        data-diferencial-card
                         className="
                             w-full
                             md:col-start-1
                             md:row-start-1
                             md:max-w-[90%]
                         "
-                    />
+                    >
+                        <Card2 number={diferenciais[0].numero} title={diferenciais[0].titulo} text={diferenciais[0].texto} variant="default" experienceMode={experienceMode} className="w-full" />
+                    </div>
 
                     {/* =================================================
                         CARD 02
                     ================================================= */}
 
-                    <Card2
-                        number={diferenciais[1].numero}
-                        title={diferenciais[1].titulo}
-                        text={diferenciais[1].texto}
-                        variant="default"
+                    <div
+                        data-diferencial-card
                         className="
                             w-full
                             md:col-start-2
@@ -193,34 +354,32 @@ function Diferenciais() {
                             md:ml-auto
                             md:max-w-[90%]
                         "
-                    />
+                    >
+                        <Card2 number={diferenciais[1].numero} title={diferenciais[1].titulo} text={diferenciais[1].texto} variant="default" experienceMode={experienceMode} className="w-full" />
+                    </div>
 
                     {/* =================================================
                         CARD 03
                     ================================================= */}
 
-                    <Card2
-                        number={diferenciais[2].numero}
-                        title={diferenciais[2].titulo}
-                        text={diferenciais[2].texto}
-                        variant="default"
+                    <div
+                        data-diferencial-card
                         className="
                             w-full
                             md:col-start-1
                             md:row-start-3
                             md:max-w-[90%]
                         "
-                    />
+                    >
+                        <Card2 number={diferenciais[2].numero} title={diferenciais[2].titulo} text={diferenciais[2].texto} variant="default" experienceMode={experienceMode} className="w-full" />
+                    </div>
 
                     {/* =================================================
                         CARD 04
                     ================================================= */}
 
-                    <Card2
-                        number={diferenciais[3].numero}
-                        title={diferenciais[3].titulo}
-                        text={diferenciais[3].texto}
-                        variant="default"
+                    <div
+                        data-diferencial-card
                         className="
                             w-full
                             md:col-start-2
@@ -228,7 +387,9 @@ function Diferenciais() {
                             md:ml-auto
                             md:max-w-[90%]
                         "
-                    />
+                    >
+                        <Card2 number={diferenciais[3].numero} title={diferenciais[3].titulo} text={diferenciais[3].texto} variant="default" experienceMode={experienceMode} className="w-full" />
+                    </div>
                 </div>
 
                 {/* =================================================
@@ -236,12 +397,12 @@ function Diferenciais() {
                 ================================================= */}
 
                 <div
+                    ref={footerRef}
                     className="
                         mt-12
                         flex
                         w-full
                         justify-end
-
                         md:mt-16
                     "
                 >

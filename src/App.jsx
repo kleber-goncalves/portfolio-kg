@@ -1,31 +1,54 @@
 // ScrollSmooth - Lenis
 import SmoothScroll from "./components/SmoothScroll";
 
+// React
+import { useState } from "react";
+
 // Layout
-import Competencia from "./layout/CompetenciaTeste";
+import Competencia from "./layout/Competencia";
+import ProjetoT from "./layout/ProjetosTeste2";
+import Diferenciais from "./layout/DiferenciaisTeste";
 import Formacao from "./layout/Formacao";
 import Footer from "./layout/Footer";
 
 // Styles
 import "./App.css";
-import ProjetoT from "./layout/ProjetosTeste2";
-import Diferenciais from "./layout/DiferenciaisTeste";
+
+// Components
+import HeroSectionTransition from "./components/HeroSectionTransition";
 import ButtonReset from "./components/buttonReset";
-import Hero from "./layout/HeroTeste2";
-import Seclogs from "./layout/Logo2";
+import CursorTrail from "./components/CursorTrail";
+
+
+// Experience Mode
+import { getExperienceMode } from "./utils/experienceMode";
 
 function App() {
+    const [experienceMode] = useState(() => getExperienceMode() || "full");
+
     return (
-        <SmoothScroll>
-            <ButtonReset />
-            <Hero />
-            <Seclogs />
-            <Competencia />
-            <ProjetoT />
-            <Diferenciais />
-            <Formacao />
-            <Footer />
-        </SmoothScroll>
+        <>
+            <CursorTrail />
+
+            <SmoothScroll>
+
+                <div className="relative z-[1] w-full">
+                    <ButtonReset />
+
+                    <HeroSectionTransition experienceMode={experienceMode} />
+
+                    <Competencia experienceMode={experienceMode} />
+
+                    <ProjetoT experienceMode={experienceMode} />
+
+                    <Diferenciais experienceMode={experienceMode} />
+
+                    <Formacao experienceMode={experienceMode} />
+
+                    <Footer />
+                </div>
+            </SmoothScroll>
+        </>
     );
 }
 

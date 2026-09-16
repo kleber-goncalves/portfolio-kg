@@ -3,493 +3,1045 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import MinhaTrajetoria from "../components/MinhaTrajetoria";
 import { eventosTrajetoria } from "../data/eventosTrajetoria";
+import "../styles/formationCard.css";
+
 gsap.registerPlugin(ScrollTrigger);
 
-function Formacao() {
-
+function Formacao({ experienceMode = "full" }) {
     const sectionRef = useRef(null);
     const formationCardRef = useRef(null);
 
+    const titleRef = useRef(null);
+    const lineRef = useRef(null);
+
+
+    const isReducedExperience = experienceMode === "reduced";
+
     /*
     ============================================================
-    ANIMAÇÕES EXCLUSIVAS DA FORMAÇÃO
+    ANIMAÇÃO DE ENTRADA — FORMAÇÃO
     ============================================================
     */
 
     useLayoutEffect(() => {
         const ctx = gsap.context(() => {
-            // suas animações do CARD DE FORMAÇÃO
-            // permanecem aqui
+            const formationCard = formationCardRef.current;
+
+            if (!formationCard) return;
+
+            /*
+            ====================================================
+            ELEMENTOS
+            ====================================================
+            */
+
+            const title = titleRef.current;
+            const line = lineRef.current;
+
+            const entryCards = formationCard.querySelectorAll("[data-formation-entry]");
+
+            /*
+            ====================================================
+            ESTADO INICIAL — TÍTULO
+            ====================================================
+            */
+
+            gsap.set(title, {
+                opacity: 0,
+                x: -35,
+            });
+
+            /*
+            ====================================================
+            ESTADO INICIAL — LINHA
+            ====================================================
+            */
+
+            gsap.set(line, {
+                scaleX: 0,
+                transformOrigin: "left center",
+            });
+
+            /*
+            ====================================================
+            ESTADO INICIAL — CARDS
+            ====================================================
+            */
+
+            entryCards.forEach((card) => {
+                gsap.set(card, {
+                    opacity: 0,
+                    y: 75,
+                });
+            });
+
+            /*
+            ====================================================
+            ANIMAÇÃO DO CABEÇALHO
+            ====================================================
+            */
+
+            const headerTimeline = gsap.timeline({
+                scrollTrigger: {
+                    trigger: sectionRef.current,
+                    start: "top 90%",
+                    end: "top 65%",
+                    scrub: 1,
+                    markers: false,
+                },
+            });
+
+            headerTimeline
+                .to(
+                    title,
+                    {
+                        opacity: 1,
+                        x: 0,
+                        duration: 1,
+                        ease: "none",
+                    },
+                    0,
+                )
+                .to(
+                    line,
+                    {
+                        scaleX: 1,
+                        duration: 1,
+                        ease: "none",
+                    },
+                    0.15,
+                );
+
+            /*
+            ====================================================
+            ANIMAÇÃO INDIVIDUAL DOS CARDS
+            ====================================================
+            */
+
+            entryCards.forEach((card) => {
+                const cardTimeline = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: card,
+                        start: "top 95%",
+                        end: "top 55%",
+                        scrub: 1,
+                        markers: false,
+                    },
+                });
+
+                cardTimeline.to(card, {
+                    opacity: 1,
+                    y: 0,
+                    duration: 1,
+                    ease: "none",
+                });
+            });
         }, sectionRef);
 
         return () => ctx.revert();
     }, []);
 
+    /*
+    ============================================================
+    EFEITOS INTERATIVOS DOS CARDS
+    ============================================================
+    */
+
+    useLayoutEffect(() => {
+        const ctx = gsap.context(() => {
+            const formationCard = formationCardRef.current;
+
+            if (!formationCard) return;
+
+            if (isReducedExperience) {
+                return;
+            }
+            /*
+            ====================================================
+            ELEMENTOS QUE RECEBEM O EFEITO
+            ====================================================
+            */
+
+            const interactiveCards = formationCard.querySelectorAll("[data-formation-card]");
+
+            /*
+            ====================================================
+            VERIFICA SE O DISPOSITIVO POSSUI MOUSE
+            ====================================================
+            */
+
+            const mediaQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
+
+            if (!mediaQuery.matches) return;
+
+            /*
+            ====================================================
+            APLICA O EFEITO EM CADA CARD
+            ====================================================
+            */
+
+            const cleanups = [];
+
+            interactiveCards.forEach((card) => {
+                /*
+                =================================================
+                MOUSE ENTER
+                =================================================
+                */
+
+                const handleMouseEnter = () => {
+                    card.style.setProperty("--spotlight-opacity", "1");
+
+                    card.style.setProperty("--border-glow-opacity", "1");
+
+                    gsap.to(card, {
+                        y: -3,
+                        duration: 0.35,
+                        ease: "power2.out",
+                        overwrite: true,
+                    });
+                };
+
+                /*
+                =================================================
+                MOUSE MOVE
+                =================================================
+                */
+
+                const handleMouseMove = (event) => {
+                    const rect = card.getBoundingClientRect();
+
+                    const x = event.clientX - rect.left;
+                    const y = event.clientY - rect.top;
+
+                    /*
+                    =============================================
+                    POSIÇÃO DO SPOTLIGHT
+                    =============================================
+                    */
+
+                    const percentX = (x / rect.width) * 100;
+                    const percentY = (y / rect.height) * 100;
+
+                    card.style.setProperty("--mouse-x", `${percentX}%`);
+
+                    card.style.setProperty("--mouse-y", `${percentY}%`);
+
+                    /*
+                    =============================================
+                    TILT 3D
+                    =============================================
+                    */
+
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+
+                    const mouseX = x - centerX;
+                    const mouseY = y - centerY;
+
+                    /*
+                    =============================================
+                    TILT EXTREMAMENTE SUTIL
+                    =============================================
+                    */
+
+                    const rotateX = (mouseY / centerY) * -1.5;
+
+                    const rotateY = (mouseX / centerX) * 1.5;
+
+                    gsap.to(card, {
+                        rotateX,
+                        rotateY,
+                        duration: 0.18,
+                        ease: "power2.out",
+                        transformPerspective: 500,
+                        overwrite: true,
+                    });
+                };
+
+                /*
+                =================================================
+                MOUSE LEAVE
+                =================================================
+                */
+
+                const handleMouseLeave = () => {
+                    card.style.setProperty("--spotlight-opacity", "0");
+
+                    card.style.setProperty("--border-glow-opacity", "0");
+
+                    gsap.to(card, {
+                        y: 0,
+                        rotateX: 0,
+                        rotateY: 0,
+                        duration: 0.5,
+                        ease: "power3.out",
+                        overwrite: true,
+                    });
+                };
+
+                /*
+                =================================================
+                EVENT LISTENERS
+                =================================================
+                */
+
+                card.addEventListener("mouseenter", handleMouseEnter);
+
+                card.addEventListener("mousemove", handleMouseMove);
+
+                card.addEventListener("mouseleave", handleMouseLeave);
+
+                /*
+                =================================================
+                CLEANUP INDIVIDUAL
+                =================================================
+                */
+
+                cleanups.push(() => {
+                    card.removeEventListener("mouseenter", handleMouseEnter);
+
+                    card.removeEventListener("mousemove", handleMouseMove);
+
+                    card.removeEventListener("mouseleave", handleMouseLeave);
+
+                    gsap.killTweensOf(card);
+                });
+            });
+
+            /*
+            ====================================================
+            CLEANUP
+            ====================================================
+            */
+
+            return () => {
+                cleanups.forEach((cleanup) => cleanup());
+            };
+        }, sectionRef);
+
+        return () => ctx.revert();
+    }, [isReducedExperience]);
+
     return (
-        <section ref={sectionRef} id="formacao" className="bg-obsidian w-full h-full p-5 md:p-10 relative overflow-hidden flex flex-col items-center gap-10">
-            <div className="flex flex-col items-center gap-10 md:gap-20 w-full md:max-w-[1500px]">
-                <div className="flex flex-row items-center gap-2 w-full">
-                    <h2 className="text-sm md:text-7xl  text-steel uppercase">// Formação & Nivel Técnico</h2>
-                    <span className="flex-1 h-0.5 md:h-1 bg-gradientaa"></span>
+        <section
+            ref={sectionRef}
+            id="formacao"
+            className="
+                bg-obsidian
+                w-full
+                h-full
+                p-5
+                mt-30
+                md:p-10
+                relative
+                overflow-hidden
+                flex
+                flex-col
+                items-center
+                gap-10
+            "
+        >
+            <div
+                className="
+                    flex
+                    flex-col
+                    items-center
+                    gap-10
+                    md:gap-20
+                    w-full
+                    md:max-w-[1500px]
+                "
+            >
+                {/* =====================================================
+                    TÍTULO
+                ===================================================== */}
+
+                <div
+                    className="
+                        flex
+                        flex-row
+                        items-center
+                        gap-2
+                        w-full
+                    "
+                >
+                    <h2
+                        ref={titleRef}
+                        className="
+                            text-sm
+                            md:text-7xl
+                            text-steel
+                            uppercase
+                        "
+                    >
+                        // Formação & Nivel Técnico
+                    </h2>
+
+                    <span
+                        ref={lineRef}
+                        className="
+                            flex-1
+                            h-0.5
+                            md:h-1
+                            bg-gradientaa
+                        "
+                    />
                 </div>
-                <div className="w-full h-full relative overflow-hidden flex flex-col items-center gap-15 md:gap-20">
+
+                <div
+                    className="
+                        w-full
+                        h-full
+                        relative
+                        overflow-hidden
+                        flex
+                        flex-col
+                        items-center
+                        gap-15
+                        md:gap-20
+                    "
+                >
+                    {/* =====================================================
+                        FORMATION CARD
+                    ===================================================== */}
+
                     <div
                         ref={formationCardRef}
                         className="
-        relative
-        w-full
+                            relative
+                            w-full
 
-        rounded-3xl
-        border-t-2
-        border-champagne
-        bg-carbon
+                            rounded-3xl
+                            border-t-2
+                            border-champagne
+                            bg-carbon
 
-        md:rounded-none
-        md:border-t-0
-        md:bg-transparent
-    "
+                            md:rounded-none
+                            md:border-t-0
+                            md:bg-transparent
+                        "
                     >
                         <div
                             className="
-            relative
-            flex
-            w-full
-            flex-col
-            gap-10
+                                relative
+                                flex
+                                w-full
+                                flex-col
+                                gap-10
 
-            rounded-3xl
-            border
-            border-graphite
-            p-5
+                                rounded-3xl
+                                border
+                                border-graphite
+                                p-5
 
-            md:gap-16
-            md:rounded-none
-            md:border-0
-            md:p-0
-        "
+                                md:gap-4
+                                md:rounded-none
+                                md:border-0
+                                md:p-0
+                            "
                         >
                             {/* =====================================================
-            BLOCO PRINCIPAL
-        ===================================================== */}
+                                BLOCO PRINCIPAL
+                            ===================================================== */}
 
                             <div
                                 className="
-                relative
-                grid
-                w-full
-                grid-cols-1
-                gap-10
+                                    relative
+                                    grid
+                                    w-full
+                                    grid-cols-1
+                                    gap-10
 
-                md:grid-cols-[1.1fr_1.85fr]
-                md:gap-
-                lg:gap-
-            "
+                                    md:grid-cols-[1.1fr_1.85fr]
+                                    md:gap-0
+                                "
                             >
                                 {/* =================================================
-                COLUNA ESQUERDA — NÍVEL ATUAL
-            ================================================= */}
+                                    CARD 1 — NÍVEL ATUAL
+                                ================================================= */}
 
-                                <div
-                                    className="
-                    relative
-                    flex
-                    flex-col
-                    gap-8
-                    pt-2
-                "
-                                >
-                                    {/* LABEL */}
+                                <div data-formation-entry className="w-full ">
+                                    <div
+                                        data-formation-card
+                                        className="
+                                            formation-inner-card
+                                            relative
+                                            flex
+                                            flex-col
+                                            gap-8
+                                            pt-2
+                                            md:pt-6
+                                            md:pl-6
+                                            h-full
+                                        "
+                                    >
+                                        
+                                        {/* SPOTLIGHT */}
 
-                                    <div className="flex items-center gap-3">
                                         <span
                                             className="
-                            h-2
-                            w-2
-                            shrink-0
-                            rounded-full
-                            bg-champagne
-                        "
+                                                formation-inner-card__spotlight
+                                                absolute
+                                                inset-0
+                                                pointer-events-none
+                                            "
                                         />
-
-                                        <p
-                                            className="
-                            font-bebas
-                            text-xs
-                            uppercase
-                            tracking-[0.2em]
-                            text-steel
-
-                            md:text-sm
-                        "
-                                        >
-                                            Nível atual
-                                        </p>
-                                    </div>
-
-                                    {/* JUNIOR */}
-
-                                    <div className="relative">
-                                        <h2
-                                            className="
-                            relative
-                            z-10
-                            font-bold
-                            bebas-neue-regular
-                            text-6xl
-                            uppercase
-                            
-                            tracking-tight
-                            text-ivory
-
-                            md:text-[10rem]
-                            lg:text-7xl
-                        "
-                                        >
-                                            Junior
-                                        </h2>
 
                                         {/* GLOW */}
 
+                                        <span
+                                            className="
+                                                formation-inner-card__glow
+                                                absolute
+                                                inset-0
+                                                pointer-events-none
+                                            "
+                                        />
+
+                                        {/* LABEL */}
+
                                         <div
                                             className="
-                            pointer-events-none
-                            absolute
-                            bottom-[-20px]
-                            left-[15%]
-                            z-0
-                            h-24
-                            w-40
-                            rounded-full
-                            bg-[#A87852]/20
-                            blur-[70px]
+                                                relative
+                                                z-[2]
+                                                flex
+                                                items-center
+                                                gap-3
+                                            "
+                                        >
+                                            <span
+                                                className="
+                                                    h-2
+                                                    w-2
+                                                    shrink-0
+                                                    rounded-full
+                                                    bg-champagne
+                                                "
+                                            />
 
-                            md:bottom-[-30px]
-                            md:left-[20%]
-                            md:h-40
-                            md:w-64
-                            md:bg-[#A87852]/15
-                            md:blur-[90px]
-                        "
-                                        />
-                                    </div>
+                                            <h3
+                                                className="
+                                                    font-bebas
+                                                    md:font-space
+                                                    text-xs
+                                                    md:font-extrabold
+                                                    uppercase
+                                                    tracking-[0.2em]
+                                                    md:tracking-[0.1em]
+                                                    text-steel
 
-                                    {/* ESPECIALIDADES */}
+                                                    md:text-sm
+                                                "
+                                            >
+                                                Nível atual
+                                            </h3>
+                                        </div>
 
-                                    <div
-                                        className="
-                        flex
-                        flex-wrap
-                        gap-x-4
-                        gap-y-1
+                                        {/* JUNIOR */}
 
-                        text-sm
-                        text-steel
+                                        <div
+                                            className="
+                                                relative
+                                                z-[2]
+                                            "
+                                        >
+                                            <h2
+                                                className="
+                                                    relative
+                                                    z-10
+                                                    font-bold
+                                                    bebas-neue-regular
+                                                    text-6xl
+                                                    uppercase
+                                                    tracking-tight
+                                                    text-ivory
 
-                        md:text-base
-                    "
-                                    >
-                                        <span>Frontend</span>
-                                        <span className="text-bronze">·</span>
-                                        <span>Backend</span>
-                                        <span className="text-bronze">·</span>
-                                        <span>Full Stack</span>
+                                                    md:text-[10rem]
+                                                    lg:text-7xl
+                                                "
+                                            >
+                                                Junior
+                                            </h2>
+                                        </div>
+
+                                        {/* ESPECIALIDADES */}
+
+                                        <div
+                                            className="
+                                                relative
+                                                z-[2]
+                                                flex
+                                                flex-wrap
+                                                gap-x-4
+                                                gap-y-1
+
+                                                text-sm
+                                                text-steel
+
+                                                md:text-base
+                                            "
+                                        >
+                                            <span>Frontend</span>
+
+                                            <span className="text-bronze">·</span>
+
+                                            <span>Backend</span>
+
+                                            <span className="text-bronze">·</span>
+
+                                            <span>Full Stack</span>
+                                        </div>
                                     </div>
                                 </div>
 
                                 {/* =================================================
-                COLUNA DIREITA — FORMAÇÃO
-            ================================================= */}
+                                    CARD 2 — FORMAÇÃO PRINCIPAL
+                                ================================================= */}
 
-                                <div
-                                    className="
-                    flex
-                    flex-col
-                    justify-end
-                    gap-6
+                                <div data-formation-entry className="w-full">
+                                    <div
+                                        data-formation-card
+                                        className="
+                                            formation-inner-card
+                                            relative
+                                            flex
+                                            flex-col
+                                            justify-end
+                                            gap-6
 
-                    md:border-l
-                    md:border-graphite
-                    md:pl-10
-                    lg:pl-14
-                "
-                                >
-                                    {/* LABEL */}
+                                            md:border-l
+                                            md:border-graphite
+                                            md:pl-10
+                                            md:pt-6
+                                            lg:pl-10
+                                            lg:pr-10
+                                            lg:pb-6
+                                        "
+                                    >
+                                        {/* SPOTLIGHT */}
 
-                                    <div className="flex items-center gap-3">
                                         <span
                                             className="
-                            h-2
-                            w-2
-                            shrink-0
-                            rounded-full
-                            bg-champagne
-                        "
+                                                formation-inner-card__spotlight
+                                                absolute
+                                                inset-0
+                                                pointer-events-none
+                                            "
                                         />
 
-                                        <h3
+                                        {/* GLOW */}
+
+                                        <span
                                             className="
-                            font-bebas
-                            text-xs
-                            uppercase
-                            tracking-[0.2em]
-                            text-steel
+                                                formation-inner-card__glow
+                                                absolute
+                                                inset-0
+                                                pointer-events-none
+                                            "
+                                        />
 
-                            md:text-sm
-                        "
-                                        >
-                                            Formação
-                                        </h3>
-                                    </div>
+                                        {/* LABEL */}
 
-                                    {/* CURSO */}
-
-                                    <div className="flex flex-col gap-2">
-                                        <p
-                                            className="
-                            font-space
-                            text-2xl
-                            font-semibold
-                            leading-tight
-                            text-ivory
-
-                            md:text-4xl
-                        "
-                                        >
-                                            Análise e Desenvolvimento
-                                            <br className="hidden md:block" />
-                                            de Sistemas
-                                        </p>
-
-                                        <p
-                                            className="
-                            text-sm
-                            text-champagne
-
-                            md:text-base
-                        "
-                                        >
-                                            ADS · Uniube — Uberaba
-                                        </p>
-                                    </div>
-
-                                    {/* PROGRESSO */}
-
-                                    <div className="flex flex-col gap-3">
                                         <div
                                             className="
-                            flex
-                            items-end
-                            justify-between
-                        "
+                                                relative
+                                                z-[2]
+                                                flex
+                                                items-center
+                                                gap-3
+                                            "
                                         >
                                             <span
                                                 className="
-                                text-xs
-                                uppercase
-                                tracking-[0.15em]
-                                text-steel/60
-                            "
-                                            >
-                                                Progresso
-                                            </span>
+                                                    h-2
+                                                    w-2
+                                                    shrink-0
+                                                    rounded-full
+                                                    bg-champagne
+                                                "
+                                            />
 
-                                            <span
+                                            <h3
                                                 className="
-                                font-bebas
-                                text-3xl
-                                leading-none
-                                text-bronze
+                                                    font-bebas
+                                                    md:font-space
+                                                    text-xs
+                                                    md:font-extrabold
+                                                    uppercase
+                                                    tracking-[0.2em]
+                                                    md:tracking-[0.1em]
+                                                    text-steel
 
-                                md:text-4xl
-                            "
+                                                    md:text-sm
+                                                "
                                             >
-                                                87%
-                                            </span>
+                                                Formação
+                                            </h3>
                                         </div>
 
+                                        {/* CURSO */}
+
                                         <div
                                             className="
-                            h-1.5
-                            w-full
-                            overflow-hidden
-                            rounded-full
-                            bg-graphite
-                        "
+                                                relative
+                                                z-[2]
+                                                flex
+                                                flex-col
+                                                gap-2
+                                            "
+                                        >
+                                            <p
+                                                className="
+                                                    font-space
+                                                    text-2xl
+                                                    font-semibold
+                                                    leading-tight
+                                                    text-ivory
+
+                                                    md:text-4xl
+                                                "
+                                            >
+                                                Análise e Desenvolvimento
+                                                <br className="hidden md:block" />
+                                                de Sistemas
+                                            </p>
+
+                                            <p
+                                                className="
+                                                    text-sm
+                                                    text-champagne
+
+                                                    md:text-base
+                                                "
+                                            >
+                                                ADS · Uniube — Uberaba
+                                            </p>
+                                        </div>
+
+                                        {/* PROGRESSO */}
+
+                                        <div
+                                            className="
+                                                relative
+                                                z-[2]
+                                                flex
+                                                flex-col
+                                                gap-3
+                                            "
                                         >
                                             <div
                                                 className="
-                                h-full
-                                w-[87%]
-                                rounded-full
-                                bg-bronze
-                            "
-                                            />
+                                                    flex
+                                                    items-end
+                                                    justify-between
+                                                "
+                                            >
+                                                <span
+                                                    className="
+                                                        text-xs
+                                                        uppercase
+                                                        tracking-[0.15em]
+                                                        text-steel/60
+                                                    "
+                                                >
+                                                    Progresso
+                                                </span>
+
+                                                <span
+                                                    className="
+                                                        font-bebas
+                                                        text-3xl
+                                                        leading-none
+                                                        text-bronze
+
+                                                        md:text-4xl
+                                                    "
+                                                >
+                                                    87%
+                                                </span>
+                                            </div>
+
+                                            <div
+                                                className="
+                                                    h-1.5
+                                                    w-full
+                                                    overflow-hidden
+                                                    rounded-full
+                                                    bg-graphite
+                                                "
+                                            >
+                                                <div
+                                                    className="
+                                                        h-full
+                                                        w-[87%]
+                                                        rounded-full
+                                                        bg-bronze
+                                                    "
+                                                />
+                                            </div>
+
+                                            <div
+                                                className="
+                                                    flex
+                                                    justify-between
+                                                    text-xs
+                                                    text-steel/70
+
+                                                    md:text-sm
+                                                "
+                                            >
+                                                <span>2,5 anos</span>
+
+                                                <span>Em conclusão</span>
+                                            </div>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* =====================================================
+                                FORMAÇÕES COMPLEMENTAR + ACADÊMICA
+                            ===================================================== */}
+
+                            <div
+                                className="
+                                    grid
+                                    w-full
+                                    grid-cols-1
+                                    gap-6
+
+                                    md:grid-cols-2
+                                    md:gap-5
+                                "
+                            >
+                                {/* =================================================
+                                    CARD 3 — FORMAÇÃO COMPLEMENTAR
+                                ================================================= */}
+
+                                <div data-formation-entry className="w-full">
+                                    <div
+                                        data-formation-card
+                                        className="
+                                            formation-inner-card
+                                            relative
+                                            flex
+                                            flex-col
+                                            gap-3
+
+                                            border-t
+                                            md:border-y
+                                            border-graphite
+                                            pt-8
+
+                                            md:pt-10
+                                            md:pl-6
+                                            h-full
+                                        "
+                                    >
+                                        {/* SPOTLIGHT */}
+
+                                        <span
+                                            className="
+                                                formation-inner-card__spotlight
+                                                absolute
+                                                inset-0
+                                                pointer-events-none
+                                            "
+                                        />
+
+                                        {/* GLOW */}
+
+                                        <span
+                                            className="
+                                                formation-inner-card__glow
+                                                absolute
+                                                inset-0
+                                                pointer-events-none
+                                            "
+                                        />
+
+                                        {/* LABEL */}
 
                                         <div
                                             className="
-                            flex
-                            justify-between
-                            text-xs
-                            text-steel/70
-
-                            md:text-sm
-                        "
+                                                relative
+                                                z-[2]
+                                                flex
+                                                items-center
+                                                gap-3
+                                            "
                                         >
-                                            <span>2,5 anos</span>
+                                            <span
+                                                className="
+                                                    h-1.5
+                                                    w-1.5
+                                                    rounded-full
+                                                    bg-champagne
+                                                "
+                                            />
 
-                                            <span>Em conclusão</span>
+                                            <h3
+                                                className="
+                                                    font-space
+                                                    text-sm
+                                                    uppercase
+                                                    font-extrabold
+                                                    tracking-[0.1em]
+                                                    text-steel
+                                                "
+                                            >
+                                                Formação complementar
+                                            </h3>
                                         </div>
+
+                                        {/* DESCRIÇÃO */}
+
+                                        <p
+                                            className="
+                                                relative
+                                                z-[2]
+                                                text-sm
+                                                leading-6
+                                                text-steel
+
+                                                md:text-base
+                                                md:leading-7
+                                            "
+                                        >
+                                            Formado nos cursos de
+                                            <span className="font-bold text-bronze"> Front-end</span> e<span className="font-bold text-bronze"> Back-end</span> da
+                                            <span className="font-bold text-champagne"> DNC</span>, com formação prática que simula o mercado real e voltada ao desenvolvimento de aplicações web, construção de interfaces, APIs, integração com bancos de dados e desenvolvimento
+                                            <span className="font-bold text-bronze"> Full-Stack</span>.
+                                        </p>
                                     </div>
                                 </div>
 
                                 {/* =================================================
-                GLOW DECORATIVO
-            ================================================= */}
+                                    CARD 4 — FORMAÇÃO ACADÊMICA
+                                ================================================= */}
 
-                                <div
-                                    className="
-                    pointer-events-none
-                    absolute
-                    right-[-80px]
-                    top-[-60px]
-                    h-40
-                    w-40
-                    rounded-full
-                    bg-[#A87852]/10
-                    blur-[100px]
+                                <div data-formation-entry className="w-full">
+                                    <div
+                                        data-formation-card
+                                        className="
+                                            formation-inner-card
+                                            relative
+                                            flex
+                                            flex-col
+                                            gap-3
 
-                    md:h-56
-                    md:w-56
-                "
-                                />
-                            </div>
+                                            border-t
+                                            md:border-y
+                                            border-graphite
+                                            pt-8
+                                            pb-6
+                                            md:pt-10
+                                            md:pl-6
+                                            md:pb-10
+                                            h-full
+                                        "
+                                    >
+                                        {/* SPOTLIGHT */}
 
-                            {/* =====================================================
-            DESCRIÇÃO DAS FORMAÇÕES
-        ===================================================== */}
-
-                            <div
-                                className="
-                grid
-                w-full
-                grid-cols-1
-                gap-6
-
-                border-t
-                border-graphite
-                pt-8
-
-                md:grid-cols-2
-                md:gap-16
-                md:pt-10
-            "
-                            >
-                                {/* DNC */}
-
-                                <div className="flex flex-col gap-3">
-                                    <div className="flex items-center gap-3">
                                         <span
                                             className="
-                            h-1.5
-                            w-1.5
-                            rounded-full
-                            bg-champagne
-                        "
+                                                formation-inner-card__spotlight
+                                                absolute
+                                                inset-0
+                                                pointer-events-none
+                                            "
                                         />
+
+                                        {/* GLOW */}
+
+                                        <span
+                                            className="
+                                                formation-inner-card__glow
+                                                absolute
+                                                inset-0
+                                                pointer-events-none
+                                            "
+                                        />
+
+                                        {/* LABEL */}
+
+                                        <div
+                                            className="
+                                                relative
+                                                z-[2]
+                                                flex
+                                                items-center
+                                                gap-3
+                                            "
+                                        >
+                                            <span
+                                                className="
+                                                    h-1.5
+                                                    w-1.5
+                                                    rounded-full
+                                                    bg-champagne
+                                                "
+                                            />
+
+                                            <h3
+                                                className="
+                                                    font-space
+                                                    text-sm
+                                                    uppercase
+                                                    font-extrabold
+                                                    tracking-[0.1em]
+                                                    text-steel
+                                                "
+                                            >
+                                                Formação acadêmica
+                                            </h3>
+                                        </div>
+
+                                        {/* DESCRIÇÃO */}
 
                                         <p
                                             className="
-                            font-bebas
-                            text-xs
-                            uppercase
-                            tracking-[0.2em]
-                            text-steel
-                        "
+                                                relative
+                                                z-[2]
+                                                text-sm
+                                                leading-6
+                                                text-steel
+
+                                                md:text-base
+                                                md:leading-7
+                                            "
                                         >
-                                            Formação complementar
+                                            Atualmente, estou concluindo
+                                            <span className="font-bold text-bronze"> Análise e Desenvolvimento de Sistemas</span> pela
+                                            <span className="font-bold text-champagne"> Uniube — Uberaba</span>, com aproximadamente
+                                            <span className="font-bold text-bronze"> 87% da graduação concluída.</span> A formação envolve Scrum, sprints e projetos em equipe.
                                         </p>
-                                    </div>
 
-                                    <p
-                                        className="
-                        text-sm
-                        leading-6
-                        text-steel
-
-                        md:text-base
-                        md:leading-7
-                    "
-                                    >
-                                        Formado nos cursos de
-                                        <span className="font-bold text-bronze"> Front-end</span> e<span className="font-bold text-bronze"> Back-end</span> da
-                                        <span className="font-bold text-champagne"> DNC</span>, com formação prática que simula o mercado real e voltada ao desenvolvimento de aplicações web, construção de interfaces, APIs, integração com bancos de dados e desenvolvimento
-                                        <span className="font-bold text-bronze"> Full-Stack</span>.
-                                    </p>
-                                </div>
-
-                                {/* ADS */}
-
-                                <div className="flex flex-col gap-3">
-                                    <div className="flex items-center gap-3">
-                                        <span
+                                        <small
                                             className="
-                            h-1.5
-                            w-1.5
-                            rounded-full
-                            bg-champagne
-                        "
-                                        />
+                                                relative
+                                                z-[2]
+                                                text-xs
+                                                italic
+                                                leading-5
+                                                text-steel/60
 
-                                        <p
-                                            className="
-                            font-bebas
-                            text-xs
-                            uppercase
-                            tracking-[0.2em]
-                            text-steel
-                        "
+                                                md:text-sm
+                                                md:leading-6
+                                            "
                                         >
-                                            Formação acadêmica
-                                        </p>
+                                            O nível reflete o que a formação entregou, não tempo de mercado.
+                                        </small>
                                     </div>
-
-                                    <p
-                                        className="
-                        text-sm
-                        leading-6
-                        text-steel
-
-                        md:text-base
-                        md:leading-7
-                    "
-                                    >
-                                        Atualmente, estou concluindo
-                                        <span className="font-bold text-bronze"> Análise e Desenvolvimento de Sistemas</span> pela
-                                        <span className="font-bold text-champagne"> Uniube — Uberaba</span>, com aproximadamente
-                                        <span className="font-bold text-bronze"> 87% da graduação concluída.</span> A formação envolve Scrum, sprints e projetos em equipe.
-                                    </p>
-
-                                    <p
-                                        className="
-                        text-xs
-                        italic
-                        leading-5
-                        text-steel/60
-
-                        md:text-sm
-                        md:leading-6
-                    "
-                                    >
-                                        O nível reflete o que a formação entregou, não tempo de mercado.
-                                    </p>
                                 </div>
                             </div>
-
                         </div>
                     </div>
 
-
+                    {/* =====================================================
+                        MINHA TRAJETÓRIA — NÃO ALTERADO
+                    ===================================================== */}
 
                     <MinhaTrajetoria subtitulo="Minha Trajetória" titulo="Evolução" descricao="Aprendizado, prática e evolução contínua no desenvolvimento de software." eventos={eventosTrajetoria} />
                 </div>

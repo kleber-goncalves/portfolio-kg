@@ -1,0 +1,185 @@
+.editorial-card {
+    /*
+     * Variáveis do efeito
+     */
+
+    --mouse-x: 50%;
+    --mouse-y: 50%;
+
+    --spotlight-opacity: 0;
+    --border-glow-opacity: 0;
+
+    /*
+     * TILT 3D
+     */
+
+    position: relative;
+
+    overflow: hidden;
+
+    perspective: 1000px;
+
+    transform-style: preserve-3d;
+
+    will-change: transform;
+
+    /*
+     * Evita que o navegador faça
+     * algumas otimizações que podem
+     * deixar o Tilt inconsistente.
+     */
+
+    backface-visibility: hidden;
+
+    transform-origin: center center;
+}
+
+
+/*
+========================================
+SPOTLIGHT
+========================================
+*/
+
+.editorial-card__spotlight {
+    z-index: 0;
+
+    opacity: var(--spotlight-opacity);
+
+    background:
+        radial-gradient(
+            300px circle at var(--mouse-x) var(--mouse-y),
+            rgba(196, 154, 120, 0.13) 0%,
+            rgba(168, 120, 82, 0.07) 25%,
+            rgba(168, 120, 82, 0.035) 45%,
+            transparent 72%
+        );
+
+    mix-blend-mode: screen;
+
+    transition:
+        opacity 0.3s ease;
+}
+
+
+/*
+========================================
+BORDA ILUMINADA
+========================================
+*/
+
+.editorial-card__glow {
+    z-index: 1;
+
+    padding: 3px;
+
+    opacity: var(--border-glow-opacity);
+
+    background:
+        radial-gradient(
+            320px circle at var(--mouse-x) var(--mouse-y),
+            rgba(216, 194, 170, 1) 0%,
+            rgba(196, 154, 120, 0.75) 15%,
+            rgba(168, 120, 82, 0.4) 35%,
+            transparent 65%
+        );
+
+    /*
+     * Faz somente a borda aparecer.
+     */
+
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+
+    -webkit-mask-composite: xor;
+
+    mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+
+    mask-composite: exclude;
+
+    transition:
+        opacity 0.25s ease;
+}
+
+
+/*
+========================================
+HOVER
+========================================
+*/
+
+.editorial-card:hover {
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.12),
+        0 0 30px rgba(168, 120, 82, 0.05);
+    border-bottom: none !important;
+}
+
+
+/*
+========================================
+REDUCED MOTION
+========================================
+*/
+
+@media (prefers-reduced-motion: reduce) {
+    .editorial-card {
+        transform: none !important;
+
+        transition: none !important;
+    }
+
+    .editorial-card__spotlight,
+    .editorial-card__glow {
+        transition: none;
+    }
+}
+
+
+/*
+========================================
+MOBILE
+========================================
+*/
+
+@media (max-width: 767px) {
+    .editorial-card {
+        transform: none !important;
+
+        perspective: none;
+
+        transform-style: flat;
+
+        box-shadow: none !important;
+    }
+
+    .editorial-card__spotlight,
+    .editorial-card__glow {
+        display: none;
+    }
+}
+
+
+/*
+========================================
+TOUCH DEVICES
+========================================
+*/
+
+@media (hover: none), (pointer: coarse) {
+    .editorial-card {
+        transform: none !important;
+
+        perspective: none;
+
+        transform-style: flat;
+    }
+
+    .editorial-card__spotlight,
+    .editorial-card__glow {
+        display: none;
+    }
+}
