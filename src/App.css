@@ -226,7 +226,7 @@ html::-webkit-scrollbar {
    DESKTOP
 ============================================================ */
 
-@media (min-width: 768px) {
+@media (min-width: 768px) and (orientation: portrait), (min-width: 768px) and (orientation: landscape) and (min-height: 601px) {
 
     .hero-cut-top-left {
         width: 7rem;
