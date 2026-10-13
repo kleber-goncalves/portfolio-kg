@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 const TOTAL_STEPS = 4;
+const MIN_DISPLAY_TIME = 3000;
 
 function loadImage(src) {
     return new Promise((resolve) => {
@@ -24,6 +25,7 @@ function Preloader() {
 
     useEffect(() => {
         let cancelled = false;
+        const startedAt = performance.now();
 
         const completeStep = (label, success = true) => {
             if (cancelled) return;
@@ -34,6 +36,9 @@ function Preloader() {
             ]);
             setProgress((value) => Math.min(value + 1, TOTAL_STEPS));
         };
+
+        const wait = (duration) =>
+            new Promise((resolve) => window.setTimeout(resolve, duration));
 
         const prepareSite = async () => {
             setCurrentLabel("Carregando sua identidade visual");
@@ -76,10 +81,22 @@ function Preloader() {
 
             if (cancelled) return;
 
+            // Mantém o preloader visível por pelo menos 3 segundos,
+            // mesmo se os recursos terminarem de carregar muito rápido.
+            const elapsed = performance.now() - startedAt;
+            const remainingTime = Math.max(0, MIN_DISPLAY_TIME - elapsed);
+
+            if (remainingTime > 0) {
+                setCurrentLabel("Preparando sua experiência");
+                await wait(remainingTime);
+            }
+
+            if (cancelled) return;
+
             setCurrentLabel("Tudo pronto para começar");
-            window.setTimeout(() => {
-                if (!cancelled) setVisible(false);
-            }, 350);
+            await wait(500);
+
+            if (!cancelled) setVisible(false);
         };
 
         const previousOverflow = document.body.style.overflow;
