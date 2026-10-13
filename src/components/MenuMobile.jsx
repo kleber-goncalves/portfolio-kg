@@ -138,7 +138,7 @@ function MenuMobile({ items = [] }) {
     };
 
     return (
-        <div className="md:hidden">
+        <div className="b-md:hidden">
             {/* =========================================
                 BOTÃO HAMBÚRGUER
             ========================================== */}
