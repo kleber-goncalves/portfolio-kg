@@ -124,11 +124,11 @@ const techLogos = [
 function Seclogs() {
     return (
         <section className="bg-obsidian w-full  h-full relative overflow-hidden flex flex-col items-center gap-10">
-            <div className="flex flex-row items-center gap-2 w-full p-5 md:p-10">
-                <h2 className="text-sm md:text-7xl text-steel uppercase">
+            <div className="flex flex-row items-center gap-2 w-full p-5 b-md:p-10">
+                <h2 className="text-sm b-md:text-7xl text-steel uppercase">
                     // Stack & Ferramentas
                 </h2>
-                <span className="flex-1 h-0.5 md:h-1 bg-gradientaa"></span>
+                <span className="flex-1 h-0.5 b-md:h-1 bg-gradientaa"></span>
             </div>
             <div className="bg-obsidian w-full h-full relative overflow-hidden flex flex-col items-center gap-2">
                 <div className="bg-obsidian w-full h-20 relative overflow-hidden flex flex-row items-center">
