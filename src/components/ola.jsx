@@ -952,8 +952,8 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                         top-8
                         z-40
 
-                        lg:left-18
-                        lg:top-10
+                        c-lg:left-18
+                        c-lg:top-10
                     "
                 >
                     <div
@@ -961,8 +961,8 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                             h-10
                             w-10
 
-                            lg:h-11
-                            lg:w-11
+                            c-lg:h-11
+                            c-lg:w-11
                         "
                     >
                         <img
@@ -993,9 +993,9 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                         items-center
                         gap-5
 
-                        lg:right-17
-                        lg:top-10
-                        lg:gap-7
+                        c-lg:right-17
+                        c-lg:top-10
+                        c-lg:gap-7
                     "
                 >
                     {items.map((item) => (
@@ -1025,7 +1025,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
 
                                 hover:text-bronze
 
-                                lg:text-[10px]
+                                c-lg:text-[10px]
                             "
                         >
                             <span>{item.label}</span>
@@ -1071,7 +1071,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
 
                                 hover:text-bronze
 
-                                lg:text-[10px]
+                                c-lg:text-[10px]
                             "
                         >
                             <span>Experience</span>
@@ -1226,8 +1226,8 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
 
                         overflow-hidden
 
-                        lg:w-[440px]
-                        xl:w-[970px]
+                        c-lg:w-[440px]
+                        d-xl:w-[970px]
                     "
                 >
                     <img
@@ -1300,7 +1300,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
 
                         -translate-y-1/2
 
-                        lg:flex
+                        c-lg:flex
                     "
                 >
                     <div
@@ -1393,11 +1393,11 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
 
                         -translate-y-1/2
 
-                        lg:flex
-                        lg:flex-col
+                        c-lg:flex
+                        c-lg:flex-col
 
-                        xl:right-[0%]
-                        xl:w-[340px]
+                        d-xl:right-[0%]
+                        d-xl:w-[340px]
                     "
                 >
                     <div
@@ -1439,8 +1439,8 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
 
                                 text-ivory
 
-                                lg:text-5xl
-                                xl:text-6xl
+                                c-lg:text-5xl
+                                d-xl:text-6xl
                             "
                         >
                             Software
@@ -1477,8 +1477,8 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                         left-8
                         z-40
 
-                        lg:bottom-10
-                        lg:left-10
+                        c-lg:bottom-10
+                        c-lg:left-10
                     "
                 >
                     <Socials />
