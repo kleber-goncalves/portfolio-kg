@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
+import OptimizedImage from "./OptimizedImage";
 
 function ProjetoCard({ numero, titulo, descricao, tecnologias = [], tecnologiasConfig = {}, imagens = [], demo, github }) {
     const cardRef = useRef(null);
@@ -158,7 +159,7 @@ function ProjetoCard({ numero, titulo, descricao, tecnologias = [], tecnologiasC
             ================================================== */}
 
             <div className="relative aspect-video w-full shrink-0 overflow-hidden bg-neutral-950" onClick={alternarPausa}>
-                {imagens.length > 0 && <img ref={imageRef} src={imagens[imagemAtual]} alt={`Preview do projeto ${titulo}`} className="absolute inset-0 h-full w-full object-cover" />}
+                {imagens.length > 0 && <OptimizedImage imageRef={imageRef} src={imagens[imagemAtual]} alt={`Captura de tela do projeto ${titulo}`} width={1600} height={900} loading="lazy" fetchPriority="low" wrapperClassName="absolute inset-0" className="object-cover" />}
 
                 {/* OVERLAY */}
 
