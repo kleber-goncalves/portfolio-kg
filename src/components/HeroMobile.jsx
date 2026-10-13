@@ -24,6 +24,9 @@ function HeroMobile({ items }) {
                     top-0
                     h-full
                     w-full
+                     
+
+       
                 "
             />
 
