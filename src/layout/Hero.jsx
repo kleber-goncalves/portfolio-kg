@@ -2,9 +2,9 @@ import { Github, Linkedin, Instagram } from "@thesvg/react";
 
 function Hero() {
     return (
-        <section className="bg-obsidian w-full p-5 md:p-10  h-screen relative flex flex-row ">
+        <section className="bg-obsidian w-full p-5 b-md:p-10  h-screen relative flex flex-row ">
             <div id="eft1">
-                <h1 className="text-5xl md:text-7xl text-amber-700 font-bold text-center">
+                <h1 className="text-5xl b-md:text-7xl text-amber-700 font-bold text-center">
                     K
                 </h1>
                 <img src="" alt="" />
@@ -35,17 +35,17 @@ function Hero() {
                         ></div>
                     </div>
                     <div className="flex flex-col gap-2">
-                        <h1 className="text-6xl md:text-7xl font-bold bebas-neue-regular text-ivory">
+                        <h1 className="text-6xl b-md:text-7xl font-bold bebas-neue-regular text-ivory">
                             Kleber<br></br> Dev.
                         </h1>
-                        <p className="text-xs md:text-3xl text-steel">
+                        <p className="text-xs b-md:text-3xl text-steel">
                             Frontend · Backend · Fullstack ·{" "}
                             <strong className="text-bronze">
                                 Analista de Sistemas
                             </strong>
                         </p>
                     </div>
-                    <div className="flex flex-col mt-3 gap-5 text-sm md:text-3xl text-steel">
+                    <div className="flex flex-col mt-3 gap-5 text-sm b-md:text-3xl text-steel">
                         <p>
                             Meu nome é Kleber, tenho 21 anos e Sou formado em
                             Análise e Desenvolvimento de Sistemas pela
