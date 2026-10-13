@@ -22,7 +22,10 @@ import OptimizedImage from "./OptimizedImage";
 
 gsap.registerPlugin(ScrollTrigger);
 
-function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode = "full" }) {
+function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, experienceMode = "full" }) {
+    useLayoutEffect(() => {
+        onReady?.("desktop");
+    }, [onReady]);
     // ============================================================
     // REFS
     // ============================================================

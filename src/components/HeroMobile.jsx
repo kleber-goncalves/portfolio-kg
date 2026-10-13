@@ -1,8 +1,14 @@
+import { useLayoutEffect } from "react";
+
 import Socials from "../components/Socials";
 import MenuMobile from "../components/MenuMobile";
 import OptimizedImage from "./OptimizedImage";
 
-function HeroMobile({ items }) {
+function HeroMobile({ items, onReady }) {
+    useLayoutEffect(() => {
+        onReady?.("mobile");
+    }, [onReady]);
+
     return (
         <div className="relative w-full">
             {/* SVG DE FUNDO: acompanha a altura real do Hero */}

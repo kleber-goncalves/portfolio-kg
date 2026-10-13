@@ -6,10 +6,15 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Hero from "../layout/HeroTeste2";
 import Seclogs from "../layout/Logo2";
 import MenuDesktop from "../components/MenuDesktop";
+import useResponsive from "../hooks/useResponsive";
 
 gsap.registerPlugin(ScrollTrigger);
 
 function HeroSectionTransition({ experienceMode = "full" }) {
+    const { isMobileLayout } = useResponsive();
+    const requiredHeroLayout = isMobileLayout ? "mobile" : "desktop";
+    const [readyHeroLayout, setReadyHeroLayout] = useState(null);
+
     const sectionRef = useRef(null);
     const heroRef = useRef(null);
     const seclogsRef = useRef(null);
@@ -182,6 +187,10 @@ function HeroSectionTransition({ experienceMode = "full" }) {
         const section = sectionRef.current;
 
         if (!section) return;
+
+        // A transição depende do DOM do Hero correspondente à viewport.
+        // Aguarda o módulo lazy carregar antes de criar animações e ScrollTriggers.
+        if (readyHeroLayout !== requiredHeroLayout) return;
 
         // ========================================================
         // EXPERIÊNCIA REDUZIDA
@@ -531,7 +540,7 @@ function HeroSectionTransition({ experienceMode = "full" }) {
                 heroTransition.kill();
             }
         };
-    }, [experienceMode]);
+    }, [experienceMode, readyHeroLayout, requiredHeroLayout]);
 
     // ============================================================
     // MODO ATUAL
@@ -638,7 +647,13 @@ function HeroSectionTransition({ experienceMode = "full" }) {
             ================================================== */}
 
             <div ref={heroRef} className={heroWrapperClass}>
-                <Hero dotFieldFrozen={dotFieldFrozen} onNavigate={handleHeroNavigation} experienceMode={experienceMode} />
+                <Hero
+                    isMobileLayout={isMobileLayout}
+                    dotFieldFrozen={dotFieldFrozen}
+                    onNavigate={handleHeroNavigation}
+                    onReady={setReadyHeroLayout}
+                    experienceMode={experienceMode}
+                />
                 {isFullExperience === false && (
                     <div
                         className="
