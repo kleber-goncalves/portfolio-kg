@@ -145,7 +145,7 @@ MOBILE
 ========================================
 */
 
-@media (max-width: 767px) {
+@media (max-width: 767px), (orientation: landscape) and (max-height: 600px) {
     .editorial-card {
         transform: none !important;
 
