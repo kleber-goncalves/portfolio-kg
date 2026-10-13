@@ -5,13 +5,13 @@ function Diferenciais() {
       const [selectedCard, setSelectedCard] = useState(null);
 
     return (
-        <section className="bg-obsidian w-full h-full p-5 md:p-10 relative overflow-hidden flex flex-col items-center gap-10">
+        <section className="bg-obsidian w-full h-full p-5 b-md:p-10 relative overflow-hidden flex flex-col items-center gap-10">
             <div className="flex flex-col items-center gap-10 w-full">
                 <div className="flex flex-row items-center gap-2 w-full">
-                    <h2 className="text-sm md:text-7xl  text-steel uppercase">
+                    <h2 className="text-sm b-md:text-7xl  text-steel uppercase">
                         // DIFERENCIAIS
                     </h2>
-                    <span className="flex-1 h-0.5 md:h-1 bg-gradientaa"></span>
+                    <span className="flex-1 h-0.5 b-md:h-1 bg-gradientaa"></span>
                 </div>
                 <div className="w-full h-full relative overflow-hidden flex flex-col items-center gap-3">
                     <Card2
