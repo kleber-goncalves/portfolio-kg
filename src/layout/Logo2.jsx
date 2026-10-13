@@ -399,10 +399,10 @@ function Seclogs() {
                 overflow-hidden
                 bg-obsidian
 
-                md:mt-34
+                b-md:mt-34
                 mt-30
-                md:shadow-t-2xl
-                md:shadow-black
+                b-md:shadow-t-2xl
+                b-md:shadow-black
             "
         >
             {/* ==================================================
@@ -415,13 +415,13 @@ function Seclogs() {
                     w-full
                     flex-row
                     items-center
-                    md:flex-col
-                    md:items-start
+                    b-md:flex-col
+                    b-md:items-start
                     gap-2
-                    md:p-5
+                    b-md:p-5
                     px-5
-                    md:mb-3
-                    md:pl-26
+                    b-md:mb-3
+                    b-md:pl-26
                 "
             >
                 {/* DESKTOP */}
@@ -433,8 +433,8 @@ function Seclogs() {
                         whitespace-nowrap
                         text-steel
 
-                        md:block
-                        md:text-7xl
+                        b-md:block
+                        b-md:text-7xl
                     "
                 >
                     // TECNOLOGIAS & FERRAMENTAS
@@ -450,7 +450,7 @@ function Seclogs() {
                         uppercase
                         text-steel
 
-                        md:hidden
+                        b-md:hidden
                     "
                 >
                     // TECNOLOGIAS & FERRAMENTAS
@@ -466,7 +466,7 @@ function Seclogs() {
                         flex-1
                         bg-gradientaa
 
-                        md:block
+                        b-md:block
                     "
                 />
 
@@ -479,7 +479,7 @@ function Seclogs() {
                         w-full
                         bg-gradientaa
 
-                        md:hidden
+                        b-md:hidden
                     "
                 />
 
@@ -492,10 +492,10 @@ function Seclogs() {
                         max-w-md
                         text-steel
 
-                        md:block
-                        md:pl-34
-                        md:text-sm
-                        md:leading-6
+                        b-md:block
+                        b-md:pl-34
+                        b-md:text-sm
+                        b-md:leading-6
                     "
                 >
                     Ferramenta não é diferencial. Decisão técnica é.
@@ -518,7 +518,7 @@ function Seclogs() {
                     py-12
                     border-b-2
                     border-graphite
-                    md:hidden
+                    b-md:hidden
                 "
             >
                 <p
@@ -548,7 +548,7 @@ function Seclogs() {
                     MOBILE
                 ================================================= */}
 
-                <div className="flex flex-col gap-8 md:hidden">
+                <div className="flex flex-col gap-8 b-md:hidden">
                     {/* =================================================
                         FRONT-END
                     ================================================= */}
@@ -655,7 +655,7 @@ function Seclogs() {
                         h-[360px]
                         w-full
 
-                        md:block
+                        b-md:block
                     "
                 >
                     <FlowingMenu items={flowingItems} speed={20} textColor="#F2F0EC" bgColor="#0d0d0d" marqueeBgColor="#d8c2aa" marqueeTextColor="#0D0D0D" borderColor="#242424" />
