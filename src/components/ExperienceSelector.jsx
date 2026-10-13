@@ -149,7 +149,7 @@ function ExperienceSelector() {
                     border-graphite
                     bg-carbon
                     p-6
-                    md:p-10
+                    b-md:p-10
                 "
             >
                 {/* =====================================
@@ -193,7 +193,7 @@ function ExperienceSelector() {
                             font-medium
                             tracking-[-0.04em]
                             text-ivory
-                            md:text-4xl
+                            b-md:text-4xl
                         "
                     >
                         COMO VOCÊ QUER
