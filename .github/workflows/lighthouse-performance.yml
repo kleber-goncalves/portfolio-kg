@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - feat/responsividadeFull
-  pull_request:
-    branches:
-      - feat/responsividadeFull
   workflow_dispatch:
 
 permissions:
@@ -18,9 +15,12 @@ concurrency:
 
 jobs:
   lighthouse:
-    name: Build and validate performance
+    name: Build and validate Vercel preview performance
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
+
+    env:
+      PREVIEW_URL: https://portfolio-kg-git-feat-respon-0847d0-kleber-goncalves-s-projects.vercel.app/
 
     steps:
       - name: Checkout repository
@@ -35,10 +35,26 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build production site
+      - name: Validate production build
         run: npm run build
 
-      - name: Run Lighthouse CI
+      - name: Wait for Vercel preview
+        run: |
+          echo "Aguardando o deployment da Vercel em $PREVIEW_URL"
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent --show-error "$PREVIEW_URL" --output /dev/null; then
+              echo "Preview da Vercel está respondendo."
+              exit 0
+            fi
+
+            echo "Tentativa $attempt/30: preview ainda indisponível."
+            sleep 10
+          done
+
+          echo "A preview da Vercel não ficou disponível dentro do tempo limite."
+          exit 1
+
+      - name: Run Lighthouse against Vercel preview
         uses: treosh/lighthouse-ci-action@v12
         with:
           configPath: ./lighthouserc.json
