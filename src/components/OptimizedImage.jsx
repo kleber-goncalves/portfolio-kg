@@ -1,12 +1,36 @@
 import { useState } from "react";
+import imageMetadata from "../generated/imageMetadata.json";
 
 /**
  * Imagem reutilizável com dimensões reservadas, carregamento configurável,
- * suporte a srcSet e placeholder opcional.
+ * srcSet responsivo e placeholder opcional.
  *
  * SEO: forneça um alt descritivo para imagens informativas.
  * Acessibilidade: use alt="" para imagens puramente decorativas.
  */
+function resolveImageMetadata(src) {
+    if (typeof src !== "string") return null;
+
+    try {
+        const pathname = new URL(src, window.location.origin).pathname;
+        const filename = pathname.split("/").pop() ?? "";
+        const originalFilename = filename.replace(
+            /-[A-Za-z0-9_-]{8,}(?=\.[^.]+$)/,
+            "",
+        );
+
+        return imageMetadata[originalFilename] ?? null;
+    } catch {
+        const filename = src.split(/[?#]/, 1)[0].split("/").pop() ?? "";
+        const originalFilename = filename.replace(
+            /-[A-Za-z0-9_-]{8,}(?=\.[^.]+$)/,
+            "",
+        );
+
+        return imageMetadata[originalFilename] ?? null;
+    }
+}
+
 export function OptimizedImage({
     src,
     alt = "",
@@ -26,14 +50,24 @@ export function OptimizedImage({
     onError,
     ...props
 }) {
+    const metadata = resolveImageMetadata(src);
+    const resolvedSrc = srcSet ? src : metadata?.src ?? src;
+    const resolvedSrcSet = srcSet ?? metadata?.srcSet;
+    const resolvedSizes = metadata?.sizes ?? sizes;
+    const resolvedWidth = width ?? metadata?.width;
+    const resolvedHeight = height ?? metadata?.height;
+
     const [loadedSrc, setLoadedSrc] = useState(null);
-    const loaded = loadedSrc === src;
+    const loaded = loadedSrc === resolvedSrc;
 
     const resolvedAspectRatio =
-        aspectRatio ?? (width && height ? `${width} / ${height}` : undefined);
+        aspectRatio ??
+        (resolvedWidth && resolvedHeight
+            ? `${resolvedWidth} / ${resolvedHeight}`
+            : undefined);
 
     const handleLoad = (event) => {
-        setLoadedSrc(src);
+        setLoadedSrc(resolvedSrc);
         onLoad?.(event);
     };
 
@@ -47,8 +81,8 @@ export function OptimizedImage({
                     src={placeholderSrc}
                     alt=""
                     aria-hidden="true"
-                    width={width}
-                    height={height}
+                    width={resolvedWidth}
+                    height={resolvedHeight}
                     decoding="async"
                     draggable="false"
                     className={[
@@ -60,12 +94,12 @@ export function OptimizedImage({
 
             <img
                 ref={imageRef}
-                src={src}
-                srcSet={srcSet}
-                sizes={srcSet ? sizes : undefined}
+                src={resolvedSrc}
+                srcSet={resolvedSrcSet}
+                sizes={resolvedSrcSet ? resolvedSizes : undefined}
                 alt={alt}
-                width={width}
-                height={height}
+                width={resolvedWidth}
+                height={resolvedHeight}
                 loading={loading}
                 fetchPriority={fetchPriority}
                 decoding={decoding}
