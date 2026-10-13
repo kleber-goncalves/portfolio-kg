@@ -6,7 +6,7 @@ const root = process.cwd();
 const inputRoot = path.join(root, "src/assets/projetos");
 const outputRoot = path.join(root, "public/_optimized/projetos");
 const metadataPath = path.join(root, "src/generated/imageMetadata.json");
-const widths = [320, 640, 960, 1280];
+const widths = [320, 640, 960, 1280, 1600];
 const supported = new Set([".jpg", ".jpeg", ".png", ".webp", ".avif"]);
 const metadata = {};
 
@@ -56,7 +56,7 @@ for (const file of files) {
     await mkdir(outputDirectory, { recursive: true });
 
     const availableWidths = widths.filter((width) => width < info.width);
-    if (!availableWidths.includes(info.width)) availableWidths.push(info.width);
+    if (info.width <= 1600 && !availableWidths.includes(info.width)) availableWidths.push(info.width);
     const variants = [];
 
     for (const width of [...new Set(availableWidths)].sort((a, b) => a - b)) {
