@@ -1,11 +1,11 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { lazy, Suspense, useLayoutEffect, useRef, useState } from "react";
 
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import Hero from "../layout/HeroTeste2";
 import Seclogs from "../layout/Logo2";
-import MenuDesktop from "../components/MenuDesktop";
+const MenuDesktop = lazy(() => import("../components/MenuDesktop"));
 import useResponsive from "../hooks/useResponsive";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -684,7 +684,14 @@ function HeroSectionTransition({ experienceMode = "full" }) {
                 MENU DESKTOP
             ================================================== */}
 
-            <MenuDesktop items={menuItems} showMenu={showDesktopMenu} />
+            {showDesktopMenu && (
+                <Suspense fallback={null}>
+                    <MenuDesktop
+                        items={menuItems}
+                        showMenu={showDesktopMenu}
+                    />
+                </Suspense>
+            )}
         </section>
     );
 }
