@@ -106,12 +106,12 @@ function Projetos() {
             >
                 {/* TÍTULO */}
 
-                <div className="absolute top-0 left-0 z-20 flex flex-row items-center gap-2 w-full pt-12 p-5 md:p-10">
-                    <h2 className="text-sm md:text-7xl text-steel uppercase whitespace-nowrap">
+                <div className="absolute top-0 left-0 z-20 flex flex-row items-center gap-2 w-full pt-12 p-5 b-md:p-10">
+                    <h2 className="text-sm b-md:text-7xl text-steel uppercase whitespace-nowrap">
                         // Projetos
                     </h2>
 
-                    <span className="flex-1 h-0.5 md:h-1 bg-gradientaa"></span>
+                    <span className="flex-1 h-0.5 b-md:h-1 bg-gradientaa"></span>
                 </div>
 
                 {/* TRACK */}
