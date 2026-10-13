@@ -6,6 +6,7 @@ on:
       - feat/responsividadeFull
     paths:
       - "src/assets/projetos/**"
+      - "src/components/HeroMobile.jsx"
       - "scripts/optimize-project-images.mjs"
       - ".github/workflows/optimize-project-images.yml"
   workflow_dispatch:
@@ -49,7 +50,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add public/_optimized/projetos src/generated/imageMetadata.json
+          git add public/_optimized src/generated/imageMetadata.json
           if git diff --cached --quiet; then
             echo "As imagens otimizadas já estão atualizadas."
             exit 0

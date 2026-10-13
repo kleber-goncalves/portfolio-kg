@@ -1,5 +1,6 @@
 import Socials from "../components/Socials";
 import MenuMobile from "../components/MenuMobile";
+import OptimizedImage from "./OptimizedImage";
 
 function HeroMobile({ items }) {
     return (
@@ -32,10 +33,16 @@ function HeroMobile({ items }) {
                 <div className="mt-25 flex flex-col gap-6 px-3">
                     {/* FOTO */}
                     <div className="relative flex h-54 w-54 shrink-0 items-center justify-center rounded-xl border border-bronze shadow-sm shadow-warm-bronze">
-                        <img
+                        <OptimizedImage
                             src="https://github.com/kleber-goncalves.png"
-                            alt="Kleber Dev"
-                            className="h-full w-full rounded-xl object-cover"
+                            alt="Retrato de Kleber Gonçalves"
+                            width={460}
+                            height={460}
+                            sizes="216px"
+                            loading="eager"
+                            fetchPriority="high"
+                            wrapperClassName="h-full w-full rounded-xl"
+                            className="rounded-xl object-cover"
                         />
 
                         {/* Glow */}

@@ -18,6 +18,7 @@ import MagneticLink from "../components/MagneticNavLink";
 import "../styles/looptextHero.css";
 import "../styles/heroParallax.css";
 import GlobeIcon from "./GlobeIcon";
+import OptimizedImage from "./OptimizedImage";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -1001,13 +1002,15 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                             c-lg:w-11
                         "
                         >
-                            <img
+                            <OptimizedImage
                                 src="/logo.svg"
                                 alt="Kleber Dev"
-                                className="
-                                h-full
-                                w-full
-                            "
+                                width={44}
+                                height={44}
+                                loading="eager"
+                                fetchPriority="high"
+                                wrapperClassName="h-full w-full"
+                                className="object-contain"
                             />
                         </div>
                     </div>

@@ -1,14 +1,22 @@
 import { useEffect, useState } from "react";
+import imageMetadata from "../generated/imageMetadata.json";
 
 const TOTAL_STEPS = 4;
 const MIN_DISPLAY_TIME = 3000;
 
-function loadImage(src) {
+function loadImage(src, srcSet, sizes) {
     return new Promise((resolve) => {
         const image = new Image();
 
         image.onload = () => resolve(true);
         image.onerror = () => resolve(false);
+
+        if (srcSet) {
+            image.srcset = srcSet;
+            image.sizes = sizes || "100vw";
+        }
+
+        image.fetchPriority = "high";
         image.src = src;
 
         if (image.complete) {
@@ -51,8 +59,11 @@ function Preloader() {
             if (cancelled) return;
 
             setCurrentLabel("Carregando seu retrato");
+            const portraitMetadata = imageMetadata["kleber-goncalves.png"];
             const portraitLoaded = await loadImage(
-                "https://github.com/kleber-goncalves.png",
+                portraitMetadata?.src ?? "https://github.com/kleber-goncalves.png",
+                portraitMetadata?.srcSet,
+                portraitMetadata?.sizes,
             );
             completeStep(
                 portraitLoaded ? "Retrato carregado" : "Retrato indisponível",

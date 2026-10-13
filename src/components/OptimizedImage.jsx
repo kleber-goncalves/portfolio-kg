@@ -15,7 +15,7 @@ function resolveImageMetadata(src) {
         const pathname = new URL(src, window.location.origin).pathname;
         const filename = pathname.split("/").pop() ?? "";
         const originalFilename = filename.replace(
-            /-[A-Za-z0-9_-]{8,}(?=\.[^.]+$)/,
+            /-[A-Za-z0-9_-]{8}(?=\.[^.]+$)/,
             "",
         );
 
@@ -23,7 +23,7 @@ function resolveImageMetadata(src) {
     } catch {
         const filename = src.split(/[?#]/, 1)[0].split("/").pop() ?? "";
         const originalFilename = filename.replace(
-            /-[A-Za-z0-9_-]{8,}(?=\.[^.]+$)/,
+            /-[A-Za-z0-9_-]{8}(?=\.[^.]+$)/,
             "",
         );
 
