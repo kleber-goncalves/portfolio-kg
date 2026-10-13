@@ -197,7 +197,7 @@ function ExperienceDropdown({ experienceMode = getExperienceMode() || "full", on
                     uppercase
                     tracking-[0.14em]
 
-                    lg:text-[10px]
+                    c-lg:text-[10px]
                 "
             >
                 {/* ==================================================
