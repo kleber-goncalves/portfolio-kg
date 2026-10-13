@@ -634,7 +634,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
     // =====================================
 
     const menuContent = (
-        <div className="hidden md:block">
+        <div className="hidden b-md:block">
             {/* =================================
                 OVERLAY
             ================================= */}
@@ -1143,8 +1143,8 @@ function MenuDesktop({ items = [], showMenu = false }) {
                     duration-300
                     hover:border-bronze
                     hover:text-bronze
-                    lg:right-4
-                    lg:top-10
+                    c-lg:right-4
+                    c-lg:top-10
                 "
                 style={{
                     pointerEvents: showMenu ? "auto" : "none",
