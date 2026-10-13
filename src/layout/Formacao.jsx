@@ -333,7 +333,7 @@ function Formacao({ experienceMode = "full" }) {
                 h-full
                 p-5
                 mt-30
-                md:p-10
+                b-md:p-10
                 relative
                 overflow-hidden
                 flex
@@ -348,9 +348,9 @@ function Formacao({ experienceMode = "full" }) {
                     flex-col
                     items-center
                     gap-10
-                    md:gap-20
+                    b-md:gap-20
                     w-full
-                    md:max-w-[1500px]
+                    b-md:max-w-[1500px]
                 "
             >
                 {/* =====================================================
@@ -370,7 +370,7 @@ function Formacao({ experienceMode = "full" }) {
                         ref={titleRef}
                         className="
                             text-sm
-                            md:text-7xl
+                            b-md:text-7xl
                             text-steel
                             uppercase
                         "
@@ -383,7 +383,7 @@ function Formacao({ experienceMode = "full" }) {
                         className="
                             flex-1
                             h-0.5
-                            md:h-1
+                            b-md:h-1
                             bg-gradientaa
                         "
                     />
@@ -399,7 +399,7 @@ function Formacao({ experienceMode = "full" }) {
                         flex-col
                         items-center
                         gap-15
-                        md:gap-20
+                        b-md:gap-20
                     "
                 >
                     {/* =====================================================
@@ -417,9 +417,9 @@ function Formacao({ experienceMode = "full" }) {
                             border-champagne
                             bg-carbon
 
-                            md:rounded-none
-                            md:border-t-0
-                            md:bg-transparent
+                            b-md:rounded-none
+                            b-md:border-t-0
+                            b-md:bg-transparent
                         "
                     >
                         <div
@@ -435,10 +435,10 @@ function Formacao({ experienceMode = "full" }) {
                                 border-graphite
                                 p-5
 
-                                md:gap-4
-                                md:rounded-none
-                                md:border-0
-                                md:p-0
+                                b-md:gap-4
+                                b-md:rounded-none
+                                b-md:border-0
+                                b-md:p-0
                             "
                         >
                             {/* =====================================================
@@ -453,8 +453,8 @@ function Formacao({ experienceMode = "full" }) {
                                     grid-cols-1
                                     gap-10
 
-                                    md:grid-cols-[1.1fr_1.85fr]
-                                    md:gap-0
+                                    b-md:grid-cols-[1.1fr_1.85fr]
+                                    b-md:gap-0
                                 "
                             >
                                 {/* =================================================
@@ -471,8 +471,8 @@ function Formacao({ experienceMode = "full" }) {
                                             flex-col
                                             gap-8
                                             pt-2
-                                            md:pt-6
-                                            md:pl-6
+                                            b-md:pt-6
+                                            b-md:pl-6
                                             h-full
                                         "
                                     >
@@ -523,15 +523,15 @@ function Formacao({ experienceMode = "full" }) {
                                             <h3
                                                 className="
                                                     font-bebas
-                                                    md:font-space
+                                                    b-md:font-space
                                                     text-xs
-                                                    md:font-extrabold
+                                                    b-md:font-extrabold
                                                     uppercase
                                                     tracking-[0.2em]
-                                                    md:tracking-[0.1em]
+                                                    b-md:tracking-[0.1em]
                                                     text-steel
 
-                                                    md:text-sm
+                                                    b-md:text-sm
                                                 "
                                             >
                                                 Nível atual
@@ -557,8 +557,8 @@ function Formacao({ experienceMode = "full" }) {
                                                     tracking-tight
                                                     text-ivory
 
-                                                    md:text-[10rem]
-                                                    lg:text-7xl
+                                                    b-md:text-[10rem]
+                                                    c-lg:text-7xl
                                                 "
                                             >
                                                 Junior
@@ -579,7 +579,7 @@ function Formacao({ experienceMode = "full" }) {
                                                 text-sm
                                                 text-steel
 
-                                                md:text-base
+                                                b-md:text-base
                                             "
                                         >
                                             <span>Frontend</span>
@@ -610,13 +610,13 @@ function Formacao({ experienceMode = "full" }) {
                                             justify-end
                                             gap-6
 
-                                            md:border-l
-                                            md:border-graphite
-                                            md:pl-10
-                                            md:pt-6
-                                            lg:pl-10
-                                            lg:pr-10
-                                            lg:pb-6
+                                            b-md:border-l
+                                            b-md:border-graphite
+                                            b-md:pl-10
+                                            b-md:pt-6
+                                            c-lg:pl-10
+                                            c-lg:pr-10
+                                            c-lg:pb-6
                                         "
                                     >
                                         {/* SPOTLIGHT */}
@@ -665,15 +665,15 @@ function Formacao({ experienceMode = "full" }) {
                                             <h3
                                                 className="
                                                     font-bebas
-                                                    md:font-space
+                                                    b-md:font-space
                                                     text-xs
-                                                    md:font-extrabold
+                                                    b-md:font-extrabold
                                                     uppercase
                                                     tracking-[0.2em]
-                                                    md:tracking-[0.1em]
+                                                    b-md:tracking-[0.1em]
                                                     text-steel
 
-                                                    md:text-sm
+                                                    b-md:text-sm
                                                 "
                                             >
                                                 Formação
@@ -699,11 +699,11 @@ function Formacao({ experienceMode = "full" }) {
                                                     leading-tight
                                                     text-ivory
 
-                                                    md:text-4xl
+                                                    b-md:text-4xl
                                                 "
                                             >
                                                 Análise e Desenvolvimento
-                                                <br className="hidden md:block" />
+                                                <br className="hidden b-md:block" />
                                                 de Sistemas
                                             </p>
 
@@ -712,7 +712,7 @@ function Formacao({ experienceMode = "full" }) {
                                                     text-sm
                                                     text-champagne
 
-                                                    md:text-base
+                                                    b-md:text-base
                                                 "
                                             >
                                                 ADS · Uniube — Uberaba
@@ -755,7 +755,7 @@ function Formacao({ experienceMode = "full" }) {
                                                         leading-none
                                                         text-bronze
 
-                                                        md:text-4xl
+                                                        b-md:text-4xl
                                                     "
                                                 >
                                                     87%
@@ -788,7 +788,7 @@ function Formacao({ experienceMode = "full" }) {
                                                     text-xs
                                                     text-steel/70
 
-                                                    md:text-sm
+                                                    b-md:text-sm
                                                 "
                                             >
                                                 <span>2,5 anos</span>
@@ -811,8 +811,8 @@ function Formacao({ experienceMode = "full" }) {
                                     grid-cols-1
                                     gap-6
 
-                                    md:grid-cols-2
-                                    md:gap-5
+                                    b-md:grid-cols-2
+                                    b-md:gap-5
                                 "
                             >
                                 {/* =================================================
@@ -830,12 +830,12 @@ function Formacao({ experienceMode = "full" }) {
                                             gap-3
 
                                             border-t
-                                            md:border-y
+                                            b-md:border-y
                                             border-graphite
                                             pt-8
 
-                                            md:pt-10
-                                            md:pl-6
+                                            b-md:pt-10
+                                            b-md:pl-6
                                             h-full
                                         "
                                     >
@@ -905,8 +905,8 @@ function Formacao({ experienceMode = "full" }) {
                                                 leading-6
                                                 text-steel
 
-                                                md:text-base
-                                                md:leading-7
+                                                b-md:text-base
+                                                b-md:leading-7
                                             "
                                         >
                                             Formado nos cursos de
@@ -932,13 +932,13 @@ function Formacao({ experienceMode = "full" }) {
                                             gap-3
 
                                             border-t
-                                            md:border-y
+                                            b-md:border-y
                                             border-graphite
                                             pt-8
                                             pb-6
-                                            md:pt-10
-                                            md:pl-6
-                                            md:pb-10
+                                            b-md:pt-10
+                                            b-md:pl-6
+                                            b-md:pb-10
                                             h-full
                                         "
                                     >
@@ -1008,8 +1008,8 @@ function Formacao({ experienceMode = "full" }) {
                                                 leading-6
                                                 text-steel
 
-                                                md:text-base
-                                                md:leading-7
+                                                b-md:text-base
+                                                b-md:leading-7
                                             "
                                         >
                                             Atualmente, estou concluindo
@@ -1027,8 +1027,8 @@ function Formacao({ experienceMode = "full" }) {
                                                 leading-5
                                                 text-steel/60
 
-                                                md:text-sm
-                                                md:leading-6
+                                                b-md:text-sm
+                                                b-md:leading-6
                                             "
                                         >
                                             O nível reflete o que a formação entregou, não tempo de mercado.
