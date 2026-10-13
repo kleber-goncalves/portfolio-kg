@@ -2,7 +2,7 @@ export default function CardTrajetoria() {
     return (
         <div className="flex flex-col w-full rounded-3xl border-t-2 border-warm-bronze">
             <div
-                className="flex flex-col w-full items-start rounded-3xl p-5 md:p-10
+                className="flex flex-col w-full items-start rounded-3xl p-5 b-md:p-10
                             gap-12
                             border
                             border-graphite
@@ -17,13 +17,13 @@ export default function CardTrajetoria() {
                     <div className="flex items-center gap-3">
                         <span className="w-2 h-2 rounded-full bg-champagne"></span>
 
-                        <p className="text-xs md:text-3xl text-steel uppercase">Minha Trajetoria</p>
+                        <p className="text-xs b-md:text-3xl text-steel uppercase">Minha Trajetoria</p>
                     </div>
 
                     <h2
                         className="
                                     text-5xl
-                                    md:text-7xl
+                                    b-md:text-7xl
                                     font-bold
                                     bebas-neue-regular
                                     text-ivory
@@ -55,7 +55,7 @@ export default function CardTrajetoria() {
                                     bottom-0
                                     w-px
                                     h-104
-                                    md:h-full
+                                    b-md:h-full
                                     bg-graphite
                                 "
                     ></div>
@@ -72,7 +72,7 @@ export default function CardTrajetoria() {
                                     top-4
                                     w-px
                                     h-104
-                                    md:h-full
+                                    b-md:h-full
                                     bg-warm-bronze
                                 "
                     ></div>
@@ -111,7 +111,7 @@ export default function CardTrajetoria() {
                                         text-champagne
                                         font-bold
                                         text-sm
-                                        md:text-xl
+                                        b-md:text-xl
                                     "
                         >
                             2023
@@ -121,7 +121,7 @@ export default function CardTrajetoria() {
                             className="
                                         text-ivory
                                         text-lg
-                                        md:text-3xl
+                                        b-md:text-3xl
                                         font-bold
                                     "
                         >
@@ -132,7 +132,7 @@ export default function CardTrajetoria() {
                             className="
                                         text-steel
                                         text-sm
-                                        md:text-xl
+                                        b-md:text-xl
                                     "
                         >
                             Início da minha jornada no desenvolvimento.
@@ -173,7 +173,7 @@ export default function CardTrajetoria() {
                                         text-champagne
                                         font-bold
                                         text-sm
-                                        md:text-xl
+                                        b-md:text-xl
                                     "
                         >
                             2024
@@ -183,7 +183,7 @@ export default function CardTrajetoria() {
                             className="
                                         text-ivory
                                         text-lg
-                                        md:text-3xl
+                                        b-md:text-3xl
                                         font-bold
                                     "
                         >
@@ -194,7 +194,7 @@ export default function CardTrajetoria() {
                             className="
                                         text-steel
                                         text-sm
-                                        md:text-xl
+                                        b-md:text-xl
                                     "
                         >
                             HTML, CSS, JavaScript e construção de interfaces.
@@ -235,7 +235,7 @@ export default function CardTrajetoria() {
                                         text-champagne
                                         font-bold
                                         text-sm
-                                        md:text-xl
+                                        b-md:text-xl
                                     "
                         >
                             2025
@@ -245,7 +245,7 @@ export default function CardTrajetoria() {
                             className="
                                         text-ivory
                                         text-lg
-                                        md:text-3xl
+                                        b-md:text-3xl
                                         font-bold
                                     "
                         >
@@ -256,7 +256,7 @@ export default function CardTrajetoria() {
                             className="
                                         text-steel
                                         text-sm
-                                        md:text-xl
+                                        b-md:text-xl
                                     "
                         >
                             APIs, bancos de dados, Node.js e desenvolvimento de aplicações.
@@ -314,7 +314,7 @@ export default function CardTrajetoria() {
                                         text-champagne
                                         font-bold
                                         text-sm
-                                        md:text-xl
+                                        b-md:text-xl
                                     "
                         >
                             2026
@@ -324,7 +324,7 @@ export default function CardTrajetoria() {
                             className="
                                         text-ivory
                                         text-lg
-                                        md:text-3xl
+                                        b-md:text-3xl
                                         font-bold
                                     "
                         >
@@ -335,7 +335,7 @@ export default function CardTrajetoria() {
                             className="
                                         text-steel
                                         text-sm
-                                        md:text-xl
+                                        b-md:text-xl
                                     "
                         >
                             Formação Full Stack pela DNC e graduação em Análise e Desenvolvimento de Sistemas pela Uniube.
