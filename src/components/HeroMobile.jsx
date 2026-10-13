@@ -79,7 +79,7 @@ function HeroMobile({ items }) {
                 </div>
 
                 {/* REDES SOCIAIS: ficam no fluxo para não sobrepor o texto */}
-                <div className="relative z-30 mt-10 pb-5 pr-4">
+                <div className="relative z-30 mt-10 pb-1 pr-4">
                     <Socials />
                 </div>
             </div>
