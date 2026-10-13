@@ -215,12 +215,12 @@ function Projetos({ experienceMode = "full" }) {
     }, []);
 
     return (
-        <section id="projetos" ref={sectionRef} className="w-full md:mt-30 mt-30 bg-obsidian">
+        <section id="projetos" ref={sectionRef} className="w-full b-md:mt-30 mt-30 bg-obsidian">
             {/* ==================================================
                 DESKTOP
             ================================================== */}
 
-            <div className="hidden md:block  ">
+            <div className="hidden b-md:block  ">
                 <ProjetoDesktop projetos={projetos} experienceMode={experienceMode} />
             </div>
 
@@ -239,7 +239,7 @@ function Projetos({ experienceMode = "full" }) {
                     px-0
                     pb-12
                     pt-24
-                    md:hidden
+                    b-md:hidden
                 "
             >
                 {/* ==================================================
