@@ -225,7 +225,7 @@ function Competencia({ experienceMode = "full" }) {
                 overflow-hidden
                 bg-obsidian
                 p-5
-                md:p-10
+                b-md:p-10
             "
         >
             <div
@@ -234,7 +234,7 @@ function Competencia({ experienceMode = "full" }) {
                     flex
                     w-full
                     flex-col
-                    md:max-w-[1500px]
+                    b-md:max-w-[1500px]
                 "
             >
                 {/* ==================================================
@@ -250,7 +250,7 @@ function Competencia({ experienceMode = "full" }) {
                         flex-row
                         items-center
                         gap-2
-                        md:mb-20
+                        b-md:mb-20
                     "
                 >
                     <h2
@@ -261,7 +261,7 @@ function Competencia({ experienceMode = "full" }) {
                             uppercase
                             tracking-wide
                             text-steel
-                            md:text-7xl
+                            b-md:text-7xl
                         "
                     >
                         // COMPETENCIAS
@@ -273,7 +273,7 @@ function Competencia({ experienceMode = "full" }) {
                             h-0.5
                             flex-1
                             bg-gradientaa
-                            md:h-1
+                            b-md:h-1
                         "
                     />
 
@@ -283,9 +283,9 @@ function Competencia({ experienceMode = "full" }) {
                             hidden
                             max-w-md
                             text-steel
-                            md:block
-                            md:text-sm
-                            md:leading-6
+                            b-md:block
+                            b-md:text-sm
+                            b-md:leading-6
                         "
                     >
                         Eu posso te ajudar com...
@@ -303,7 +303,7 @@ function Competencia({ experienceMode = "full" }) {
                         max-w-3xl
                         flex-col
                         gap-4
-                        md:hidden
+                        b-md:hidden
                     "
                 >
                     <p
@@ -328,8 +328,8 @@ function Competencia({ experienceMode = "full" }) {
                         w-full
                         grid-cols-1
                         gap-4
-                        md:grid-cols-2
-                        md:gap-y-5
+                        b-md:grid-cols-2
+                        b-md:gap-y-5
                     "
                 >
                     {competencias.map((competencia) => (
@@ -354,8 +354,8 @@ function Competencia({ experienceMode = "full" }) {
                         uppercase
                         tracking-[0.25em]
                         text-steel/60
-                        md:mt-10
-                        md:text-[10px]
+                        b-md:mt-10
+                        b-md:text-[10px]
                     "
                 >
                     <span></span>
