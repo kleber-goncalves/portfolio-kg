@@ -33,7 +33,7 @@ function resolveImageMetadata(src) {
 
 export function OptimizedImage({
     src,
-    alt = "",
+    alt,
     width,
     height,
     aspectRatio,
@@ -79,7 +79,7 @@ export function OptimizedImage({
             {placeholderSrc && (
                 <img
                     src={placeholderSrc}
-                    alt=""
+                    alt={alt}
                     aria-hidden="true"
                     width={resolvedWidth}
                     height={resolvedHeight}
