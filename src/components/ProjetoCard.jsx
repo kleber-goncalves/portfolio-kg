@@ -157,7 +157,7 @@ function ProjetoCard({ numero, titulo, descricao, tecnologias = [], tecnologiasC
                 PREVIEW
             ================================================== */}
 
-            <div className="relative h-48 w-full shrink-0 overflow-hidden bg-neutral-950" onClick={alternarPausa}>
+            <div className="relative aspect-video w-full shrink-0 overflow-hidden bg-neutral-950" onClick={alternarPausa}>
                 {imagens.length > 0 && <img ref={imageRef} src={imagens[imagemAtual]} alt={`Preview do projeto ${titulo}`} className="absolute inset-0 h-full w-full object-cover" />}
 
                 {/* OVERLAY */}
@@ -207,6 +207,8 @@ function ProjetoCard({ numero, titulo, descricao, tecnologias = [], tecnologiasC
                 {/* CABEÇALHO */}
 
                 <div>
+                    
+
                     <h2 className="mt-2 text-3xl font-bold uppercase text-white">{titulo}</h2>
 
                     <p className="mt-3 max-w-xl text-sm leading-relaxed text-white/60">{descricao}</p>
