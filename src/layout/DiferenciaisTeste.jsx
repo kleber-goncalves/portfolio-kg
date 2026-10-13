@@ -209,10 +209,10 @@ function Diferenciais({ experienceMode = "full" }) {
                 px-5
                 mt-10
                 py-20
-                md:px-10
-                md:py-28
-                lg:py-32
-                md:mt-30
+                b-md:px-10
+                b-md:py-28
+                c-lg:py-32
+                b-md:mt-30
             "
         >
             {/* =====================================================
@@ -240,7 +240,7 @@ function Diferenciais({ experienceMode = "full" }) {
                         flex-row
                         items-center
                         gap-2
-                        md:mb-20
+                        b-md:mb-20
                     "
                 >
                     <h2
@@ -251,7 +251,7 @@ function Diferenciais({ experienceMode = "full" }) {
                             uppercase
                             tracking-wide
                             text-steel
-                            md:text-7xl
+                            b-md:text-7xl
                         "
                     >
                         // DIFERENCIAIS
@@ -263,7 +263,7 @@ function Diferenciais({ experienceMode = "full" }) {
                             h-0.5
                             flex-1
                             bg-gradientaa
-                            md:h-1
+                            b-md:h-1
                         "
                     />
 
@@ -277,9 +277,9 @@ function Diferenciais({ experienceMode = "full" }) {
                             hidden
                             max-w-md
                             text-steel
-                            md:block
-                            md:text-sm
-                            md:leading-6
+                            b-md:block
+                            b-md:text-sm
+                            b-md:leading-6
                         "
                     >
                         Mais do que ferramentas, eu valorizo a forma como os problemas são analisados e transformados em soluções.
@@ -298,7 +298,7 @@ function Diferenciais({ experienceMode = "full" }) {
                         max-w-3xl
                         flex-col
                         gap-4
-                        md:hidden
+                        b-md:hidden
                     "
                 >
                     <p
@@ -321,8 +321,8 @@ function Diferenciais({ experienceMode = "full" }) {
                         grid
                         w-full
                         grid-cols-1
-                        md:grid-cols-2
-                        md:grid-rows-4
+                        b-md:grid-cols-2
+                        b-md:grid-rows-4
                     "
                 >
                     {/* =================================================
@@ -333,9 +333,9 @@ function Diferenciais({ experienceMode = "full" }) {
                         data-diferencial-card
                         className="
                             w-full
-                            md:col-start-1
-                            md:row-start-1
-                            md:max-w-[90%]
+                            b-md:col-start-1
+                            b-md:row-start-1
+                            b-md:max-w-[90%]
                         "
                     >
                         <Card2 number={diferenciais[0].numero} title={diferenciais[0].titulo} text={diferenciais[0].texto} variant="default" experienceMode={experienceMode} className="w-full" />
@@ -349,10 +349,10 @@ function Diferenciais({ experienceMode = "full" }) {
                         data-diferencial-card
                         className="
                             w-full
-                            md:col-start-2
-                            md:row-start-2
-                            md:ml-auto
-                            md:max-w-[90%]
+                            b-md:col-start-2
+                            b-md:row-start-2
+                            b-md:ml-auto
+                            b-md:max-w-[90%]
                         "
                     >
                         <Card2 number={diferenciais[1].numero} title={diferenciais[1].titulo} text={diferenciais[1].texto} variant="default" experienceMode={experienceMode} className="w-full" />
@@ -366,9 +366,9 @@ function Diferenciais({ experienceMode = "full" }) {
                         data-diferencial-card
                         className="
                             w-full
-                            md:col-start-1
-                            md:row-start-3
-                            md:max-w-[90%]
+                            b-md:col-start-1
+                            b-md:row-start-3
+                            b-md:max-w-[90%]
                         "
                     >
                         <Card2 number={diferenciais[2].numero} title={diferenciais[2].titulo} text={diferenciais[2].texto} variant="default" experienceMode={experienceMode} className="w-full" />
@@ -382,10 +382,10 @@ function Diferenciais({ experienceMode = "full" }) {
                         data-diferencial-card
                         className="
                             w-full
-                            md:col-start-2
-                            md:row-start-4
-                            md:ml-auto
-                            md:max-w-[90%]
+                            b-md:col-start-2
+                            b-md:row-start-4
+                            b-md:ml-auto
+                            b-md:max-w-[90%]
                         "
                     >
                         <Card2 number={diferenciais[3].numero} title={diferenciais[3].titulo} text={diferenciais[3].texto} variant="default" experienceMode={experienceMode} className="w-full" />
@@ -403,7 +403,7 @@ function Diferenciais({ experienceMode = "full" }) {
                         flex
                         w-full
                         justify-end
-                        md:mt-16
+                        b-md:mt-16
                     "
                 >
                     <span
