@@ -191,7 +191,7 @@ function NavbarDesktop({ items = [] }) {
             ref={menuRef}
             className="
                 hidden
-                md:block
+                b-md:block
             "
         >
             {/* =====================================================
@@ -225,8 +225,8 @@ function NavbarDesktop({ items = [] }) {
 
                     hover:text-bronze
 
-                    lg:right-17
-                    lg:top-10
+                    c-lg:right-17
+                    c-lg:top-10
                 "
             >
                 <span>Menu</span>
@@ -352,7 +352,7 @@ function NavbarDesktop({ items = [] }) {
                         px-12
                         py-10
 
-                        xl:px-16
+                        d-xl:px-16
                     "
                 >
                     {/* =================================================
@@ -458,7 +458,7 @@ function NavbarDesktop({ items = [] }) {
                                             transition-colors
                                             duration-300
 
-                                            xl:text-6xl
+                                            d-xl:text-6xl
                                         "
                                     >
                                         {/* indicador */}
