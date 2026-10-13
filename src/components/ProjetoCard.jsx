@@ -152,12 +152,12 @@ function ProjetoCard({ numero, titulo, descricao, tecnologias = [], tecnologiasC
     };
 
     return (
-        <article ref={cardRef} className="h-[70vh] w-[89vw] shrink-0 overflow-hidden rounded-3xl bg-neutral-900">
+        <article ref={cardRef} className="flex h-auto w-[89vw] shrink-0 flex-col self-start overflow-hidden rounded-3xl bg-neutral-900">
             {/* ==================================================
                 PREVIEW
             ================================================== */}
 
-            <div className="relative h-[40%] w-full shrink-0 overflow-hidden bg-neutral-950" onClick={alternarPausa}>
+            <div className="relative aspect-video w-full shrink-0 overflow-hidden bg-neutral-950" onClick={alternarPausa}>
                 {imagens.length > 0 && <img ref={imageRef} src={imagens[imagemAtual]} alt={`Preview do projeto ${titulo}`} className="absolute inset-0 h-full w-full object-cover" />}
 
                 {/* OVERLAY */}
@@ -203,7 +203,7 @@ function ProjetoCard({ numero, titulo, descricao, tecnologias = [], tecnologiasC
                 INFORMAÇÕES
             ================================================== */}
 
-            <div className="flex h-[52%] flex-col  p-5">
+            <div className="flex h-auto flex-col p-5">
                 {/* CABEÇALHO */}
 
                 <div>
