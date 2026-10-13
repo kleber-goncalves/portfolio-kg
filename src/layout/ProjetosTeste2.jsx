@@ -1,25 +1,9 @@
-import { useState, useLayoutEffect, useRef } from "react";
-import { gsap } from "gsap";
+import { lazy, Suspense, useLayoutEffect, useRef } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-gsap.registerPlugin(ScrollTrigger);
-
-// Lucide Icons
-import { MoveLeft, MoveRight } from "lucide-react";
-
-
 import { tecnologias } from "../data/tecnologias";
-
-
-// Swiper
-import { Swiper, SwiperSlide } from "swiper/react";
-import { EffectCoverflow } from "swiper/modules";
-
-import "swiper/css";
-import "swiper/css/effect-coverflow";
-
-import ProjetoCard from "../components/ProjetoCard";
 import ProjetoDesktop from "../components/ProjetoDesktop";
+import useResponsive from "../hooks/useResponsive";
 
 // ============================================================
 // IMAGENS
@@ -31,14 +15,33 @@ import projeto01_03 from "../assets/projetos/projeto01/jason-3.webp";
 import projeto01_04 from "../assets/projetos/projeto01/lucia-1.webp";
 
 
+const ProjetoCarouselMobile = lazy(() => import("../components/ProjetoCarouselMobile"));
+
+function MobileCarouselPlaceholder({ projectCount }) {
+    return (
+        <div className="relative flex min-h-screen w-full items-center overflow-hidden px-0 pb-12 pt-24">
+            <div className="absolute left-0 top-0 z-20 flex w-full flex-row items-center gap-2 p-5 pt-12">
+                <h2 className="whitespace-nowrap text-sm uppercase text-steel">
+                    // Projetos
+                </h2>
+                <span className="h-0.5 flex-1 bg-gradientaa" />
+                <span className="flex items-center gap-1 text-sm text-champagne">
+                    01 <span className="text-white/20">/</span>
+                    <span className="text-champagne/50">
+                        {String(projectCount).padStart(2, "0")}
+                    </span>
+                </span>
+            </div>
+            <div className="w-full px-5" aria-hidden="true">
+                <div className="mx-auto h-[52vh] w-[89vw] animate-pulse rounded-3xl bg-neutral-900/60" />
+            </div>
+        </div>
+    );
+}
+
 function Projetos({ experienceMode = "full", onReady }) {
     const sectionRef = useRef(null);
-    const titleRef = useRef(null);
-    const lineRef = useRef(null);
-    const contadorRef = useRef(null);
-    const swiperRef = useRef(null);
-
-    const [slideAtual, setSlideAtual] = useState(0);
+    const { isMobileLayout } = useResponsive();
 
     const projetos = [
         {
@@ -140,83 +143,13 @@ function Projetos({ experienceMode = "full", onReady }) {
         },
     ];
 
-    useLayoutEffect(() => {
-        const section = sectionRef.current;
-
-        if (!section) return;
-
-        const ctx = gsap.context(() => {
-            gsap.set(titleRef.current, {
-                opacity: 0,
-                x: -35,
-            });
-
-            gsap.set(lineRef.current, {
-                scaleX: 0,
-                transformOrigin: "left center",
-            });
-
-            gsap.set(contadorRef.current, {
-                opacity: 0,
-            });
-
-            gsap.set(swiperRef.current, {
-                y: 75,
-                opacity: 0,
-            });
-
-            const tl = gsap.timeline({
-                scrollTrigger: {
-                    trigger: titleRef.current,
-                    start: "top 90%",
-                    end: "top 65%",
-                    scrub: 1,
-                },
-            });
-
-            tl.to(titleRef.current, {
-                opacity: 1,
-                x: 0,
-                duration: 1,
-                ease: "none",
-            });
-
-            tl.to(
-                lineRef.current,
-                {
-                    scaleX: 1,
-                    duration: 1,
-                    ease: "none",
-                },
-                "+=0.5",
-            );
-            tl.to(
-                contadorRef.current,
-                {
-                    opacity: 1,
-                    duration: 1.5,
-                    ease: "none",
-                },
-                "+=0.5",
-            );
-            tl.to(
-                swiperRef.current,
-                {
-                    y: 0,
-                    duration: 1.5,
-                    ease: "none",
-                    opacity: 3,
-                },
-                "+=0.5",
-            );
-        }, section);
-
-        return () => ctx.revert();
-    }, []);
-
     // Depois da montagem tardia, recalcula as posições de todos os ScrollTriggers.
     // Duas frames permitem que React e o navegador assentem o layout antes do refresh.
     useLayoutEffect(() => {
+        // No mobile, o carrossel informa quando seu próprio chunk está pronto.
+        // No desktop, o markup está presente neste mesmo commit.
+        if (isMobileLayout) return undefined;
+
         let firstFrame = 0;
         let secondFrame = 0;
 
@@ -231,207 +164,32 @@ function Projetos({ experienceMode = "full", onReady }) {
             window.cancelAnimationFrame(firstFrame);
             window.cancelAnimationFrame(secondFrame);
         };
-    }, [onReady]);
+    }, [isMobileLayout, onReady]);
 
     return (
         <section ref={sectionRef} className="w-full bg-obsidian">
-            {/* ==================================================
-                DESKTOP
-            ================================================== */}
+            {!isMobileLayout && (
+                <ProjetoDesktop
+                    projetos={projetos}
+                    experienceMode={experienceMode}
+                />
+            )}
 
-            <div className="hidden b-md:block  ">
-                <ProjetoDesktop projetos={projetos} experienceMode={experienceMode} />
-            </div>
-
-            {/* ==================================================
-                MOBILE
-            ================================================== */}
-
-            <div
-                className="
-                    relative
-                    flex
-                    min-h-screen
-                    w-full
-                    items-center
-                    overflow-hidden
-                    px-0
-                    pb-12
-                    pt-24
-                    b-md:hidden
-                "
-            >
-                {/* ==================================================
-                    TÍTULO
-                ================================================== */}
-
-                <div
-                    className="
-                        absolute
-                        left-0
-                        top-0
-                        z-20
-                        flex
-                        w-full
-                        flex-row
-                        items-center
-                        gap-2
-                        p-5
-                        pt-12
-                    "
-                >
-                    <h2
-                        ref={titleRef}
-                        className="
-                            whitespace-nowrap
-                            text-sm
-                            uppercase
-                            text-steel
-                        "
-                    >
-                        // Projetos
-                    </h2>
-
-                    <span
-                        ref={lineRef}
-                        className="
-                            h-0.5
-                            flex-1
-                            bg-gradientaa
-                        "
-                    />
-
-                    {/* ==================================================
-                        CONTADOR MOBILE
-                    ================================================== */}
-
-                    <div
-                        ref={contadorRef}
-                        className="
-                            flex
-                            items-center
-                            gap-1
-                        "
-                    >
-                        <span
-                            className="
-                                text-sm
-                                font-medium
-                                text-champagne
-                            "
-                        >
-                            {String(slideAtual + 1).padStart(2, "0")}
-                        </span>
-
-                        <span
-                            className="
-                                text-[10px]
-                                text-white/20
-                            "
-                        >
-                            /
-                        </span>
-
-                        <span
-                            className="
-                                text-sm
-                                text-champagne/30
-                            "
-                        >
-                            {String(projetos.length).padStart(2, "0")}
-                        </span>
-                    </div>
-                </div>
-
-                {/* ==================================================
-                    SWIPER MOBILE
-                ================================================== */}
-
-                <Swiper
-                    ref={swiperRef}
-                    modules={[EffectCoverflow]}
-                    effect="coverflow"
-                    slidesPerView="auto"
-                    centeredSlides={true}
-                    spaceBetween={16}
-                    grabCursor={true}
-                    speed={500}
-                    onSlideChange={(swiper) => {
-                        setSlideAtual(swiper.activeIndex);
-                    }}
-                    coverflowEffect={{
-                        rotate: 0,
-                        stretch: 0,
-                        depth: 40,
-                        modifier: 1,
-                        scale: 0.94,
-                        slideShadows: false,
-                    }}
-                    className="!w-full"
-                >
-                    {projetos.map((projeto) => (
-                        <SwiperSlide key={projeto.numero} className="!w-[89vw]">
-                            <ProjetoCard numero={projeto.numero} titulo={projeto.titulo} descricao={projeto.descricao} tecnologias={projeto.tecnologias} tecnologiasConfig={tecnologias} imagens={projeto.imagens} demo={projeto.demo} github={projeto.github} />
-                        </SwiperSlide>
-                    ))}
-                </Swiper>
-
-                {/* ==================================================
-                    INDICAÇÃO MOBILE
-                ================================================== */}
-
-                <div
-                    className="
-                        pointer-events-none
-                        absolute
-                        bottom-9
-                        left-1/2
-                        z-30
-                        flex
-                        -translate-x-1/2
-                        flex-col
-                        items-center
-                        gap-2
-                    "
-                >
-                    {/* INSTRUÇÃO */}
-
-                    <span
-                        className="
-                            whitespace-nowrap
-                            text-[10px]
-                            uppercase
-                            tracking-[0.3em]
-                            text-white/40
-                        "
-                    >
-                        Arraste para o lado
-                    </span>
-
-                    <div
-                        className="
-                            flex
-                            items-center
-                            gap-4
-                            text-sm
-                            text-white/50
-                        "
-                    >
-                        <MoveLeft size={24} strokeWidth={1.5} className="indicator-arrow-left" />
-
-                        <span
-                            className="
-                                h-3
-                                w-8
-                                rounded-full
-                                bg-white/50
-                            "
+            {isMobileLayout && (
+                <Suspense
+                    fallback={
+                        <MobileCarouselPlaceholder
+                            projectCount={projetos.length}
                         />
-
-                        <MoveRight size={24} strokeWidth={1.5} className="indicator-arrow-right" />
-                    </div>
-                </div>
-            </div>
+                    }
+                >
+                    <ProjetoCarouselMobile
+                        projects={projetos}
+                        tecnologiasConfig={tecnologias}
+                        onReady={onReady}
+                    />
+                </Suspense>
+            )}
         </section>
     );
 }
