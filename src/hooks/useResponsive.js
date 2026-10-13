@@ -24,7 +24,7 @@ function readResponsiveState() {
 
 /**
  * Centraliza a leitura do viewport para decisões de layout e comportamento.
- * As classes Tailwind responsivas usam variantes definidas em App.css.
+ * Tablets usam a experiência mobile, independentemente da orientação.
  */
 export default function useResponsive() {
     const [viewport, setViewport] = useState(readResponsiveState);
@@ -56,6 +56,8 @@ export default function useResponsive() {
         compactLandscape.addEventListener("change", updateViewport);
         touch.addEventListener("change", updateViewport);
 
+        updateViewport();
+
         return () => {
             window.removeEventListener("resize", updateViewport);
             window.removeEventListener("orientationchange", updateViewport);
@@ -64,8 +66,10 @@ export default function useResponsive() {
         };
     }, []);
 
-    const isMobileLayout = viewport.width < 768 || viewport.isCompactLandscape;
-    const isTablet = !isMobileLayout && viewport.width >= 768 && viewport.width < 1024;
+    // Telas touch a partir de 768px (tablets) mantêm a experiência mobile.
+    const isTablet = viewport.isTouch && viewport.width >= 768;
+    const isMobileLayout =
+        viewport.width < 768 || viewport.isCompactLandscape || isTablet;
     const isDesktop = !isMobileLayout && viewport.width >= 1024;
 
     return {
