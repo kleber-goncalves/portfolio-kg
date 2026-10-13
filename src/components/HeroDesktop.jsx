@@ -1091,12 +1091,14 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                         d-xl:w-[970px]
                     "
                 >
-                    <img
+                    <OptimizedImage
                         src="/euNv.png"
-                        alt="Kleber Dev"
+                        alt="Retrato de Kleber Gonçalves"
+                        sizes="(min-width: 1280px) 970px, (min-width: 1024px) 440px, 420px"
+                        loading="eager"
+                        fetchPriority="high"
+                        wrapperClassName="h-full w-full"
                         className="
-                            h-full
-                            w-full
                             object-cover
                             object-top
                         "

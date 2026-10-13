@@ -117,6 +117,20 @@ for (const file of projectFiles) {
     });
 }
 
+// Optimize the desktop Hero portrait stored in public/euNv.png.
+const desktopPortraitPath = path.join(root, "public", "euNv.png");
+
+await optimizeImage({
+    input: desktopPortraitPath,
+    key: "euNv.png",
+    baseName: "euNv",
+    outputDirectory: "hero",
+    publicDirectory: "hero",
+    sizes: "(min-width: 1280px) 970px, (min-width: 1024px) 440px, 420px",
+    fallbackWidth: 640,
+    label: "HeroDesktop portrait (public/euNv.png)",
+});
+
 // Fetch the GitHub-hosted portrait in CI, then commit only optimized local variants.
 const profileResponse = await fetch(heroProfileUrl, {
     redirect: "follow",

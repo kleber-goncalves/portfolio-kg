@@ -6,6 +6,8 @@ on:
       - feat/responsividadeFull
     paths:
       - "src/assets/projetos/**"
+      - "public/euNv.png"
+      - "src/components/HeroDesktop.jsx"
       - "src/components/HeroMobile.jsx"
       - "scripts/optimize-project-images.mjs"
       - ".github/workflows/optimize-project-images.yml"
