@@ -559,9 +559,9 @@ function HeroSectionTransition({ experienceMode = "full" }) {
                 z-0
                 w-full
 
-                md:absolute
-                md:inset-0
-                md:h-full
+                b-md:absolute
+                b-md:inset-0
+                b-md:h-full
             `
         : `
                 relative
@@ -592,11 +592,11 @@ function HeroSectionTransition({ experienceMode = "full" }) {
 
                 bg-obsidian
 
-                md:absolute
-                md:inset-0
-                md:h-auto
+                b-md:absolute
+                b-md:inset-0
+                b-md:h-auto
 
-                md:shadow-[0_-25px_60px_rgba(0,0,0,0.55)]
+                b-md:shadow-[0_-25px_60px_rgba(0,0,0,0.55)]
             `
         : `
                 relative
@@ -620,16 +620,16 @@ function HeroSectionTransition({ experienceMode = "full" }) {
                         w-full
                         h-auto
 
-                        md:h-screen
-                        md:overflow-hidden
+                        b-md:h-screen
+                        b-md:overflow-hidden
                     `
                     : `
                         relative
                         w-full
                         h-auto
 
-                        md:h-auto
-                        md:overflow-visible
+                        b-md:h-auto
+                        b-md:overflow-visible
                     `
             }
         >
