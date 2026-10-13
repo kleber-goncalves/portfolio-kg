@@ -8,6 +8,7 @@ gsap.registerPlugin(ScrollTrigger);
 import { tecnologias } from "../data/tecnologias";
 import { ArrowUpRight } from "lucide-react";
 import MagneticExternalLinkHover from "./MagneticExternalLinkHover";
+import OptimizedImage from "./OptimizedImage";
 
 function ProjetoDesktop({ projetos, experienceMode = "full" }) {
     // ============================================================
@@ -974,14 +975,15 @@ function ProjetoDesktop({ projetos, experienceMode = "full" }) {
                                         shrink-0
                                     "
                             >
-                                <img
+                                <OptimizedImage
                                     src={projeto.preview || projeto.imagens?.[0]}
-                                    alt={`Preview de ${projeto.titulo}`}
-                                    className="
-                                            h-full
-                                            w-full
-                                            object-cover
-                                        "
+                                    alt={`Captura de tela do projeto ${projeto.titulo}`}
+                                    width={560}
+                                    height={360}
+                                    loading="lazy"
+                                    fetchPriority="low"
+                                    wrapperClassName="h-full w-full"
+                                    className="object-cover"
                                 />
                             </div>
                         ))}
