@@ -602,7 +602,7 @@ function ProjetoDesktop({ projetos, experienceMode = "full" }) {
                                 uppercase
                                 tracking-wide
                                 text-steel
-                                lg:text-7xl
+                                c-lg:text-7xl
                             "
                         >
                             // Projetos
@@ -616,7 +616,7 @@ function ProjetoDesktop({ projetos, experienceMode = "full" }) {
                                 h-0.5
                                 flex-1
                                 bg-gradientaa
-                                md:h-1
+                                b-md:h-1
                             "
                         />
 
@@ -631,7 +631,7 @@ function ProjetoDesktop({ projetos, experienceMode = "full" }) {
                                 text-sm
                                 leading-6
                                 text-steel
-                                lg:block
+                                c-lg:block
                             "
                         >
                             Uma seleção de projetos desenvolvidos durante minha evolução como desenvolvedor
@@ -795,7 +795,7 @@ function ProjetoDesktop({ projetos, experienceMode = "full" }) {
                                                             ease-out
                                                             group-hover:translate-x-2
                                                             group-hover:text-ivory
-                                                            lg:text-4xl
+                                                            c-lg:text-4xl
                                                         "
                                                 >
                                                     {projeto.titulo}
@@ -949,7 +949,7 @@ function ProjetoDesktop({ projetos, experienceMode = "full" }) {
                         bg-carbon
                         shadow-2xl
                         shadow-black
-                        lg:block
+                        c-lg:block
                     "
                 >
                     {/* ==============================================
