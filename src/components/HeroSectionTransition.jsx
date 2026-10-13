@@ -264,7 +264,7 @@ function HeroSectionTransition({ experienceMode = "full" }) {
             // DESKTOP
             // ====================================================
 
-            mm.add("(min-width: 768px)", () => {
+            mm.add("(min-width: 768px) and (orientation: portrait), (min-width: 768px) and (orientation: landscape) and (min-height: 601px)", () => {
                 // =================================================
                 // ELEMENTOS DO HERO
                 // =================================================
