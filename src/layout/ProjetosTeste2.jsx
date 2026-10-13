@@ -31,7 +31,7 @@ import projeto01_03 from "../assets/projetos/projeto01/jason-3.webp";
 import projeto01_04 from "../assets/projetos/projeto01/lucia-1.webp";
 
 
-function Projetos({ experienceMode = "full" }) {
+function Projetos({ experienceMode = "full", onReady }) {
     const sectionRef = useRef(null);
     const titleRef = useRef(null);
     const lineRef = useRef(null);
@@ -214,8 +214,27 @@ function Projetos({ experienceMode = "full" }) {
         return () => ctx.revert();
     }, []);
 
+    // Depois da montagem tardia, recalcula as posições de todos os ScrollTriggers.
+    // Duas frames permitem que React e o navegador assentem o layout antes do refresh.
+    useLayoutEffect(() => {
+        let firstFrame = 0;
+        let secondFrame = 0;
+
+        firstFrame = window.requestAnimationFrame(() => {
+            secondFrame = window.requestAnimationFrame(() => {
+                ScrollTrigger.refresh(true);
+                onReady?.();
+            });
+        });
+
+        return () => {
+            window.cancelAnimationFrame(firstFrame);
+            window.cancelAnimationFrame(secondFrame);
+        };
+    }, [onReady]);
+
     return (
-        <section id="projetos" ref={sectionRef} className="w-full b-md:mt-30 mt-30 bg-obsidian">
+        <section ref={sectionRef} className="w-full bg-obsidian">
             {/* ==================================================
                 DESKTOP
             ================================================== */}
@@ -263,7 +282,6 @@ function Projetos({ experienceMode = "full" }) {
                 >
                     <h2
                         ref={titleRef}
-                        id="projetos"
                         className="
                             whitespace-nowrap
                             text-sm

@@ -6,7 +6,7 @@ import { useState } from "react";
 
 // Layout
 import Competencia from "./layout/Competencia";
-import ProjetoT from "./layout/ProjetosTeste2";
+import DeferredProjects from "./components/DeferredProjects";
 import Diferenciais from "./layout/DiferenciaisTeste";
 import Formacao from "./layout/Formacao";
 import Footer from "./layout/Footer";
@@ -40,7 +40,7 @@ function App() {
 
                     <Competencia experienceMode={experienceMode} />
 
-                    <ProjetoT experienceMode={experienceMode} />
+                    <DeferredProjects experienceMode={experienceMode} />
 
                     <Diferenciais experienceMode={experienceMode} />
 
