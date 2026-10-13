@@ -227,7 +227,7 @@ function MenuItem({ text, logos = [], speed, textColor, marqueeBgColor, marqueeT
                     justify-between
                     px-5
 
-                    md:px-26
+                    b-md:px-26
                 "
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
@@ -390,7 +390,7 @@ function LogoItem({ logo }) {
 
                 px-8
 
-                md:px-5
+                b-md:px-5
             "
         >
             {/* =================================================
@@ -407,8 +407,8 @@ function LogoItem({ logo }) {
                     items-center
                     justify-center
 
-                    md:h-12
-                    md:w-12
+                    b-md:h-12
+                    b-md:w-12
                 "
                 >
                     {logo.node}
@@ -426,7 +426,7 @@ function LogoItem({ logo }) {
                     text-base
                     font-medium
 
-                    md:text-lg
+                    b-md:text-lg
                 "
                 >
                     {logo.title}
