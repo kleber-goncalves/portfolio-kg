@@ -18,7 +18,7 @@ import "./App.css";
 import HeroSectionTransition from "./components/HeroSectionTransition";
 import ButtonReset from "./components/buttonReset";
 import CursorTrail from "./components/CursorTrail";
-
+import Preloader from "./components/Preloader";
 
 // Experience Mode
 import { getExperienceMode } from "./utils/experienceMode";
@@ -28,10 +28,11 @@ function App() {
 
     return (
         <>
+            <Preloader />
+
             <CursorTrail />
 
             <SmoothScroll>
-
                 <div className="relative z-[1] w-full">
                     <ButtonReset />
 
