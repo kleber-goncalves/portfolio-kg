@@ -56,8 +56,6 @@ export default function useResponsive() {
         compactLandscape.addEventListener("change", updateViewport);
         touch.addEventListener("change", updateViewport);
 
-        updateViewport();
-
         return () => {
             window.removeEventListener("resize", updateViewport);
             window.removeEventListener("orientationchange", updateViewport);
