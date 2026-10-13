@@ -289,7 +289,7 @@ function Projetos() {
                     relative
                     w-full
                     overflow-hidden
-                    md:h-screen
+                    b-md:h-screen
                 "
             >
                 {/* ==================================================
@@ -309,7 +309,7 @@ function Projetos() {
                         gap-2
                         p-5
                         pt-12
-                        md:p-10
+                        b-md:p-10
                     "
                 >
                     <h2
@@ -319,7 +319,7 @@ function Projetos() {
                             text-sm
                             uppercase
                             text-steel
-                            md:text-7xl
+                            b-md:text-7xl
                         "
                     >
                         // Projetos
@@ -330,7 +330,7 @@ function Projetos() {
                             h-0.5
                             flex-1
                             bg-gradientaa
-                            md:h-1
+                            b-md:h-1
                         "
                     />
 
@@ -343,7 +343,7 @@ function Projetos() {
                             flex
                             items-center
                             gap-1
-                            md:hidden
+                            b-md:hidden
                         "
                     >
                         <span
@@ -389,7 +389,7 @@ function Projetos() {
                         h-screen
                         w-full
                         items-center
-                        md:flex
+                        b-md:flex
                     "
                 >
                     <div
@@ -425,7 +425,7 @@ function Projetos() {
                         px-0
                         pb-12
                         pt-24
-                        md:hidden
+                        b-md:hidden
                     "
                 >
                     <Swiper
@@ -486,7 +486,7 @@ function Projetos() {
                         flex-col
                         items-center
                         gap-2
-                        md:flex
+                        b-md:flex
                     "
                 >
                     <span
@@ -528,7 +528,7 @@ function Projetos() {
                         flex-col
                         items-center
                         gap-2
-                        md:hidden
+                        b-md:hidden
                     "
                 >
                     {/* INSTRUÇÃO */}
