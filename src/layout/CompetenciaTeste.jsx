@@ -7,8 +7,8 @@ const Competencia = () => {
                 w-full
                 bg-obsidian
                 px-6
-                md:px-10
-                lg:px-16
+                b-md:px-10
+                c-lg:px-16
             "
         >
             <div
@@ -25,8 +25,8 @@ const Competencia = () => {
                         grid
                         grid-cols-1
                         gap-4
-                        md:grid-cols-2
-                        md:gap-y-5
+                        b-md:grid-cols-2
+                        b-md:gap-y-5
                         
                     "
                 >
