@@ -29,12 +29,12 @@ function Hero() {
         },
     ];
     return (
-        <section id="hero" className="relative w-full overflow-hidden bg-obsidian p-4 md:p-10">
+        <section id="hero" className="relative w-full overflow-hidden bg-obsidian p-4 b-md:p-10">
             <div className="relative aspect-[390/790] w-full">
                 {/* =========================
                 SVG MOBILE
             ========================== */}
-                <img src="/hero-vetor-7.svg" alt="" aria-hidden="true" className="absolute left-0 top-0 w-full h-full md:hidden" />
+                <img src="/hero-vetor-7.svg" alt="" aria-hidden="true" className="absolute left-0 top-0 w-full h-full b-md:hidden" />
 
                 {/* =========================
                 CONTEÚDO
