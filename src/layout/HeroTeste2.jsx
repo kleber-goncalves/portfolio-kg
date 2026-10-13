@@ -1,32 +1,9 @@
-import { useEffect, useState } from "react";
 import HeroMobile from "../components/HeroMobile";
 import HeroDesktop from "../components/HeroDesktop";
-
-const MOBILE_LAYOUT_QUERY =
-    "(max-width: 767px), (orientation: landscape) and (max-height: 600px)";
+import useResponsive from "../hooks/useResponsive";
 
 function Hero({ dotFieldFrozen = false, onNavigate, experienceMode = "full" }) {
-    const [useMobileLayout, setUseMobileLayout] = useState(() => {
-        if (typeof window === "undefined") return false;
-
-        return window.matchMedia(MOBILE_LAYOUT_QUERY).matches;
-    });
-
-    useEffect(() => {
-        const mediaQuery = window.matchMedia(MOBILE_LAYOUT_QUERY);
-
-        const updateLayout = () => {
-            setUseMobileLayout(mediaQuery.matches);
-        };
-
-        // Mantém o layout sincronizado ao girar o aparelho ou redimensionar a janela.
-        updateLayout();
-        mediaQuery.addEventListener("change", updateLayout);
-
-        return () => {
-            mediaQuery.removeEventListener("change", updateLayout);
-        };
-    }, []);
+    const { isMobileLayout } = useResponsive();
 
     // ============================================================
     // ITENS DO MENU
@@ -61,7 +38,7 @@ function Hero({ dotFieldFrozen = false, onNavigate, experienceMode = "full" }) {
 
     return (
         <section id="hero" className="relative">
-            {useMobileLayout ? (
+            {isMobileLayout ? (
                 <div className="p-5">
                     <HeroMobile items={menuItems} />
                 </div>
