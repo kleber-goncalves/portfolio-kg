@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+/*
+ * Breakpoints adaptados para telas com pouca altura.
+ * Em celulares deitados (landscape + até 600px de altura),
+ * as classes responsivas não ativam layouts de tablet/desktop.
+ * Os nomes são ordenados para manter a progressão mobile -> desktop.
+ */
+@custom-variant a-sm (@media (width >= 40rem) and (orientation: portrait), (width >= 40rem) and (orientation: landscape) and (min-height: 601px));
+@custom-variant b-md (@media (width >= 48rem) and (orientation: portrait), (width >= 48rem) and (orientation: landscape) and (min-height: 601px));
+@custom-variant c-lg (@media (width >= 64rem) and (orientation: portrait), (width >= 64rem) and (orientation: landscape) and (min-height: 601px));
+@custom-variant d-xl (@media (width >= 80rem) and (orientation: portrait), (width >= 80rem) and (orientation: landscape) and (min-height: 601px));
+@custom-variant e-2xl (@media (width >= 96rem) and (orientation: portrait), (width >= 96rem) and (orientation: landscape) and (min-height: 601px));
+
 @theme {
     --color-obsidian: #0d0d0d;
     --color-carbon: #151515;
