@@ -601,7 +601,7 @@ export default function MinhaTrajetoria({
                 w-full
                 flex-col
                 gap-14
-                md:gap-20
+                b-md:gap-20
             "
         >
             {/* ==================================================
@@ -644,7 +644,7 @@ export default function MinhaTrajetoria({
                             uppercase
                             tracking-[0.2em]
                             text-steel
-                            md:text-sm
+                            b-md:text-sm
                         "
                     >
                         {subtitulo}
@@ -663,7 +663,7 @@ export default function MinhaTrajetoria({
                         leading-none
                         tracking-tight
                         text-ivory
-                        md:text-7xl
+                        b-md:text-7xl
                     "
                 >
                     {titulo}
@@ -679,8 +679,8 @@ export default function MinhaTrajetoria({
                         text-sm
                         leading-6
                         text-steel
-                        md:text-sm
-                        md:leading-7
+                        b-md:text-sm
+                        b-md:leading-7
                     "
                 >
                     {descricao}
@@ -707,7 +707,7 @@ export default function MinhaTrajetoria({
                         relative
                         hidden
                         w-full
-                        md:block
+                        b-md:block
                     "
                 >
                     {/* ==================================================
@@ -947,7 +947,7 @@ export default function MinhaTrajetoria({
                     className="
                         relative
                         w-full
-                        md:hidden
+                        b-md:hidden
                         ml-3
                     "
                 >
@@ -1189,7 +1189,7 @@ function TimelineContent({
                     leading-[1.1]
                     tracking-tight
                     text-ivory
-                    lg:text-3xl
+                    c-lg:text-3xl
                 "
             >
                 {evento.titulo}
