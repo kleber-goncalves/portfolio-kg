@@ -107,7 +107,7 @@ export default function ButtonReset() {
                 bottom-1
                 right-5
                 z-50
-                md:hidden
+                b-md:hidden
                 opacity-0
             "
         >
