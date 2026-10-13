@@ -296,7 +296,7 @@ function Socials() {
     };
 
     return (
-        <div ref={containerRef} className="relative w-[78%] md:hidden">
+        <div ref={containerRef} className="relative w-[78%] b-md:hidden">
             {/* =====================================
                 BOTÃO DE ARRASTE
             ====================================== */}
