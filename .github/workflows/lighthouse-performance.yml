@@ -38,9 +38,14 @@ jobs:
       - name: Validate production build
         run: npm run build
 
+      - name: Allow Vercel to finish deploying
+        run: |
+          echo "Aguardando 60 segundos para a Vercel concluir o deployment da branch."
+          sleep 60
+
       - name: Wait for Vercel preview
         run: |
-          echo "Aguardando o deployment da Vercel em $PREVIEW_URL"
+          echo "Verificando o preview em $PREVIEW_URL"
           for attempt in $(seq 1 30); do
             if curl --fail --silent --show-error "$PREVIEW_URL" --output /dev/null; then
               echo "Preview da Vercel está respondendo."
