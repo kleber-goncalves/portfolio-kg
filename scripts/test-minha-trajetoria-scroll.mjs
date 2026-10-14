@@ -260,8 +260,7 @@ async function testModeSwitchReload(browser) {
         reducedMotion: "no-preference",
     });
 
-    // Inicializa em Reduced só na primeira navegação; no reload preserva
-    // o modo que o teste mudar no localStorage, como faz o dropdown real.
+    // Inicia em Reduced e preserva o modo escolhido durante o reload da página.
     await context.addInitScript(() => {
         try {
             if (sessionStorage.getItem("__trajectory_mode_initialized") !== "1") {
@@ -276,25 +275,58 @@ async function testModeSwitchReload(browser) {
     const page = await context.newPage();
 
     try {
-        console.log("Testing mode switch/reload: reduced -> full");
+        console.log("Testing real mode switch: reduced -> full from MinhaTrajetoria");
         await waitForPageReady(page, "reduced");
 
-        await page.evaluate(() => window.scrollTo(0, 650));
-        await page.waitForTimeout(250);
-        const scrollBeforeReload = await page.evaluate(() => window.scrollY);
+        // Coloca a linha real da trajetória na viewport antes de trocar de modo.
+        await page.evaluate(() => {
+            document.documentElement.style.scrollBehavior = "auto";
+            const line = document.querySelector('[data-trajectory-progress-line="desktop"]');
 
-        assert.ok(
-            scrollBeforeReload > 100,
-            "Could not position the reduced-mode page before reload; scrollY=" + scrollBeforeReload + ".",
+            if (!line) {
+                throw new Error("Could not find the desktop trajectory line before switching modes.");
+            }
+
+            const targetY =
+                window.scrollY +
+                line.getBoundingClientRect().top -
+                window.innerHeight * 0.4;
+
+            window.scrollTo(0, Math.max(0, targetY));
+        });
+
+        await page.waitForFunction(
+            () => {
+                const button = document.querySelector('button[aria-label="Abrir menu"]');
+                return Boolean(
+                    button &&
+                    getComputedStyle(button).pointerEvents !== "none" &&
+                    Number(getComputedStyle(button).opacity) > 0.8
+                );
+            },
+            null,
+            { timeout: 15000 },
         );
 
-        await page.evaluate(() => {
-            localStorage.setItem("experienceMode", "full");
-        });
-        await page.reload({
+        const beforeSwitch = await readLineProgress(page);
+        const beforeSwitchY = await page.evaluate(() => window.scrollY);
+        assert.ok(
+            beforeSwitchY > 100,
+            "The test must switch modes while scrolled into MinhaTrajetoria; scrollY=" + beforeSwitchY + ".",
+        );
+
+        await page.locator('button[aria-label="Abrir menu"]').click();
+
+        const fullOption = page.locator('[data-experience-mode-option="full"]');
+        await fullOption.waitFor({ state: "visible", timeout: 10000 });
+
+        const reload = page.waitForNavigation({
             waitUntil: "domcontentloaded",
             timeout: 60000,
         });
+
+        await fullOption.click();
+        await reload;
         await waitForPageReady(page, "full", { navigate: false });
 
         const afterReload = await readLineProgress(page);
@@ -304,19 +336,53 @@ async function testModeSwitchReload(browser) {
             "Could not locate the trajectory line after switching to Full.",
         );
         assert.ok(
+            afterReload.scrollY <= 5,
+            "Changing to Full should restart at the top to avoid restoring a scroll position from the old layout; scrollY=" +
+                afterReload.scrollY + ".",
+        );
+        assert.ok(
             afterReload.progress <= 0.08,
-            "The trajectory line should remain near empty after switching to Full and reloading above the trajectory; scrollY=" +
-                afterReload.scrollY +
-                ", scaleY=" +
-                afterReload.progress.toFixed(3) +
-                ".",
+            "The trajectory line should be empty at the top after switching to Full; scaleY=" +
+                afterReload.progress.toFixed(3) + ".",
+        );
+
+        const downSamples = await scrollAndSample(page, 1);
+        assertProgressIsMonotonic(downSamples, 1, "Full after mode switch");
+
+        const downValues = downSamples.map((sample) => sample.progress);
+        const downMax = Math.max(...downValues);
+        assert.ok(
+            downMax >= 0.95,
+            "The line should reach the end after switching to Full; max scaleY=" + downMax.toFixed(3) + ".",
+        );
+        assert.ok(
+            intermediateProgressBands(downSamples).size >= 2,
+            "The line should fill gradually after switching to Full.",
+        );
+
+        const upSamples = await scrollAndSample(page, -1);
+        assertProgressIsMonotonic(upSamples, -1, "Full after mode switch");
+
+        const upValues = upSamples.map((sample) => sample.progress);
+        const upMin = Math.min(...upValues);
+        assert.ok(
+            upMin <= 0.08,
+            "The line should return nearly empty when scrolling back up after switching to Full; min scaleY=" +
+                upMin.toFixed(3) + ".",
+        );
+        assert.ok(
+            intermediateProgressBands(upSamples).size >= 2,
+            "The line should reverse gradually after switching to Full.",
         );
 
         console.log(JSON.stringify({
-            scenario: "reduced -> full reload",
-            scrollBeforeReload: Math.round(scrollBeforeReload),
+            scenario: "reduced -> full from MinhaTrajetoria",
+            scrollBeforeSwitch: Math.round(beforeSwitchY),
+            progressBeforeSwitch: Number(beforeSwitch.progress.toFixed(3)),
             scrollAfterReload: Math.round(afterReload.scrollY),
             initialLineProgress: Number(afterReload.progress.toFixed(3)),
+            downMax: Number(downMax.toFixed(3)),
+            upMin: Number(upMin.toFixed(3)),
         }));
     } finally {
         await context.close();
