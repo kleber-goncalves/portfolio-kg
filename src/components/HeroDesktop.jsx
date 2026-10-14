@@ -52,7 +52,20 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, exper
     // ============================================================
 
     useLayoutEffect(() => {
+        let initialFrameId = null;
+        let settledFrameId = null;
+
         const updateActiveSection = () => {
+            // No topo real da página, o Hero é sempre a seção ativa.
+            // Isso evita que a sobreposição temporária do Stack durante
+            // a inicialização do GSAP marque o link errado.
+            const heroItem = items.find((item) => item.href === "#hero");
+
+            if (window.scrollY <= 1 && heroItem) {
+                setActiveHref(heroItem.href);
+                return;
+            }
+
             const viewportPosition = window.innerHeight * 0.35;
 
             let currentSection = null;
@@ -61,7 +74,6 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, exper
                 if (!item.href?.startsWith("#")) return;
 
                 const id = item.href.slice(1);
-
                 const section = document.getElementById(id);
 
                 if (!section) return;
@@ -76,18 +88,55 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, exper
             setActiveHref(currentSection);
         };
 
-        updateActiveSection();
+        // Aguarda dois frames para que os efeitos de layout do React,
+        // as transformações iniciais do GSAP e o pin do ScrollTrigger
+        // tenham aplicado suas posições antes da medição.
+        const scheduleActiveSectionUpdate = () => {
+            if (initialFrameId !== null) {
+                cancelAnimationFrame(initialFrameId);
+            }
+
+            if (settledFrameId !== null) {
+                cancelAnimationFrame(settledFrameId);
+            }
+
+            initialFrameId = requestAnimationFrame(() => {
+                initialFrameId = null;
+
+                settledFrameId = requestAnimationFrame(() => {
+                    settledFrameId = null;
+                    updateActiveSection();
+                });
+            });
+        };
+
+        scheduleActiveSectionUpdate();
 
         window.addEventListener("scroll", updateActiveSection, {
             passive: true,
         });
 
-        window.addEventListener("resize", updateActiveSection);
+        window.addEventListener("resize", scheduleActiveSectionUpdate);
+        window.addEventListener("pageshow", scheduleActiveSectionUpdate);
+
+        // ScrollTrigger pode alterar o layout ao criar ou recalcular o pin.
+        // Revalidamos após o refresh, sem forçar um refresh novo.
+        ScrollTrigger.addEventListener("refresh", scheduleActiveSectionUpdate);
 
         return () => {
-            window.removeEventListener("scroll", updateActiveSection);
+            if (initialFrameId !== null) {
+                cancelAnimationFrame(initialFrameId);
+            }
 
-            window.removeEventListener("resize", updateActiveSection);
+            if (settledFrameId !== null) {
+                cancelAnimationFrame(settledFrameId);
+            }
+
+            window.removeEventListener("scroll", updateActiveSection);
+            window.removeEventListener("resize", scheduleActiveSectionUpdate);
+            window.removeEventListener("pageshow", scheduleActiveSectionUpdate);
+
+            ScrollTrigger.removeEventListener("refresh", scheduleActiveSectionUpdate);
         };
     }, [items]);
     // ============================================================
