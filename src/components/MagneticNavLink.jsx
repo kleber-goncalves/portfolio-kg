@@ -14,6 +14,7 @@ function MagneticLink({
     isActive = false,
 
     accent = "#A87852",
+    hoverAccent = "#C49A78",
     textColor = "#8B8B8B",
     hoverTextColor = "#0D0D0D",
 
@@ -213,7 +214,7 @@ function MagneticLink({
                     z-0
                 "
                 style={{
-                    backgroundColor: accent,
+                    backgroundColor: isActive ? accent : hoverAccent,
 
                     transformOrigin: `${originX.get() * 100}% ${originY.get() * 100}%`,
                 }}
@@ -254,7 +255,7 @@ function MagneticLink({
                     border
                 "
                 style={{
-                    borderColor: accent,
+                    borderColor: isActive ? accent : hoverAccent,
                 }}
                 animate={{
                     opacity: isActive ? 1 : isHovered ? 0.55 : 0,
@@ -298,7 +299,7 @@ function MagneticLink({
                     block
                 "
                 style={{
-                    color: isActive ? hoverTextColor : isHovered ? accent : textColor,
+                    color: isActive ? hoverTextColor : isHovered ? hoverAccent : textColor,
                 }}
                 animate={{
                     y: isActive ? -0.5 : isHovered ? -0.25 : 0,
