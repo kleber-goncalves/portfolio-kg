@@ -39,8 +39,18 @@ module.exports = async (browser) => {
             );
         }
 
+        // The setup navigation must not warm the cache for the measured navigation.
+        // Keep localStorage untouched, but clear cached network responses explicitly.
+        const client = await page.createCDPSession();
+
+        try {
+            await client.send("Network.clearBrowserCache");
+        } finally {
+            await client.detach();
+        }
+
         console.log(
-            `[LHCI] Verified experienceMode="${mode}" for ${page.url()}`,
+            `[LHCI] Verified experienceMode="${mode}" and cleared HTTP cache for ${page.url()}`,
         );
     } finally {
         await page.close();

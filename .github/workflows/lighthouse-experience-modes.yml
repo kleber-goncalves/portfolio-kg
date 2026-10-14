@@ -69,25 +69,55 @@ jobs:
       - name: Install temporary Lighthouse CI tools
         run: npm install --no-save --package-lock=false @lhci/cli@0.15.1 puppeteer
 
-      - name: Measure full animation mode (3 Lighthouse runs)
+      - name: Measure full animation mode (3 isolated Lighthouse runs)
         env:
           EXPERIENCE_MODE: full
         run: |
           set -euo pipefail
-          rm -rf .lighthouseci
-          npx lhci collect --config=./lighthouserc-experience-modes.json
           mkdir -p lighthouse-comparison/full
-          cp .lighthouseci/lhr-* lighthouse-comparison/full/
 
-      - name: Measure reduced animation mode (3 Lighthouse runs)
+          for run in 1 2 3; do
+            echo "Full animation mode: isolated run $run/3"
+            rm -rf .lighthouseci
+            npx lhci collect --config=./lighthouserc-experience-modes.json
+
+            report_json="$(find .lighthouseci -maxdepth 1 -type f -name 'lhr-*.json' -print -quit)"
+            if [ -z "$report_json" ]; then
+              echo "No Lighthouse JSON report was generated for full mode run $run."
+              exit 1
+            fi
+
+            cp "$report_json" "lighthouse-comparison/full/lhr-full-run-$run.json"
+            report_html="${report_json%.json}.html"
+            if [ -f "$report_html" ]; then
+              cp "$report_html" "lighthouse-comparison/full/lhr-full-run-$run.html"
+            fi
+          done
+
+      - name: Measure reduced animation mode (3 isolated Lighthouse runs)
         env:
           EXPERIENCE_MODE: reduced
         run: |
           set -euo pipefail
-          rm -rf .lighthouseci
-          npx lhci collect --config=./lighthouserc-experience-modes.json
           mkdir -p lighthouse-comparison/reduced
-          cp .lighthouseci/lhr-* lighthouse-comparison/reduced/
+
+          for run in 1 2 3; do
+            echo "Reduced animation mode: isolated run $run/3"
+            rm -rf .lighthouseci
+            npx lhci collect --config=./lighthouserc-experience-modes.json
+
+            report_json="$(find .lighthouseci -maxdepth 1 -type f -name 'lhr-*.json' -print -quit)"
+            if [ -z "$report_json" ]; then
+              echo "No Lighthouse JSON report was generated for reduced mode run $run."
+              exit 1
+            fi
+
+            cp "$report_json" "lighthouse-comparison/reduced/lhr-reduced-run-$run.json"
+            report_html="${report_json%.json}.html"
+            if [ -f "$report_html" ]; then
+              cp "$report_html" "lighthouse-comparison/reduced/lhr-reduced-run-$run.html"
+            fi
+          done
 
       - name: Compare median Lighthouse metrics
         run: node scripts/summarize-lighthouse-modes.mjs
