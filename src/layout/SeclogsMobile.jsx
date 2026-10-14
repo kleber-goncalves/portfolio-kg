@@ -81,7 +81,7 @@ function SeclogsMobile({ sectionRef, onReady }) {
 
             gsap.set(frontEndRef.current, {
                 opacity: 0,
-                y: 50,
+                y: 0,
             });
 
             gsap.to(frontEndRef.current, {
@@ -105,7 +105,7 @@ function SeclogsMobile({ sectionRef, onReady }) {
 
             gsap.set(backendRef.current, {
                 opacity: 0,
-                y: 50,
+                y: 0,
             });
 
             gsap.to(backendRef.current, {
@@ -129,7 +129,7 @@ function SeclogsMobile({ sectionRef, onReady }) {
 
             gsap.set(toolsRef.current, {
                 opacity: 0,
-                y: 50,
+                y: 0,
             });
 
             gsap.to(toolsRef.current, {
