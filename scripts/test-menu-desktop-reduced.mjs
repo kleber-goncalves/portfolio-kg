@@ -182,7 +182,31 @@ async function testReducedReloadAtMiddle(browser) {
     await context.addInitScript(() => {
         try {
             localStorage.setItem("experienceMode", "reduced");
-            history.scrollRestoration = "auto";
+            // Controla a posição no próprio teste: Chromium nem sempre restaura reloads
+            // programáticos da mesma forma que uma atualização manual do navegador.
+            history.scrollRestoration = "manual";
+
+            window.addEventListener("DOMContentLoaded", () => {
+                if (sessionStorage.getItem("__menu_test_restore_midpage") !== "1") return;
+
+                sessionStorage.removeItem("__menu_test_restore_midpage");
+                document.documentElement.style.scrollBehavior = "auto";
+
+                // Restaura após o HTML inicial, mas antes de o Hero lazy concluir onReady.
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        const target = document.querySelector("#competencias");
+                        if (!target) return;
+
+                        const targetY =
+                            window.scrollY +
+                            target.getBoundingClientRect().top -
+                            window.innerHeight * 0.25;
+
+                        window.scrollTo(0, Math.max(0, targetY));
+                    });
+                });
+            });
         } catch {
             // Ignore storage access failures before navigation.
         }
@@ -206,6 +230,12 @@ async function testReducedReloadAtMiddle(browser) {
             beforeReload.scrollY > viewport.height,
             "The test must refresh away from Hero; scrollY=" + beforeReload.scrollY + ".",
         );
+
+        // Força uma restauração de posição controlada durante o reload para reproduzir
+        // o cenário sem depender do comportamento variável de scroll restoration do Chromium.
+        await page.evaluate(() => {
+            sessionStorage.setItem("__menu_test_restore_midpage", "1");
+        });
 
         await page.reload({
             waitUntil: "domcontentloaded",
