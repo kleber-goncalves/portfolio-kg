@@ -11,6 +11,7 @@ on:
       - "vite.config.js"
       - "vite.analysis.config.js"
       - "scripts/analyze-js-runtime-coverage.mjs"
+      - "scripts/check-reduced-mode-scroll.mjs"
       - ".github/workflows/analyze-js-runtime-coverage.yml"
   workflow_dispatch:
 
@@ -65,6 +66,9 @@ jobs:
 
           cat /tmp/vite-preview.log
           exit 1
+
+      - name: Verify reduced-mode scrolling on desktop and mobile
+        run: node scripts/check-reduced-mode-scroll.mjs
 
       - name: Analyze JavaScript execution on desktop and mobile
         run: node scripts/analyze-js-runtime-coverage.mjs
