@@ -289,6 +289,9 @@ function MenuDesktop({ items = [], showMenu = false }) {
         // =====================================
 
         window.setTimeout(() => {
+            // O modo Full adiciona um trecho pinado ao fluxo vertical.
+            // Evita restaurar o scroll antigo em uma geometria diferente após o reload.
+            window.scrollTo(0, 0);
             window.location.reload();
         }, 500);
     };
@@ -951,6 +954,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
 
                             <motion.button
                                 type="button"
+                                data-experience-mode-option="full"
                                 onClick={() => handleExperienceChange("full")}
                                 whileHover={{
                                     y: -2,
@@ -1009,6 +1013,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
 
                             <motion.button
                                 type="button"
+                                data-experience-mode-option="reduced"
                                 onClick={() => handleExperienceChange("reduced")}
                                 whileHover={{
                                     y: -2,
