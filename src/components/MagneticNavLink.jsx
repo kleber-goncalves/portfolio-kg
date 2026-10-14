@@ -14,7 +14,7 @@ function MagneticLink({
     isActive = false,
 
     accent = "#A87852",
-    hoverAccent = "#C49A78",
+    hoverAccent = "#A87852",
     textColor = "#8B8B8B",
     hoverTextColor = "#0D0D0D",
 
