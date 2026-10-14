@@ -293,6 +293,10 @@ function HeroSectionTransition({ experienceMode = "full" }) {
         // EXPERIÊNCIA COMPLETA
         // ========================================================
 
+        // O pin do Hero/Stack altera os offsets dos ScrollTriggers abaixo.
+        // Recalcula todos depois que a geometria do pin estiver aplicada.
+        let pinRefreshFrameId = null;
+
         const ctx = gsap.context(() => {
             const hero = heroRef.current;
             const seclogs = seclogsRef.current;
@@ -562,11 +566,24 @@ function HeroSectionTransition({ experienceMode = "full" }) {
             };
         }, sectionRef);
 
+        // O pin já está criado neste ponto; espera um frame para medir
+        // as seções seguintes com os offsets definitivos do ScrollTrigger.
+        if (experienceMode === "full" && !isMobileLayout) {
+            pinRefreshFrameId = requestAnimationFrame(() => {
+                pinRefreshFrameId = null;
+                ScrollTrigger.refresh();
+            });
+        }
+
         // ========================================================
         // CLEANUP GSAP CONTEXT
         // ========================================================
 
         return () => {
+            if (pinRefreshFrameId !== null) {
+                cancelAnimationFrame(pinRefreshFrameId);
+            }
+
             ctx.revert();
             initialContext.revert();
 
