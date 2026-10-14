@@ -26,36 +26,20 @@ function MagneticLink({
     // ============================================================
 
     const [isHovered, setIsHovered] = useState(false);
-    const [isFocused, setIsFocused] = useState(false);
 
     /*
     ------------------------------------------------------------
-    INTERAÇÃO
+    ESTADOS VISUAIS
     ------------------------------------------------------------
 
-    Hover e focus continuam sendo estados de interação.
+    A seção ativa precisa ser reconhecida sem confusão:
 
-    O isActive representa a seção atualmente ativa.
+    - isActive: destaque sólido da seção atual.
+    - isHovered: indicação discreta de interação.
+    - foco por teclado: contorno visível via focus-visible.
 
-    Quando qualquer um deles estiver ativo, o link recebe
-    o mesmo tratamento visual.
+    Hover e foco não devem imitar o destaque da seção ativa.
     */
-
-    const isInteractive = isHovered || isFocused;
-
-    /*
-    ------------------------------------------------------------
-    ESTADO VISUAL
-    ------------------------------------------------------------
-
-    O link fica visualmente ativo quando:
-
-    - está em hover
-    - está focado
-    - ou pertence à seção atual
-    */
-
-    const isVisuallyActive = isInteractive || isActive;
 
     // ============================================================
     // MOVIMENTO MAGNÉTICO
@@ -187,12 +171,11 @@ function MagneticLink({
     return (
         <motion.a
             href={href}
+            aria-current={isActive ? "location" : undefined}
             onClick={handleClick}
             onMouseEnter={handleMouseEnter}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
             style={{
                 x: springX,
                 y: springY,
@@ -207,6 +190,10 @@ function MagneticLink({
                 rounded-sm
                 py-1
                 px-2
+                focus-visible:outline
+                focus-visible:outline-2
+                focus-visible:outline-offset-2
+                focus-visible:outline-[#A87852]
                 
 
                 ${className}
@@ -235,8 +222,8 @@ function MagneticLink({
                     opacity: 0,
                 }}
                 animate={{
-                    scale: isVisuallyActive ? 1 : 0,
-                    opacity: isVisuallyActive ? 1 : 0,
+                    scale: isActive || isHovered ? 1 : 0,
+                    opacity: isActive ? 1 : isHovered ? 0.12 : 0,
                 }}
                 transition={{
                     scale: {
@@ -270,7 +257,7 @@ function MagneticLink({
                     borderColor: accent,
                 }}
                 animate={{
-                    opacity: isVisuallyActive ? 1 : 0,
+                    opacity: isActive ? 1 : isHovered ? 0.55 : 0,
                 }}
                 transition={{
                     duration: 0.2,
@@ -292,7 +279,7 @@ function MagneticLink({
                     bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08),transparent_60%)]
                 "
                 animate={{
-                    opacity: isVisuallyActive ? 1 : 0,
+                    opacity: isActive ? 1 : isHovered ? 0.12 : 0,
                 }}
                 transition={{
                     duration: 0.25,
@@ -311,12 +298,12 @@ function MagneticLink({
                     block
                 "
                 style={{
-                    color: isVisuallyActive ? hoverTextColor : textColor,
+                    color: isActive ? hoverTextColor : isHovered ? accent : textColor,
                 }}
                 animate={{
-                    y: isVisuallyActive ? -0.5 : 0,
+                    y: isActive ? -0.5 : isHovered ? -0.25 : 0,
 
-                    letterSpacing: isVisuallyActive ? "0.14em" : "0.12em",
+                    letterSpacing: isActive ? "0.14em" : isHovered ? "0.125em" : "0.12em",
                 }}
                 transition={{
                     y: {
