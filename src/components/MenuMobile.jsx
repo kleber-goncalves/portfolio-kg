@@ -1,10 +1,13 @@
 import { useEffect, useState, useRef } from "react";
+import { createPortal } from "react-dom";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import gsap from "gsap";
+import { startSmoothScroll, stopSmoothScroll } from "../utils/lenisControl";
 
 function MenuMobile({ items = [] }) {
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef(null);
+    const pendingNavigationRef = useRef(null);
 
 
     const openMenu = () => {
@@ -61,6 +64,74 @@ function MenuMobile({ items = [] }) {
         return () => {
             document.removeEventListener("keydown", handleKeyDown);
         };
+    }, [isOpen]);
+
+    // =========================================
+    // BLOQUEIO DA ROLAGEM DA PÁGINA
+    // =========================================
+
+    useEffect(() => {
+        if (!isOpen) return undefined;
+
+        const html = document.documentElement;
+        const body = document.body;
+        const scrollY = window.scrollY;
+
+        const previousHtmlOverflow = html.style.overflow;
+        const previousHtmlScrollBehavior = html.style.scrollBehavior;
+        const previousBodyStyles = {
+            position: body.style.position,
+            top: body.style.top,
+            left: body.style.left,
+            right: body.style.right,
+            width: body.style.width,
+            overflow: body.style.overflow,
+        };
+
+        // Pausa o Lenis quando estiver inicializado e bloqueia o scroll nativo.
+        stopSmoothScroll();
+        html.style.overflow = "hidden";
+        html.style.scrollBehavior = "auto";
+        body.style.position = "fixed";
+        body.style.top = "-" + scrollY + "px";
+        body.style.left = "0";
+        body.style.right = "0";
+        body.style.width = "100%";
+        body.style.overflow = "hidden";
+
+        return () => {
+            body.style.position = previousBodyStyles.position;
+            body.style.top = previousBodyStyles.top;
+            body.style.left = previousBodyStyles.left;
+            body.style.right = previousBodyStyles.right;
+            body.style.width = previousBodyStyles.width;
+            body.style.overflow = previousBodyStyles.overflow;
+
+            html.style.overflow = previousHtmlOverflow;
+            window.scrollTo(0, scrollY);
+            html.style.scrollBehavior = previousHtmlScrollBehavior;
+
+            startSmoothScroll();
+        };
+    }, [isOpen]);
+
+    // Só navega depois que o painel fechou e o bloqueio da página foi removido.
+    useEffect(() => {
+        if (isOpen || !pendingNavigationRef.current) return undefined;
+
+        const href = pendingNavigationRef.current;
+        pendingNavigationRef.current = null;
+
+        const frameId = requestAnimationFrame(() => {
+            const section = document.querySelector(href);
+
+            section?.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+            });
+        });
+
+        return () => cancelAnimationFrame(frameId);
     }, [isOpen]);
 
     // =========================================
@@ -123,18 +194,8 @@ function MenuMobile({ items = [] }) {
     // =========================================
 
     const handleNavigation = (href) => {
+        pendingNavigationRef.current = href;
         closeMenu();
-
-        setTimeout(() => {
-            const section = document.querySelector(href);
-
-            if (section) {
-                section.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start",
-                });
-            }
-        }, 400);
     };
 
     return (
@@ -176,13 +237,16 @@ function MenuMobile({ items = [] }) {
                 MENU
             ========================================== */}
 
-            {isOpen && (
+            {isOpen && createPortal(
                 <div
+                    data-mobile-menu-overlay
                     className="
                         fixed
                         inset-0
-                        z-[100]
+                        z-[9999]
+                        overscroll-contain
                         bg-black/30
+                        b-md:hidden
                     "
                     onClick={handleOverlayClick}
                 >
@@ -197,7 +261,9 @@ function MenuMobile({ items = [] }) {
                             w-[82%]
                             max-w-[360px]
                             flex-col
-                            overflow-hidden
+                            overflow-x-hidden
+                            overflow-y-auto
+                            overscroll-contain
                             border-r
                             border-graphite
                             bg-carbon
@@ -299,7 +365,8 @@ function MenuMobile({ items = [] }) {
                             <span className="text-[9px] uppercase tracking-[0.2em] text-steel">Kleber Dev · Portfolio</span>
                         </div>
                     </nav>
-                </div>
+                </div>,
+                document.body,
             )}
         </div>
     );
