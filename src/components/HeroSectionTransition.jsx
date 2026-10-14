@@ -13,7 +13,9 @@ gsap.registerPlugin(ScrollTrigger);
 function HeroSectionTransition({ experienceMode = "full" }) {
     const { isMobileLayout } = useResponsive();
     const requiredHeroLayout = isMobileLayout ? "mobile" : "desktop";
+    const requiredStackLayout = isMobileLayout ? "mobile" : "desktop";
     const [readyHeroLayout, setReadyHeroLayout] = useState(null);
+    const [readyStackLayout, setReadyStackLayout] = useState(null);
 
     const sectionRef = useRef(null);
     const heroRef = useRef(null);
@@ -193,6 +195,16 @@ function HeroSectionTransition({ experienceMode = "full" }) {
         // A transição depende do DOM do Hero correspondente à viewport.
         // Aguarda o módulo lazy carregar antes de criar animações e ScrollTriggers.
         if (readyHeroLayout !== requiredHeroLayout) return;
+
+        // A transição pinada no desktop precisa medir o Stack real,
+        // não o espaço reservado enquanto o módulo lazy carrega.
+        if (
+            experienceMode === "full" &&
+            !isMobileLayout &&
+            readyStackLayout !== requiredStackLayout
+        ) {
+            return;
+        }
 
         // ========================================================
         // EXPERIÊNCIA REDUZIDA
@@ -550,7 +562,14 @@ function HeroSectionTransition({ experienceMode = "full" }) {
                 heroTransition.kill();
             }
         };
-    }, [experienceMode, readyHeroLayout, requiredHeroLayout]);
+    }, [
+        experienceMode,
+        readyHeroLayout,
+        requiredHeroLayout,
+        readyStackLayout,
+        requiredStackLayout,
+        isMobileLayout,
+    ]);
 
     // ============================================================
     // MODO ATUAL
@@ -687,7 +706,7 @@ function HeroSectionTransition({ experienceMode = "full" }) {
             ================================================== */}
 
             <div ref={seclogsRef} className={stackWrapperClass}>
-                <Seclogs />
+                <Seclogs onReady={setReadyStackLayout} />
             </div>
 
             {/* ==================================================
