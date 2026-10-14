@@ -1109,7 +1109,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
                 onMouseLeave={handleButtonMouseLeave}
                 initial={{
                     opacity: 0,
-                    scale: 10,
+                    scale: 2,
                 }}
                 animate={{
                     opacity: showMenu ? 1 : 0,
