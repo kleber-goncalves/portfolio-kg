@@ -224,7 +224,7 @@ function MagneticLink({
                 }}
                 animate={{
                     scale: isActive || isHovered ? 1 : 0,
-                    opacity: isActive ? 1 : isHovered ? 0.12 : 0,
+                    opacity: isActive || isHovered ? 1 : 0,
                 }}
                 transition={{
                     scale: {
@@ -258,7 +258,7 @@ function MagneticLink({
                     borderColor: isActive ? accent : hoverAccent,
                 }}
                 animate={{
-                    opacity: isActive ? 1 : isHovered ? 0.55 : 0,
+                    opacity: isActive || isHovered ? 1 : 0,
                 }}
                 transition={{
                     duration: 0.2,
@@ -280,7 +280,7 @@ function MagneticLink({
                     bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08),transparent_60%)]
                 "
                 animate={{
-                    opacity: isActive ? 1 : isHovered ? 0.12 : 0,
+                    opacity: isActive || isHovered ? 1 : 0,
                 }}
                 transition={{
                     duration: 0.25,
@@ -299,12 +299,12 @@ function MagneticLink({
                     block
                 "
                 style={{
-                    color: isActive ? hoverTextColor : isHovered ? hoverAccent : textColor,
+                    color: isActive || isHovered ? hoverTextColor : textColor,
                 }}
                 animate={{
-                    y: isActive ? -0.5 : isHovered ? -0.25 : 0,
+                    y: isActive || isHovered ? -0.5 : 0,
 
-                    letterSpacing: isActive ? "0.14em" : isHovered ? "0.125em" : "0.12em",
+                    letterSpacing: isActive || isHovered ? "0.14em" : "0.12em",
                 }}
                 transition={{
                     y: {
