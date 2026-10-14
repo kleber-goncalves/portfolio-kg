@@ -541,7 +541,18 @@ export default function MinhaTrajetoria({
                             end: "bottom 68%",
                             scrub: 1,
                             invalidateOnRefresh: true,
-                            onRefresh: updateLineHeights,
+                            onRefresh: (self) => {
+                                updateLineHeights();
+
+                                // Diagnóstico sob demanda, ativado apenas pelo teste Playwright.
+                                if (window.__TRAJECTORY_SCROLL_DEBUG__ === true) {
+                                    progressLines.forEach((element) => {
+                                        element.dataset.trajectoryTriggerStart = String(self.start);
+                                        element.dataset.trajectoryTriggerEnd = String(self.end);
+                                        element.dataset.trajectoryTriggerProgress = String(self.progress);
+                                    });
+                                }
+                            },
                         },
                     }
                 );
