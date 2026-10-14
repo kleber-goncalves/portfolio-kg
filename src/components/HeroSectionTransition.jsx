@@ -53,7 +53,9 @@ function HeroSectionTransition({ experienceMode = "full" }) {
      * Esses refs evitam chamar setState repetidamente
      * durante o onUpdate do ScrollTrigger.
      */
-    const menuVisibleRef = useRef(experienceMode === "reduced");
+    // Espelha a visibilidade real inicial: showDesktopMenu começa em false.
+    // No Reduced, o primeiro cálculo precisa conseguir mudar ref e estado para true.
+    const menuVisibleRef = useRef(false);
 
     const dotFieldFrozenRef = useRef(false);
 
@@ -266,24 +268,34 @@ function HeroSectionTransition({ experienceMode = "full" }) {
             };
 
             /*
-             * Estado inicial
+             * Estado inicial.
+             *
+             * Mede novamente após dois frames para incluir o layout lazy
+             * e a restauração de scroll do navegador após refresh.
              */
             updateReducedMenu();
 
+            let firstReducedMenuFrame = 0;
+            let secondReducedMenuFrame = 0;
+
+            firstReducedMenuFrame = requestAnimationFrame(() => {
+                secondReducedMenuFrame = requestAnimationFrame(updateReducedMenu);
+            });
+
             /*
-             * Atualiza enquanto o usuário rola.
+             * Mantém o estado sincronizado em rolagem, resize e pageshow.
              */
             window.addEventListener("scroll", updateReducedMenu, { passive: true });
-
-            /*
-             * Atualiza em resize.
-             */
             window.addEventListener("resize", updateReducedMenu);
+            window.addEventListener("pageshow", updateReducedMenu);
 
             return () => {
-                window.removeEventListener("scroll", updateReducedMenu);
+                cancelAnimationFrame(firstReducedMenuFrame);
+                cancelAnimationFrame(secondReducedMenuFrame);
 
+                window.removeEventListener("scroll", updateReducedMenu);
                 window.removeEventListener("resize", updateReducedMenu);
+                window.removeEventListener("pageshow", updateReducedMenu);
 
                 initialContext.revert();
             };
