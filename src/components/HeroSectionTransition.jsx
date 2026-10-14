@@ -192,9 +192,25 @@ function HeroSectionTransition({ experienceMode = "full" }) {
 
         if (!section) return;
 
+        // Mantém o Stack fora da tela durante o carregamento do layout lazy.
+        // Este contexto separado é revertido nos retornos antecipados e no cleanup.
+        const initialContext = gsap.context(() => {
+            if (experienceMode === "full" && !isMobileLayout) {
+                const seclogs = seclogsRef.current;
+
+                if (seclogs) {
+                    gsap.set(seclogs, {
+                        yPercent: 100,
+                    });
+                }
+            }
+        }, section);
+
         // A transição depende do DOM do Hero correspondente à viewport.
         // Aguarda o módulo lazy carregar antes de criar animações e ScrollTriggers.
-        if (readyHeroLayout !== requiredHeroLayout) return;
+        if (readyHeroLayout !== requiredHeroLayout) {
+            return () => initialContext.revert();
+        }
 
         // A transição pinada no desktop precisa medir o Stack real,
         // não o espaço reservado enquanto o módulo lazy carrega.
@@ -203,7 +219,7 @@ function HeroSectionTransition({ experienceMode = "full" }) {
             !isMobileLayout &&
             readyStackLayout !== requiredStackLayout
         ) {
-            return;
+            return () => initialContext.revert();
         }
 
         // ========================================================
@@ -228,7 +244,7 @@ function HeroSectionTransition({ experienceMode = "full" }) {
         if (experienceMode === "reduced") {
             const hero = heroRef.current;
 
-            if (!hero) return;
+            if (!hero) return () => initialContext.revert();
 
             const updateReducedMenu = () => {
                 const heroRect = hero.getBoundingClientRect();
@@ -272,6 +288,8 @@ function HeroSectionTransition({ experienceMode = "full" }) {
                 window.removeEventListener("scroll", updateReducedMenu);
 
                 window.removeEventListener("resize", updateReducedMenu);
+
+                initialContext.revert();
             };
         }
 
@@ -555,6 +573,7 @@ function HeroSectionTransition({ experienceMode = "full" }) {
 
         return () => {
             ctx.revert();
+            initialContext.revert();
 
             const heroTransition = ScrollTrigger.getById("heroTransition");
 
