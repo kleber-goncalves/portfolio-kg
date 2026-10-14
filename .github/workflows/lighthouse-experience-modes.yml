@@ -1,0 +1,101 @@
+name: Lighthouse Experience Mode Comparison
+
+on:
+  push:
+    branches:
+      - feat/responsividadeFull
+    paths:
+      - ".github/workflows/lighthouse-experience-modes.yml"
+      - "lighthouserc-experience-modes.json"
+      - "scripts/lhci-set-experience-mode.cjs"
+      - "scripts/summarize-lighthouse-modes.mjs"
+      - "src/**"
+      - "public/**"
+      - "index.html"
+      - "package.json"
+      - "package-lock.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lighthouse-modes-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  compare:
+    name: Compare full and reduced experience
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    env:
+      PREVIEW_URL: https://portfolio-kg-git-feat-respon-0847d0-kleber-goncalves-s-projects.vercel.app/
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install project dependencies
+        run: npm ci
+
+      - name: Validate production build
+        run: npm run build
+
+      - name: Wait for Vercel preview
+        run: |
+          echo "Waiting for the branch preview: $PREVIEW_URL"
+          sleep 60
+
+          for attempt in $(seq 1 30); do
+            if curl --location --fail --silent --show-error "$PREVIEW_URL" --output /dev/null; then
+              echo "Preview is responding."
+              exit 0
+            fi
+
+            echo "Attempt $attempt/30: preview is not ready yet."
+            sleep 10
+          done
+
+          echo "The Vercel preview did not become available in time."
+          exit 1
+
+      - name: Install temporary Lighthouse CI tools
+        run: npm install --no-save --package-lock=false @lhci/cli@0.15.1 puppeteer
+
+      - name: Measure full animation mode (3 Lighthouse runs)
+        env:
+          EXPERIENCE_MODE: full
+        run: |
+          set -euo pipefail
+          rm -rf .lighthouseci
+          npx lhci collect --config=./lighthouserc-experience-modes.json
+          mkdir -p lighthouse-comparison/full
+          cp .lighthouseci/lhr-* lighthouse-comparison/full/
+
+      - name: Measure reduced animation mode (3 Lighthouse runs)
+        env:
+          EXPERIENCE_MODE: reduced
+        run: |
+          set -euo pipefail
+          rm -rf .lighthouseci
+          npx lhci collect --config=./lighthouserc-experience-modes.json
+          mkdir -p lighthouse-comparison/reduced
+          cp .lighthouseci/lhr-* lighthouse-comparison/reduced/
+
+      - name: Compare median Lighthouse metrics
+        run: node scripts/summarize-lighthouse-modes.mjs
+
+      - name: Upload full and reduced Lighthouse reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-experience-mode-comparison
+          path: lighthouse-comparison/
+          if-no-files-found: error
+          retention-days: 14

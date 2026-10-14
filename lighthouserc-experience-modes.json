@@ -1,0 +1,14 @@
+{
+  "ci": {
+    "collect": {
+      "url": [
+        "https://portfolio-kg-git-feat-respon-0847d0-kleber-goncalves-s-projects.vercel.app/"
+      ],
+      "numberOfRuns": 3,
+      "puppeteerScript": "./scripts/lhci-set-experience-mode.cjs",
+      "settings": {
+        "disableStorageReset": true
+      }
+    }
+  }
+}
