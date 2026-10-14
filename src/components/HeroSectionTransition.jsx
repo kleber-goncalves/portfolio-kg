@@ -38,6 +38,8 @@ function HeroSectionTransition({ experienceMode = "full" }) {
      * o menu fica disponível desde o início.
      */
     const [showDesktopMenu, setShowDesktopMenu] = useState(false);
+    // Mantém o menu montado após a primeira aparição para permitir a animação de saída.
+    const [hasShownDesktopMenu, setHasShownDesktopMenu] = useState(false);
 
     const [dotFieldFrozen, setDotFieldFrozen] = useState(false);
 
@@ -231,6 +233,10 @@ function HeroSectionTransition({ experienceMode = "full" }) {
                 if (menuVisibleRef.current !== shouldShowMenu) {
                     menuVisibleRef.current = shouldShowMenu;
 
+                    if (shouldShowMenu) {
+                        setHasShownDesktopMenu(true);
+                    }
+
                     setShowDesktopMenu(shouldShowMenu);
                 }
             };
@@ -383,6 +389,10 @@ function HeroSectionTransition({ experienceMode = "full" }) {
                              */
                             if (menuVisibleRef.current !== shouldShowMenu) {
                                 menuVisibleRef.current = shouldShowMenu;
+
+                                if (shouldShowMenu) {
+                                    setHasShownDesktopMenu(true);
+                                }
 
                                 setShowDesktopMenu(shouldShowMenu);
                             }
@@ -684,7 +694,7 @@ function HeroSectionTransition({ experienceMode = "full" }) {
                 MENU DESKTOP
             ================================================== */}
 
-            {showDesktopMenu && (
+            {hasShownDesktopMenu && (
                 <Suspense fallback={null}>
                     <MenuDesktop
                         items={menuItems}
