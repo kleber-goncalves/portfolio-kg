@@ -8,11 +8,13 @@ const wheelDelta = 420;
 const wheelPauseMs = 140;
 const maxStepsPerDirection = 85;
 
-async function waitForPageReady(page, expectedMode) {
-    await page.goto(baseUrl, {
-        waitUntil: "domcontentloaded",
-        timeout: 60000,
-    });
+async function waitForPageReady(page, expectedMode, { navigate = true } = {}) {
+    if (navigate) {
+        await page.goto(baseUrl, {
+            waitUntil: "domcontentloaded",
+            timeout: 60000,
+        });
+    }
 
     const actualMode = await page.evaluate(() => localStorage.getItem("experienceMode"));
     assert.equal(
@@ -293,7 +295,7 @@ async function testModeSwitchReload(browser) {
             waitUntil: "domcontentloaded",
             timeout: 60000,
         });
-        await waitForPageReady(page, "full");
+        await waitForPageReady(page, "full", { navigate: false });
 
         const afterReload = await readLineProgress(page);
         assert.notEqual(
