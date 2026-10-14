@@ -63,7 +63,7 @@ function HeroSectionTransition({ experienceMode = "full" }) {
 
     const menuItems = [
         {
-            label: "Home",
+            label: "Hero",
             href: "#hero",
         },
         {
@@ -94,7 +94,7 @@ function HeroSectionTransition({ experienceMode = "full" }) {
 
     const handleHeroNavigation = (href) => {
         // ========================================================
-        // HOME
+        // Hero
         // ========================================================
 
         if (href === "#hero") {
@@ -214,11 +214,7 @@ function HeroSectionTransition({ experienceMode = "full" }) {
 
         // A transição pinada no desktop precisa medir o Stack real,
         // não o espaço reservado enquanto o módulo lazy carrega.
-        if (
-            experienceMode === "full" &&
-            !isMobileLayout &&
-            readyStackLayout !== requiredStackLayout
-        ) {
+        if (experienceMode === "full" && !isMobileLayout && readyStackLayout !== requiredStackLayout) {
             return () => initialContext.revert();
         }
 
@@ -351,7 +347,6 @@ function HeroSectionTransition({ experienceMode = "full" }) {
                         transformOrigin: "center center",
                     });
                 }
-
 
                 /*
                  * DotField começa visível.
@@ -581,14 +576,7 @@ function HeroSectionTransition({ experienceMode = "full" }) {
                 heroTransition.kill();
             }
         };
-    }, [
-        experienceMode,
-        readyHeroLayout,
-        requiredHeroLayout,
-        readyStackLayout,
-        requiredStackLayout,
-        isMobileLayout,
-    ]);
+    }, [experienceMode, readyHeroLayout, requiredHeroLayout, readyStackLayout, requiredStackLayout, isMobileLayout]);
 
     // ============================================================
     // MODO ATUAL
@@ -695,13 +683,7 @@ function HeroSectionTransition({ experienceMode = "full" }) {
             ================================================== */}
 
             <div ref={heroRef} className={heroWrapperClass}>
-                <Hero
-                    isMobileLayout={isMobileLayout}
-                    dotFieldFrozen={dotFieldFrozen}
-                    onNavigate={handleHeroNavigation}
-                    onReady={setReadyHeroLayout}
-                    experienceMode={experienceMode}
-                />
+                <Hero isMobileLayout={isMobileLayout} dotFieldFrozen={dotFieldFrozen} onNavigate={handleHeroNavigation} onReady={setReadyHeroLayout} experienceMode={experienceMode} />
                 {isFullExperience === false && (
                     <div
                         className="
@@ -734,10 +716,7 @@ function HeroSectionTransition({ experienceMode = "full" }) {
 
             {hasShownDesktopMenu && (
                 <Suspense fallback={null}>
-                    <MenuDesktop
-                        items={menuItems}
-                        showMenu={showDesktopMenu}
-                    />
+                    <MenuDesktop items={menuItems} showMenu={showDesktopMenu} />
                 </Suspense>
             )}
         </section>

@@ -4,14 +4,13 @@ const HeroMobile = lazy(() => import("../components/HeroMobile"));
 const HeroDesktop = lazy(() => import("../components/HeroDesktop"));
 
 function Hero({ isMobileLayout, dotFieldFrozen = false, onNavigate, onReady, experienceMode = "full" }) {
-
     // ============================================================
     // ITENS DO MENU
     // ============================================================
 
     const menuItems = [
         {
-            label: "Home",
+            label: "Hero",
             href: "#hero",
         },
         {
@@ -40,30 +39,13 @@ function Hero({ isMobileLayout, dotFieldFrozen = false, onNavigate, onReady, exp
         <section id="hero" className="relative">
             {isMobileLayout ? (
                 <div className="p-5">
-                    <Suspense
-                        fallback={
-                            <div
-                                aria-hidden="true"
-                                className="min-h-[calc(100svh-2.5rem)]"
-                            />
-                        }
-                    >
+                    <Suspense fallback={<div aria-hidden="true" className="min-h-[calc(100svh-2.5rem)]" />}>
                         <HeroMobile items={menuItems} onReady={onReady} />
                     </Suspense>
                 </div>
             ) : (
-                <Suspense
-                    fallback={
-                        <div aria-hidden="true" className="h-screen w-full" />
-                    }
-                >
-                    <HeroDesktop
-                        items={menuItems}
-                        dotFieldFrozen={dotFieldFrozen}
-                        onNavigate={onNavigate}
-                        onReady={onReady}
-                        experienceMode={experienceMode}
-                    />
+                <Suspense fallback={<div aria-hidden="true" className="h-screen w-full" />}>
+                    <HeroDesktop items={menuItems} dotFieldFrozen={dotFieldFrozen} onNavigate={onNavigate} onReady={onReady} experienceMode={experienceMode} />
                 </Suspense>
             )}
         </section>
