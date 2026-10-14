@@ -249,6 +249,78 @@ async function testMode(browser, mode) {
     }
 }
 
+async function testModeSwitchReload(browser) {
+    const context = await browser.newContext({
+        viewport,
+        deviceScaleFactor: 1,
+        isMobile: false,
+        hasTouch: false,
+        reducedMotion: "no-preference",
+    });
+
+    // Inicializa em Reduced só na primeira navegação; no reload preserva
+    // o modo que o teste mudar no localStorage, como faz o dropdown real.
+    await context.addInitScript(() => {
+        try {
+            if (sessionStorage.getItem("__trajectory_mode_initialized") !== "1") {
+                localStorage.setItem("experienceMode", "reduced");
+                sessionStorage.setItem("__trajectory_mode_initialized", "1");
+            }
+        } catch {
+            // The about:blank origin may not expose storage.
+        }
+    });
+
+    const page = await context.newPage();
+
+    try {
+        console.log("Testing mode switch/reload: reduced -> full");
+        await waitForPageReady(page, "reduced");
+
+        await page.evaluate(() => window.scrollTo(0, 650));
+        await page.waitForTimeout(250);
+        const scrollBeforeReload = await page.evaluate(() => window.scrollY);
+
+        assert.ok(
+            scrollBeforeReload > 100,
+            "Could not position the reduced-mode page before reload; scrollY=" + scrollBeforeReload + ".",
+        );
+
+        await page.evaluate(() => {
+            localStorage.setItem("experienceMode", "full");
+        });
+        await page.reload({
+            waitUntil: "domcontentloaded",
+            timeout: 60000,
+        });
+        await waitForPageReady(page, "full");
+
+        const afterReload = await readLineProgress(page);
+        assert.notEqual(
+            afterReload.progress,
+            null,
+            "Could not locate the trajectory line after switching to Full.",
+        );
+        assert.ok(
+            afterReload.progress <= 0.08,
+            "The trajectory line should remain near empty after switching to Full and reloading above the trajectory; scrollY=" +
+                afterReload.scrollY +
+                ", scaleY=" +
+                afterReload.progress.toFixed(3) +
+                ".",
+        );
+
+        console.log(JSON.stringify({
+            scenario: "reduced -> full reload",
+            scrollBeforeReload: Math.round(scrollBeforeReload),
+            scrollAfterReload: Math.round(afterReload.scrollY),
+            initialLineProgress: Number(afterReload.progress.toFixed(3)),
+        }));
+    } finally {
+        await context.close();
+    }
+}
+
 const browser = await chromium.launch({
     headless: true,
     args: ["--no-sandbox", "--disable-dev-shm-usage"],
@@ -260,6 +332,8 @@ try {
     for (const mode of modes) {
         reports.push(await testMode(browser, mode));
     }
+
+    await testModeSwitchReload(browser);
 } finally {
     await browser.close();
 }
