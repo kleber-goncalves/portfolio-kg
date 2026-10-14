@@ -59,6 +59,9 @@ async function readLineProgress(page) {
             );
         });
 
+        const formation = document.querySelector("#formacao");
+        const formationTop = formation?.getBoundingClientRect().top ?? null;
+
         if (!line) {
             return {
                 progress: null,
@@ -67,6 +70,9 @@ async function readLineProgress(page) {
                     return style.display !== "none" && element.offsetHeight > 0;
                 }).length,
                 scrollY: window.scrollY,
+                lineTop: null,
+                formationTop,
+                viewportHeight: window.innerHeight,
             };
         }
 
@@ -74,11 +80,15 @@ async function readLineProgress(page) {
         const progress = transform === "none"
             ? 1
             : new DOMMatrixReadOnly(transform).m22;
+        const lineTop = line.getBoundingClientRect().top;
 
         return {
             progress,
             line: line.dataset.trajectoryProgressLine,
             scrollY: window.scrollY,
+            lineTop,
+            formationTop,
+            viewportHeight: window.innerHeight,
         };
     });
 }
@@ -161,6 +171,38 @@ function assertProgressIsMonotonic(samples, direction, mode) {
     }
 }
 
+function assertLineStaysEmptyBeforeFormation(samples, mode) {
+    for (const sample of samples) {
+        assert.notEqual(
+            sample.formationTop,
+            null,
+            `Could not locate #formacao while checking premature progress in ${mode}.`,
+        );
+
+        const details =
+            `scaleY=${sample.progress.toFixed(3)}, lineTop=${sample.lineTop?.toFixed(1)}, ` +
+            `formationTop=${sample.formationTop.toFixed(1)}, scrollY=${sample.scrollY}.`;
+
+        // A linha não deve avançar enquanto o topo da Formação ainda está abaixo da viewport.
+        if (sample.formationTop > sample.viewportHeight + 40) {
+            assert.ok(
+                sample.progress <= 0.08,
+                `Trajectory line advanced before #formacao entered the viewport in ${mode}: ${details}`,
+            );
+        }
+
+        // A linha também deve permanecer vazia antes do start: "top 78%" configurado no ScrollTrigger.
+        // A margem de 120 px tolera o scrub e a rolagem suave perto do limite.
+        const expectedTriggerStartTop = sample.viewportHeight * 0.78 + 120;
+        if (sample.lineTop > expectedTriggerStartTop) {
+            assert.ok(
+                sample.progress <= 0.08,
+                `Trajectory line advanced before its expected ScrollTrigger start in ${mode}: ${details}`,
+            );
+        }
+    }
+}
+
 function intermediateProgressBands(samples) {
     return new Set(
         samples
@@ -205,6 +247,7 @@ async function testMode(browser, mode) {
         );
 
         const downSamples = await scrollAndSample(page, 1);
+        assertLineStaysEmptyBeforeFormation(downSamples, mode);
         assertProgressIsMonotonic(downSamples, 1, mode);
 
         const downValues = downSamples.map((sample) => sample.progress);
@@ -347,6 +390,7 @@ async function testModeSwitchReload(browser) {
         );
 
         const downSamples = await scrollAndSample(page, 1);
+        assertLineStaysEmptyBeforeFormation(downSamples, "Full after mode switch");
         assertProgressIsMonotonic(downSamples, 1, "Full after mode switch");
 
         const downValues = downSamples.map((sample) => sample.progress);
