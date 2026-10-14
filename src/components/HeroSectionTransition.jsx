@@ -379,6 +379,10 @@ function HeroSectionTransition({ experienceMode = "full" }) {
 
                         pin: true,
 
+                        // O Hero é carregado sob demanda e pode criar o pin depois dos gatilhos abaixo.
+                        // Prioriza sua medição para que o espaço pinado seja incluído nos starts/ends seguintes.
+                        refreshPriority: 1,
+
                         anticipatePin: 1,
 
                         pinType: "transform",

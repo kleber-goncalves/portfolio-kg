@@ -73,9 +73,6 @@ async function readLineProgress(page) {
                 lineTop: null,
                 formationTop,
                 viewportHeight: window.innerHeight,
-                triggerStart: null,
-                triggerEnd: null,
-                triggerProgress: null,
             };
         }
 
@@ -92,15 +89,6 @@ async function readLineProgress(page) {
             lineTop,
             formationTop,
             viewportHeight: window.innerHeight,
-            triggerStart: line.dataset.trajectoryTriggerStart
-                ? Number(line.dataset.trajectoryTriggerStart)
-                : null,
-            triggerEnd: line.dataset.trajectoryTriggerEnd
-                ? Number(line.dataset.trajectoryTriggerEnd)
-                : null,
-            triggerProgress: line.dataset.trajectoryTriggerProgress
-                ? Number(line.dataset.trajectoryTriggerProgress)
-                : null,
         };
     });
 }
@@ -193,9 +181,7 @@ function assertLineStaysEmptyBeforeFormation(samples, mode) {
 
         const details =
             `scaleY=${sample.progress.toFixed(3)}, lineTop=${sample.lineTop?.toFixed(1)}, ` +
-            `formationTop=${sample.formationTop.toFixed(1)}, scrollY=${sample.scrollY}, ` +
-            `triggerStart=${sample.triggerStart}, triggerEnd=${sample.triggerEnd}, ` +
-            `triggerProgress=${sample.triggerProgress}.`;
+            `formationTop=${sample.formationTop.toFixed(1)}, scrollY=${sample.scrollY}.`;
 
         // A linha não deve avançar enquanto o topo da Formação ainda está abaixo da viewport.
         if (sample.formationTop > sample.viewportHeight + 40) {
@@ -236,7 +222,6 @@ async function testMode(browser, mode) {
     });
 
     await context.addInitScript((selectedMode) => {
-        window.__TRAJECTORY_SCROLL_DEBUG__ = true;
         try {
             window.localStorage.setItem("experienceMode", selectedMode);
         } catch {
@@ -320,7 +305,6 @@ async function testModeSwitchReload(browser) {
 
     // Inicia em Reduced e preserva o modo escolhido durante o reload da página.
     await context.addInitScript(() => {
-        window.__TRAJECTORY_SCROLL_DEBUG__ = true;
         try {
             if (sessionStorage.getItem("__trajectory_mode_initialized") !== "1") {
                 localStorage.setItem("experienceMode", "reduced");
