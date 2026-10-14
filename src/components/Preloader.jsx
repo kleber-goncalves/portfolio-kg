@@ -107,7 +107,12 @@ function Preloader() {
             setCurrentLabel("Tudo pronto para começar");
             await wait(500);
 
-            if (!cancelled) setVisible(false);
+            if (!cancelled) {
+                // Libera a rolagem antes de esconder o Preloader.
+                // O componente continua montado mesmo quando retorna null.
+                document.body.style.overflow = previousOverflow;
+                setVisible(false);
+            }
         };
 
         const previousOverflow = document.body.style.overflow;
