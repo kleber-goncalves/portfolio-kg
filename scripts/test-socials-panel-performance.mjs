@@ -91,6 +91,72 @@ async function measureOpen(page, opener, iteration) {
     return report;
 }
 
+async function measureDragOpen(page, opener, iteration) {
+    await opener.scrollIntoViewIfNeeded({ timeout: 15000 });
+    const box = await opener.boundingBox();
+    assert.ok(box, "O botão Socials precisa ter uma área visível para testar o gesto.");
+
+    const geometry = await opener.evaluate((button) => {
+        const shell = button.parentElement?.parentElement;
+        return {
+            containerWidth: shell?.offsetWidth ?? 0,
+            buttonWidth: button.offsetWidth,
+        };
+    });
+
+    const maxDrag = geometry.containerWidth - geometry.buttonWidth - 16;
+    assert.ok(maxDrag > 20, "A distância de arraste calculada precisa ser positiva.");
+
+    await opener.evaluate((button) => {
+        window.__socialsDragStartedAt = null;
+        button.addEventListener("pointerdown", () => {
+            window.__socialsDragStartedAt = performance.now();
+        }, { once: true, capture: true });
+    });
+
+    const startedAt = Date.now();
+    const startX = box.x + box.width / 2;
+    const startY = box.y + box.height / 2;
+    const endX = Math.min(startX + maxDrag * 0.99, 388);
+
+    await page.mouse.move(startX, startY);
+    await page.mouse.down();
+    await page.mouse.move(endX, startY, { steps: 12 });
+    await page.mouse.up();
+
+    const panel = panelRootLocator(page);
+    await panel.waitFor({ state: "attached", timeout: 5000 });
+    const mountedMs = await page.evaluate(() =>
+        performance.now() - window.__socialsDragStartedAt,
+    );
+
+    await page.waitForFunction(() => {
+        const heading = Array.from(document.querySelectorAll("h2"))
+            .find((element) => element.textContent.trim() === "Redes Sociais");
+        const root = heading?.parentElement?.parentElement?.parentElement;
+        return root && Number.parseFloat(getComputedStyle(root).opacity) >= 0.98;
+    }, null, { timeout: 3000 });
+
+    const fullyVisibleMs = await page.evaluate(() =>
+        performance.now() - window.__socialsDragStartedAt,
+    );
+    const actionDurationMs = Date.now() - startedAt;
+
+    const report = {
+        iteration,
+        actionDurationMs,
+        pointerDownToPanelMountedMs: Math.round(mountedMs),
+        pointerDownToNearlyFullyVisibleMs: Math.round(fullyVisibleMs),
+        maxDragPx: Math.round(maxDrag),
+    };
+    console.log(JSON.stringify({ check: "socials-drag-first-vs-repeat", ...report }));
+
+    assert.ok(mountedMs < 1500, `A montagem após o arraste ${iteration} demorou ${Math.round(mountedMs)} ms.`);
+    assert.ok(fullyVisibleMs < 2500, `A abertura após o arraste ${iteration} demorou ${Math.round(fullyVisibleMs)} ms.`);
+
+    return report;
+}
+
 try {
     const context = await browser.newContext({
         viewport: { width: 390, height: 844 },
@@ -130,6 +196,28 @@ try {
     }));
     const socialsChunk = beforeOpen.resources.find((name) => /socials/i.test(name));
 
+    // O usuário relata demora principalmente no primeiro gesto, então medimos
+    // arraste real (pointer events) antes de qualquer abertura por clique.
+    const firstDrag = await measureDragOpen(page, opener, 1);
+
+    await page.getByRole("button", { name: "Fechar redes sociais", exact: true })
+        .click({ timeout: 5000 });
+    await page.waitForFunction(() =>
+        !Array.from(document.querySelectorAll("h2"))
+            .some((element) => element.textContent.trim() === "Redes Sociais"),
+    null, { timeout: 5000 });
+    await opener.waitFor({ state: "visible", timeout: 5000 });
+
+    const secondDrag = await measureDragOpen(page, opener, 2);
+
+    await page.getByRole("button", { name: "Fechar redes sociais", exact: true })
+        .click({ timeout: 5000 });
+    await page.waitForFunction(() =>
+        !Array.from(document.querySelectorAll("h2"))
+            .some((element) => element.textContent.trim() === "Redes Sociais"),
+    null, { timeout: 5000 });
+    await opener.waitFor({ state: "visible", timeout: 5000 });
+
     const first = await measureOpen(page, opener, 1);
 
     await page.getByRole("button", { name: "Fechar redes sociais", exact: true })
@@ -151,6 +239,8 @@ try {
         check: "socials-first-open-diagnosis",
         socialsJavaScriptChunkPresentBeforeOpening: Boolean(socialsChunk),
         socialsChunkName: socialsChunk ?? null,
+        firstDragFullyVisibleMs: firstDrag.pointerDownToNearlyFullyVisibleMs,
+        secondDragFullyVisibleMs: secondDrag.pointerDownToNearlyFullyVisibleMs,
         firstOpenFullyVisibleMs: first.clickToNearlyFullyVisibleMs,
         secondOpenFullyVisibleMs: second.clickToNearlyFullyVisibleMs,
         preloaderDismissMs,
