@@ -11,6 +11,10 @@ function panelRootLocator(page) {
 }
 
 async function measureOpen(page, opener, iteration) {
+    // Prepara o botão no viewport antes de iniciar o cronômetro do clique;
+    // assim a rolagem automática do Playwright não contamina a medida de abertura.
+    await opener.scrollIntoViewIfNeeded({ timeout: 15000 });
+
     // Marca o tempo no evento real de clique, não antes da espera de actionability do Playwright.
     await page.evaluate(() => {
         const target = document.querySelector(
