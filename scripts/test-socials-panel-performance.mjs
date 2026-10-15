@@ -11,11 +11,22 @@ function panelRootLocator(page) {
 }
 
 async function measureOpen(page, opener, iteration) {
+    // Marca o tempo no evento real de clique, não antes da espera de actionability do Playwright.
     await page.evaluate(() => {
-        window.__socialsOpenStartedAt = performance.now();
+        const target = document.querySelector(
+            'button[aria-label="Arraste para abrir as redes sociais"]',
+        );
+        if (!target) throw new Error("Botão de abrir Socials não encontrado.");
+
+        window.__socialsOpenStartedAt = null;
+        target.addEventListener("click", () => {
+            window.__socialsOpenStartedAt = performance.now();
+        }, { once: true, capture: true });
     });
 
+    const actionStartedAt = Date.now();
     await opener.click({ timeout: 15000 });
+    const playwrightActionDurationMs = Date.now() - actionStartedAt;
 
     const panel = panelRootLocator(page);
     await panel.waitFor({ state: "attached", timeout: 5000 });
@@ -61,6 +72,7 @@ async function measureOpen(page, opener, iteration) {
 
     const report = {
         iteration,
+        playwrightActionDurationMs,
         clickToPanelMountedMs: Math.round(mounted),
         clickToFadeStartedMs: Math.round(animationStarted),
         clickToNearlyFullyVisibleMs: Math.round(fullyVisible),
