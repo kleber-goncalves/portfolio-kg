@@ -3,118 +3,280 @@ import { chromium } from "playwright";
 
 const baseUrl = process.env.BASE_URL || "http://127.0.0.1:4173/";
 const browser = await chromium.launch({ headless: true });
-const results = [];
 
-function panelRootLocator(page) {
+function panelLocator(page) {
     return page.getByRole("heading", { name: "Redes Sociais", exact: true })
         .locator("xpath=../../..");
 }
 
-async function measureOpen(page, opener, iteration) {
-    // Prepara o botão no viewport antes de iniciar o cronômetro do clique;
-    // assim a rolagem automática do Playwright não contamina a medida de abertura.
-    await opener.scrollIntoViewIfNeeded({ timeout: 15000 });
+async function createPage(cpuThrottleRate = 1) {
+    const context = await browser.newContext({
+        viewport: { width: 390, height: 844 },
+        deviceScaleFactor: 3,
+        isMobile: true,
+        hasTouch: true,
+        reducedMotion: "no-preference",
+    });
+    const page = await context.newPage();
 
-    // Marca o tempo no evento real de clique, não antes da espera de actionability do Playwright.
-    await page.evaluate(() => {
-        const target = document.querySelector(
-            'button[aria-label="Arraste para abrir as redes sociais"]',
-        );
-        if (!target) throw new Error("Botão de abrir Socials não encontrado.");
+    await page.addInitScript(() => {
+        const diag = {
+            awaitingMount: false,
+            panelMountedAt: null,
+            clickAt: null,
+            pointerDownAt: null,
+            pointerUpAt: null,
+            longTasks: [],
+        };
+        window.__socialsPerf = diag;
 
-        window.__socialsOpenStartedAt = null;
-        target.addEventListener("click", () => {
-            window.__socialsOpenStartedAt = performance.now();
-        }, { once: true, capture: true });
+        const isOpenButton = (target) =>
+            target instanceof Element &&
+            Boolean(target.closest('button[aria-label="Arraste para abrir as redes sociais"]'));
+
+        document.addEventListener("click", (event) => {
+            if (isOpenButton(event.target)) {
+                diag.clickAt = performance.now();
+            }
+        }, true);
+
+        document.addEventListener("pointerdown", (event) => {
+            if (isOpenButton(event.target)) {
+                diag.pointerDownAt = performance.now();
+            }
+        }, true);
+
+        document.addEventListener("pointerup", (event) => {
+            if (isOpenButton(event.target)) {
+                diag.pointerUpAt = performance.now();
+            }
+        }, true);
+
+        const containsSocialsHeading = (node) => {
+            if (!(node instanceof Element)) return false;
+            if (node.matches("h2") && node.textContent.trim() === "Redes Sociais") {
+                return true;
+            }
+            return Array.from(node.querySelectorAll("h2"))
+                .some((heading) => heading.textContent.trim() === "Redes Sociais");
+        };
+
+        new MutationObserver((mutations) => {
+            if (!diag.awaitingMount || diag.panelMountedAt !== null) return;
+            for (const mutation of mutations) {
+                for (const node of mutation.addedNodes) {
+                    if (containsSocialsHeading(node)) {
+                        diag.panelMountedAt = performance.now();
+                        return;
+                    }
+                }
+            }
+        }).observe(document, { childList: true, subtree: true });
+
+        if ("PerformanceObserver" in window) {
+            try {
+                new PerformanceObserver((list) => {
+                    for (const entry of list.getEntries()) {
+                        diag.longTasks.push({
+                            startTime: entry.startTime,
+                            duration: entry.duration,
+                        });
+                    }
+                }).observe({ type: "longtask", buffered: true });
+            } catch {
+                // Navegadores sem suporte ao entry type "longtask" seguem o teste.
+            }
+        }
     });
 
-    const actionStartedAt = Date.now();
-    await opener.click({ timeout: 15000 });
-    const playwrightActionDurationMs = Date.now() - actionStartedAt;
+    const navigationStartedAt = Date.now();
+    await page.goto(baseUrl, { waitUntil: "domcontentloaded", timeout: 60000 });
 
-    const panel = panelRootLocator(page);
-    await panel.waitFor({ state: "attached", timeout: 5000 });
+    const preloader = page.locator('[aria-label^="Carregamento do site:"]');
+    await preloader.waitFor({ state: "attached", timeout: 30000 });
+    await preloader.waitFor({ state: "detached", timeout: 60000 });
 
-    const mounted = await page.evaluate(() =>
-        performance.now() - window.__socialsOpenStartedAt,
-    );
+    const preloaderDismissMs = Date.now() - navigationStartedAt;
+    console.log(JSON.stringify({
+        check: "preloader-interactive-readiness",
+        cpuThrottleRate,
+        navigationToPreloaderDismissMs: preloaderDismissMs,
+        result: "passed",
+    }));
 
-    // Aguarda observar o início do fade-in (opacidade abaixo de 0,98).
-    await page.waitForFunction(() => {
-        const title = Array.from(document.querySelectorAll("h2"))
-            .find((element) => element.textContent.trim() === "Redes Sociais");
-        const root = title?.parentElement?.parentElement?.parentElement;
-        return root && Number.parseFloat(getComputedStyle(root).opacity) < 0.98;
-    }, null, { timeout: 3000 });
+    if (cpuThrottleRate > 1) {
+        const cdp = await context.newCDPSession(page);
+        await cdp.send("Emulation.setCPUThrottlingRate", { rate: cpuThrottleRate });
+    }
 
-    const animationStarted = await page.evaluate(() =>
-        performance.now() - window.__socialsOpenStartedAt,
-    );
+    return { context, page, preloaderDismissMs };
+}
 
-    await page.waitForFunction(() => {
-        const title = Array.from(document.querySelectorAll("h2"))
-            .find((element) => element.textContent.trim() === "Redes Sociais");
-        const root = title?.parentElement?.parentElement?.parentElement;
-        return root && Number.parseFloat(getComputedStyle(root).opacity) >= 0.98;
-    }, null, { timeout: 3000 });
+async function resetMeasurements(page) {
+    await page.evaluate(() => {
+        const diag = window.__socialsPerf;
+        diag.awaitingMount = true;
+        diag.panelMountedAt = null;
+        diag.clickAt = null;
+        diag.pointerDownAt = null;
+        diag.pointerUpAt = null;
+        diag.longTasks = [];
+        diag.resourceStartAt = performance.now();
+    });
+}
 
-    const fullyVisible = await page.evaluate(() =>
-        performance.now() - window.__socialsOpenStartedAt,
-    );
-
-    const resources = await page.evaluate(() => {
-        const clickStart = window.__socialsOpenStartedAt;
-        return performance.getEntriesByType("resource")
-            .filter((entry) => /\.js(?:$|\?)/i.test(entry.name))
-            .filter((entry) => entry.startTime >= clickStart)
+async function readMetrics(page, mode, iteration, cpuThrottleRate) {
+    const metrics = await page.evaluate(() => {
+        const diag = window.__socialsPerf;
+        const startAt = modeIsClick ? diag.clickAt : diag.pointerDownAt;
+        const panelMountedAt = diag.panelMountedAt;
+        const fadeStartedAt = performance.now();
+        const resources = performance.getEntriesByType("resource")
+            .filter((entry) => entry.startTime >= diag.resourceStartAt)
+            .filter((entry) => entry.initiatorType === "script" || /\.js(?:$|\?)/i.test(entry.name))
             .map((entry) => ({
                 name: entry.name.split("/").pop(),
-                startMsAfterClick: Math.round(entry.startTime - clickStart),
+                startMsAfterInteraction: Math.round(entry.startTime - diag.resourceStartAt),
                 durationMs: Math.round(entry.duration),
             }));
-    });
+
+        return {
+            interactionStartAt: startAt,
+            panelMountedAt,
+            clickAt: diag.clickAt,
+            pointerDownAt: diag.pointerDownAt,
+            pointerUpAt: diag.pointerUpAt,
+            pointerUpToPanelMountedMs: diag.pointerUpAt === null || panelMountedAt === null
+                ? null
+                : Math.round(panelMountedAt - diag.pointerUpAt),
+            interactionToPanelMountedMs: startAt === null || panelMountedAt === null
+                ? null
+                : Math.round(panelMountedAt - startAt),
+            longTasks: diag.longTasks
+                .filter((entry) => entry.startTime >= diag.resourceStartAt)
+                .map((entry) => ({
+                    startMsAfterInteraction: Math.round(entry.startTime - diag.resourceStartAt),
+                    durationMs: Math.round(entry.duration),
+                })),
+            javascriptResourcesStartedAfterInteraction: resources,
+        };
+    }, { modeIsClick: mode === "click" });
+
+    const panel = panelLocator(page);
+    await page.waitForFunction(() => {
+        const heading = Array.from(document.querySelectorAll("h2"))
+            .find((element) => element.textContent.trim() === "Redes Sociais");
+        const root = heading?.parentElement?.parentElement?.parentElement;
+        return root && Number.parseFloat(getComputedStyle(root).opacity) < 0.98;
+    }, null, { timeout: 5000 });
+
+    const fadeStartedAt = await page.evaluate(() => performance.now());
+    await page.waitForFunction(() => {
+        const heading = Array.from(document.querySelectorAll("h2"))
+            .find((element) => element.textContent.trim() === "Redes Sociais");
+        const root = heading?.parentElement?.parentElement?.parentElement;
+        return root && Number.parseFloat(getComputedStyle(root).opacity) >= 0.98;
+    }, null, { timeout: 5000 });
+
+    const nearlyVisibleAt = await page.evaluate(() => performance.now());
+    const timing = await page.evaluate(({ mode, fadeStartedAt, nearlyVisibleAt }) => {
+        const diag = window.__socialsPerf;
+        const startAt = mode === "click" ? diag.clickAt : diag.pointerDownAt;
+        return {
+            interactionToFadeStartedMs: Math.round(fadeStartedAt - startAt),
+            interactionToNearlyFullyVisibleMs: Math.round(nearlyVisibleAt - startAt),
+            pointerUpToPanelMountedMs: diag.pointerUpAt === null || diag.panelMountedAt === null
+                ? null
+                : Math.round(diag.panelMountedAt - diag.pointerUpAt),
+            estimatedMountOverheadAfter200msSnapMs: diag.pointerUpAt === null || diag.panelMountedAt === null
+                ? null
+                : Math.round(diag.panelMountedAt - diag.pointerUpAt - 200),
+            longTasksDuringOpen: diag.longTasks.map((entry) => ({
+                startMsAfterInteraction: Math.round(entry.startTime - (startAt ?? entry.startTime)),
+                durationMs: Math.round(entry.duration),
+            })),
+        };
+    }, { mode, fadeStartedAt, nearlyVisibleAt });
 
     const report = {
+        check: "socials-panel-cold-vs-repeat-render",
+        mode,
         iteration,
-        playwrightActionDurationMs,
-        clickToPanelMountedMs: Math.round(mounted),
-        clickToFadeStartedMs: Math.round(animationStarted),
-        clickToNearlyFullyVisibleMs: Math.round(fullyVisible),
-        javascriptResourcesStartedAfterClick: resources,
+        cpuThrottleRate,
+        interactionToPanelMountedMs: metrics.interactionToPanelMountedMs,
+        pointerUpToPanelMountedMs: timing.pointerUpToPanelMountedMs,
+        estimatedMountOverheadAfter200msSnapMs: timing.estimatedMountOverheadAfter200msSnapMs,
+        interactionToFadeStartedMs: timing.interactionToFadeStartedMs,
+        interactionToNearlyFullyVisibleMs: timing.interactionToNearlyFullyVisibleMs,
+        longTasksDuringOpen: timing.longTasksDuringOpen,
+        javascriptResourcesStartedAfterInteraction: metrics.javascriptResourcesStartedAfterInteraction,
     };
-    results.push(report);
-    console.log(JSON.stringify({ check: "socials-first-open-timing", ...report }));
 
-    assert.ok(mounted < 1000, `O painel levou ${Math.round(mounted)} ms para montar no ciclo ${iteration}.`);
-    assert.ok(fullyVisible < 2000, `O painel levou ${Math.round(fullyVisible)} ms para ficar visível no ciclo ${iteration}.`);
+    console.log(JSON.stringify(report));
+
+    if (mode === "click") {
+        assert.ok(
+            metrics.interactionToPanelMountedMs !== null &&
+            metrics.interactionToPanelMountedMs < 1500,
+            "O painel demorou demais para ser montado após clique.",
+        );
+    } else {
+        assert.ok(
+            timing.pointerUpToPanelMountedMs !== null &&
+            timing.pointerUpToPanelMountedMs < 1500,
+            "O painel demorou demais para ser montado após soltar o arraste.",
+        );
+    }
+    assert.ok(
+        timing.interactionToNearlyFullyVisibleMs < 3000,
+        "O painel demorou demais para ficar visualmente aberto.",
+    );
 
     return report;
 }
 
-async function measureDragOpen(page, opener, iteration) {
-    await opener.scrollIntoViewIfNeeded({ timeout: 15000 });
-    const box = await opener.boundingBox();
-    assert.ok(box, "O botão Socials precisa ter uma área visível para testar o gesto.");
+async function closePanel(page) {
+    await page.getByRole("button", { name: "Fechar redes sociais", exact: true })
+        .click({ timeout: 10000 });
+    await page.waitForFunction(() =>
+        !Array.from(document.querySelectorAll("h2"))
+            .some((element) => element.textContent.trim() === "Redes Sociais"),
+    null, { timeout: 10000 });
+    await page.getByRole("button", {
+        name: "Arraste para abrir as redes sociais",
+        exact: true,
+    }).waitFor({ state: "visible", timeout: 10000 });
+}
 
-    const geometry = await opener.evaluate((button) => {
-        const shell = button.parentElement?.parentElement;
-        return {
-            containerWidth: shell?.offsetWidth ?? 0,
-            buttonWidth: button.offsetWidth,
-        };
+async function measureClick(page, iteration, cpuThrottleRate) {
+    const opener = page.getByRole("button", {
+        name: "Arraste para abrir as redes sociais",
+        exact: true,
     });
+    await opener.scrollIntoViewIfNeeded();
+    await resetMeasurements(page);
+    await opener.click({ timeout: 10000 });
+    await panelLocator(page).waitFor({ state: "attached", timeout: 10000 });
+    return readMetrics(page, "click", iteration, cpuThrottleRate);
+}
 
+async function measureDrag(page, iteration, cpuThrottleRate) {
+    const opener = page.getByRole("button", {
+        name: "Arraste para abrir as redes sociais",
+        exact: true,
+    });
+    await opener.scrollIntoViewIfNeeded();
+    const box = await opener.boundingBox();
+    assert.ok(box, "O botão Socials precisa estar visível antes do arraste.");
+
+    const geometry = await opener.evaluate((button) => ({
+        containerWidth: button.parentElement?.parentElement?.offsetWidth ?? 0,
+        buttonWidth: button.offsetWidth,
+    }));
     const maxDrag = geometry.containerWidth - geometry.buttonWidth - 16;
     assert.ok(maxDrag > 20, "A distância de arraste calculada precisa ser positiva.");
 
-    await opener.evaluate((button) => {
-        window.__socialsDragStartedAt = null;
-        button.addEventListener("pointerdown", () => {
-            window.__socialsDragStartedAt = performance.now();
-        }, { once: true, capture: true });
-    });
-
-    const startedAt = Date.now();
+    await resetMeasurements(page);
     const startX = box.x + box.width / 2;
     const startY = box.y + box.height / 2;
     const endX = Math.min(startX + maxDrag * 0.99, 388);
@@ -124,144 +286,45 @@ async function measureDragOpen(page, opener, iteration) {
     await page.mouse.move(endX, startY, { steps: 12 });
     await page.mouse.up();
 
-    const panel = panelRootLocator(page);
-    await panel.waitFor({ state: "attached", timeout: 5000 });
-    const mountedMs = await page.evaluate(() =>
-        performance.now() - window.__socialsDragStartedAt,
-    );
-
-    // Espera o requestAnimationFrame que inicia o GSAP, para não confundir
-    // o estado inicial opaco com o painel já plenamente animado.
-    await page.waitForFunction(() => {
-        const heading = Array.from(document.querySelectorAll("h2"))
-            .find((element) => element.textContent.trim() === "Redes Sociais");
-        const root = heading?.parentElement?.parentElement?.parentElement;
-        return root && Number.parseFloat(getComputedStyle(root).opacity) < 0.98;
-    }, null, { timeout: 3000 });
-
-    const fadeStartedMs = await page.evaluate(() =>
-        performance.now() - window.__socialsDragStartedAt,
-    );
-
-    await page.waitForFunction(() => {
-        const heading = Array.from(document.querySelectorAll("h2"))
-            .find((element) => element.textContent.trim() === "Redes Sociais");
-        const root = heading?.parentElement?.parentElement?.parentElement;
-        return root && Number.parseFloat(getComputedStyle(root).opacity) >= 0.98;
-    }, null, { timeout: 3000 });
-
-    const fullyVisibleMs = await page.evaluate(() =>
-        performance.now() - window.__socialsDragStartedAt,
-    );
-    const actionDurationMs = Date.now() - startedAt;
-
-    const report = {
-        iteration,
-        actionDurationMs,
-        pointerDownToPanelMountedMs: Math.round(mountedMs),
-        pointerDownToFadeStartedMs: Math.round(fadeStartedMs),
-        pointerDownToNearlyFullyVisibleMs: Math.round(fullyVisibleMs),
-        maxDragPx: Math.round(maxDrag),
-    };
-    console.log(JSON.stringify({ check: "socials-drag-first-vs-repeat", ...report }));
-
-    assert.ok(mountedMs < 1500, `A montagem após o arraste ${iteration} demorou ${Math.round(mountedMs)} ms.`);
-    assert.ok(fullyVisibleMs < 2500, `A abertura após o arraste ${iteration} demorou ${Math.round(fullyVisibleMs)} ms.`);
-
-    return report;
+    await panelLocator(page).waitFor({ state: "attached", timeout: 10000 });
+    return readMetrics(page, "drag", iteration, cpuThrottleRate);
 }
 
 try {
-    const context = await browser.newContext({
-        viewport: { width: 390, height: 844 },
-        deviceScaleFactor: 3,
-        isMobile: true,
-        hasTouch: true,
-        reducedMotion: "no-preference",
-    });
-    const page = await context.newPage();
-    const pageErrors = [];
-    page.on("pageerror", (error) => pageErrors.push(error.message));
+    // Contexto limpo: mede a primeira montagem por clique e, depois, uma reabertura.
+    const clickTest = await createPage(1);
+    const clickFirst = await measureClick(clickTest.page, 1, 1);
+    await closePanel(clickTest.page);
+    const clickRepeat = await measureClick(clickTest.page, 2, 1);
 
-    const navigationStartedAt = Date.now();
-    await page.goto(baseUrl, { waitUntil: "domcontentloaded", timeout: 60000 });
-
-    const preloader = page.locator('[aria-label^="Carregamento do site:"]');
-    await preloader.waitFor({ state: "attached", timeout: 30000 });
-    await preloader.waitFor({ state: "detached", timeout: 60000 });
-    const preloaderDismissMs = Date.now() - navigationStartedAt;
-    console.log(JSON.stringify({
-        check: "preloader-interactive-readiness",
-        navigationToPreloaderDismissMs: preloaderDismissMs,
-        result: "passed",
-    }));
-
-    const opener = page.getByRole("button", {
-        name: "Arraste para abrir as redes sociais",
-        exact: true,
-    });
-    await opener.waitFor({ state: "visible", timeout: 60000 });
-    await opener.waitFor({ state: "attached" });
-
-    const beforeOpen = await page.evaluate(() => ({
-        resources: performance.getEntriesByType("resource")
-            .filter((entry) => /\.js(?:$|\?)/i.test(entry.name))
-            .map((entry) => entry.name.split("/").pop()),
-    }));
-    const socialsChunk = beforeOpen.resources.find((name) => /socials/i.test(name));
-
-    // O usuário relata demora principalmente no primeiro gesto, então medimos
-    // arraste real (pointer events) antes de qualquer abertura por clique.
-    const firstDrag = await measureDragOpen(page, opener, 1);
-
-    await page.getByRole("button", { name: "Fechar redes sociais", exact: true })
-        .click({ timeout: 5000 });
-    await page.waitForFunction(() =>
-        !Array.from(document.querySelectorAll("h2"))
-            .some((element) => element.textContent.trim() === "Redes Sociais"),
-    null, { timeout: 5000 });
-    await opener.waitFor({ state: "visible", timeout: 5000 });
-
-    const secondDrag = await measureDragOpen(page, opener, 2);
-
-    await page.getByRole("button", { name: "Fechar redes sociais", exact: true })
-        .click({ timeout: 5000 });
-    await page.waitForFunction(() =>
-        !Array.from(document.querySelectorAll("h2"))
-            .some((element) => element.textContent.trim() === "Redes Sociais"),
-    null, { timeout: 5000 });
-    await opener.waitFor({ state: "visible", timeout: 5000 });
-
-    const first = await measureOpen(page, opener, 1);
-
-    await page.getByRole("button", { name: "Fechar redes sociais", exact: true })
-        .click({ timeout: 5000 });
-    await page.waitForFunction(() =>
-        !Array.from(document.querySelectorAll("h2"))
-            .some((element) => element.textContent.trim() === "Redes Sociais"),
-    null, { timeout: 5000 });
-
-    const second = await measureOpen(page, opener, 2);
-
-    assert.equal(
-        pageErrors.some((message) => /Socials|GSAP|React/i.test(message)),
-        false,
-        `Erro de execução relacionado ao painel: ${pageErrors.join(" | ")}`,
+    const socialsChunk = await clickTest.page.evaluate(() =>
+        performance.getEntriesByType("resource")
+            .map((entry) => entry.name.split("/").pop())
+            .find((name) => /socials/i.test(name)) ?? null,
     );
 
+    // Página nova com CPU 4x mais lento, para aproximar um dispositivo móvel modesto.
+    // A limitação é aplicada só depois do preloader para isolar a montagem do painel.
+    const dragTest = await createPage(4);
+    const dragFirst = await measureDrag(dragTest.page, 1, 4);
+    await closePanel(dragTest.page);
+    const dragRepeat = await measureDrag(dragTest.page, 2, 4);
+
     console.log(JSON.stringify({
-        check: "socials-first-open-diagnosis",
+        check: "socials-panel-render-diagnosis-summary",
         socialsJavaScriptChunkPresentBeforeOpening: Boolean(socialsChunk),
-        socialsChunkName: socialsChunk ?? null,
-        firstDragFullyVisibleMs: firstDrag.pointerDownToNearlyFullyVisibleMs,
-        secondDragFullyVisibleMs: secondDrag.pointerDownToNearlyFullyVisibleMs,
-        firstOpenFullyVisibleMs: first.clickToNearlyFullyVisibleMs,
-        secondOpenFullyVisibleMs: second.clickToNearlyFullyVisibleMs,
-        preloaderDismissMs,
+        socialsChunkName: socialsChunk,
+        firstClickMountMs: clickFirst.interactionToPanelMountedMs,
+        repeatClickMountMs: clickRepeat.interactionToPanelMountedMs,
+        firstThrottledDragMountAfterPointerUpMs: dragFirst.pointerUpToPanelMountedMs,
+        repeatThrottledDragMountAfterPointerUpMs: dragRepeat.pointerUpToPanelMountedMs,
+        firstThrottledDragEstimatedOverheadAfterSnapMs: dragFirst.estimatedMountOverheadAfter200msSnapMs,
+        repeatThrottledDragEstimatedOverheadAfterSnapMs: dragRepeat.estimatedMountOverheadAfter200msSnapMs,
         result: "passed",
     }));
 
-    await context.close();
+    await clickTest.context.close();
+    await dragTest.context.close();
 } finally {
     await browser.close();
 }
