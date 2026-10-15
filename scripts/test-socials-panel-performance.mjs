@@ -130,6 +130,19 @@ async function measureDragOpen(page, opener, iteration) {
         performance.now() - window.__socialsDragStartedAt,
     );
 
+    // Espera o requestAnimationFrame que inicia o GSAP, para não confundir
+    // o estado inicial opaco com o painel já plenamente animado.
+    await page.waitForFunction(() => {
+        const heading = Array.from(document.querySelectorAll("h2"))
+            .find((element) => element.textContent.trim() === "Redes Sociais");
+        const root = heading?.parentElement?.parentElement?.parentElement;
+        return root && Number.parseFloat(getComputedStyle(root).opacity) < 0.98;
+    }, null, { timeout: 3000 });
+
+    const fadeStartedMs = await page.evaluate(() =>
+        performance.now() - window.__socialsDragStartedAt,
+    );
+
     await page.waitForFunction(() => {
         const heading = Array.from(document.querySelectorAll("h2"))
             .find((element) => element.textContent.trim() === "Redes Sociais");
@@ -146,6 +159,7 @@ async function measureDragOpen(page, opener, iteration) {
         iteration,
         actionDurationMs,
         pointerDownToPanelMountedMs: Math.round(mountedMs),
+        pointerDownToFadeStartedMs: Math.round(fadeStartedMs),
         pointerDownToNearlyFullyVisibleMs: Math.round(fullyVisibleMs),
         maxDragPx: Math.round(maxDrag),
     };
