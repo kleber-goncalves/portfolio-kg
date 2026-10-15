@@ -8,6 +8,10 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
+// TESTE TEMPORÁRIO DE DESEMPENHO: mantém o LogoLoop ativo e desliga apenas
+// as animações de entrada do GSAP nesta seção mobile.
+const RUN_MOBILE_GSAP_SCROLL_ANIMATIONS = false;
+
 function SeclogsMobile({ sectionRef, onReady }) {
     const mobileTitleRef = useRef(null);
     const mobileLineRef = useRef(null);
@@ -18,6 +22,8 @@ function SeclogsMobile({ sectionRef, onReady }) {
     const toolsRef = useRef(null);
 
     useLayoutEffect(() => {
+        if (!RUN_MOBILE_GSAP_SCROLL_ANIMATIONS) return undefined;
+
         const section = sectionRef.current;
 
         if (!section) return;
