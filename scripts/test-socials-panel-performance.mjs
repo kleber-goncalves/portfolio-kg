@@ -126,7 +126,7 @@ async function resetMeasurements(page) {
 }
 
 async function readMetrics(page, mode, iteration, cpuThrottleRate) {
-    const metrics = await page.evaluate(() => {
+    const metrics = await page.evaluate(({ modeIsClick }) => {
         const diag = window.__socialsPerf;
         const startAt = modeIsClick ? diag.clickAt : diag.pointerDownAt;
         const panelMountedAt = diag.panelMountedAt;
