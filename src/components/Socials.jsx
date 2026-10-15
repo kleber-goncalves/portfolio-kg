@@ -96,7 +96,7 @@ function Socials() {
                     opacity: 1,
                     y: 0,
                     scale: 1,
-                    duration: 0.45,
+                    duration: 0.30,
                     ease: "power3.out",
                 },
             );
@@ -266,7 +266,7 @@ function Socials() {
 
             gsap.to(progressRef.current, {
                 scaleX: 1,
-                duration: 0.2,
+                duration: 0.12,
                 ease: "power2.out",
             });
 
