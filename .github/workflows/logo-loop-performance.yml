@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - feat/responsividadeFull
+      - test/seclogs-mobile-no-gsap
     paths:
       - "src/components/logoLoop.jsx"
       - "src/styles/LogoLoop.css"
