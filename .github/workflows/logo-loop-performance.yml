@@ -1,0 +1,72 @@
+name: LogoLoop Visibility Performance
+
+on:
+  push:
+    branches:
+      - feat/responsividadeFull
+    paths:
+      - "src/components/logoLoop.jsx"
+      - "src/styles/LogoLoop.css"
+      - "src/layout/SeclogsMobile.jsx"
+      - "src/data/seclogsMobile.data.jsx"
+      - "scripts/test-logo-loop-performance.mjs"
+      - ".github/workflows/logo-loop-performance.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: logo-loop-performance-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Verify LogoLoop runtime behavior on mobile
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install project dependencies
+        run: npm ci
+
+      - name: Install temporary Playwright test runner
+        run: npm install --no-save --package-lock=false playwright
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Validate production build
+        run: npm run build
+
+      - name: Start local production preview
+        run: |
+          npx vite preview --host 127.0.0.1 --port 4173 --strictPort > /tmp/logo-loop-preview.log 2>&1 &
+          echo $! > /tmp/logo-loop-preview.pid
+
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4173/ --output /dev/null; then
+              echo "Local production preview is responding."
+              exit 0
+            fi
+
+            echo "Attempt $attempt/30: waiting for the preview."
+            sleep 2
+          done
+
+          cat /tmp/logo-loop-preview.log
+          exit 1
+
+      - name: Test viewport pause, resume, tab visibility, and reduced motion
+        env:
+          BASE_URL: http://127.0.0.1:4173/
+        run: node scripts/test-logo-loop-performance.mjs
