@@ -50,7 +50,7 @@ async function measureOpen(page, opener, iteration) {
     const resources = await page.evaluate(() => {
         const clickStart = window.__socialsOpenStartedAt;
         return performance.getEntriesByType("resource")
-            .filter((entry) => /\\.js(?:$|\\?)/i.test(entry.name))
+            .filter((entry) => /\.js(?:$|\?)/i.test(entry.name))
             .filter((entry) => entry.startTime >= clickStart)
             .map((entry) => ({
                 name: entry.name.split("/").pop(),
@@ -98,7 +98,7 @@ try {
 
     const beforeOpen = await page.evaluate(() => ({
         resources: performance.getEntriesByType("resource")
-            .filter((entry) => /\\.js(?:$|\\?)/i.test(entry.name))
+            .filter((entry) => /\.js(?:$|\?)/i.test(entry.name))
             .map((entry) => entry.name.split("/").pop()),
     }));
     const socialsChunk = beforeOpen.resources.find((name) => /socials/i.test(name));
