@@ -170,6 +170,7 @@ export const LogoLoop = memo(
         const containerRef = useRef(null);
         const trackRef = useRef(null);
         const seqRef = useRef(null);
+        const isVertical = direction === "up" || direction === "down";
 
         const [seqWidth, setSeqWidth] = useState(0);
         const [seqHeight, setSeqHeight] = useState(0);
@@ -263,8 +264,6 @@ export const LogoLoop = memo(
             if (pauseOnHover === false) return undefined;
             return 0;
         }, [hoverSpeed, pauseOnHover]);
-
-        const isVertical = direction === "up" || direction === "down";
 
         const targetVelocity = useMemo(() => {
             const magnitude = Math.abs(speed);
