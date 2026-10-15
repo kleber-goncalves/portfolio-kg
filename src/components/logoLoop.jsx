@@ -152,6 +152,7 @@ const useAnimationLoop = (
 export const LogoLoop = memo(
     ({
         logos,
+        disableAnimation = false,
         speed = 120,
         direction = "left",
         width = "100%",
@@ -243,13 +244,16 @@ export const LogoLoop = memo(
 
         const sequenceSize = isVertical ? seqHeight : seqWidth;
         const isAnimationEnabled =
+            !disableAnimation &&
             isInViewport &&
             isDocumentVisible &&
             !prefersReducedMotion &&
             sequenceSize > 0;
 
-        const animationPauseReason = prefersReducedMotion
-            ? "reduced-motion"
+        const animationPauseReason = disableAnimation
+            ? "manual-pause"
+            : prefersReducedMotion
+              ? "reduced-motion"
             : !isDocumentVisible
               ? "page-hidden"
               : !isInViewport
