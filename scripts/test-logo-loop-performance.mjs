@@ -67,139 +67,188 @@ try {
     const trackCount = await page.locator("#stack .logoloop__track").count();
     assert.equal(trackCount, 3, "A SecLogs mobile deve renderizar as três faixas de logotipos.");
 
-    // 1. Fora da viewport: o estado deve ser pausado e o transform deve permanecer estável.
-    await scrollToBottom(page);
-    for (let index = 0; index < trackCount; index += 1) {
-        await waitForTrackState(page, index, "paused", "outside-viewport");
-    }
-
-    const offscreenBefore = await Promise.all(
-        Array.from({ length: trackCount }, (_, index) => readTrack(page, index)),
-    );
-    await page.waitForTimeout(250);
-    const offscreenAfter = await Promise.all(
-        Array.from({ length: trackCount }, (_, index) => readTrack(page, index)),
+    const manualPauseMode = await page.locator("#stack .logoloop__track").evaluateAll((tracks) =>
+        tracks.length === 3 &&
+        tracks.every((track) =>
+            track.dataset.animationState === "paused" &&
+            track.dataset.animationPauseReason === "manual-pause",
+        ),
     );
 
-    offscreenBefore.forEach((before, index) => {
-        assert.equal(offscreenAfter[index].state, "paused");
-        assert.equal(offscreenAfter[index].reason, "outside-viewport");
-        assert.equal(
-            offscreenAfter[index].transform,
-            before.transform,
-            `A faixa ${index + 1} continuou alterando o transform fora da viewport.`,
+    if (manualPauseMode) {
+        // Modo experimental: os três trilhos devem ficar estáticos, mesmo
+        // quando entram na viewport; os gatilhos GSAP continuam no componente.
+        const before = await Promise.all(
+            Array.from({ length: trackCount }, (_, index) => readTrack(page, index)),
         );
-        assert.notEqual(
-            offscreenAfter[index].willChange,
-            "transform",
-            `A faixa ${index + 1} manteve will-change ativo fora da viewport.`,
-        );
-    });
 
-    console.log(JSON.stringify({
-        check: "offscreen-pause",
-        viewport,
-        tracks: offscreenAfter.map(({ state, reason, willChange }) => ({ state, reason, willChange })),
-        result: "passed",
-    }));
-
-    // 2. Cada faixa deve retomar o movimento quando entra na viewport.
-    for (let index = 0; index < trackCount; index += 1) {
-        const track = page.locator("#stack .logoloop__track").nth(index);
-        await track.evaluate((element) => {
-            element.scrollIntoView({ block: "center", behavior: "instant" });
+        before.forEach((track, index) => {
+            assert.equal(track.state, "paused", `A faixa ${index + 1} deveria permanecer pausada.`);
+            assert.equal(track.reason, "manual-pause");
+            assert.notEqual(track.willChange, "transform");
         });
 
-        await waitForTrackState(page, index, "running", null);
-        const before = await readTrack(page, index);
-        await page.waitForTimeout(300);
-        const after = await readTrack(page, index);
+        for (let index = 0; index < trackCount; index += 1) {
+            await page.locator("#stack .logoloop__track").nth(index).evaluate((element) => {
+                element.scrollIntoView({ block: "center", behavior: "instant" });
+            });
+            await page.waitForTimeout(250);
+        }
 
-        assert.notEqual(
-            after.transform,
-            before.transform,
-            `A faixa ${index + 1} não alterou o transform quando estava visível.`,
+        const after = await Promise.all(
+            Array.from({ length: trackCount }, (_, index) => readTrack(page, index)),
         );
-        assert.equal(
-            after.willChange,
-            "transform",
-            `A faixa ${index + 1} deveria otimizar transform somente enquanto anima.`,
-        );
+
+        after.forEach((track, index) => {
+            assert.equal(track.state, "paused");
+            assert.equal(track.reason, "manual-pause");
+            assert.equal(track.transform, before[index].transform,
+                `A faixa ${index + 1} mudou o transform apesar do teste de loop estático.`);
+            assert.notEqual(track.willChange, "transform");
+        });
 
         console.log(JSON.stringify({
-            check: "visible-animation",
-            track: index + 1,
-            before: before.transform,
-            after: after.transform,
-            willChange: after.willChange,
+            check: "manual-static-loops",
+            tracks: after.map(({ state, reason, willChange, transform }) => ({
+                state, reason, willChange, transform,
+            })),
             result: "passed",
         }));
-
+    } else {
+        // 1. Fora da viewport: o estado deve ser pausado e o transform deve permanecer estável.
         await scrollToBottom(page);
-        await waitForTrackState(page, index, "paused", "outside-viewport");
-        const pausedBefore = await readTrack(page, index);
-        await page.waitForTimeout(200);
-        const pausedAfter = await readTrack(page, index);
-
-        assert.equal(pausedAfter.transform, pausedBefore.transform);
-    }
-
-    // 3. Simula a aba em segundo plano e verifica se visibilitychange pausa o loop.
-    const firstTrack = page.locator("#stack .logoloop__track").first();
-    await firstTrack.evaluate((element) => {
-        element.scrollIntoView({ block: "center", behavior: "instant" });
-    });
-    await waitForTrackState(page, 0, "running", null);
-
-    await page.evaluate(() => {
-        Object.defineProperty(document, "visibilityState", {
-            configurable: true,
-            get: () => window.__logoLoopTestVisibility || "visible",
+        for (let index = 0; index < trackCount; index += 1) {
+            await waitForTrackState(page, index, "paused", "outside-viewport");
+        }
+    
+        const offscreenBefore = await Promise.all(
+            Array.from({ length: trackCount }, (_, index) => readTrack(page, index)),
+        );
+        await page.waitForTimeout(250);
+        const offscreenAfter = await Promise.all(
+            Array.from({ length: trackCount }, (_, index) => readTrack(page, index)),
+        );
+    
+        offscreenBefore.forEach((before, index) => {
+            assert.equal(offscreenAfter[index].state, "paused");
+            assert.equal(offscreenAfter[index].reason, "outside-viewport");
+            assert.equal(
+                offscreenAfter[index].transform,
+                before.transform,
+                `A faixa ${index + 1} continuou alterando o transform fora da viewport.`,
+            );
+            assert.notEqual(
+                offscreenAfter[index].willChange,
+                "transform",
+                `A faixa ${index + 1} manteve will-change ativo fora da viewport.`,
+            );
         });
-        window.__logoLoopTestVisibility = "hidden";
-        document.dispatchEvent(new Event("visibilitychange"));
-    });
-    await waitForTrackState(page, 0, "paused", "page-hidden");
-    const hiddenBefore = await readTrack(page, 0);
-    await page.waitForTimeout(250);
-    const hiddenAfter = await readTrack(page, 0);
-    assert.equal(hiddenAfter.transform, hiddenBefore.transform);
-
-    await page.evaluate(() => {
-        window.__logoLoopTestVisibility = "visible";
-        document.dispatchEvent(new Event("visibilitychange"));
-        delete document.visibilityState;
-        delete window.__logoLoopTestVisibility;
-        document.dispatchEvent(new Event("visibilitychange"));
-    });
-    await waitForTrackState(page, 0, "running", null);
-
-    console.log(JSON.stringify({
-        check: "hidden-page-pause",
-        state: hiddenAfter.state,
-        reason: hiddenAfter.reason,
-        transformStable: hiddenAfter.transform === hiddenBefore.transform,
-        result: "passed",
-    }));
-
-    // 4. Movimento reduzido precisa desligar o requestAnimationFrame, não apenas o CSS.
-    await page.emulateMedia({ reducedMotion: "reduce" });
-    await waitForTrackState(page, 0, "paused", "reduced-motion");
-    const reducedBefore = await readTrack(page, 0);
-    await page.waitForTimeout(250);
-    const reducedAfter = await readTrack(page, 0);
-
-    assert.equal(reducedAfter.transform, reducedBefore.transform);
-    assert.notEqual(reducedAfter.willChange, "transform");
-
-    console.log(JSON.stringify({
-        check: "reduced-motion",
-        state: reducedAfter.state,
-        reason: reducedAfter.reason,
-        transformStable: reducedAfter.transform === reducedBefore.transform,
-        willChange: reducedAfter.willChange,
-        result: "passed",
-    }));
+    
+        console.log(JSON.stringify({
+            check: "offscreen-pause",
+            viewport,
+            tracks: offscreenAfter.map(({ state, reason, willChange }) => ({ state, reason, willChange })),
+            result: "passed",
+        }));
+    
+        // 2. Cada faixa deve retomar o movimento quando entra na viewport.
+        for (let index = 0; index < trackCount; index += 1) {
+            const track = page.locator("#stack .logoloop__track").nth(index);
+            await track.evaluate((element) => {
+                element.scrollIntoView({ block: "center", behavior: "instant" });
+            });
+    
+            await waitForTrackState(page, index, "running", null);
+            const before = await readTrack(page, index);
+            await page.waitForTimeout(300);
+            const after = await readTrack(page, index);
+    
+            assert.notEqual(
+                after.transform,
+                before.transform,
+                `A faixa ${index + 1} não alterou o transform quando estava visível.`,
+            );
+            assert.equal(
+                after.willChange,
+                "transform",
+                `A faixa ${index + 1} deveria otimizar transform somente enquanto anima.`,
+            );
+    
+            console.log(JSON.stringify({
+                check: "visible-animation",
+                track: index + 1,
+                before: before.transform,
+                after: after.transform,
+                willChange: after.willChange,
+                result: "passed",
+            }));
+    
+            await scrollToBottom(page);
+            await waitForTrackState(page, index, "paused", "outside-viewport");
+            const pausedBefore = await readTrack(page, index);
+            await page.waitForTimeout(200);
+            const pausedAfter = await readTrack(page, index);
+    
+            assert.equal(pausedAfter.transform, pausedBefore.transform);
+        }
+    
+        // 3. Simula a aba em segundo plano e verifica se visibilitychange pausa o loop.
+        const firstTrack = page.locator("#stack .logoloop__track").first();
+        await firstTrack.evaluate((element) => {
+            element.scrollIntoView({ block: "center", behavior: "instant" });
+        });
+        await waitForTrackState(page, 0, "running", null);
+    
+        await page.evaluate(() => {
+            Object.defineProperty(document, "visibilityState", {
+                configurable: true,
+                get: () => window.__logoLoopTestVisibility || "visible",
+            });
+            window.__logoLoopTestVisibility = "hidden";
+            document.dispatchEvent(new Event("visibilitychange"));
+        });
+        await waitForTrackState(page, 0, "paused", "page-hidden");
+        const hiddenBefore = await readTrack(page, 0);
+        await page.waitForTimeout(250);
+        const hiddenAfter = await readTrack(page, 0);
+        assert.equal(hiddenAfter.transform, hiddenBefore.transform);
+    
+        await page.evaluate(() => {
+            window.__logoLoopTestVisibility = "visible";
+            document.dispatchEvent(new Event("visibilitychange"));
+            delete document.visibilityState;
+            delete window.__logoLoopTestVisibility;
+            document.dispatchEvent(new Event("visibilitychange"));
+        });
+        await waitForTrackState(page, 0, "running", null);
+    
+        console.log(JSON.stringify({
+            check: "hidden-page-pause",
+            state: hiddenAfter.state,
+            reason: hiddenAfter.reason,
+            transformStable: hiddenAfter.transform === hiddenBefore.transform,
+            result: "passed",
+        }));
+    
+        // 4. Movimento reduzido precisa desligar o requestAnimationFrame, não apenas o CSS.
+        await page.emulateMedia({ reducedMotion: "reduce" });
+        await waitForTrackState(page, 0, "paused", "reduced-motion");
+        const reducedBefore = await readTrack(page, 0);
+        await page.waitForTimeout(250);
+        const reducedAfter = await readTrack(page, 0);
+    
+        assert.equal(reducedAfter.transform, reducedBefore.transform);
+        assert.notEqual(reducedAfter.willChange, "transform");
+    
+        console.log(JSON.stringify({
+            check: "reduced-motion",
+            state: reducedAfter.state,
+            reason: reducedAfter.reason,
+            transformStable: reducedAfter.transform === reducedBefore.transform,
+            willChange: reducedAfter.willChange,
+            result: "passed",
+        }));
+    }
 
     assert.equal(
         pageErrors.some((message) => /LogoLoop|isVertical|animationPauseReason/i.test(message)),
