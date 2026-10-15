@@ -39,7 +39,7 @@ jobs:
         run: npm ci
 
       - name: Install temporary Playwright test runner
-        run: npm install --no-save --package-lock=false playwright
+        run: npm install --no-save playwright
 
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
