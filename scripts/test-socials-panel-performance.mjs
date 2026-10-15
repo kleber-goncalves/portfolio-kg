@@ -1,0 +1,135 @@
+import assert from "node:assert/strict";
+import { chromium } from "playwright";
+
+const baseUrl = process.env.BASE_URL || "http://127.0.0.1:4173/";
+const browser = await chromium.launch({ headless: true });
+const results = [];
+
+function panelRootLocator(page) {
+    return page.getByRole("heading", { name: "Redes Sociais", exact: true })
+        .locator("xpath=../../..");
+}
+
+async function measureOpen(page, opener, iteration) {
+    await page.evaluate(() => {
+        window.__socialsOpenStartedAt = performance.now();
+    });
+
+    await opener.click({ timeout: 15000 });
+
+    const panel = panelRootLocator(page);
+    await panel.waitFor({ state: "attached", timeout: 5000 });
+
+    const mounted = await page.evaluate(() =>
+        performance.now() - window.__socialsOpenStartedAt,
+    );
+
+    // Aguarda observar o início do fade-in (opacidade abaixo de 0,98).
+    await page.waitForFunction(() => {
+        const title = Array.from(document.querySelectorAll("h2"))
+            .find((element) => element.textContent.trim() === "Redes Sociais");
+        const root = title?.parentElement?.parentElement?.parentElement;
+        return root && Number.parseFloat(getComputedStyle(root).opacity) < 0.98;
+    }, null, { timeout: 3000 });
+
+    const animationStarted = await page.evaluate(() =>
+        performance.now() - window.__socialsOpenStartedAt,
+    );
+
+    await page.waitForFunction(() => {
+        const title = Array.from(document.querySelectorAll("h2"))
+            .find((element) => element.textContent.trim() === "Redes Sociais");
+        const root = title?.parentElement?.parentElement?.parentElement;
+        return root && Number.parseFloat(getComputedStyle(root).opacity) >= 0.98;
+    }, null, { timeout: 3000 });
+
+    const fullyVisible = await page.evaluate(() =>
+        performance.now() - window.__socialsOpenStartedAt,
+    );
+
+    const resources = await page.evaluate(() => {
+        const clickStart = window.__socialsOpenStartedAt;
+        return performance.getEntriesByType("resource")
+            .filter((entry) => /\\.js(?:$|\\?)/i.test(entry.name))
+            .filter((entry) => entry.startTime >= clickStart)
+            .map((entry) => ({
+                name: entry.name.split("/").pop(),
+                startMsAfterClick: Math.round(entry.startTime - clickStart),
+                durationMs: Math.round(entry.duration),
+            }));
+    });
+
+    const report = {
+        iteration,
+        clickToPanelMountedMs: Math.round(mounted),
+        clickToFadeStartedMs: Math.round(animationStarted),
+        clickToNearlyFullyVisibleMs: Math.round(fullyVisible),
+        javascriptResourcesStartedAfterClick: resources,
+    };
+    results.push(report);
+    console.log(JSON.stringify({ check: "socials-first-open-timing", ...report }));
+
+    assert.ok(mounted < 1000, `O painel levou ${Math.round(mounted)} ms para montar no ciclo ${iteration}.`);
+    assert.ok(fullyVisible < 2000, `O painel levou ${Math.round(fullyVisible)} ms para ficar visível no ciclo ${iteration}.`);
+
+    return report;
+}
+
+try {
+    const context = await browser.newContext({
+        viewport: { width: 390, height: 844 },
+        deviceScaleFactor: 3,
+        isMobile: true,
+        hasTouch: true,
+        reducedMotion: "no-preference",
+    });
+    const page = await context.newPage();
+    const pageErrors = [];
+    page.on("pageerror", (error) => pageErrors.push(error.message));
+
+    await page.goto(baseUrl, { waitUntil: "domcontentloaded", timeout: 60000 });
+
+    const opener = page.getByRole("button", {
+        name: "Arraste para abrir as redes sociais",
+        exact: true,
+    });
+    await opener.waitFor({ state: "visible", timeout: 60000 });
+    await opener.waitFor({ state: "attached" });
+
+    const beforeOpen = await page.evaluate(() => ({
+        resources: performance.getEntriesByType("resource")
+            .filter((entry) => /\\.js(?:$|\\?)/i.test(entry.name))
+            .map((entry) => entry.name.split("/").pop()),
+    }));
+    const socialsChunk = beforeOpen.resources.find((name) => /socials/i.test(name));
+
+    const first = await measureOpen(page, opener, 1);
+
+    await page.getByRole("button", { name: "Fechar redes sociais", exact: true })
+        .click({ timeout: 5000 });
+    await page.waitForFunction(() =>
+        !Array.from(document.querySelectorAll("h2"))
+            .some((element) => element.textContent.trim() === "Redes Sociais"),
+    null, { timeout: 5000 });
+
+    const second = await measureOpen(page, opener, 2);
+
+    assert.equal(
+        pageErrors.some((message) => /Socials|GSAP|React/i.test(message)),
+        false,
+        `Erro de execução relacionado ao painel: ${pageErrors.join(" | ")}`,
+    );
+
+    console.log(JSON.stringify({
+        check: "socials-first-open-diagnosis",
+        socialsJavaScriptChunkPresentBeforeOpening: Boolean(socialsChunk),
+        socialsChunkName: socialsChunk ?? null,
+        firstOpenFullyVisibleMs: first.clickToNearlyFullyVisibleMs,
+        secondOpenFullyVisibleMs: second.clickToNearlyFullyVisibleMs,
+        result: "passed",
+    }));
+
+    await context.close();
+} finally {
+    await browser.close();
+}
