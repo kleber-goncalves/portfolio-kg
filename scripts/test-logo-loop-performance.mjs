@@ -67,7 +67,52 @@ try {
     const trackCount = await page.locator("#stack .logoloop__track").count();
     assert.equal(trackCount, 3, "A SecLogs mobile deve renderizar as três faixas de logotipos.");
 
-    // 1. Fora da viewport: o estado deve ser pausado e o transform deve permanecer estável.
+    // 1. Durante a rolagem, o LogoLoop deve pausar e retomar automaticamente.
+    const firstTrack = page.locator("#stack .logoloop__track").first();
+    await firstTrack.evaluate((element) => {
+        element.scrollIntoView({ block: "center", behavior: "instant" });
+    });
+    await waitForTrackState(page, 0, "running", null);
+
+    await page.evaluate(() => window.dispatchEvent(new Event("scroll")));
+    await waitForTrackState(page, 0, "paused", "page-scrolling");
+
+    const duringScrollBefore = await readTrack(page, 0);
+    await page.waitForTimeout(50);
+    const duringScrollAfter = await readTrack(page, 0);
+
+    assert.equal(
+        duringScrollAfter.transform,
+        duringScrollBefore.transform,
+        "O transform do LogoLoop mudou enquanto a pausa de rolagem estava ativa.",
+    );
+    assert.notEqual(
+        duringScrollAfter.willChange,
+        "transform",
+        "will-change deve ser removido durante a pausa por rolagem.",
+    );
+
+    await waitForTrackState(page, 0, "running", null);
+    const resumedBefore = await readTrack(page, 0);
+    await page.waitForTimeout(250);
+    const resumedAfter = await readTrack(page, 0);
+
+    assert.notEqual(
+        resumedAfter.transform,
+        resumedBefore.transform,
+        "O LogoLoop não retomou a animação depois que a rolagem terminou.",
+    );
+
+    console.log(JSON.stringify({
+        check: "pause-during-scroll-and-resume",
+        pausedReason: duringScrollAfter.reason,
+        transformStableWhilePaused:
+            duringScrollAfter.transform === duringScrollBefore.transform,
+        resumedMovement: resumedAfter.transform !== resumedBefore.transform,
+        result: "passed",
+    }));
+
+    // 2. Fora da viewport: o estado deve ser pausado e o transform deve permanecer estável.
     await scrollToBottom(page);
     for (let index = 0; index < trackCount; index += 1) {
         await waitForTrackState(page, index, "paused", "outside-viewport");
