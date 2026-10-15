@@ -22,10 +22,14 @@ async function createPage(cpuThrottleRate = 1) {
     await page.addInitScript(() => {
         const diag = {
             awaitingMount: false,
+            mode: null,
             panelMountedAt: null,
             clickAt: null,
             pointerDownAt: null,
             pointerUpAt: null,
+            pointerDownX: null,
+            pointerMoved: false,
+            suppressedSyntheticClicks: 0,
             longTasks: [],
         };
         window.__socialsPerf = diag;
@@ -35,14 +39,38 @@ async function createPage(cpuThrottleRate = 1) {
             Boolean(target.closest('button[aria-label="Arraste para abrir as redes sociais"]'));
 
         document.addEventListener("click", (event) => {
-            if (isOpenButton(event.target)) {
-                diag.clickAt = performance.now();
+            if (!isOpenButton(event.target)) return;
+
+            // Playwright/Chromium can synthesize a click after a captured drag.
+            // Suppress only that test-generated click so the drag test measures
+            // the actual pointer-up -> GSAP snap -> openSocials path.
+            if (diag.mode === "drag" && diag.pointerMoved) {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                diag.suppressedSyntheticClicks += 1;
+                return;
             }
+
+            diag.clickAt = performance.now();
         }, true);
 
         document.addEventListener("pointerdown", (event) => {
             if (isOpenButton(event.target)) {
                 diag.pointerDownAt = performance.now();
+                diag.pointerDownX = event.clientX;
+                diag.pointerMoved = false;
+            }
+        }, true);
+
+        document.addEventListener("pointermove", (event) => {
+            if (
+                diag.mode === "drag" &&
+                diag.pointerDownAt !== null &&
+                isOpenButton(event.target) &&
+                diag.pointerDownX !== null &&
+                Math.abs(event.clientX - diag.pointerDownX) > 8
+            ) {
+                diag.pointerMoved = true;
             }
         }, true);
 
@@ -112,17 +140,21 @@ async function createPage(cpuThrottleRate = 1) {
     return { context, page, preloaderDismissMs };
 }
 
-async function resetMeasurements(page) {
-    await page.evaluate(() => {
+async function resetMeasurements(page, mode) {
+    await page.evaluate((nextMode) => {
         const diag = window.__socialsPerf;
         diag.awaitingMount = true;
+        diag.mode = nextMode;
         diag.panelMountedAt = null;
         diag.clickAt = null;
         diag.pointerDownAt = null;
         diag.pointerUpAt = null;
+        diag.pointerDownX = null;
+        diag.pointerMoved = false;
+        diag.suppressedSyntheticClicks = 0;
         diag.longTasks = [];
         diag.resourceStartAt = performance.now();
-    });
+    }, mode);
 }
 
 async function readMetrics(page, mode, iteration, cpuThrottleRate) {
@@ -146,6 +178,8 @@ async function readMetrics(page, mode, iteration, cpuThrottleRate) {
             clickAt: diag.clickAt,
             pointerDownAt: diag.pointerDownAt,
             pointerUpAt: diag.pointerUpAt,
+            pointerMoved: diag.pointerMoved,
+            suppressedSyntheticClicks: diag.suppressedSyntheticClicks,
             pointerUpToPanelMountedMs: diag.pointerUpAt === null || panelMountedAt === null
                 ? null
                 : Math.round(panelMountedAt - diag.pointerUpAt),
@@ -204,8 +238,12 @@ async function readMetrics(page, mode, iteration, cpuThrottleRate) {
         iteration,
         cpuThrottleRate,
         interactionToPanelMountedMs: metrics.interactionToPanelMountedMs,
-        pointerUpToPanelMountedMs: timing.pointerUpToPanelMountedMs,
-        estimatedMountOverheadAfter200msSnapMs: timing.estimatedMountOverheadAfter200msSnapMs,
+        pointerMoved: metrics.pointerMoved,
+        suppressedSyntheticClicks: metrics.suppressedSyntheticClicks,
+        pointerUpToPanelMountedMs: mode === "drag" ? timing.pointerUpToPanelMountedMs : null,
+        estimatedMountOverheadAfter200msSnapMs: mode === "drag"
+            ? timing.estimatedMountOverheadAfter200msSnapMs
+            : null,
         interactionToFadeStartedMs: timing.interactionToFadeStartedMs,
         interactionToNearlyFullyVisibleMs: timing.interactionToNearlyFullyVisibleMs,
         longTasksDuringOpen: timing.longTasksDuringOpen,
@@ -254,7 +292,7 @@ async function measureClick(page, iteration, cpuThrottleRate) {
         exact: true,
     });
     await opener.scrollIntoViewIfNeeded();
-    await resetMeasurements(page);
+    await resetMeasurements(page, "click");
     await opener.click({ timeout: 10000 });
     await panelLocator(page).waitFor({ state: "attached", timeout: 10000 });
     return readMetrics(page, "click", iteration, cpuThrottleRate);
@@ -276,7 +314,7 @@ async function measureDrag(page, iteration, cpuThrottleRate) {
     const maxDrag = geometry.containerWidth - geometry.buttonWidth - 16;
     assert.ok(maxDrag > 20, "A distância de arraste calculada precisa ser positiva.");
 
-    await resetMeasurements(page);
+    await resetMeasurements(page, "drag");
     const startX = box.x + box.width / 2;
     const startY = box.y + box.height / 2;
     const endX = Math.min(startX + maxDrag * 0.99, 388);
