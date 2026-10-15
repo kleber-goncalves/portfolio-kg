@@ -152,6 +152,7 @@ const useAnimationLoop = (
 export const LogoLoop = memo(
     ({
         logos,
+        pauseDuringScroll = false,
         speed = 120,
         direction = "left",
         width = "100%",
@@ -185,6 +186,7 @@ export const LogoLoop = memo(
         const [isDocumentVisible, setIsDocumentVisible] = useState(
             () => typeof document === "undefined" || document.visibilityState === "visible",
         );
+        const [isPageScrolling, setIsPageScrolling] = useState(false);
         const [prefersReducedMotion, setPrefersReducedMotion] = useState(() => {
             if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
                 return false;
@@ -223,6 +225,28 @@ export const LogoLoop = memo(
         }, []);
 
         useEffect(() => {
+            if (!pauseDuringScroll) return undefined;
+
+            let scrollEndTimeout = null;
+
+            const handleScroll = () => {
+                setIsPageScrolling(true);
+                window.clearTimeout(scrollEndTimeout);
+                scrollEndTimeout = window.setTimeout(() => {
+                    setIsPageScrolling(false);
+                    scrollEndTimeout = null;
+                }, 180);
+            };
+
+            window.addEventListener("scroll", handleScroll, { passive: true });
+
+            return () => {
+                window.removeEventListener("scroll", handleScroll);
+                window.clearTimeout(scrollEndTimeout);
+            };
+        }, [pauseDuringScroll]);
+
+        useEffect(() => {
             if (typeof window.matchMedia !== "function") return undefined;
 
             const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -246,6 +270,7 @@ export const LogoLoop = memo(
             isInViewport &&
             isDocumentVisible &&
             !prefersReducedMotion &&
+            !(pauseDuringScroll && isPageScrolling) &&
             sequenceSize > 0;
 
         const animationPauseReason = prefersReducedMotion
@@ -256,7 +281,9 @@ export const LogoLoop = memo(
                 ? "outside-viewport"
                 : sequenceSize <= 0
                   ? "measuring"
-                  : undefined;
+                  : pauseDuringScroll && isPageScrolling
+                    ? "page-scrolling"
+                    : undefined;
 
         const effectiveHoverSpeed = useMemo(() => {
             if (hoverSpeed !== undefined) return hoverSpeed;
