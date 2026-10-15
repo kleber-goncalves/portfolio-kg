@@ -6,59 +6,63 @@ const ANIMATION_CONFIG = { SMOOTH_TAU: 0.25, MIN_COPIES: 2, COPY_HEADROOM: 2 };
 const toCssLength = (value) =>
     typeof value === "number" ? `${value}px` : (value ?? undefined);
 
-const useResizeObserver = (callback, elements, dependencies) => {
+const useResizeObserver = (callback, containerRef, sequenceRef) => {
     useEffect(() => {
         if (!window.ResizeObserver) {
             const handleResize = () => callback();
-            window.addEventListener("resize", handleResize);
+            window.addEventListener("resize", handleResize, { passive: true });
             callback();
+
             return () => window.removeEventListener("resize", handleResize);
         }
-        const observers = elements.map((ref) => {
+
+        const observers = [containerRef, sequenceRef].map((ref) => {
             if (!ref.current) return null;
+
             const observer = new ResizeObserver(callback);
             observer.observe(ref.current);
             return observer;
         });
+
         callback();
+
         return () => {
             observers.forEach((observer) => observer?.disconnect());
         };
-    }, [callback, elements, dependencies]);
+    }, [callback, containerRef, sequenceRef]);
 };
 
-const useImageLoader = (seqRef, onLoad, dependencies) => {
+const useImageLoader = (seqRef, onLoad, logos) => {
     useEffect(() => {
         const images = seqRef.current?.querySelectorAll("img") ?? [];
+
         if (images.length === 0) {
             onLoad();
-            return;
+            return undefined;
         }
+
         let remainingImages = images.length;
         const handleImageLoad = () => {
             remainingImages -= 1;
             if (remainingImages === 0) onLoad();
         };
+
         images.forEach((img) => {
-            const htmlImg = img;
-            if (htmlImg.complete) {
+            if (img.complete) {
                 handleImageLoad();
             } else {
-                htmlImg.addEventListener("load", handleImageLoad, {
-                    once: true,
-                });
-                htmlImg.addEventListener("error", handleImageLoad, {
-                    once: true,
-                });
+                img.addEventListener("load", handleImageLoad, { once: true });
+                img.addEventListener("error", handleImageLoad, { once: true });
             }
         });
+
         return () => {
             images.forEach((img) => {
                 img.removeEventListener("load", handleImageLoad);
                 img.removeEventListener("error", handleImageLoad);
             });
         };
-    }, [onLoad, seqRef, dependencies]);
+    }, [onLoad, seqRef, logos]);
 };
 
 const useAnimationLoop = (
@@ -69,6 +73,7 @@ const useAnimationLoop = (
     isHovered,
     hoverSpeed,
     isVertical,
+    isAnimationEnabled,
 ) => {
     const rafRef = useRef(null);
     const lastTimestampRef = useRef(null);
@@ -77,18 +82,17 @@ const useAnimationLoop = (
 
     useEffect(() => {
         const track = trackRef.current;
-        if (!track) return;
+        if (!track || !isAnimationEnabled) return undefined;
 
         const seqSize = isVertical ? seqHeight : seqWidth;
 
-        if (seqSize > 0) {
-            offsetRef.current =
-                ((offsetRef.current % seqSize) + seqSize) % seqSize;
-            const transformValue = isVertical
-                ? `translate3d(0, ${-offsetRef.current}px, 0)`
-                : `translate3d(${-offsetRef.current}px, 0, 0)`;
-            track.style.transform = transformValue;
-        }
+        offsetRef.current =
+            ((offsetRef.current % seqSize) + seqSize) % seqSize;
+
+        const initialTransform = isVertical
+            ? `translate3d(0, ${-offsetRef.current}px, 0)`
+            : `translate3d(${-offsetRef.current}px, 0, 0)`;
+        track.style.transform = initialTransform;
 
         const animate = (timestamp) => {
             if (lastTimestampRef.current === null) {
@@ -109,17 +113,15 @@ const useAnimationLoop = (
             velocityRef.current +=
                 (target - velocityRef.current) * easingFactor;
 
-            if (seqSize > 0) {
-                let nextOffset =
-                    offsetRef.current + velocityRef.current * deltaTime;
-                nextOffset = ((nextOffset % seqSize) + seqSize) % seqSize;
-                offsetRef.current = nextOffset;
+            let nextOffset =
+                offsetRef.current + velocityRef.current * deltaTime;
+            nextOffset = ((nextOffset % seqSize) + seqSize) % seqSize;
+            offsetRef.current = nextOffset;
 
-                const transformValue = isVertical
-                    ? `translate3d(0, ${-offsetRef.current}px, 0)`
-                    : `translate3d(${-offsetRef.current}px, 0, 0)`;
-                track.style.transform = transformValue;
-            }
+            const transformValue = isVertical
+                ? `translate3d(0, ${-offsetRef.current}px, 0)`
+                : `translate3d(${-offsetRef.current}px, 0, 0)`;
+            track.style.transform = transformValue;
 
             rafRef.current = requestAnimationFrame(animate);
         };
@@ -131,6 +133,8 @@ const useAnimationLoop = (
                 cancelAnimationFrame(rafRef.current);
                 rafRef.current = null;
             }
+
+            // Evita saltos grandes de posição ao retomar a animação.
             lastTimestampRef.current = null;
         };
     }, [
@@ -140,6 +144,7 @@ const useAnimationLoop = (
         isHovered,
         hoverSpeed,
         isVertical,
+        isAnimationEnabled,
         trackRef,
     ]);
 };
@@ -170,6 +175,87 @@ export const LogoLoop = memo(
         const [seqHeight, setSeqHeight] = useState(0);
         const [copyCount, setCopyCount] = useState(ANIMATION_CONFIG.MIN_COPIES);
         const [isHovered, setIsHovered] = useState(false);
+
+        // Só mantém o loop ativo quando a faixa está perto/na viewport,
+        // a página está visível e o usuário não pediu movimento reduzido.
+        const [isInViewport, setIsInViewport] = useState(
+            () => typeof window !== "undefined" && !("IntersectionObserver" in window),
+        );
+        const [isDocumentVisible, setIsDocumentVisible] = useState(
+            () => typeof document === "undefined" || document.visibilityState === "visible",
+        );
+        const [prefersReducedMotion, setPrefersReducedMotion] = useState(() => {
+            if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
+                return false;
+            }
+
+            return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        });
+
+        useEffect(() => {
+            const container = containerRef.current;
+            if (!container || !("IntersectionObserver" in window)) return undefined;
+
+            const observer = new IntersectionObserver(
+                ([entry]) => {
+                    setIsInViewport(Boolean(entry?.isIntersecting));
+                },
+                {
+                    rootMargin: "64px 0px",
+                    threshold: 0,
+                },
+            );
+
+            observer.observe(container);
+            return () => observer.disconnect();
+        }, []);
+
+        useEffect(() => {
+            const updateVisibility = () => {
+                setIsDocumentVisible(document.visibilityState === "visible");
+            };
+
+            document.addEventListener("visibilitychange", updateVisibility);
+            return () => {
+                document.removeEventListener("visibilitychange", updateVisibility);
+            };
+        }, []);
+
+        useEffect(() => {
+            if (typeof window.matchMedia !== "function") return undefined;
+
+            const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+            const handleMotionPreference = (event) => {
+                setPrefersReducedMotion(event.matches);
+            };
+
+            if (typeof motionQuery.addEventListener === "function") {
+                motionQuery.addEventListener("change", handleMotionPreference);
+                return () => {
+                    motionQuery.removeEventListener("change", handleMotionPreference);
+                };
+            }
+
+            motionQuery.addListener(handleMotionPreference);
+            return () => motionQuery.removeListener(handleMotionPreference);
+        }, []);
+
+        const sequenceSize = isVertical ? seqHeight : seqWidth;
+        const isAnimationEnabled =
+            isInViewport &&
+            isDocumentVisible &&
+            !prefersReducedMotion &&
+            sequenceSize > 0;
+
+        const animationPauseReason = prefersReducedMotion
+            ? "reduced-motion"
+            : !isDocumentVisible
+              ? "page-hidden"
+              : !isInViewport
+                ? "outside-viewport"
+                : sequenceSize <= 0
+                  ? "measuring"
+                  : undefined;
 
         const effectiveHoverSpeed = useMemo(() => {
             if (hoverSpeed !== undefined) return hoverSpeed;
@@ -232,18 +318,9 @@ export const LogoLoop = memo(
             }
         }, [isVertical]);
 
-        useResizeObserver(
-            updateDimensions,
-            [containerRef, seqRef],
-            [logos, gap, logoHeight, isVertical],
-        );
+        useResizeObserver(updateDimensions, containerRef, seqRef);
 
-        useImageLoader(seqRef, updateDimensions, [
-            logos,
-            gap,
-            logoHeight,
-            isVertical,
-        ]);
+        useImageLoader(seqRef, updateDimensions, logos);
 
         useAnimationLoop(
             trackRef,
@@ -253,6 +330,7 @@ export const LogoLoop = memo(
             isHovered,
             effectiveHoverSpeed,
             isVertical,
+            isAnimationEnabled,
         );
 
         const cssVariables = useMemo(
@@ -387,6 +465,8 @@ export const LogoLoop = memo(
                 <div
                     className="logoloop__track"
                     ref={trackRef}
+                    data-animation-state={isAnimationEnabled ? "running" : "paused"}
+                    data-animation-pause-reason={animationPauseReason}
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
                 >
