@@ -103,7 +103,18 @@ try {
     const pageErrors = [];
     page.on("pageerror", (error) => pageErrors.push(error.message));
 
+    const navigationStartedAt = Date.now();
     await page.goto(baseUrl, { waitUntil: "domcontentloaded", timeout: 60000 });
+
+    const preloader = page.locator('[aria-label^="Carregamento do site:"]');
+    await preloader.waitFor({ state: "attached", timeout: 30000 });
+    await preloader.waitFor({ state: "detached", timeout: 60000 });
+    const preloaderDismissMs = Date.now() - navigationStartedAt;
+    console.log(JSON.stringify({
+        check: "preloader-interactive-readiness",
+        navigationToPreloaderDismissMs: preloaderDismissMs,
+        result: "passed",
+    }));
 
     const opener = page.getByRole("button", {
         name: "Arraste para abrir as redes sociais",
@@ -142,6 +153,7 @@ try {
         socialsChunkName: socialsChunk ?? null,
         firstOpenFullyVisibleMs: first.clickToNearlyFullyVisibleMs,
         secondOpenFullyVisibleMs: second.clickToNearlyFullyVisibleMs,
+        preloaderDismissMs,
         result: "passed",
     }));
 
