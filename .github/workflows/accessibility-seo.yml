@@ -82,6 +82,7 @@ jobs:
           temporaryPublicStorage: false
 
       - name: Axe — full page and interactive menu states
+        if: always()
         run: node scripts/audit-accessibility-seo.mjs
 
       - name: Upload detailed accessibility and SEO reports
