@@ -67,6 +67,39 @@ try {
     const trackCount = await page.locator("#stack .logoloop__track").count();
     assert.equal(trackCount, 3, "A SecLogs mobile deve renderizar as três faixas de logotipos.");
 
+    // Os logotipos mobile são visuais: não devem expor links nem perder seus nomes acessíveis.
+    const mobileLogoLinks = await page.locator("#stack .logoloop__list a").count();
+    assert.equal(
+        mobileLogoLinks,
+        0,
+        "Os logotipos das faixas mobile não devem conter links clicáveis.",
+    );
+
+    const unnamedLogoItems = await page
+        .locator('#stack .logoloop__list:not([aria-hidden="true"]) .logoloop__item')
+        .evaluateAll((items) => items.filter((item) => {
+            const node = item.querySelector(".logoloop__node");
+            if (node) {
+                return node.getAttribute("role") !== "img" ||
+                    !node.getAttribute("aria-label")?.trim();
+            }
+
+            const img = item.querySelector("img");
+            return !img || !img.getAttribute("alt")?.trim();
+        }).length);
+    assert.equal(
+        unnamedLogoItems,
+        0,
+        "Cada logotipo mobile deve continuar identificável por tecnologias assistivas.",
+    );
+
+    console.log(JSON.stringify({
+        check: "mobile-logos-are-non-interactive-and-accessible",
+        mobileLogoLinks,
+        unnamedLogoItems,
+        result: "passed",
+    }));
+
     // 1. Durante a rolagem, o LogoLoop deve pausar e retomar automaticamente.
     const firstTrack = page.locator("#stack .logoloop__track").first();
     await firstTrack.evaluate((element) => {
@@ -190,7 +223,6 @@ try {
     }
 
     // 3. Simula a aba em segundo plano e verifica se visibilitychange pausa o loop.
-    const firstTrack = page.locator("#stack .logoloop__track").first();
     await firstTrack.evaluate((element) => {
         element.scrollIntoView({ block: "center", behavior: "instant" });
     });
