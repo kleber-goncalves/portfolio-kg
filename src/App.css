@@ -368,3 +368,26 @@ html::-webkit-scrollbar {
         opacity: 0.8;
     }
 }
+
+
+/* Acessibilidade: foco de teclado visível e preferência por movimento reduzido. */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+    outline: 2px solid var(--accent-light, #d8c2aa);
+    outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html,
+    html:focus-within {
+        scroll-behavior: auto !important;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
