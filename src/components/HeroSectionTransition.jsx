@@ -550,7 +550,7 @@ function HeroSectionTransition({ experienceMode = "full" }) {
             };
         }, sectionRef);
 
-                
+
         // O pin já está criado; atualiza as posições no próximo frame.
         pinRefreshFrameId = requestAnimationFrame(() => {
             pinRefreshFrameId = null;
@@ -640,7 +640,6 @@ function HeroSectionTransition({ experienceMode = "full" }) {
                 b-md:h-auto
 
                 b-md:shadow-[0_-25px_60px_rgba(0,0,0,0.55)]
-                b-md:translate-y-full
             `
         : `
                 relative
