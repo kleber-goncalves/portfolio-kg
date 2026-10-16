@@ -164,7 +164,10 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, exper
                 ease: "back.out(1.7)",
             },
         );
-    }, [experienceMenuOpen ]);
+    }, [experienceMenuOpen]);
+
+    // ============================================================
+    // EXPERIENCE — CLIQUE FORA
     // ============================================================
 
     useLayoutEffect(() => {
