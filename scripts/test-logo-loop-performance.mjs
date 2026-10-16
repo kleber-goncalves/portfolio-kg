@@ -54,6 +54,11 @@ try {
     page.on("pageerror", (error) => pageErrors.push(error.message));
 
     await page.goto(baseUrl, { waitUntil: "domcontentloaded", timeout: 60000 });
+
+    // The mobile technology section is intentionally deferred until it approaches the viewport.
+    // Enter the section before asserting that its LogoLoop tracks have mounted.
+    await page.locator("#stack").scrollIntoViewIfNeeded();
+
     await page.waitForFunction(
         () => {
             const tracks = document.querySelectorAll("#stack .logoloop__track");
