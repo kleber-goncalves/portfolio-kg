@@ -1,4 +1,4 @@
-import { lazy, Suspense, useLayoutEffect, useRef, useState } from "react";
+import { lazy, Suspense, useCallback, useLayoutEffect, useRef, useState } from "react";
 
 import Hero from "../layout/HeroTeste2";
 import Seclogs from "../layout/Logo2";
@@ -11,6 +11,7 @@ function HeroSectionTransition({ experienceMode = "full" }) {
     const requiredHeroLayout = isMobileLayout ? "mobile" : "desktop";
     const requiredStackLayout = isMobileLayout ? "mobile" : "desktop";
     const [readyHeroLayout, setReadyHeroLayout] = useState(null);
+    const [animationRuntime, setAnimationRuntime] = useState(null);
     const [readyStackLayout, setReadyStackLayout] = useState(null);
 
     const sectionRef = useRef(null);
@@ -42,6 +43,11 @@ function HeroSectionTransition({ experienceMode = "full" }) {
 
     const [dotFieldFrozen, setDotFieldFrozen] = useState(false);
     const [desktopAnimationReady, setDesktopAnimationReady] = useState(false);
+
+    const handleHeroReady = useCallback((layout, runtime) => {
+        setReadyHeroLayout(layout);
+        if (runtime) setAnimationRuntime(runtime);
+    }, []);
 
     // ============================================================
     // REFS DE CONTROLE
@@ -192,7 +198,7 @@ function HeroSectionTransition({ experienceMode = "full" }) {
 
         if (!section || readyHeroLayout !== requiredHeroLayout) return;
 
-        // O modo reduzido não precisa carregar GSAP/ScrollTrigger para o menu.
+        // A experiência reduzida não precisa de pin nem timeline.
         if (experienceMode === "reduced") {
             const hero = heroRef.current;
 
@@ -254,32 +260,20 @@ function HeroSectionTransition({ experienceMode = "full" }) {
             };
         }
 
-
-        // A experiência mobile não utiliza pin nem timeline nesta transição.
+        // O HeroDesktop já carrega GSAP/ScrollTrigger no seu próprio chunk.
+        // Reaproveitamos essas instâncias para manter o bundle inicial mobile leve.
         if (isMobileLayout || readyStackLayout !== requiredStackLayout) return;
 
-        let cancelled = false;
+        const gsap = animationRuntime?.gsap;
+        const ScrollTrigger = animationRuntime?.ScrollTrigger;
+        if (!gsap || !ScrollTrigger) return;
+
+        gsap.registerPlugin(ScrollTrigger);
+        scrollTriggerRef.current = ScrollTrigger;
+
         let pinRefreshFrameId = null;
-        let ctx = null;
-        let scrollTriggerModule = null;
 
-        const initializeAnimations = async () => {
-            try {
-                const [gsapModule, scrollTriggerModuleResult] = await Promise.all([
-                    import("gsap"),
-                    import("gsap/ScrollTrigger"),
-                ]);
-
-                if (cancelled) return;
-
-                const gsap = gsapModule.default ?? gsapModule.gsap;
-                const { ScrollTrigger } = scrollTriggerModuleResult;
-
-                gsap.registerPlugin(ScrollTrigger);
-                scrollTriggerModule = ScrollTrigger;
-                scrollTriggerRef.current = ScrollTrigger;
-
-                ctx = gsap.context(() => {
+        const ctx = gsap.context(() => {
             const hero = heroRef.current;
             const seclogs = seclogsRef.current;
 
@@ -556,38 +550,29 @@ function HeroSectionTransition({ experienceMode = "full" }) {
             };
         }, sectionRef);
 
-                // O pin já existe; recalcula os offsets no próximo frame.
-                pinRefreshFrameId = requestAnimationFrame(() => {
-                    pinRefreshFrameId = null;
-                    if (!cancelled) ScrollTrigger.refresh();
-                });
-            } catch (error) {
-                if (!cancelled) {
-                    console.error("Não foi possível carregar as animações do Hero.", error);
-                }
-            }
-        };
-
-        void initializeAnimations();
+                
+        // O pin já está criado; atualiza as posições no próximo frame.
+        pinRefreshFrameId = requestAnimationFrame(() => {
+            pinRefreshFrameId = null;
+            ScrollTrigger.refresh();
+        });
 
         return () => {
-            cancelled = true;
-
             if (pinRefreshFrameId !== null) {
                 cancelAnimationFrame(pinRefreshFrameId);
             }
 
-            ctx?.revert();
+            ctx.revert();
             setDesktopAnimationReady(false);
 
-            const heroTransition = scrollTriggerModule?.getById("heroTransition");
+            const heroTransition = ScrollTrigger.getById("heroTransition");
             heroTransition?.kill();
 
-            if (scrollTriggerRef.current === scrollTriggerModule) {
+            if (scrollTriggerRef.current === ScrollTrigger) {
                 scrollTriggerRef.current = null;
             }
         };
-    }, [experienceMode, readyHeroLayout, requiredHeroLayout, readyStackLayout, requiredStackLayout, isMobileLayout]);
+    }, [experienceMode, readyHeroLayout, requiredHeroLayout, readyStackLayout, requiredStackLayout, isMobileLayout, animationRuntime]);
 
     // ============================================================
     // MODO ATUAL
@@ -697,7 +682,7 @@ function HeroSectionTransition({ experienceMode = "full" }) {
             ================================================== */}
 
             <div ref={heroRef} className={heroWrapperClass}>
-                <Hero isMobileLayout={isMobileLayout} dotFieldFrozen={dotFieldFrozen} onNavigate={handleHeroNavigation} onReady={setReadyHeroLayout} experienceMode={experienceMode} />
+                <Hero isMobileLayout={isMobileLayout} dotFieldFrozen={dotFieldFrozen} onNavigate={handleHeroNavigation} onReady={handleHeroReady} experienceMode={experienceMode} />
                 {isFullExperience === false && (
                     <div
                         className="
