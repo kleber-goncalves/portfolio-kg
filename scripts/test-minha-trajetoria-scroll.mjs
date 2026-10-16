@@ -212,14 +212,16 @@ function assertLineStaysEmptyBeforeFormation(samples, mode) {
         }
 
         // O trigger é a área inteira da trajetória, não a linha decorativa.
-        // Portanto a asserção deve comparar o topo do elemento que realmente controla o ScrollTrigger.
+        // O teste envia wheel events em intervalos curtos, enquanto Lenis e scrub: 1
+        // continuam suavizando a posição. Tolera 220px ao redor do início para evitar
+        // classificar a defasagem visual do scrub como avanço prematuro.
         assert.notEqual(
             sample.timelineTop,
             null,
             `Could not locate [data-trajectory-timeline] in ${mode}.`,
         );
 
-        const expectedTriggerStartTop = sample.viewportHeight * 0.78 + 120;
+        const expectedTriggerStartTop = sample.viewportHeight * 0.78 + 220;
         if (sample.timelineTop > expectedTriggerStartTop) {
             assert.ok(
                 sample.progress <= 0.08,
