@@ -34,6 +34,12 @@ function App() {
                 <div className="relative z-[1] w-full">
                     <Link
                         to="#main-content"
+                        onClick={(event) => {
+                            event.preventDefault();
+                            const target = document.getElementById("main-content");
+                            target?.scrollIntoView({ behavior: "auto", block: "start" });
+                            target?.focus();
+                        }}
                         className="sr-only fixed left-4 top-4 z-[10000] bg-champagne px-4 py-3 font-space text-sm font-semibold text-obsidian focus:not-sr-only focus:outline focus:outline-2 focus:outline-offset-4 focus:outline-champagne"
                     >
                         Pular para o conteúdo principal

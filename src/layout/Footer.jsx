@@ -365,7 +365,7 @@ function Footer() {
                     TOPO
                 ================================================= */}
 
-                <header
+                <div
                     ref={headerRef}
                     className="
                         flex
@@ -442,7 +442,7 @@ function Footer() {
                             2026
                         </span>
                     </div>
-                </header>
+                </div>
 
                 {/* =================================================
                     ÁREA PRINCIPAL

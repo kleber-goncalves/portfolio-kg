@@ -1031,8 +1031,9 @@ function ProjetoDesktop({ projetos, experienceMode = "full", onReady }) {
                         BOTÃO PREVIEW
                     ============================================== */}
 
-                    <button
+                    <div
                         ref={previewButtonRef}
+                        aria-hidden="true"
                         className="
                             pointer-events-none
                             absolute
@@ -1060,7 +1061,7 @@ function ProjetoDesktop({ projetos, experienceMode = "full", onReady }) {
                         >
                             View
                         </span>
-                    </button>
+                    </div>
                 </div>
             )}
         </section>
