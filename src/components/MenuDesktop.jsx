@@ -2,11 +2,11 @@ import { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
 import { motion, useMotionValue, useSpring } from "motion/react";
 import { Link } from "react-router-dom";
-
-const MotionLink = motion.create(Link);
 import { stopSmoothScroll, startSmoothScroll } from "../utils/lenisControl";
 
 import { getExperienceMode, setExperienceMode } from "../utils/experienceMode";
+
+const MotionLink = motion.create(Link);
 
 function MenuDesktop({ items = [], showMenu = false }) {
     const [isOpen, setIsOpen] = useState(false);

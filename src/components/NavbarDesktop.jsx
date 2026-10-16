@@ -273,6 +273,7 @@ function NavbarDesktop({ items = [] }) {
 
             <div
                 ref={overlayRef}
+                data-a11y-click-surface="backdrop"
                 onClick={() => setIsOpen(false)}
                 className="
                     fixed

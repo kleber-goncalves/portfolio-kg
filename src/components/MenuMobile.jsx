@@ -242,6 +242,7 @@ function MenuMobile({ items = [] }) {
             {isOpen && createPortal(
                 <div
                     data-mobile-menu-overlay
+                    data-a11y-click-surface="backdrop"
                     className="
                         fixed
                         inset-0

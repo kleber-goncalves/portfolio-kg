@@ -245,7 +245,7 @@ function ProjetoCarouselMobile({
                     Arraste para o lado
                 </span>
 
-                <div className="flex items-center gap-4 text-sm text-white/50">
+                <div className="flex items-center gap-4 text-sm text-steel">
                     <MoveLeft
                         size={24}
                         strokeWidth={1.5}
