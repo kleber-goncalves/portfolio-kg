@@ -49,6 +49,21 @@ async function readHamburgerState(page) {
         );
 
         const hero = document.querySelector("#hero");
+        const stack = document.querySelector("#stack");
+        const media = {
+            width: window.innerWidth,
+            height: window.innerHeight,
+            touchQuery: window.matchMedia("(hover: none) and (pointer: coarse)").matches,
+            finePointer: window.matchMedia("(pointer: fine)").matches,
+            hover: window.matchMedia("(hover: hover)").matches,
+            landscape: window.matchMedia("(orientation: landscape)").matches,
+            desktopHeroContent: Boolean(document.querySelector('[data-hero-element="dotfield"]')),
+            mobileHeroContent: Boolean(document.querySelector("#hero img[alt='Retrato de Kleber Gonçalves']")),
+            pinSpacerCount: document.querySelectorAll(".pin-spacer").length,
+            stackTransform: stack ? getComputedStyle(stack).transform : null,
+            stackTranslate: stack ? getComputedStyle(stack).translate : null,
+            stackRectTop: stack?.getBoundingClientRect().top ?? null,
+        };
 
         if (!button) {
             return {
@@ -58,6 +73,7 @@ async function readHamburgerState(page) {
                 pointerEvents: "none",
                 scrollY: window.scrollY,
                 heroBottom: hero?.getBoundingClientRect().bottom ?? null,
+                diagnostics: media,
             };
         }
 
@@ -73,6 +89,7 @@ async function readHamburgerState(page) {
             height: rect.height,
             scrollY: window.scrollY,
             heroBottom: hero?.getBoundingClientRect().bottom ?? null,
+            diagnostics: media,
         };
     });
 }
