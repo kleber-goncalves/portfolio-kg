@@ -394,7 +394,14 @@ function HeroSectionTransition({ experienceMode = "full" }) {
                             // MENU
                             // =====================================
 
-                            const shouldShowMenu = coveredAmount >= MENU_APPEAR_PX;
+                            // Em telas mais baixas, o Stack pode cobrir menos que 800px
+                            // por causa da margem superior. Usa até 80% da altura do Hero,
+                            // sem alterar o limite de 800px em viewports suficientemente altas.
+                            const menuAppearThreshold = Math.min(
+                                MENU_APPEAR_PX,
+                                heroRect.height * 0.8,
+                            );
+                            const shouldShowMenu = coveredAmount >= menuAppearThreshold;
 
                             /*
                              * Só atualiza o React quando
