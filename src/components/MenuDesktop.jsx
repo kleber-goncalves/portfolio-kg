@@ -672,7 +672,9 @@ function MenuDesktop({ items = [], showMenu = false }) {
                     initial="closed"
                     animate={isOpen ? "open" : "closed"}
                     transition={panelSpring}
+                    aria-label="Menu principal"
                     aria-hidden={!isOpen}
+                    inert={!isOpen}
                     className="
                         absolute
                         right-0
