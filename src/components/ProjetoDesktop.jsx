@@ -10,7 +10,7 @@ import { ArrowUpRight } from "lucide-react";
 import MagneticExternalLinkHover from "./MagneticExternalLinkHover";
 import OptimizedImage from "./OptimizedImage";
 
-function ProjetoDesktop({ projetos, experienceMode = "full" }) {
+function ProjetoDesktop({ projetos, experienceMode = "full", onReady }) {
     // ============================================================
     // MODO DE EXPERIÊNCIA
     // ============================================================
@@ -544,6 +544,28 @@ function ProjetoDesktop({ projetos, experienceMode = "full" }) {
             gsap.killTweensOf(previewButton);
         };
     }, [isReducedExperience, projetos]);
+
+    // ============================================================
+    // NOTIFICAÇÃO DE PRONTIDÃO
+    // ============================================================
+
+    useLayoutEffect(() => {
+        let firstFrame = 0;
+        let secondFrame = 0;
+
+        // Aguarda o DOM, os gatilhos de rolagem e o layout antes de sinalizar prontidão.
+        firstFrame = window.requestAnimationFrame(() => {
+            secondFrame = window.requestAnimationFrame(() => {
+                ScrollTrigger.refresh(true);
+                onReady?.();
+            });
+        });
+
+        return () => {
+            window.cancelAnimationFrame(firstFrame);
+            window.cancelAnimationFrame(secondFrame);
+        };
+    }, [onReady]);
 
     // ============================================================
     // RENDER

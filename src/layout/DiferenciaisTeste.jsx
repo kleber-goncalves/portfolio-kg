@@ -200,7 +200,6 @@ function Diferenciais({ experienceMode = "full" }) {
     return (
         <section
             ref={sectionRef}
-            id="diferenciais"
             className="
                 relative
                 w-full

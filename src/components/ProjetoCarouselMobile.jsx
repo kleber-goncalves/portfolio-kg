@@ -4,6 +4,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { MoveLeft, MoveRight } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow } from "swiper/modules";
+import { tecnologias } from "../data/tecnologias";
 
 import "swiper/css";
 import "swiper/css/effect-coverflow";
@@ -14,7 +15,6 @@ gsap.registerPlugin(ScrollTrigger);
 
 function ProjetoCarouselMobile({
     projects = [],
-    tecnologiasConfig = {},
     onReady,
 }) {
     const sectionRef = useRef(null);
@@ -209,7 +209,7 @@ function ProjetoCarouselMobile({
                                 titulo={projeto.titulo}
                                 descricao={projeto.descricao}
                                 tecnologias={projeto.tecnologias}
-                                tecnologiasConfig={tecnologiasConfig}
+                                tecnologiasConfig={tecnologias}
                                 imagens={projeto.imagens}
                                 demo={projeto.demo}
                                 github={projeto.github}

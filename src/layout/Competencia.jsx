@@ -217,7 +217,6 @@ function Competencia({ experienceMode = "full" }) {
     return (
         <section
             ref={sectionRef}
-            id="competencias"
             className="
                 relative
                 mt-30

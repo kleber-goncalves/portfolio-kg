@@ -1,8 +1,5 @@
-import { lazy, Suspense, useLayoutEffect, useRef } from "react";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { lazy, Suspense } from "react";
 
-import { tecnologias } from "../data/tecnologias";
-import ProjetoDesktop from "../components/ProjetoDesktop";
 import useResponsive from "../hooks/useResponsive";
 
 // ============================================================
@@ -15,6 +12,7 @@ import projeto01_03 from "../assets/projetos/projeto01/jason-3.webp";
 import projeto01_04 from "../assets/projetos/projeto01/lucia-1.webp";
 
 
+const ProjetoDesktop = lazy(() => import("../components/ProjetoDesktop"));
 const ProjetoCarouselMobile = lazy(() => import("../components/ProjetoCarouselMobile"));
 
 function MobileCarouselPlaceholder({ projectCount }) {
@@ -40,7 +38,6 @@ function MobileCarouselPlaceholder({ projectCount }) {
 }
 
 function Projetos({ experienceMode = "full", onReady }) {
-    const sectionRef = useRef(null);
     const { isMobileLayout } = useResponsive();
 
     const projetos = [
@@ -143,36 +140,24 @@ function Projetos({ experienceMode = "full", onReady }) {
         },
     ];
 
-    // Depois da montagem tardia, recalcula as posições de todos os ScrollTriggers.
-    // Duas frames permitem que React e o navegador assentem o layout antes do refresh.
-    useLayoutEffect(() => {
-        // No mobile, o carrossel informa quando seu próprio chunk está pronto.
-        // No desktop, o markup está presente neste mesmo commit.
-        if (isMobileLayout) return undefined;
-
-        let firstFrame = 0;
-        let secondFrame = 0;
-
-        firstFrame = window.requestAnimationFrame(() => {
-            secondFrame = window.requestAnimationFrame(() => {
-                ScrollTrigger.refresh(true);
-                onReady?.();
-            });
-        });
-
-        return () => {
-            window.cancelAnimationFrame(firstFrame);
-            window.cancelAnimationFrame(secondFrame);
-        };
-    }, [isMobileLayout, onReady]);
 
     return (
-        <section ref={sectionRef} className="w-full bg-obsidian">
+        <section className="w-full bg-obsidian">
             {!isMobileLayout && (
-                <ProjetoDesktop
-                    projetos={projetos}
-                    experienceMode={experienceMode}
-                />
+                <Suspense
+                    fallback={
+                        <div
+                            aria-hidden="true"
+                            className="min-h-screen w-full bg-obsidian"
+                        />
+                    }
+                >
+                    <ProjetoDesktop
+                        projetos={projetos}
+                        experienceMode={experienceMode}
+                        onReady={onReady}
+                    />
+                </Suspense>
             )}
 
             {isMobileLayout && (

@@ -326,7 +326,6 @@ function Formacao({ experienceMode = "full" }) {
     return (
         <section
             ref={sectionRef}
-            id="formacao"
             className="
                 bg-obsidian
                 w-full

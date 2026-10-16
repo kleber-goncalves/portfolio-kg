@@ -326,7 +326,6 @@ function Footer() {
     return (
         <footer
             ref={footerRef}
-            id="footer"
             className="
                 relative
                 flex

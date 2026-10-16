@@ -4,12 +4,9 @@ import SmoothScroll from "./components/SmoothScroll";
 // React
 import { useState } from "react";
 
-// Layout
-import Competencia from "./layout/Competencia";
+// Layouts carregados conforme se aproximam da viewport
+import DeferredLayoutSection from "./components/DeferredLayoutSection";
 import DeferredProjects from "./components/DeferredProjects";
-import Diferenciais from "./layout/DiferenciaisTeste";
-import Formacao from "./layout/Formacao";
-import Footer from "./layout/Footer";
 
 // Styles
 import "./App.css";
@@ -38,15 +35,15 @@ function App() {
 
                     <HeroSectionTransition experienceMode={experienceMode} />
 
-                    <Competencia experienceMode={experienceMode} />
+                    <DeferredLayoutSection section="competencia" experienceMode={experienceMode} />
 
                     <DeferredProjects experienceMode={experienceMode} />
 
-                    <Diferenciais experienceMode={experienceMode} />
+                    <DeferredLayoutSection section="diferenciais" experienceMode={experienceMode} />
 
-                    <Formacao experienceMode={experienceMode} />
+                    <DeferredLayoutSection section="formacao" experienceMode={experienceMode} />
 
-                    <Footer />
+                    <DeferredLayoutSection section="footer" />
                 </div>
             </SmoothScroll>
         </>
