@@ -3,6 +3,7 @@ name: Optimize project images
 on:
   push:
     branches:
+      - main
       - feat/responsividadeFull
     paths:
       - "src/assets/projetos/**"
@@ -49,13 +50,23 @@ jobs:
         run: node scripts/optimize-project-images.mjs
 
       - name: Commit generated images when changed
+        shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add public/_optimized src/generated/imageMetadata.json
+
+          if [ -d public/_optimized ]; then
+            git add -A -- public/_optimized
+          fi
+
+          if [ -f src/generated/imageMetadata.json ]; then
+            git add -A -- src/generated/imageMetadata.json
+          fi
+
           if git diff --cached --quiet; then
-            echo "As imagens otimizadas já estão atualizadas."
+            echo "As imagens otimizadas já estão atualizadas; nenhum commit necessário."
             exit 0
           fi
+
           git commit -m "chore(images): generate responsive WebP variants [skip ci]"
-          git push origin "HEAD:${{ github.ref_name }}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
