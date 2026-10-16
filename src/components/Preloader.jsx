@@ -92,20 +92,16 @@ function Preloader() {
 
             if (cancelled) return;
 
-            // Mantém o preloader visível por pelo menos 800 ms,
-            // mesmo se os recursos terminarem de carregar muito rápido.
+            // Mantém o preloader visível por pelo menos 800 ms no total,
+            // sem acrescentar uma espera obrigatória depois que tudo está pronto.
+            setCurrentLabel("Tudo pronto para começar");
+
             const elapsed = performance.now() - startedAt;
             const remainingTime = Math.max(0, MIN_DISPLAY_TIME - elapsed);
 
             if (remainingTime > 0) {
-                setCurrentLabel("Preparando sua experiência");
                 await wait(remainingTime);
             }
-
-            if (cancelled) return;
-
-            setCurrentLabel("Tudo pronto para começar");
-            await wait(500);
 
             if (!cancelled) {
                 // Libera a rolagem antes de esconder o Preloader.
