@@ -11,13 +11,13 @@ export default function Card2({ title, number, text, variant = "default", classN
         v1: {
             number: "text-white",
             title: "text-white",
-            description: "text-white/60",
+            description: "text-white",
         },
 
         v2: {
             number: "text-white",
             title: "text-white",
-            description: "text-white/60",
+            description: "text-white",
         },
     };
 
@@ -185,7 +185,7 @@ export default function Card2({ title, number, text, variant = "default", classN
                                 w-5
                                 shrink-0
 
-                                text-steel/30
+                                text-steel
 
                                 transition-all
                                 duration-500
@@ -220,8 +220,8 @@ export default function Card2({ title, number, text, variant = "default", classN
                             duration-500
                             ease-out
 
-                            group-hover:text-ivory/70
-                            group-active:text-ivory/70
+                            group-hover:text-ivory
+                            group-active:text-ivory
 
                             ${styles.description}
                             ${classNameText}

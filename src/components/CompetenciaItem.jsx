@@ -179,7 +179,7 @@ export default function CompetenciaItem({
                                 text-[9px]
                                 uppercase
                                 tracking-[0.25em]
-                                text-steel/40
+                                text-steel
                             "
                         >
                             Expertise

@@ -203,13 +203,13 @@ export default function Card1({ title, text, text_2, variant = "default", classN
         v1: {
             text: "text-white",
             title: "text-white",
-            description: "text-white/60",
+            description: "text-white",
         },
 
         v2: {
             text: "text-white",
             title: "text-white",
-            description: "text-white/60",
+            description: "text-white",
         },
     };
 
@@ -374,7 +374,7 @@ export default function Card1({ title, text, text_2, variant = "default", classN
                         duration-500
                         ease-out
 
-                        text-ivory/70
+                        text-ivory
 
                         ${styles.description}
                         ${classNametext2}
