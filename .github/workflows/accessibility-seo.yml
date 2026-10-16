@@ -1,0 +1,94 @@
+name: Accessibility and SEO Audit
+
+on:
+  push:
+    branches:
+      - feat/responsividadeFull
+    paths:
+      - "src/**"
+      - "public/**"
+      - "index.html"
+      - "package.json"
+      - "package-lock.json"
+      - "vite.config.js"
+      - "scripts/audit-accessibility-seo.mjs"
+      - "lighthouserc-accessibility-seo*.json"
+      - ".github/workflows/accessibility-seo.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: accessibility-seo-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    name: Audit accessibility and SEO on production build
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install project dependencies
+        run: npm ci
+
+      - name: Build production assets
+        run: npm run build
+
+      - name: Install temporary browser audit tools
+        run: npm install --no-save --package-lock=false playwright@1.63.0 @axe-core/playwright@4.13.0
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Start production preview
+        shell: bash
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/portfolio-preview.log 2>&1 &
+          echo $! > /tmp/portfolio-preview.pid
+          for attempt in $(seq 1 40); do
+            if curl --fail --silent http://127.0.0.1:4173/ --output /dev/null; then
+              echo "Production preview is ready."
+              exit 0
+            fi
+            echo "Waiting for production preview ($attempt/40)..."
+            sleep 2
+          done
+          cat /tmp/portfolio-preview.log
+          exit 1
+
+      - name: Lighthouse — mobile accessibility and SEO
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          configPath: ./lighthouserc-accessibility-seo-mobile.json
+          uploadArtifacts: true
+          temporaryPublicStorage: false
+
+      - name: Lighthouse — desktop accessibility and SEO
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          configPath: ./lighthouserc-accessibility-seo-desktop.json
+          uploadArtifacts: true
+          temporaryPublicStorage: false
+
+      - name: Axe — full page and interactive menu states
+        run: node scripts/audit-accessibility-seo.mjs
+
+      - name: Upload detailed accessibility and SEO reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: accessibility-seo-audit-reports
+          path: artifacts/accessibility-seo/
+          if-no-files-found: warn
+          retention-days: 14

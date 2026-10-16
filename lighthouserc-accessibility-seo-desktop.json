@@ -1,0 +1,62 @@
+{
+  "ci": {
+    "collect": {
+      "url": [
+        "http://127.0.0.1:4173/"
+      ],
+      "numberOfRuns": 2,
+      "settings": {
+        "formFactor": "desktop"
+      }
+    },
+    "assert": {
+      "assertions": {
+        "categories:accessibility": [
+          "warn",
+          {
+            "minScore": 0.95
+          }
+        ],
+        "categories:seo": [
+          "warn",
+          {
+            "minScore": 0.9
+          }
+        ],
+        "document-title": "error",
+        "html-has-lang": "error",
+        "meta-description": "error",
+        "canonical": [
+          "warn",
+          {
+            "minScore": 1
+          }
+        ],
+        "image-alt": [
+          "warn",
+          {
+            "minScore": 1
+          }
+        ],
+        "button-name": [
+          "warn",
+          {
+            "minScore": 1
+          }
+        ],
+        "link-name": [
+          "warn",
+          {
+            "minScore": 1
+          }
+        ],
+        "crawlable-anchors": [
+          "warn",
+          {
+            "minScore": 1
+          }
+        ]
+      }
+    }
+  }
+}
