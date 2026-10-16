@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronUp } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function ButtonReset() {
     const [isVisible, setIsVisible] = useState(false);
@@ -71,10 +72,11 @@ export default function ButtonReset() {
                       : "translate-y-0 opacity-100"}
             `}
         >
-            <a
-                href="#hero"
+            <Link
+                to="#hero"
                 onClick={handleBackToTop}
                 aria-label="Retornar ao topo"
+                title="Retornar ao topo"
                 className="
                     group
                     flex
@@ -106,7 +108,7 @@ export default function ButtonReset() {
                         group-hover:-translate-y-0.5
                     "
                 />
-            </a>
+            </Link>
         </div>
     );
 }

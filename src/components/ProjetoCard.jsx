@@ -158,7 +158,7 @@ function ProjetoCard({ numero, titulo, descricao, tecnologias = [], tecnologiasC
                 PREVIEW
             ================================================== */}
 
-            <div className="relative aspect-video w-full shrink-0 overflow-hidden bg-neutral-950" onClick={alternarPausa}>
+            <div className="relative aspect-video w-full shrink-0 overflow-hidden bg-neutral-950">
                 {imagens.length > 0 && <OptimizedImage imageRef={imageRef} src={imagens[imagemAtual]} alt={`Captura de tela do projeto ${titulo}`} width={1600} height={900} loading="lazy" fetchPriority="low" wrapperClassName="absolute inset-0" className="object-cover" />}
 
                 {/* OVERLAY */}
@@ -176,7 +176,15 @@ function ProjetoCard({ numero, titulo, descricao, tecnologias = [], tecnologiasC
                 {/* STATUS */}
 
                 <div className="absolute right-5 top-5 z-10">
-                    <span className="rounded-full bg-black/50 px-3 py-1 text-xs text-white backdrop-blur-md">{pausado ? "▶ Continuar" : "Ⅱ Pausar"}</span>
+                    <button
+                        type="button"
+                        onClick={alternarPausa}
+                        aria-pressed={pausado}
+                        title={pausado ? "Retomar alternância das imagens" : "Pausar alternância das imagens"}
+                        className="rounded-full bg-black/70 px-3 py-1 text-xs text-white backdrop-blur-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                    >
+                        {pausado ? "▶ Continuar" : "Ⅱ Pausar"}
+                    </button>
                 </div>
 
                 {/* INDICADORES */}
@@ -194,6 +202,7 @@ function ProjetoCard({ numero, titulo, descricao, tecnologias = [], tecnologiasC
                                 }}
                                 className={`h-1.5 rounded-full transition-all duration-300 ${index === imagemAtual ? "w-8 bg-white" : "w-2 bg-white/40"}`}
                                 aria-label={`Mostrar imagem ${index + 1}`}
+                                title={`Mostrar imagem ${index + 1}`}
                             />
                         ))}
                     </div>

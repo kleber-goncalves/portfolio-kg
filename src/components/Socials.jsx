@@ -370,6 +370,7 @@ function Socials() {
                         ref={buttonRef}
                         type="button"
                         aria-label="Arraste para abrir as redes sociais"
+                        title="Abrir redes sociais"
                         onClick={openSocials}
                         onPointerDown={handlePointerDown}
                         onPointerMove={handlePointerMove}
@@ -450,6 +451,7 @@ function Socials() {
                             type="button"
                             onClick={closeSocials}
                             aria-label="Fechar redes sociais"
+                            title="Fechar redes sociais"
                             className="
                                 flex
                                 h-11

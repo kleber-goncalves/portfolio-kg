@@ -239,7 +239,7 @@ function ProjetoCarouselMobile({
                         text-[10px]
                         uppercase
                         tracking-[0.3em]
-                        text-white/40
+                        text-steel
                     "
                 >
                     Arraste para o lado

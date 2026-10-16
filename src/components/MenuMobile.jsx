@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import { Link } from "react-router-dom";
 import { createPortal } from "react-dom";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import gsap from "gsap";
@@ -209,6 +210,7 @@ function MenuMobile({ items = [] }) {
                     type="button"
                     onClick={openMenu}
                     aria-label="Abrir menu"
+                    title="Abrir menu"
                     aria-expanded={isOpen}
                     className="
                         flex
@@ -287,6 +289,7 @@ function MenuMobile({ items = [] }) {
                                 type="button"
                                 onClick={closeMenu}
                                 aria-label="Fechar menu"
+                                title="Fechar menu"
                                 className="
                                     flex
                                     h-11
@@ -316,11 +319,14 @@ function MenuMobile({ items = [] }) {
 
                         <div className="flex flex-1 flex-col pt-8">
                             {items.map((item, index) => (
-                                <button
+                                <Link
                                     key={item.href}
-                                    type="button"
+                                    to={item.href}
                                     data-mobile-menu-link
-                                    onClick={() => handleNavigation(item.href)}
+                                    onClick={(event) => {
+                                        event.preventDefault();
+                                        handleNavigation(item.href);
+                                    }}
                                     className="
                                         group
                                         flex
@@ -333,15 +339,19 @@ function MenuMobile({ items = [] }) {
                                         transition-colors
                                         duration-300
                                         hover:border-bronze
+                                        focus-visible:outline
+                                        focus-visible:outline-2
+                                        focus-visible:outline-offset-4
+                                        focus-visible:outline-champagne
                                     "
                                 >
-                                    <div className="flex items-center gap-4">
+                                    <span className="flex items-center gap-4">
                                         <span className="font-mono text-[10px] text-bronze">{String(index + 1).padStart(2, "0")}</span>
-
                                         <span className="font-space text-sm uppercase tracking-wider text-ivory">{item.label}</span>
-                                    </div>
+                                    </span>
 
                                     <ArrowUpRight
+                                        aria-hidden="true"
                                         className="
                                             h-4
                                             w-4
@@ -353,7 +363,7 @@ function MenuMobile({ items = [] }) {
                                             group-hover:text-bronze
                                         "
                                     />
-                                </button>
+                                </Link>
                             ))}
                         </div>
 

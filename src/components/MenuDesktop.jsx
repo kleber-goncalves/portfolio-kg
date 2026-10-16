@@ -1,6 +1,9 @@
 import { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
 import { motion, useMotionValue, useSpring } from "motion/react";
+import { Link } from "react-router-dom";
+
+const MotionLink = motion.create(Link);
 import { stopSmoothScroll, startSmoothScroll } from "../utils/lenisControl";
 
 import { getExperienceMode, setExperienceMode } from "../utils/experienceMode";
@@ -747,9 +750,9 @@ function MenuDesktop({ items = [], showMenu = false }) {
                             const isActive = item.href === activeHref;
 
                             return (
-                                <motion.button
+                                <MotionLink
                                     key={item.href || index}
-                                    type="button"
+                                    to={item.href}
                                     data-desktop-menu-link
                                     data-href={item.href}
                                     variants={linkVariants}
@@ -906,7 +909,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
                                             "
                                         />
                                     )}
-                                </motion.button>
+                                </MotionLink>
                             );
                         })}
                     </motion.div>
@@ -1108,6 +1111,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
                 ref={buttonRef}
                 type="button"
                 aria-label={isOpen ? "Fechar menu" : "Abrir menu"}
+                title={isOpen ? "Fechar menu" : "Abrir menu"}
                 aria-expanded={isOpen}
                 onClick={handleToggle}
                 onMouseMove={handleButtonMouseMove}

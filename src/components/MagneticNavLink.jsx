@@ -1,5 +1,8 @@
 import { motion, useMotionValue, useSpring } from "motion/react";
+import { Link } from "react-router-dom";
 import { useState } from "react";
+
+const MotionLink = motion.create(Link);
 
 function MagneticLink({
     href = "#",
@@ -170,8 +173,8 @@ function MagneticLink({
     // ============================================================
 
     return (
-        <motion.a
-            href={href}
+        <MotionLink
+            to={href}
             aria-current={isActive ? "location" : undefined}
             onClick={handleClick}
             onMouseEnter={handleMouseEnter}
@@ -356,7 +359,7 @@ function MagneticLink({
                     transformOrigin: "left center",
                 }}
             />
-        </motion.a>
+        </MotionLink>
     );
 }
 
