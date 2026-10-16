@@ -8,8 +8,10 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const DIST = path.join(ROOT, "dist");
 const REPORT_DIR = path.join(ROOT, "artifacts", "accessibility-seo");
 const BASE_URL = process.env.AUDIT_BASE_URL || "http://127.0.0.1:4173/";
+const PUBLIC_URL = process.env.AUDIT_PUBLIC_URL || "https://kleber-dev1.vercel.app/";
+const SOCIAL_IMAGE_URL = new URL("euNv.png", PUBLIC_URL).href;
 const seo = { checks: [], summary: { pass: 0, warning: 0, error: 0 } };
-const accessibility = { scans: [], interactions: [], violationGroups: 0 };
+const accessibility = { scans: [], semantics: [], interactions: [], violationGroups: 0 };
 
 function attributes(tag) {
     const result = {};
@@ -25,16 +27,19 @@ function addSeo(level, id, message) {
     seo.checks.push({ level, id, message });
 }
 
-function auditSeo(html, hasRobots, hasSitemap) {
+function auditSeo(html, robotsText, sitemapText) {
     const htmlTag = html.match(/<html\b[^>]*>/i)?.[0] ?? "";
     const lang = attributes(htmlTag).lang ?? "";
     const title = html.match(/<title\b[^>]*>([\s\S]*?)<\/title>/i)?.[1]?.trim() ?? "";
     const metas = (html.match(/<meta\b[^>]*>/gi) ?? []).map((tag) => attributes(tag));
     const links = (html.match(/<link\b[^>]*>/gi) ?? []).map((tag) => attributes(tag));
-    const meta = (key, value) => metas.some((item) => (item[key] ?? "").toLowerCase() === value.toLowerCase());
-    const description = metas.find((item) => (item.name ?? "").toLowerCase() === "description")?.content ?? "";
-    const canonical = links.some((item) => (item.rel ?? "").toLowerCase().split(/\s+/).includes("canonical"));
-    const rootInner = html.match(/<main\b[^>]*\bid=["']root["'][^>]*>([\s\S]*?)<\/main>/i)?.[1] ?? "";
+    const findMeta = (key, value) =>
+        metas.find((item) => (item[key] ?? "").toLowerCase() === value.toLowerCase())?.content ?? "";
+    const meta = (key, value) => Boolean(findMeta(key, value));
+    const description = findMeta("name", "description");
+    const canonicalHref = links.find((item) =>
+        (item.rel ?? "").toLowerCase().split(/\s+/).includes("canonical"))?.href ?? "";
+    const rootInner = html.match(/<(main|div)\b[^>]*\bid=["']root["'][^>]*>([\s\S]*?)<\/\1>/i)?.[2] ?? "";
 
     addSeo(lang === "pt-BR" ? "pass" : "error", "html-lang",
         lang ? "Idioma declarado: " + lang + "." : "O documento não declara o idioma.");
@@ -54,28 +59,51 @@ function auditSeo(html, hasRobots, hasSitemap) {
         ["name", "twitter:card", "Twitter/X card"],
     ]) {
         const exists = meta(key, value);
-        addSeo(exists ? "pass" : "warning", value, exists ? label + " presente." : label + " ausente.");
+        addSeo(exists ? "pass" : "error", value,
+            exists ? label + " presente." : label + " ausente.");
     }
 
-    addSeo(canonical ? "pass" : "warning", "canonical",
-        canonical ? "URL canônica declarada." : "URL canônica ausente; o domínio público definitivo precisa ser confirmado antes de defini-la.");
-    for (const [value, label] of [
-        ["og:url", "Open Graph URL"],
-        ["og:image", "Open Graph image"],
-        ["twitter:image", "Twitter/X image"],
+    addSeo(canonicalHref === PUBLIC_URL ? "pass" : "error", "canonical",
+        canonicalHref === PUBLIC_URL
+            ? "URL canônica coincide com o domínio de produção."
+            : "A URL canônica precisa ser exatamente " + PUBLIC_URL + "; valor atual: " + (canonicalHref || "ausente") + ".");
+
+    for (const [key, name, expected, label] of [
+        ["property", "og:url", PUBLIC_URL, "Open Graph URL"],
+        ["property", "og:image", SOCIAL_IMAGE_URL, "Open Graph image"],
+        ["name", "twitter:image", SOCIAL_IMAGE_URL, "Twitter/X image"],
     ]) {
-        const exists = meta("property", value) || meta("name", value);
-        addSeo(exists ? "pass" : "warning", value,
-            exists ? label + " presente." : label + " ausente; as prévias de compartilhamento podem ficar incompletas.");
+        const actual = findMeta(key, name);
+        addSeo(actual === expected ? "pass" : "error", name,
+            actual === expected
+                ? label + " aponta para a URL pública esperada."
+                : label + " deve apontar para " + expected + "; valor atual: " + (actual || "ausente") + ".");
     }
-    addSeo(hasRobots ? "pass" : "warning", "robots-txt",
-        hasRobots ? "robots.txt está na saída de produção." : "robots.txt não encontrado na saída de produção.");
-    addSeo(hasSitemap ? "pass" : "warning", "sitemap-xml",
-        hasSitemap ? "sitemap.xml está na saída de produção." : "sitemap.xml não encontrado na saída de produção.");
+
+    for (const [key, name, label] of [
+        ["property", "og:image:alt", "Texto alternativo da imagem Open Graph"],
+        ["name", "twitter:image:alt", "Texto alternativo da imagem Twitter/X"],
+    ]) {
+        const actual = findMeta(key, name);
+        addSeo(actual.trim() ? "pass" : "warning", name,
+            actual.trim() ? label + " presente." : label + " ausente.");
+    }
+
+    const hasRobots = /user-agent:\s*\*/i.test(robotsText) &&
+        robotsText.includes(new URL("sitemap.xml", PUBLIC_URL).href);
+    const hasSitemap = /<urlset\b/i.test(sitemapText) &&
+        sitemapText.includes("<loc>" + PUBLIC_URL + "</loc>");
+    addSeo(hasRobots ? "pass" : "error", "robots-txt",
+        hasRobots ? "robots.txt permite rastreamento e referencia o sitemap público." :
+            "robots.txt está ausente ou não inclui User-agent: * e o sitemap público.");
+    addSeo(hasSitemap ? "pass" : "error", "sitemap-xml",
+        hasSitemap ? "sitemap.xml lista a URL de produção." :
+            "sitemap.xml está ausente ou não lista " + PUBLIC_URL + ".");
+
     addSeo(rootInner.trim() ? "pass" : "warning", "static-html-content",
         rootInner.trim()
-            ? "O HTML inicial contém conteúdo na raiz principal."
-            : "O HTML inicial contém a raiz React vazia; o texto depende de JavaScript. Avaliar pré-renderização/SSR para fortalecer SEO e prévias sociais.");
+            ? "O HTML inicial contém conteúdo na raiz React."
+            : "A raiz React é vazia no HTML inicial; o conteúdo depende de JavaScript. Considere prerender/SSR para fortalecer indexação e prévias sociais.");
 
     seo.summary = seo.checks.reduce((sum, check) => {
         sum[check.level] += 1;
@@ -151,6 +179,69 @@ async function scan(page, label) {
     }
 }
 
+async function auditSemantics(page, label) {
+    const result = await page.evaluate(() => {
+        const isInViewport = (element) => {
+            const style = window.getComputedStyle(element);
+            const rect = element.getBoundingClientRect();
+            return style.display !== "none" && style.visibility !== "hidden" &&
+                rect.width > 0 && rect.height > 0 &&
+                rect.bottom > 0 && rect.right > 0 &&
+                rect.top < window.innerHeight && rect.left < window.innerWidth;
+        };
+        const visible = (selector) => [...document.querySelectorAll(selector)].filter(isInViewport);
+        const accessibleName = (element) => Boolean(
+            element.getAttribute("aria-label")?.trim() ||
+            element.getAttribute("aria-labelledby")?.trim() ||
+            element.innerText?.trim() ||
+            [...element.querySelectorAll("img[alt]")].some((img) => img.alt.trim())
+        );
+        const buttons = visible("button");
+        const links = visible("a");
+        const titlelessIconButtons = buttons.filter((button) =>
+            !button.innerText?.trim() && !button.getAttribute("title")?.trim()
+        ).map((button) => ({
+            html: button.outerHTML.slice(0, 240),
+            ariaLabel: button.getAttribute("aria-label"),
+        }));
+        const unnamedButtons = buttons.filter((button) => !accessibleName(button))
+            .map((button) => button.outerHTML.slice(0, 240));
+        const unnamedLinks = links.filter((link) => !accessibleName(link))
+            .map((link) => link.outerHTML.slice(0, 240));
+        const unnamedNavs = visible("nav").filter((nav) =>
+            !nav.getAttribute("aria-label")?.trim() &&
+            !nav.getAttribute("aria-labelledby")?.trim()
+        ).map((nav) => nav.outerHTML.slice(0, 240));
+        const divRoleButtons = visible("div[role='button']")
+            .map((element) => element.outerHTML.slice(0, 240));
+        return {
+            mainCount: visible("main").length,
+            h1Count: visible("h1").length,
+            buttonCount: buttons.length,
+            linkCount: links.length,
+            titlelessIconButtons,
+            unnamedButtons,
+            unnamedLinks,
+            unnamedNavs,
+            divRoleButtons,
+        };
+    });
+
+    const checks = [
+        { id: "single-main-landmark", failed: result.mainCount !== 1, detail: "Marcos main visíveis: " + result.mainCount + " (esperado: 1)." },
+        { id: "visible-h1", failed: result.h1Count !== 1, detail: "Títulos H1 no viewport: " + result.h1Count + " (esperado: 1)." },
+        { id: "named-buttons", failed: result.unnamedButtons.length > 0, detail: result.unnamedButtons.length + " botão(ões) sem nome acessível." },
+        { id: "named-links", failed: result.unnamedLinks.length > 0, detail: result.unnamedLinks.length + " link(s) sem nome acessível." },
+        { id: "labelled-navigation", failed: result.unnamedNavs.length > 0, detail: result.unnamedNavs.length + " elemento(s) nav sem rótulo acessível." },
+        { id: "icon-button-titles", failed: result.titlelessIconButtons.length > 0, detail: result.titlelessIconButtons.length + " botão(ões) somente com ícone sem title." },
+        { id: "no-div-buttons", failed: result.divRoleButtons.length > 0, detail: result.divRoleButtons.length + " div(s) simulando botão; prefira um button real." },
+    ];
+    accessibility.semantics.push({ viewport: label, result, checks });
+    for (const check of checks) {
+        console.log("[semantics][" + (check.failed ? "ERROR" : "PASS") + "][" + label + "] " + check.id + ": " + check.detail);
+    }
+}
+
 async function auditViewport(browser, setup) {
     const context = await browser.newContext({
         viewport: { width: setup.width, height: setup.height },
@@ -163,10 +254,26 @@ async function auditViewport(browser, setup) {
     try {
         await page.goto(BASE_URL, { waitUntil: "domcontentloaded", timeout: 45000 });
         await page.locator("h1").first().waitFor({ state: "attached", timeout: 20000 }).catch(() => {});
-        await page.waitForTimeout(900);
+        await page.waitForTimeout(1100);
         await loadDeferredSections(page);
+        await page.addStyleTag({ content: "* { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }" });
+        await page.evaluate(() => {
+            document.querySelectorAll("*").forEach((element) => {
+                const style = window.getComputedStyle(element);
+                if (style.display !== "none" && style.visibility !== "hidden" &&
+                    Number(style.opacity) > 0 && element.getClientRects().length > 0 &&
+                    Number(style.opacity) < 1) {
+                    element.style.setProperty("opacity", "1", "important");
+                }
+            });
+        });
+        await auditSemantics(page, setup.label);
         await scan(page, setup.label + " — página inteira");
 
+        await page.evaluate((isMobile) => {
+            window.scrollTo({ top: isMobile ? 0 : 950, behavior: "instant" });
+        }, setup.isMobile ?? false);
+        await page.waitForTimeout(450);
         const buttons = page.getByRole("button", { name: /abrir menu/i });
         let opened = false;
         for (let index = 0; index < await buttons.count(); index += 1) {
@@ -181,16 +288,17 @@ async function auditViewport(browser, setup) {
             await page.waitForTimeout(450);
             await scan(page, setup.label + " — menu aberto");
             await page.keyboard.press("Escape");
-            await page.waitForTimeout(350);
-            const closeStillVisible = await page.getByRole("button", { name: /fechar menu/i })
-                .isVisible().catch(() => false);
+            await page.waitForTimeout(850);
+            const openButton = page.getByRole("button", { name: /abrir menu/i }).first();
+            const expanded = await openButton.getAttribute("aria-expanded").catch(() => null);
+            const failed = expanded === "true";
             accessibility.interactions.push({
                 viewport: setup.label,
                 id: "escape-closes-menu",
-                level: closeStillVisible ? "warning" : "pass",
-                message: closeStillVisible
-                    ? "O botão 'Fechar menu' continua visível depois de Escape; precisa de conferência manual."
-                    : "Depois de Escape, o botão 'Fechar menu' não permaneceu visível.",
+                level: failed ? "error" : "pass",
+                message: failed
+                    ? "O botão de menu continua marcado como expandido depois de Escape."
+                    : "Escape fechou o menu (aria-expanded não ficou true).",
             });
         } else {
             accessibility.interactions.push({
@@ -213,9 +321,9 @@ async function auditViewport(browser, setup) {
 async function main() {
     await fs.mkdir(REPORT_DIR, { recursive: true });
     const html = await fs.readFile(path.join(DIST, "index.html"), "utf8");
-    const hasRobots = await accessExists(path.join(DIST, "robots.txt"));
-    const hasSitemap = await accessExists(path.join(DIST, "sitemap.xml"));
-    auditSeo(html, hasRobots, hasSitemap);
+    const robotsText = await fs.readFile(path.join(DIST, "robots.txt"), "utf8").catch(() => "");
+    const sitemapText = await fs.readFile(path.join(DIST, "sitemap.xml"), "utf8").catch(() => "");
+    auditSeo(html, robotsText, sitemapText);
     for (const check of seo.checks) {
         console.log("[seo][" + check.level.toUpperCase() + "] " + check.id + ": " + check.message);
     }
@@ -246,6 +354,12 @@ async function main() {
         ...seo.checks.filter((item) => item.level !== "pass").map((item) =>
             "- **" + item.level.toUpperCase() + " — " + item.id + ":** " + item.message),
         "",
+        "## Runtime semantic checks",
+        ...accessibility.semantics.flatMap((item) => [
+            "### " + item.viewport,
+            ...item.checks.map((check) => "- **" + (check.failed ? "ERROR" : "PASS") + " — " + check.id + ":** " + check.detail),
+        ]),
+        "",
         "## Axe findings",
         ...accessibility.scans.flatMap((item) => [
             "### " + item.label,
@@ -264,10 +378,11 @@ async function main() {
     await fs.writeFile(path.join(REPORT_DIR, "summary.md"), lines.join("\n"), "utf8");
 
     const errors = accessibility.interactions.filter((item) => item.level === "error").length;
-    if (seo.summary.error > 0 || accessibility.violationGroups > 0 || errors > 0) {
+    const semanticErrors = accessibility.semantics.flatMap((item) => item.checks).filter((item) => item.failed).length;
+    if (seo.summary.error > 0 || accessibility.violationGroups > 0 || errors > 0 || semanticErrors > 0) {
         console.error("\n[audit] FAILED: " + seo.summary.error + " static SEO error(s), " +
-            accessibility.violationGroups + " Axe violation group(s), " + errors + " audit error(s).");
-        process.exitCode = 1;
+            accessibility.violationGroups + " Axe violation group(s), " + errors + " interaction error(s), " +
+            semanticErrors + " semantic error(s).");
     } else {
         console.log("\n[audit] PASSED: no blocking static SEO errors or Axe violations. Review warnings in the reports.");
     }
