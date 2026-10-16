@@ -246,7 +246,7 @@ function SeclogsMobile({ sectionRef, onReady }) {
                                 overflow-hidden
                             "
                         >
-                            <LogoLoop logos={stackLogos} pauseDuringScroll speed={80} direction="left" logoHeight={50} gap={45} hoverSpeed={0} scaleOnHover fadeOut fadeOutColor="#0b0b0b" ariaLabel="Stack de desenvolvimento" />
+                            <LogoLoop logos={stackLogos} clickable={false} pauseDuringScroll speed={80} direction="left" logoHeight={50} gap={45} hoverSpeed={0} scaleOnHover fadeOut fadeOutColor="#0b0b0b" ariaLabel="Stack de desenvolvimento" />
                         </div>
                     </div>
 
@@ -274,7 +274,7 @@ function SeclogsMobile({ sectionRef, onReady }) {
                                 overflow-hidden
                             "
                         >
-                            <LogoLoop logos={backendLogos} pauseDuringScroll speed={70} direction="right" logoHeight={50} gap={45} hoverSpeed={0} scaleOnHover fadeOut fadeOutColor="#0b0b0b" ariaLabel="Backend e bancos de dados" />
+                            <LogoLoop logos={backendLogos} clickable={false} pauseDuringScroll speed={70} direction="right" logoHeight={50} gap={45} hoverSpeed={0} scaleOnHover fadeOut fadeOutColor="#0b0b0b" ariaLabel="Backend e bancos de dados" />
                         </div>
                     </div>
 
@@ -301,7 +301,7 @@ function SeclogsMobile({ sectionRef, onReady }) {
                                 overflow-hidden
                             "
                         >
-                            <LogoLoop logos={toolsLogos} pauseDuringScroll speed={85} direction="left" logoHeight={50} gap={45} hoverSpeed={0} scaleOnHover fadeOut fadeOutColor="#0b0b0b" ariaLabel="Ferramentas de desenvolvimento" />
+                            <LogoLoop logos={toolsLogos} clickable={false} pauseDuringScroll speed={85} direction="left" logoHeight={50} gap={45} hoverSpeed={0} scaleOnHover fadeOut fadeOutColor="#0b0b0b" ariaLabel="Ferramentas de desenvolvimento" />
                         </div>
                     </div>
                 </div>

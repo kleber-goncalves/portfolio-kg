@@ -163,6 +163,7 @@ export const LogoLoop = memo(
         fadeOut = false,
         fadeOutColor,
         scaleOnHover = false,
+        clickable = true,
         renderItem,
         ariaLabel = "Partner logos",
         className,
@@ -403,10 +404,17 @@ export const LogoLoop = memo(
                     );
                 }
                 const isNodeItem = "node" in item;
+                const itemAriaLabel = isNodeItem
+                    ? (item.ariaLabel ?? item.title)
+                    : (item.alt ?? item.title);
+                const isLinkedItem = clickable && Boolean(item.href);
+
                 const content = isNodeItem ? (
                     <span
                         className="logoloop__node"
-                        aria-hidden={!!item.href && !item.ariaLabel}
+                        aria-hidden={isLinkedItem ? true : undefined}
+                        role={!isLinkedItem && itemAriaLabel ? "img" : undefined}
+                        aria-label={!isLinkedItem ? (itemAriaLabel || undefined) : undefined}
                     >
                         {item.node}
                     </span>
@@ -417,17 +425,15 @@ export const LogoLoop = memo(
                         sizes={item.sizes}
                         width={item.width}
                         height={item.height}
-                        alt={item.alt ?? ""}
+                        alt={item.alt ?? (isLinkedItem ? "" : (item.title ?? ""))}
                         title={item.title}
                         loading="lazy"
                         decoding="async"
                         draggable={false}
                     />
                 );
-                const itemAriaLabel = isNodeItem
-                    ? (item.ariaLabel ?? item.title)
-                    : (item.alt ?? item.title);
-                const itemContent = item.href ? (
+
+                const itemContent = isLinkedItem ? (
                     <a
                         className="logoloop__link"
                         href={item.href}
@@ -440,6 +446,7 @@ export const LogoLoop = memo(
                 ) : (
                     content
                 );
+
                 return (
                     <li className="logoloop__item" key={key} role="listitem">
                         {itemContent}
