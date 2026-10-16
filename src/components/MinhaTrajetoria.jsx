@@ -699,6 +699,7 @@ export default function MinhaTrajetoria({
 
             <div
                 ref={timelineRef}
+                data-trajectory-timeline
                 className="
                     relative
                     w-full

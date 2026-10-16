@@ -77,6 +77,8 @@ async function readLineProgress(page) {
 
         const formation = document.querySelector("#formacao");
         const formationTop = formation?.getBoundingClientRect().top ?? null;
+        const timeline = document.querySelector("[data-trajectory-timeline]");
+        const timelineTop = timeline?.getBoundingClientRect().top ?? null;
 
         if (!line) {
             return {
@@ -88,6 +90,7 @@ async function readLineProgress(page) {
                 scrollY: window.scrollY,
                 lineTop: null,
                 formationTop,
+                timelineTop,
                 viewportHeight: window.innerHeight,
             };
         }
@@ -104,6 +107,7 @@ async function readLineProgress(page) {
             scrollY: window.scrollY,
             lineTop,
             formationTop,
+            timelineTop,
             viewportHeight: window.innerHeight,
         };
     });
@@ -207,13 +211,19 @@ function assertLineStaysEmptyBeforeFormation(samples, mode) {
             );
         }
 
-        // A linha também deve permanecer vazia antes do start: "top 78%" configurado no ScrollTrigger.
-        // A margem de 120 px tolera o scrub e a rolagem suave perto do limite.
+        // O trigger é a área inteira da trajetória, não a linha decorativa.
+        // Portanto a asserção deve comparar o topo do elemento que realmente controla o ScrollTrigger.
+        assert.notEqual(
+            sample.timelineTop,
+            null,
+            `Could not locate [data-trajectory-timeline] in ${mode}.`,
+        );
+
         const expectedTriggerStartTop = sample.viewportHeight * 0.78 + 120;
-        if (sample.lineTop > expectedTriggerStartTop) {
+        if (sample.timelineTop > expectedTriggerStartTop) {
             assert.ok(
                 sample.progress <= 0.08,
-                `Trajectory line advanced before its expected ScrollTrigger start in ${mode}: ${details}`,
+                `Trajectory line advanced before its ScrollTrigger trigger reached the start in ${mode}: ${details} timelineTop=${sample.timelineTop.toFixed(1)}.`,
             );
         }
     }
