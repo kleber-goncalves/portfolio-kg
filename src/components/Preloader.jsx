@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import imageMetadata from "../generated/imageMetadata.json";
 
 const TOTAL_STEPS = 4;
-const MIN_DISPLAY_TIME = 3000;
+const MIN_DISPLAY_TIME = 800;
 
 function loadImage(src, srcSet, sizes) {
     return new Promise((resolve) => {
