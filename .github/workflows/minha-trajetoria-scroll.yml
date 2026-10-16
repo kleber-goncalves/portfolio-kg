@@ -3,6 +3,7 @@ name: Minha Trajetoria Scroll Progress
 on:
   push:
     branches:
+      - main
       - feat/responsividadeFull
     paths:
       - ".github/workflows/minha-trajetoria-scroll.yml"

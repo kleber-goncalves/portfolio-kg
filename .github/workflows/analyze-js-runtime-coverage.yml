@@ -3,6 +3,7 @@ name: Analyze Unused JavaScript
 on:
   push:
     branches:
+      - main
       - feat/responsividadeFull
     paths:
       - "src/**"

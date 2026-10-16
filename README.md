@@ -30,10 +30,10 @@
 
 <p align="center">
   <a href="https://github.com/kleber-goncalves/portfolio-kg/actions/workflows/lighthouse-performance.yml">
-    <img src="https://github.com/kleber-goncalves/portfolio-kg/actions/workflows/lighthouse-performance.yml/badge.svg?branch=feat%2FresponsividadeFull" alt="GitHub Actions — Lighthouse Performance" />
+    <img src="https://github.com/kleber-goncalves/portfolio-kg/actions/workflows/lighthouse-performance.yml/badge.svg?branch=main" alt="GitHub Actions — Lighthouse Performance" />
   </a>
   <a href="https://github.com/kleber-goncalves/portfolio-kg/actions/workflows/accessibility-seo.yml">
-    <img src="https://github.com/kleber-goncalves/portfolio-kg/actions/workflows/accessibility-seo.yml/badge.svg?branch=feat%2FresponsividadeFull" alt="GitHub Actions — Accessibility and SEO Audit" />
+    <img src="https://github.com/kleber-goncalves/portfolio-kg/actions/workflows/accessibility-seo.yml/badge.svg?branch=main" alt="GitHub Actions — Accessibility and SEO Audit" />
   </a>
 </p>
 

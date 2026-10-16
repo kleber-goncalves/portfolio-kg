@@ -3,6 +3,7 @@ name: Accessibility and SEO Audit
 on:
   push:
     branches:
+      - main
       - feat/responsividadeFull
     paths:
       - "src/**"

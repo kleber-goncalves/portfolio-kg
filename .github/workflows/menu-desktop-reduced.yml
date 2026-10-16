@@ -20,7 +20,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: menu-desktop-reduced
+  group: menu-desktop-reduced-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:

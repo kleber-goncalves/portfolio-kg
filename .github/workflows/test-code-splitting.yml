@@ -3,6 +3,7 @@ name: Deferred Section and Project Code Splitting
 on:
   push:
     branches:
+      - main
       - feat/responsividadeFull
     paths:
       - "src/App.jsx"

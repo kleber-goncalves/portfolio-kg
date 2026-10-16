@@ -3,6 +3,7 @@ name: LogoLoop Visibility Performance
 on:
   push:
     branches:
+      - main
       - feat/responsividadeFull
     paths:
       - "src/components/logoLoop.jsx"

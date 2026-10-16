@@ -3,6 +3,7 @@ name: Desktop Scroll Interaction Performance
 on:
   push:
     branches:
+      - main
       - feat/responsividadeFull
     paths:
       - ".github/workflows/desktop-scroll-performance.yml"

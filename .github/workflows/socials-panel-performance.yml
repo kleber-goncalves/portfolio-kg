@@ -3,6 +3,7 @@ name: Socials Panel First Open Performance
 on:
   push:
     branches:
+      - main
       - feat/responsividadeFull
     paths:
       - "src/components/Socials.jsx"

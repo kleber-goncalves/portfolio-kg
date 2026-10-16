@@ -3,6 +3,7 @@ name: Lighthouse Performance
 on:
   push:
     branches:
+      - main
       - feat/responsividadeFull
   workflow_dispatch:
 
@@ -20,7 +21,7 @@ jobs:
     timeout-minutes: 20
 
     env:
-      PREVIEW_URL: https://portfolio-kg-git-feat-respon-0847d0-kleber-goncalves-s-projects.vercel.app/
+      PREVIEW_URL: "${{ github.ref_name == 'main' && 'https://kleber-dev1.vercel.app/' || 'https://portfolio-kg-git-feat-respon-0847d0-kleber-goncalves-s-projects.vercel.app/' }}"
 
     steps:
       - name: Checkout repository
@@ -58,6 +59,19 @@ jobs:
 
           echo "A preview da Vercel não ficou disponível dentro do tempo limite."
           exit 1
+
+      - name: Configure Lighthouse target for current branch
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFileSync, writeFileSync } from "node:fs";
+
+          const configPath = "lighthouserc.json";
+          const config = JSON.parse(readFileSync(configPath, "utf8"));
+          config.ci.collect.url = [process.env.PREVIEW_URL];
+          writeFileSync(configPath, JSON.stringify(config, null, 2) + "\n");
+
+          console.log(`Lighthouse target: ${process.env.PREVIEW_URL}`);
+          NODE
 
       - name: Run Lighthouse against Vercel preview
         uses: treosh/lighthouse-ci-action@v12

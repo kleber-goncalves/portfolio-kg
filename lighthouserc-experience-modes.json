@@ -2,7 +2,7 @@
   "ci": {
     "collect": {
       "url": [
-        "https://portfolio-kg-git-feat-respon-0847d0-kleber-goncalves-s-projects.vercel.app/"
+        "https://kleber-dev1.vercel.app/"
       ],
       "numberOfRuns": 1,
       "puppeteerScript": "./scripts/lhci-set-experience-mode.cjs",
