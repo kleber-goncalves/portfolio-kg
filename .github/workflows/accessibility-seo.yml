@@ -71,6 +71,7 @@ jobs:
         uses: treosh/lighthouse-ci-action@v12
         with:
           configPath: ./lighthouserc-accessibility-seo-mobile.json
+          artifactName: lighthouse-accessibility-seo-mobile
           uploadArtifacts: true
           temporaryPublicStorage: false
 
@@ -78,6 +79,7 @@ jobs:
         uses: treosh/lighthouse-ci-action@v12
         with:
           configPath: ./lighthouserc-accessibility-seo-desktop.json
+          artifactName: lighthouse-accessibility-seo-desktop
           uploadArtifacts: true
           temporaryPublicStorage: false
 

@@ -152,12 +152,13 @@ async function scan(page, label) {
 }
 
 async function auditViewport(browser, setup) {
-    const page = await browser.newPage({
+    const context = await browser.newContext({
         viewport: { width: setup.width, height: setup.height },
         deviceScaleFactor: setup.deviceScaleFactor ?? 1,
         isMobile: setup.isMobile ?? false,
         hasTouch: setup.hasTouch ?? false,
     });
+    const page = await context.newPage();
     page.setDefaultTimeout(15000);
     try {
         await page.goto(BASE_URL, { waitUntil: "domcontentloaded", timeout: 45000 });
@@ -205,7 +206,7 @@ async function auditViewport(browser, setup) {
         });
         console.error("[axe] Falha no viewport " + setup.label + ":", error);
     } finally {
-        await page.close();
+        await context.close();
     }
 }
 
