@@ -170,7 +170,6 @@ function Projetos({ experienceMode = "full", onReady }) {
                 >
                     <ProjetoCarouselMobile
                         projects={projetos}
-                        tecnologiasConfig={tecnologias}
                         onReady={onReady}
                     />
                 </Suspense>
