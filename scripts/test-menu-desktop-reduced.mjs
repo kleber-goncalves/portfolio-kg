@@ -4,6 +4,18 @@ import { chromium } from "playwright";
 const baseUrl = process.env.MENU_TEST_URL || "http://127.0.0.1:4173/";
 const viewport = { width: 1365, height: 900 };
 
+function logBrowserDiagnostics(page, scenario) {
+    page.on("console", (message) => {
+        if (message.type() === "error") {
+            console.log(`[browser console error][${scenario}] ${message.text()}`);
+        }
+    });
+
+    page.on("pageerror", (error) => {
+        console.log(`[browser pageerror][${scenario}] ${error.message}`);
+    });
+}
+
 async function waitForPageReady(page, expectedMode, options = {}) {
     if (options.navigate !== false) {
         await page.goto(baseUrl, {
@@ -210,6 +222,7 @@ async function testReducedReloadAtMiddle(browser) {
     });
 
     const page = await context.newPage();
+    logBrowserDiagnostics(page, "reduced-midpage-refresh");
 
     try {
         console.log("Testing Reduced refresh while scrolled away from Hero");
@@ -279,6 +292,7 @@ try {
 
     try {
         const switchPage = await switchContext.newPage();
+        logBrowserDiagnostics(switchPage, "full-to-reduced");
         await testFullToReduced(switchPage);
     } finally {
         await switchContext.close();

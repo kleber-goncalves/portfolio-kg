@@ -271,7 +271,7 @@ function HeroSectionTransition({ experienceMode = "full" }) {
 
                 if (cancelled) return;
 
-                const gsap = gsapModule.gsap ?? gsapModule.default;
+                const gsap = gsapModule.default ?? gsapModule.gsap;
                 const { ScrollTrigger } = scrollTriggerModuleResult;
 
                 gsap.registerPlugin(ScrollTrigger);

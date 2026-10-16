@@ -28,7 +28,7 @@ function SmoothScroll({ children }) {
                 if (cancelled) return;
 
                 const Lenis = lenisModule.default;
-                gsap = gsapModule.gsap ?? gsapModule.default;
+                gsap = gsapModule.default ?? gsapModule.gsap;
                 scrollTrigger = scrollTriggerModule.ScrollTrigger;
 
                 gsap.registerPlugin(scrollTrigger);
