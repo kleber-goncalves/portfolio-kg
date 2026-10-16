@@ -6,7 +6,6 @@ import { stopSmoothScroll, startSmoothScroll } from "../utils/lenisControl";
 
 import { getExperienceMode, setExperienceMode } from "../utils/experienceMode";
 
-const MotionLink = motion.create(Link);
 
 function MenuDesktop({ items = [], showMenu = false }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -16,6 +15,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
     // =====================================
 
     const [activeHref, setActiveHref] = useState("#hero");
+    // eslint-disable-next-line no-unused-vars
     const [hoveredHref, setHoveredHref] = useState(null);
     // =====================================
     // MODO DE EXPERIÊNCIA

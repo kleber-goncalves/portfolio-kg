@@ -2,7 +2,6 @@ import { useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 import ExperienceDropdown from "./ExperienceDropdown";
 
@@ -11,7 +10,6 @@ import DotField from "../components/DotField";
 
 import { ArrowDownRight } from "lucide-react";
 
-import { setExperienceMode } from "../utils/experienceMode";
 
 import MagneticLink from "../components/MagneticNavLink";
 
@@ -179,33 +177,6 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, exper
     const debugIdRef = useRef(`HERO-${Math.random().toString(36).slice(2, 7)}`);
 
     const debugId = debugIdRef.current;
-
-    // ============================================================
-    // EXPERIENCE — ALTERAR MODO
-    // ============================================================
-
-    const handleExperienceChange = (mode) => {
-        // Se clicar no modo que já está ativo,
-        // apenas fecha o menu.
-
-        if (mode === experienceMode) {
-            setExperienceMenuOpen(false);
-            return;
-        }
-
-        // Fecha o menu
-
-        setExperienceMenuOpen(false);
-
-        // Salva o novo modo
-
-        setExperienceMode(mode);
-
-        // Recarrega para que todos os componentes
-        // sejam inicializados no novo modo.
-
-        window.location.reload();
-    };
 
     // ============================================================
     // EXPERIENCE — CLIQUE FORA
