@@ -758,16 +758,13 @@ function MenuDesktop({ items = [], showMenu = false }) {
                                     variants={linkVariants}
                                     initial="closed"
                                     animate={isOpen ? "open" : "closed"}
-                                    whileHover="hover"
                                     whileTap="tap"
                                     transition={{
                                         ...elementSpring,
                                         delay: isOpen ? contentDelay + 0.08 + index * 0.055 : 0,
                                     }}
                                     onHoverStart={() => {
-                                        if (!isActive) {
-                                            setHoveredHref(item.href);
-                                        }
+                                        setHoveredHref(item.href);
                                     }}
                                     onHoverEnd={() => {
                                         setHoveredHref(null);
@@ -805,6 +802,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
 
                                         <motion.span
                                             variants={indexVariants}
+                                            animate={hoveredHref === item.href ? "hover" : "rest"}
                                             transition={hoverSpring}
                                             className="
                                                     font-space
@@ -822,6 +820,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
 
                                         <motion.span
                                             variants={titleVariants}
+                                            animate={hoveredHref === item.href ? "hover" : "rest"}
                                             transition={hoverSpring}
                                             className={`
                                                     font-bebas
@@ -845,6 +844,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
 
                                     <motion.span
                                         variants={arrowVariants}
+                                        animate={hoveredHref === item.href ? "hover" : "rest"}
                                         transition={hoverSpring}
                                         className={`
                                                 font-space
