@@ -92,7 +92,7 @@ function Preloader() {
 
             if (cancelled) return;
 
-            // Mantém o preloader visível por pelo menos 3 segundos,
+            // Mantém o preloader visível por pelo menos 800 ms,
             // mesmo se os recursos terminarem de carregar muito rápido.
             const elapsed = performance.now() - startedAt;
             const remainingTime = Math.max(0, MIN_DISPLAY_TIME - elapsed);
@@ -196,7 +196,7 @@ function Preloader() {
                         ))}
                     </ul>
 
-                    <p className="mt-5 text-[9px] uppercase tracking-[0.18em] text-steel/60">
+                    <p className="mt-5 text-[9px] uppercase tracking-[0.18em] text-steel">
                         {progress} de {TOTAL_STEPS} etapas concluídas
                     </p>
                 </div>

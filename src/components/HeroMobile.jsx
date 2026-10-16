@@ -77,10 +77,10 @@ function HeroMobile({ items, onReady }) {
                     {/* DESCRIÇÃO */}
                     <div className="flex flex-col gap-4 pt-3 text-sm text-steel">
                         <p>
-                            Meu nome é Kleber e sou formado em Análise e
-                            Desenvolvimento de Sistemas pela Universidade
-                            Uniube e possuo formação em Fullstack pela DNC
-                            com simulação profissional real.
+                            Atualmente, estou concluindo Análise e
+                            Desenvolvimento de Sistemas pela Uniube. Também
+                            concluí as formações de Front-end e Back-end da DNC,
+                            com prática voltada ao desenvolvimento de aplicações web.
                         </p>
 
                         <p>
