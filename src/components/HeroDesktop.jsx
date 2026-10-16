@@ -235,9 +235,6 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, exper
 
                 const heroTop = heroRect.top;
 
-                const heroBottom = heroRect.bottom;
-
-                const heroIsVisible = heroBottom > 0 && heroTop < window.innerHeight;
 
                 // ====================================================
                 // SE O SCROLL FOI RESTAURADO
@@ -470,7 +467,6 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, exper
 
                 const currentScroll = window.scrollY;
 
-                const heroRect = hero.getBoundingClientRect();
 
                 // ====================================================
                 // DETECTA POSIÇÃO ESTÁVEL
