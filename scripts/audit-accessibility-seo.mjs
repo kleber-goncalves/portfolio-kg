@@ -137,8 +137,9 @@ async function loadDeferredSections(page) {
         if (stableAtBottom >= 3) break;
         previousHeight = after.height;
     }
-    await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
-    await page.waitForTimeout(650);
+    // Mantém a página no final do percurso: voltar ao topo reverte as animações GSAP
+    // e faria o scanner avaliar textos durante estados transitórios de baixa opacidade.
+    await page.waitForTimeout(900);
 }
 
 async function scan(page, label) {
@@ -179,25 +180,44 @@ async function scan(page, label) {
     }
 }
 
+async function stabilizeVisualState(page) {
+    await page.addStyleTag({
+        content: "* { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }",
+    });
+    await page.evaluate(() => {
+        document.querySelectorAll("*").forEach((element) => {
+            const style = window.getComputedStyle(element);
+            const opacity = Number(style.opacity);
+            if (
+                style.display !== "none" &&
+                style.visibility !== "hidden" &&
+                element.getClientRects().length > 0 &&
+                opacity > 0 &&
+                opacity < 1
+            ) {
+                element.style.setProperty("opacity", "1", "important");
+            }
+        });
+    });
+}
+
 async function auditSemantics(page, label) {
     const result = await page.evaluate(() => {
-        const isInViewport = (element) => {
+        const isDisplayed = (element) => {
             const style = window.getComputedStyle(element);
             const rect = element.getBoundingClientRect();
             return style.display !== "none" && style.visibility !== "hidden" &&
-                rect.width > 0 && rect.height > 0 &&
-                rect.bottom > 0 && rect.right > 0 &&
-                rect.top < window.innerHeight && rect.left < window.innerWidth;
+                rect.width > 0 && rect.height > 0;
         };
-        const visible = (selector) => [...document.querySelectorAll(selector)].filter(isInViewport);
+        const displayed = (selector) => [...document.querySelectorAll(selector)].filter(isDisplayed);
         const accessibleName = (element) => Boolean(
             element.getAttribute("aria-label")?.trim() ||
             element.getAttribute("aria-labelledby")?.trim() ||
             element.innerText?.trim() ||
             [...element.querySelectorAll("img[alt]")].some((img) => img.alt.trim())
         );
-        const buttons = visible("button");
-        const links = visible("a");
+        const buttons = displayed("button");
+        const links = displayed("a");
         const titlelessIconButtons = buttons.filter((button) =>
             !button.innerText?.trim() && !button.getAttribute("title")?.trim()
         ).map((button) => ({
@@ -208,15 +228,15 @@ async function auditSemantics(page, label) {
             .map((button) => button.outerHTML.slice(0, 240));
         const unnamedLinks = links.filter((link) => !accessibleName(link))
             .map((link) => link.outerHTML.slice(0, 240));
-        const unnamedNavs = visible("nav").filter((nav) =>
+        const unnamedNavs = displayed("nav").filter((nav) =>
             !nav.getAttribute("aria-label")?.trim() &&
             !nav.getAttribute("aria-labelledby")?.trim()
         ).map((nav) => nav.outerHTML.slice(0, 240));
-        const divRoleButtons = visible("div[role='button']")
+        const divRoleButtons = displayed("div[role='button']")
             .map((element) => element.outerHTML.slice(0, 240));
         return {
-            mainCount: visible("main").length,
-            h1Count: visible("h1").length,
+            mainCount: displayed("main").length,
+            h1Count: displayed("h1").length,
             buttonCount: buttons.length,
             linkCount: links.length,
             titlelessIconButtons,
@@ -228,8 +248,8 @@ async function auditSemantics(page, label) {
     });
 
     const checks = [
-        { id: "single-main-landmark", failed: result.mainCount !== 1, detail: "Marcos main visíveis: " + result.mainCount + " (esperado: 1)." },
-        { id: "visible-h1", failed: result.h1Count !== 1, detail: "Títulos H1 no viewport: " + result.h1Count + " (esperado: 1)." },
+        { id: "single-main-landmark", failed: result.mainCount !== 1, detail: "Marcos main presentes: " + result.mainCount + " (esperado: 1)." },
+        { id: "visible-h1", failed: result.h1Count !== 1, detail: "Títulos H1 presentes nas versões exibidas do layout: " + result.h1Count + " (esperado: 1)." },
         { id: "named-buttons", failed: result.unnamedButtons.length > 0, detail: result.unnamedButtons.length + " botão(ões) sem nome acessível." },
         { id: "named-links", failed: result.unnamedLinks.length > 0, detail: result.unnamedLinks.length + " link(s) sem nome acessível." },
         { id: "labelled-navigation", failed: result.unnamedNavs.length > 0, detail: result.unnamedNavs.length + " elemento(s) nav sem rótulo acessível." },
@@ -256,24 +276,19 @@ async function auditViewport(browser, setup) {
         await page.locator("h1").first().waitFor({ state: "attached", timeout: 20000 }).catch(() => {});
         await page.waitForTimeout(1100);
         await loadDeferredSections(page);
-        await page.addStyleTag({ content: "* { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }" });
-        await page.evaluate(() => {
-            document.querySelectorAll("*").forEach((element) => {
-                const style = window.getComputedStyle(element);
-                if (style.display !== "none" && style.visibility !== "hidden" &&
-                    Number(style.opacity) > 0 && element.getClientRects().length > 0 &&
-                    Number(style.opacity) < 1) {
-                    element.style.setProperty("opacity", "1", "important");
-                }
-            });
-        });
+        await stabilizeVisualState(page);
         await auditSemantics(page, setup.label);
         await scan(page, setup.label + " — página inteira");
 
-        await page.evaluate((isMobile) => {
-            window.scrollTo({ top: isMobile ? 0 : 950, behavior: "instant" });
-        }, setup.isMobile ?? false);
-        await page.waitForTimeout(450);
+        if (setup.isMobile) {
+            await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+            await page.waitForTimeout(400);
+        } else {
+            await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+            await page.waitForTimeout(250);
+            await page.mouse.wheel(0, 1500);
+            await page.waitForTimeout(1400);
+        }
         const buttons = page.getByRole("button", { name: /abrir menu/i });
         let opened = false;
         for (let index = 0; index < await buttons.count(); index += 1) {
@@ -285,7 +300,8 @@ async function auditViewport(browser, setup) {
             }
         }
         if (opened) {
-            await page.waitForTimeout(450);
+            await page.waitForTimeout(900);
+            await stabilizeVisualState(page);
             await scan(page, setup.label + " — menu aberto");
             await page.keyboard.press("Escape");
             await page.waitForTimeout(850);
