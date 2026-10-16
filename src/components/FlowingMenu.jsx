@@ -262,7 +262,7 @@ function MenuItem({ text, logos = [], speed, textColor, marqueeBgColor, marqueeT
                         text-xs
                         tracking-[0.2em]
 
-                        text-steel/40
+                        text-steel
 
                         transition-all
                         duration-500

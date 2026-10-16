@@ -410,7 +410,7 @@ function Diferenciais({ experienceMode = "full" }) {
                             text-[10px]
                             uppercase
                             tracking-[0.3em]
-                            text-steel/60
+                            text-steel
                         "
                     >
                         Forma de pensar · Forma de construir

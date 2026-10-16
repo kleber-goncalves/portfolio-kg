@@ -170,7 +170,7 @@ function ProjetoCard({ numero, titulo, descricao, tecnologias = [], tecnologiasC
                 {/* NUMERO */}
 
                 <div className="absolute left-5 top-5 z-10">
-                    <span className="text-sm font-medium text-white/60">{numero}</span>
+                    <span className="text-sm font-medium text-white">{numero}</span>
                 </div>
 
                 {/* STATUS */}
@@ -221,7 +221,7 @@ function ProjetoCard({ numero, titulo, descricao, tecnologias = [], tecnologiasC
 
                     <h2 className="mt-2 text-3xl font-bold uppercase text-white">{titulo}</h2>
 
-                    <p className="mt-3 max-w-xl text-sm leading-relaxed text-white/60">{descricao}</p>
+                    <p className="mt-3 max-w-xl text-sm leading-relaxed text-white">{descricao}</p>
                 </div>
 
                 {/* ==================================================

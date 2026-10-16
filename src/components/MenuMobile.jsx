@@ -227,11 +227,11 @@ function MenuMobile({ items = [] }) {
                         hover:text-bronze
                         group
                         active:scale-95
-                        active:text-bronze/20
+                        active:text-bronze
                         
                     "
                 >
-                    <Menu className="h-12 w-12 group-active:text-bronze/29" />
+                    <Menu className="h-12 w-12 group-active:text-bronze" />
                 </button>
             )}
 
