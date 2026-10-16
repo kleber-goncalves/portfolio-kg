@@ -1,4 +1,4 @@
-import { readdir, mkdir, writeFile } from "node:fs/promises";
+import { access, mkdir, readdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import sharp from "sharp";
 
@@ -10,6 +10,15 @@ const heroProfileUrl = "https://github.com/kleber-goncalves.png";
 const widths = [320, 640, 960, 1280, 1600];
 const supported = new Set([".jpg", ".jpeg", ".png", ".webp", ".avif"]);
 const metadata = {};
+
+async function fileExists(filePath) {
+    try {
+        await access(filePath);
+        return true;
+    } catch {
+        return false;
+    }
+}
 
 async function walk(directory) {
     let entries;
@@ -81,6 +90,11 @@ async function optimizeImage({
         variants.find((variant) => variant.width >= Math.min(fallbackWidth, info.width)) ??
         variants[variants.length - 1];
 
+    if (!fallback) {
+        console.warn(`Nenhuma variante gerada para: ${label}`);
+        return;
+    }
+
     metadata[key] = {
         src: fallback.src,
         width: info.width,
@@ -95,7 +109,7 @@ async function optimizeImage({
 const projectFiles = await walk(inputRoot);
 
 if (projectFiles.length === 0) {
-    console.log("Nenhuma imagem encontrada em src/assets/projetos.");
+    console.log("Nenhuma imagem encontrada em src/assets/projetos; etapa ignorada.");
 }
 
 for (const file of projectFiles) {
@@ -117,49 +131,67 @@ for (const file of projectFiles) {
     });
 }
 
-// Optimize the desktop Hero portrait stored in public/euNv.png.
+// HeroDesktop é opcional em branches que ainda não têm a imagem local.
 const desktopPortraitPath = path.join(root, "public", "euNv.png");
 
-await optimizeImage({
-    input: desktopPortraitPath,
-    key: "euNv.png",
-    baseName: "euNv",
-    outputDirectory: "hero",
-    publicDirectory: "hero",
-    sizes: "(min-width: 1280px) 970px, (min-width: 1024px) 440px, 420px",
-    fallbackWidth: 640,
-    label: "HeroDesktop portrait (public/euNv.png)",
-});
-
-// Fetch the GitHub-hosted portrait in CI, then commit only optimized local variants.
-const profileResponse = await fetch(heroProfileUrl, {
-    redirect: "follow",
-    headers: { "User-Agent": "KLEBER-DEV-image-optimizer" },
-});
-
-if (!profileResponse.ok) {
-    throw new Error(`Falha ao baixar a foto do HeroMobile: HTTP ${profileResponse.status}`);
+if (await fileExists(desktopPortraitPath)) {
+    await optimizeImage({
+        input: desktopPortraitPath,
+        key: "euNv.png",
+        baseName: "euNv",
+        outputDirectory: "hero",
+        publicDirectory: "hero",
+        sizes: "(min-width: 1280px) 970px, (min-width: 1024px) 440px, 420px",
+        fallbackWidth: 640,
+        label: "HeroDesktop portrait (public/euNv.png)",
+    });
+} else {
+    console.log("Imagem pública do HeroDesktop ausente; etapa ignorada.");
 }
 
-const profileContentType = profileResponse.headers.get("content-type") ?? "";
+// HeroMobile usa o retrato hospedado no GitHub. Só o baixa quando o componente existe.
+const mobileHeroPath = path.join(root, "src", "components", "HeroMobile.jsx");
 
-if (!profileContentType.startsWith("image/")) {
-    throw new Error(`A URL da foto do HeroMobile não retornou uma imagem: ${profileContentType || "content-type ausente"}`);
+if (await fileExists(mobileHeroPath)) {
+    const profileResponse = await fetch(heroProfileUrl, {
+        redirect: "follow",
+        headers: { "User-Agent": "KLEBER-DEV-image-optimizer" },
+    });
+
+    if (!profileResponse.ok) {
+        throw new Error(`Falha ao baixar a foto do HeroMobile: HTTP ${profileResponse.status}`);
+    }
+
+    const profileContentType = profileResponse.headers.get("content-type") ?? "";
+
+    if (!profileContentType.startsWith("image/")) {
+        throw new Error(
+            `A URL da foto do HeroMobile não retornou uma imagem: ${profileContentType || "content-type ausente"}`,
+        );
+    }
+
+    const profileBuffer = Buffer.from(await profileResponse.arrayBuffer());
+
+    await optimizeImage({
+        input: profileBuffer,
+        key: "kleber-goncalves.png",
+        baseName: "kleber-goncalves",
+        outputDirectory: "hero",
+        publicDirectory: "hero",
+        sizes: "216px",
+        fallbackWidth: 320,
+        label: "HeroMobile profile image",
+    });
+} else {
+    console.log("HeroMobile.jsx ausente; otimização do retrato remoto ignorada.");
 }
 
-const profileBuffer = Buffer.from(await profileResponse.arrayBuffer());
-
-await optimizeImage({
-    input: profileBuffer,
-    key: "kleber-goncalves.png",
-    baseName: "kleber-goncalves",
-    outputDirectory: "hero",
-    publicDirectory: "hero",
-    sizes: "216px",
-    fallbackWidth: 320,
-    label: "HeroMobile profile image",
-});
-
-await mkdir(path.dirname(metadataPath), { recursive: true });
-await writeFile(metadataPath, `${JSON.stringify(metadata, null, 2)}\n`);
-console.log(`Metadados escritos: ${Object.keys(metadata).length} imagens.`);
+// Só cria o arquivo de metadados quando há imagens ou ele já existia.
+// Assim, branches ainda sem o portfólio não geram um JSON vazio desnecessário.
+if (Object.keys(metadata).length > 0 || (await fileExists(metadataPath))) {
+    await mkdir(path.dirname(metadataPath), { recursive: true });
+    await writeFile(metadataPath, `${JSON.stringify(metadata, null, 2)}\n`);
+    console.log(`Metadados escritos: ${Object.keys(metadata).length} imagens.`);
+} else {
+    console.log("Nenhum metadado de imagem precisa ser gerado nesta branch.");
+}
