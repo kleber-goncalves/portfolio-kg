@@ -40,7 +40,23 @@ async function waitForPageReady(page, expectedMode, { navigate = true } = {}) {
         }
     });
 
-    // Aguarda a inicialização do Lenis, das linhas e dos ScrollTriggers.
+    // Formação agora é lazy: monte a seção antes de medir a linha e volte ao topo.
+    await page.evaluate(() => {
+        document.documentElement.style.scrollBehavior = "auto";
+        const formation = document.querySelector("#formacao");
+        formation?.scrollIntoView({ block: "center", behavior: "instant" });
+    });
+
+    await page.locator('#formacao[aria-busy="false"]').waitFor({
+        state: "attached",
+        timeout: 60000,
+    });
+
+    await page.evaluate(() => {
+        window.scrollTo({ top: 0, behavior: "instant" });
+    });
+
+    // Aguarda Lenis, a linha de progresso e os ScrollTriggers assentarem novamente.
     await page.waitForTimeout(1400);
 }
 
