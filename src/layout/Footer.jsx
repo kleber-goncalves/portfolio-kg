@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
+import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -380,9 +381,17 @@ function Footer() {
                 >
                     {/* LOGO */}
 
-                    <a
-                        href="#hero"
+                    <Link
+                        to="#hero"
                         aria-label="Voltar ao início"
+                        title="Voltar ao início"
+                        onClick={(event) => {
+                            event.preventDefault();
+                            document.querySelector("#hero")?.scrollIntoView({
+                                behavior: "smooth",
+                                block: "start",
+                            });
+                        }}
                         className="
                             block
                             h-8
@@ -404,7 +413,7 @@ function Footer() {
                                 object-contain
                             "
                         />
-                    </a>
+                    </Link>
 
                     {/* IDENTIFICAÇÃO */}
 
@@ -427,7 +436,7 @@ function Footer() {
                                 text-[10px]
                                 uppercase
                                 tracking-[0.15em]
-                                text-steel/50
+                                text-steel
                             "
                         >
                             2026

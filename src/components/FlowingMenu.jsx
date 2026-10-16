@@ -13,7 +13,7 @@ function FlowingMenu({ items = [], speed = 18, textColor = "#F2F0EC", bgColor = 
                 backgroundColor: bgColor,
             }}
         >
-            <nav className="m-0 flex h-full flex-col p-0">
+            <nav aria-label="Navegação por projetos" className="m-0 flex h-full flex-col p-0">
                 {items.map((item, index) => (
                     <MenuItem key={index} {...item} speed={speed} textColor={textColor} marqueeBgColor={marqueeBgColor} marqueeTextColor={marqueeTextColor} borderColor={borderColor} isFirst={index === 0} />
                 ))}

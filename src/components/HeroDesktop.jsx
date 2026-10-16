@@ -1248,7 +1248,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, exper
                                     text-[14px]
                                     uppercase
                                     tracking-[0.22em]
-                                    text-steel/50
+                                    text-steel
                                 "
                             >
                                 Localização
@@ -1368,7 +1368,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, exper
                                 text-sm
                                 leading-6
 
-                                text-steel/60
+                                text-steel
                             "
                         >
                             Frontend · Backend · Fullstack

@@ -352,7 +352,7 @@ function Competencia({ experienceMode = "full" }) {
                         text-[10px]
                         uppercase
                         tracking-[0.25em]
-                        text-steel/60
+                        text-steel
                         b-md:mt-10
                         b-md:text-[10px]
                     "

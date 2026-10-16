@@ -741,7 +741,7 @@ function Formacao({ experienceMode = "full" }) {
                                                         text-xs
                                                         uppercase
                                                         tracking-[0.15em]
-                                                        text-steel/60
+                                                        text-steel
                                                     "
                                                 >
                                                     Progresso
@@ -785,7 +785,7 @@ function Formacao({ experienceMode = "full" }) {
                                                     flex
                                                     justify-between
                                                     text-xs
-                                                    text-steel/70
+                                                    text-steel
 
                                                     b-md:text-sm
                                                 "
@@ -1024,7 +1024,7 @@ function Formacao({ experienceMode = "full" }) {
                                                 text-xs
                                                 italic
                                                 leading-5
-                                                text-steel/60
+                                                text-steel
 
                                                 b-md:text-sm
                                                 b-md:leading-6

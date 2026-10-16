@@ -879,7 +879,7 @@ function ProjetoDesktop({ projetos, experienceMode = "full", onReady }) {
                                                                                                                                     py-1.5
                                                                                                                                     text-[11px]
                                                                                                                                     tracking-[0.15em]
-                                                                                                                                    text-steel/60
+                                                                                                                                    text-steel
                                                                                                                                     transition-all
                                                                                                                                     duration-500
                                                                                                                                     ease-out
