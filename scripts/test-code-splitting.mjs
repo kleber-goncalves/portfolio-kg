@@ -71,6 +71,33 @@ async function testViewport({ width, height, mobile }) {
             "O Footer não deve ser transferido na primeira tela.",
         );
 
+        if (mobile) {
+            assert.equal(
+                hasChunk(initialScripts, "SeclogsMobile-"),
+                false,
+                "A seção de tecnologias mobile não deve ser baixada na primeira tela.",
+            );
+
+            // Ao aproximar-se de Stack, carrega os logotipos e preserva a atualização dos ScrollTriggers.
+            await page.locator("#stack").scrollIntoViewIfNeeded();
+            await page.getByText(/TECNOLOGIAS & FERRAMENTAS/).waitFor({
+                state: "attached",
+                timeout: 60000,
+            });
+            await page.waitForFunction(
+                () => performance.getEntriesByType("resource").some((entry) =>
+                    new URL(entry.name).pathname.split("/").pop()?.startsWith("SeclogsMobile-")
+                ),
+                null,
+                { timeout: 60000 },
+            );
+            assert.equal(
+                hasChunk(scripts, "SeclogsMobile-"),
+                true,
+                "O chunk de tecnologias mobile deve carregar quando Stack se aproxima da viewport.",
+            );
+        }
+
         // Carrega Projetos apenas ao aproximar-se da seção.
         await page.locator("#projetos").scrollIntoViewIfNeeded();
 
@@ -140,7 +167,7 @@ async function testViewport({ width, height, mobile }) {
         );
 
         const relevantErrors = errors.filter((message) =>
-            /tecnologias is not defined|Failed to fetch dynamically imported module|ProjetoDesktop|ProjetoCarouselMobile|DeferredLayoutSection|ScrollTrigger/i.test(message)
+            /tecnologias is not defined|Failed to fetch dynamically imported module|ProjetoDesktop|ProjetoCarouselMobile|SeclogsMobile|DeferredLayoutSection|ScrollTrigger/i.test(message)
         );
         assert.deepEqual(
             relevantErrors,
@@ -153,6 +180,8 @@ async function testViewport({ width, height, mobile }) {
             width,
             initialFormacaoChunk: hasChunk(initialScripts, "Formacao-"),
             initialFooterChunk: hasChunk(initialScripts, "Footer-"),
+            initialSeclogsMobileChunk: hasChunk(initialScripts, "SeclogsMobile-"),
+            seclogsMobileChunk: hasChunk(scripts, "SeclogsMobile-"),
             projectDesktopChunk: hasChunk(scripts, "ProjetoDesktop-"),
             projectCarouselMobileChunk: hasChunk(scripts, "ProjetoCarouselMobile-"),
             deferredFormacaoLoaded: hasChunk(scripts, "Formacao-"),

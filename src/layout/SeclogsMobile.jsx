@@ -152,7 +152,22 @@ function SeclogsMobile({ sectionRef, onReady }) {
     }, [sectionRef]);
 
     useEffect(() => {
-        onReady?.("mobile");
+        let firstFrame = 0;
+        let secondFrame = 0;
+
+        firstFrame = window.requestAnimationFrame(() => {
+            secondFrame = window.requestAnimationFrame(() => {
+                // The stack may mount well after the initial page layout.
+                // Refresh after two frames so downstream ScrollTriggers use its final geometry.
+                ScrollTrigger.refresh(true);
+                onReady?.("mobile");
+            });
+        });
+
+        return () => {
+            window.cancelAnimationFrame(firstFrame);
+            window.cancelAnimationFrame(secondFrame);
+        };
     }, [onReady]);
 
     return (
