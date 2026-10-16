@@ -41,6 +41,7 @@ function HeroSectionTransition({ experienceMode = "full" }) {
     const [hasShownDesktopMenu, setHasShownDesktopMenu] = useState(false);
 
     const [dotFieldFrozen, setDotFieldFrozen] = useState(false);
+    const [desktopAnimationReady, setDesktopAnimationReady] = useState(false);
 
     // ============================================================
     // REFS DE CONTROLE
@@ -316,6 +317,10 @@ function HeroSectionTransition({ experienceMode = "full" }) {
                     yPercent: 100,
                 });
 
+                // O estado React remove o deslocamento CSS auxiliar somente depois
+                // que o GSAP assume o mesmo transform no elemento.
+                setDesktopAnimationReady(true);
+
                 /*
                  * Hero começa totalmente visível.
                  */
@@ -573,6 +578,7 @@ function HeroSectionTransition({ experienceMode = "full" }) {
             }
 
             ctx?.revert();
+            setDesktopAnimationReady(false);
 
             const heroTransition = scrollTriggerModule?.getById("heroTransition");
             heroTransition?.kill();
@@ -641,6 +647,8 @@ function HeroSectionTransition({ experienceMode = "full" }) {
                 w-full
 
                 bg-obsidian
+
+                ${desktopAnimationReady ? "" : "b-md:translate-y-full"}
 
                 b-md:absolute
                 b-md:inset-0
