@@ -15,8 +15,6 @@ function MenuDesktop({ items = [], showMenu = false }) {
     // =====================================
 
     const [activeHref, setActiveHref] = useState("#hero");
-    // eslint-disable-next-line no-unused-vars
-    const [hoveredHref, setHoveredHref] = useState(null);
     // =====================================
     // MODO DE EXPERIÊNCIA
     // =====================================
@@ -760,14 +758,6 @@ function MenuDesktop({ items = [], showMenu = false }) {
                                     transition={{
                                         ...elementSpring,
                                         delay: isOpen ? contentDelay + 0.08 + index * 0.055 : 0,
-                                    }}
-                                    onHoverStart={() => {
-                                        if (!isActive) {
-                                            setHoveredHref(item.href);
-                                        }
-                                    }}
-                                    onHoverEnd={() => {
-                                        setHoveredHref(null);
                                     }}
                                     className="relative"
                                 >
