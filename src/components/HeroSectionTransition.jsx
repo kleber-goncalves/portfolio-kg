@@ -1,23 +1,25 @@
-import { lazy, Suspense, useCallback, useLayoutEffect, useRef, useState } from "react";
+import { lazy, Suspense, useLayoutEffect, useRef, useState } from "react";
+
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import Hero from "../layout/HeroTeste2";
 import Seclogs from "../layout/Logo2";
 const MenuDesktop = lazy(() => import("../components/MenuDesktop"));
 import useResponsive from "../hooks/useResponsive";
 
+gsap.registerPlugin(ScrollTrigger);
 
 function HeroSectionTransition({ experienceMode = "full" }) {
     const { isMobileLayout } = useResponsive();
     const requiredHeroLayout = isMobileLayout ? "mobile" : "desktop";
     const requiredStackLayout = isMobileLayout ? "mobile" : "desktop";
     const [readyHeroLayout, setReadyHeroLayout] = useState(null);
-    const [animationRuntime, setAnimationRuntime] = useState(null);
     const [readyStackLayout, setReadyStackLayout] = useState(null);
 
     const sectionRef = useRef(null);
     const heroRef = useRef(null);
     const seclogsRef = useRef(null);
-    const scrollTriggerRef = useRef(null);
 
     // ============================================================
     // CONFIGURAÇÕES
@@ -42,12 +44,6 @@ function HeroSectionTransition({ experienceMode = "full" }) {
     const [hasShownDesktopMenu, setHasShownDesktopMenu] = useState(false);
 
     const [dotFieldFrozen, setDotFieldFrozen] = useState(false);
-    const [desktopAnimationReady, setDesktopAnimationReady] = useState(false);
-
-    const handleHeroReady = useCallback((layout, runtime) => {
-        setReadyHeroLayout(layout);
-        if (runtime) setAnimationRuntime(runtime);
-    }, []);
 
     // ============================================================
     // REFS DE CONTROLE
@@ -121,8 +117,8 @@ function HeroSectionTransition({ experienceMode = "full" }) {
             // EXPERIÊNCIA COMPLETA
             // ----------------------------------------------------
 
-            if (experienceMode === "full" && !isMobileLayout) {
-                const heroTransition = scrollTriggerRef.current?.getById("heroTransition");
+            if (experienceMode === "full") {
+                const heroTransition = ScrollTrigger.getById("heroTransition");
 
                 if (!heroTransition) {
                     console.warn("ScrollTrigger 'heroTransition' não encontrado.");
@@ -196,13 +192,57 @@ function HeroSectionTransition({ experienceMode = "full" }) {
     useLayoutEffect(() => {
         const section = sectionRef.current;
 
-        if (!section || readyHeroLayout !== requiredHeroLayout) return;
+        if (!section) return;
 
-        // A experiência reduzida não precisa de pin nem timeline.
+        // Mantém o Stack fora da tela durante o carregamento do layout lazy.
+        // Este contexto separado é revertido nos retornos antecipados e no cleanup.
+        const initialContext = gsap.context(() => {
+            if (experienceMode === "full" && !isMobileLayout) {
+                const seclogs = seclogsRef.current;
+
+                if (seclogs) {
+                    gsap.set(seclogs, {
+                        yPercent: 100,
+                    });
+                }
+            }
+        }, section);
+
+        // A transição depende do DOM do Hero correspondente à viewport.
+        // Aguarda o módulo lazy carregar antes de criar animações e ScrollTriggers.
+        if (readyHeroLayout !== requiredHeroLayout) {
+            return () => initialContext.revert();
+        }
+
+        // A transição pinada no desktop precisa medir o Stack real,
+        // não o espaço reservado enquanto o módulo lazy carrega.
+        if (experienceMode === "full" && !isMobileLayout && readyStackLayout !== requiredStackLayout) {
+            return () => initialContext.revert();
+        }
+
+        // ========================================================
+        // EXPERIÊNCIA REDUZIDA
+        // ========================================================
+
+        /*
+         * No Reduced NÃO criamos:
+         *
+         * - ScrollTrigger da transição
+         * - pin
+         * - parallax
+         * - Stack subindo
+         * - redução do Hero
+         * - scale
+         * - rotação
+         * - blur progressivo
+         *
+         * Hero e Stack permanecem no fluxo normal.
+         */
+
         if (experienceMode === "reduced") {
             const hero = heroRef.current;
 
-            if (!hero) return;
+            if (!hero) return () => initialContext.revert();
 
             const updateReducedMenu = () => {
                 const heroRect = hero.getBoundingClientRect();
@@ -257,20 +297,16 @@ function HeroSectionTransition({ experienceMode = "full" }) {
                 window.removeEventListener("resize", updateReducedMenu);
                 window.removeEventListener("pageshow", updateReducedMenu);
 
+                initialContext.revert();
             };
         }
 
-        // O HeroDesktop já carrega GSAP/ScrollTrigger no seu próprio chunk.
-        // Reaproveitamos essas instâncias para manter o bundle inicial mobile leve.
-        if (isMobileLayout || readyStackLayout !== requiredStackLayout) return;
+        // ========================================================
+        // EXPERIÊNCIA COMPLETA
+        // ========================================================
 
-        const gsap = animationRuntime?.gsap;
-        const ScrollTrigger = animationRuntime?.ScrollTrigger;
-        if (!gsap || !ScrollTrigger) return;
-
-        gsap.registerPlugin(ScrollTrigger);
-        scrollTriggerRef.current = ScrollTrigger;
-
+        // O pin do Hero/Stack altera os offsets dos ScrollTriggers abaixo.
+        // Recalcula todos depois que a geometria do pin estiver aplicada.
         let pinRefreshFrameId = null;
 
         const ctx = gsap.context(() => {
@@ -310,10 +346,6 @@ function HeroSectionTransition({ experienceMode = "full" }) {
                 gsap.set(seclogs, {
                     yPercent: 100,
                 });
-
-                // O estado React remove o deslocamento CSS auxiliar somente depois
-                // que o GSAP assume o mesmo transform no elemento.
-                setDesktopAnimationReady(true);
 
                 /*
                  * Hero começa totalmente visível.
@@ -394,14 +426,7 @@ function HeroSectionTransition({ experienceMode = "full" }) {
                             // MENU
                             // =====================================
 
-                            // Em telas mais baixas, o Stack pode cobrir menos que 800px
-                            // por causa da margem superior. Usa até 80% da altura do Hero,
-                            // sem alterar o limite de 800px em viewports suficientemente altas.
-                            const menuAppearThreshold = Math.min(
-                                MENU_APPEAR_PX,
-                                heroRect.height * 0.8,
-                            );
-                            const shouldShowMenu = coveredAmount >= menuAppearThreshold;
+                            const shouldShowMenu = coveredAmount >= MENU_APPEAR_PX;
 
                             /*
                              * Só atualiza o React quando
@@ -557,12 +582,18 @@ function HeroSectionTransition({ experienceMode = "full" }) {
             };
         }, sectionRef);
 
+        // O pin já está criado neste ponto; espera um frame para medir
+        // as seções seguintes com os offsets definitivos do ScrollTrigger.
+        if (experienceMode === "full" && !isMobileLayout) {
+            pinRefreshFrameId = requestAnimationFrame(() => {
+                pinRefreshFrameId = null;
+                ScrollTrigger.refresh();
+            });
+        }
 
-        // O pin já está criado; atualiza as posições no próximo frame.
-        pinRefreshFrameId = requestAnimationFrame(() => {
-            pinRefreshFrameId = null;
-            ScrollTrigger.refresh();
-        });
+        // ========================================================
+        // CLEANUP GSAP CONTEXT
+        // ========================================================
 
         return () => {
             if (pinRefreshFrameId !== null) {
@@ -570,16 +601,15 @@ function HeroSectionTransition({ experienceMode = "full" }) {
             }
 
             ctx.revert();
-            setDesktopAnimationReady(false);
+            initialContext.revert();
 
             const heroTransition = ScrollTrigger.getById("heroTransition");
-            heroTransition?.kill();
 
-            if (scrollTriggerRef.current === ScrollTrigger) {
-                scrollTriggerRef.current = null;
+            if (heroTransition) {
+                heroTransition.kill();
             }
         };
-    }, [experienceMode, readyHeroLayout, requiredHeroLayout, readyStackLayout, requiredStackLayout, isMobileLayout, animationRuntime]);
+    }, [experienceMode, readyHeroLayout, requiredHeroLayout, readyStackLayout, requiredStackLayout, isMobileLayout]);
 
     // ============================================================
     // MODO ATUAL
@@ -640,8 +670,6 @@ function HeroSectionTransition({ experienceMode = "full" }) {
 
                 bg-obsidian
 
-                ${desktopAnimationReady ? "" : "b-md:translate-y-full"}
-
                 b-md:absolute
                 b-md:inset-0
                 b-md:h-auto
@@ -688,7 +716,7 @@ function HeroSectionTransition({ experienceMode = "full" }) {
             ================================================== */}
 
             <div ref={heroRef} className={heroWrapperClass}>
-                <Hero isMobileLayout={isMobileLayout} dotFieldFrozen={dotFieldFrozen} onNavigate={handleHeroNavigation} onReady={handleHeroReady} experienceMode={experienceMode} />
+                <Hero isMobileLayout={isMobileLayout} dotFieldFrozen={dotFieldFrozen} onNavigate={handleHeroNavigation} onReady={setReadyHeroLayout} experienceMode={experienceMode} />
                 {isFullExperience === false && (
                     <div
                         className="
