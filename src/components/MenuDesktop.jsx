@@ -750,27 +750,33 @@ function MenuDesktop({ items = [], showMenu = false }) {
                             const isActive = item.href === activeHref;
 
                             return (
-                                <MotionLink
+                                <motion.div
                                     key={item.href || index}
-                                    to={item.href}
-                                    data-desktop-menu-link
-                                    data-href={item.href}
                                     variants={linkVariants}
                                     initial="closed"
                                     animate={isOpen ? "open" : "closed"}
+                                    whileHover="hover"
                                     whileTap="tap"
                                     transition={{
                                         ...elementSpring,
                                         delay: isOpen ? contentDelay + 0.08 + index * 0.055 : 0,
                                     }}
                                     onHoverStart={() => {
-                                        setHoveredHref(item.href);
+                                        if (!isActive) {
+                                            setHoveredHref(item.href);
+                                        }
                                     }}
                                     onHoverEnd={() => {
                                         setHoveredHref(null);
                                     }}
-                                    onClick={(event) => handleNavigation(item.href, event)}
-                                    className="
+                                    className="relative"
+                                >
+                                    <Link
+                                        to={item.href}
+                                        data-desktop-menu-link
+                                        data-href={item.href}
+                                        onClick={(event) => handleNavigation(item.href, event)}
+                                        className="
                                             group
                                             relative
                                             flex
@@ -786,7 +792,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
                                             duration-300
                                             hover:text-bronze
                                         "
-                                >
+                                    >
                                     {/* =========================
                                             ESQUERDA
                                         ========================= */}
@@ -802,7 +808,6 @@ function MenuDesktop({ items = [], showMenu = false }) {
 
                                         <motion.span
                                             variants={indexVariants}
-                                            animate={hoveredHref === item.href ? "hover" : "rest"}
                                             transition={hoverSpring}
                                             className="
                                                     font-space
@@ -820,7 +825,6 @@ function MenuDesktop({ items = [], showMenu = false }) {
 
                                         <motion.span
                                             variants={titleVariants}
-                                            animate={hoveredHref === item.href ? "hover" : "rest"}
                                             transition={hoverSpring}
                                             className={`
                                                     font-bebas
@@ -844,7 +848,6 @@ function MenuDesktop({ items = [], showMenu = false }) {
 
                                     <motion.span
                                         variants={arrowVariants}
-                                        animate={hoveredHref === item.href ? "hover" : "rest"}
                                         transition={hoverSpring}
                                         className={`
                                                 font-space
@@ -892,7 +895,6 @@ function MenuDesktop({ items = [], showMenu = false }) {
                                         <motion.span
                                             aria-hidden="true"
                                             initial="rest"
-                                            animate={hoveredHref === item.href ? "hover" : "rest"}
                                             variants={hoverLineVariants}
                                             transition={HoverlineSpring}
                                             style={{
@@ -909,7 +911,8 @@ function MenuDesktop({ items = [], showMenu = false }) {
                                             "
                                         />
                                     )}
-                                </MotionLink>
+                                    </Link>
+                                </motion.div>
                             );
                         })}
                     </motion.div>
