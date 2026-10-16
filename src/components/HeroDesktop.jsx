@@ -164,8 +164,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, exper
                 ease: "back.out(1.7)",
             },
         );
-    }, [experienceMenuOpen]);// ============================================================
-    // EXPERIENCE — CLIQUE FORA
+    }, [experienceMenuOpen ]);
     // ============================================================
 
     useLayoutEffect(() => {
@@ -190,7 +189,6 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, exper
         const hero = heroRef.current;
 
         if (!hero) {
-
             return;
         }
 
@@ -207,8 +205,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, exper
             const elements = [logo, nav, visual, title, location, text, socials].filter(Boolean);
 
             if (!elements.length) {
-
-                return;
+            return;
             }
 
             // ========================================================
@@ -216,7 +213,6 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, exper
             // ========================================================
 
             const setVisibleState = () => {
-
                 gsap.set(elements, {
                     opacity: 1,
                     x: 0,
@@ -245,7 +241,6 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, exper
                 // ====================================================
 
                 if (currentScroll > 50) {
-
                     setVisibleState();
 
                     return null;
@@ -256,7 +251,6 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, exper
                 // ====================================================
 
                 if (heroTop < -50) {
-
                     setVisibleState();
 
                     return null;
@@ -434,7 +428,6 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, exper
                 }
 
                 return () => {
-
                     timeline.kill();
                 };
             };
@@ -555,14 +548,12 @@ if (animationCleanup) {
         // ========================================================
 
         if (!isReducedExperience) {
-
             return;
         }
 
         const hero = heroRef.current;
 
         if (!hero) {
-
             return;
         }
 
@@ -744,7 +735,6 @@ if (animationCleanup) {
             // ========================================================
 
             return () => {
-
                 scrollTrigger.kill();
 
                 exitTimeline.kill();
