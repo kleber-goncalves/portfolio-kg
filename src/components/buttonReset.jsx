@@ -1,12 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronUp } from "lucide-react";
-import gsap from "gsap";
 
 export default function ButtonReset() {
     const [isVisible, setIsVisible] = useState(false);
      const [isScrolling, setIsScrolling] = useState(false);
 
-     const buttonRef = useRef(null);
      const scrollTimeoutRef = useRef(null);
 
      // =========================================
@@ -42,51 +40,6 @@ export default function ButtonReset() {
 
 
     // =========================================
-    // ANIMAÇÃO DE ENTRADA / SAÍDA
-    // =========================================
-
-    useEffect(() => {
-        if (!buttonRef.current) return;
-
-        if (isVisible) {
-            gsap.to(buttonRef.current, {
-                opacity: 1,
-                y: 0,
-                duration: 0.4,
-                ease: "power2.out",
-            });
-        } else {
-            gsap.to(buttonRef.current, {
-                opacity: 0,
-                y: 20,
-                duration: 0.3,
-                ease: "power2.in",
-            });
-        }
-    }, [isVisible]);
-    // =========================================
-    // EFEITO DE VIDRO DURANTE O SCROLL
-    // =========================================
-
-    useEffect(() => {
-        if (!buttonRef.current || !isVisible) return;
-
-        if (isScrolling) {
-            gsap.to(buttonRef.current, {
-                opacity: 0.65,
-                duration: 0.25,
-                ease: "power2.out",
-            });
-        } else {
-            gsap.to(buttonRef.current, {
-                opacity: 1,
-                duration: 0.35,
-                ease: "power2.out",
-            });
-        }
-    }, [isScrolling, isVisible]);
-
-    // =========================================
     // VOLTAR AO TOPO
     // =========================================
 
@@ -101,15 +54,22 @@ export default function ButtonReset() {
 
     return (
         <div
-            ref={buttonRef}
-            className="
+            className={`
                 fixed
                 bottom-1
                 right-5
                 z-50
                 b-md:hidden
-                opacity-0
-            "
+                transition-[opacity,transform]
+                duration-300
+                ease-out
+                motion-reduce:transition-none
+                ${!isVisible
+                    ? "pointer-events-none translate-y-5 opacity-0"
+                    : isScrolling
+                      ? "translate-y-0 opacity-[0.65]"
+                      : "translate-y-0 opacity-100"}
+            `}
         >
             <a
                 href="#hero"

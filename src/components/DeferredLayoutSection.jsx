@@ -1,5 +1,4 @@
 import { lazy, Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const PREFETCH_MARGIN = "1200px 0px";
 
@@ -50,18 +49,34 @@ function SectionPlaceholder({ title }) {
 // Este componente só confirma prontidão depois que a seção lazy realmente montou.
 function LoadedSection({ Component, onReady, ...props }) {
     useLayoutEffect(() => {
+        let cancelled = false;
         let firstFrame = 0;
         let secondFrame = 0;
 
         firstFrame = window.requestAnimationFrame(() => {
             secondFrame = window.requestAnimationFrame(() => {
-                // Recalcula ScrollTriggers depois que a seção alterou a altura do documento.
-                ScrollTrigger.refresh(true);
-                onReady?.();
+                const refreshTriggers = async () => {
+                    try {
+                        const { ScrollTrigger } = await import("gsap/ScrollTrigger");
+                        if (cancelled) return;
+
+                        // Recalcula os gatilhos depois que a seção altera a altura do documento.
+                        ScrollTrigger.refresh(true);
+                    } catch (error) {
+                        if (!cancelled) {
+                            console.error("Não foi possível atualizar os ScrollTriggers após carregar a seção.", error);
+                        }
+                    }
+
+                    if (!cancelled) onReady?.();
+                };
+
+                void refreshTriggers();
             });
         });
 
         return () => {
+            cancelled = true;
             window.cancelAnimationFrame(firstFrame);
             window.cancelAnimationFrame(secondFrame);
         };
