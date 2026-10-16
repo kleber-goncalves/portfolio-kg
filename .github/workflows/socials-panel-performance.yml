@@ -6,6 +6,7 @@ on:
       - feat/responsividadeFull
     paths:
       - "src/components/Socials.jsx"
+      - "src/components/Preloader.jsx"
       - "src/components/HeroMobile.jsx"
       - "src/components/HeroDesktop.jsx"
       - "scripts/test-socials-panel-performance.mjs"
