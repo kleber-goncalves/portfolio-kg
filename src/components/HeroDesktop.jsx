@@ -1340,7 +1340,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, exper
                             flex-col
                         "
                     >
-                        <h2
+                        <h1
                             className="
                                 font-space
                                 text-4xl
@@ -1357,7 +1357,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, exper
                             Software
                             <br />
                             Developer
-                        </h2>
+                        </h1>
 
                         <p
                             className="

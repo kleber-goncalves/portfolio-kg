@@ -327,6 +327,7 @@ function NavbarDesktop({ items = [] }) {
             <aside
                 ref={panelRef}
                 aria-hidden={!isOpen}
+                inert={!isOpen}
                 className="
                     fixed
                     right-0

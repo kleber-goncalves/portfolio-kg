@@ -40,6 +40,20 @@ function auditSeo(html, robotsText, sitemapText) {
     const canonicalHref = links.find((item) =>
         (item.rel ?? "").toLowerCase().split(/\s+/).includes("canonical"))?.href ?? "";
     const rootInner = html.match(/<(main|div)\b[^>]*\bid=["']root["'][^>]*>([\s\S]*?)<\/\1>/i)?.[2] ?? "";
+    const jsonLd = html.match(/<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/i)?.[1] ?? "";
+    let structuredData = null;
+    try {
+        structuredData = jsonLd ? JSON.parse(jsonLd) : null;
+    } catch {
+        structuredData = null;
+    }
+    const graphTypes = structuredData?.["@graph"]?.map((item) => item["@type"]) ?? [];
+    const validStructuredData = Boolean(
+        structuredData?.["@context"] === "https://schema.org" &&
+        graphTypes.includes("Person") &&
+        graphTypes.includes("WebSite") &&
+        structuredData["@graph"].some((item) => item["@type"] === "WebSite" && item.url === PUBLIC_URL)
+    );
 
     addSeo(lang === "pt-BR" ? "pass" : "error", "html-lang",
         lang ? "Idioma declarado: " + lang + "." : "O documento não declara o idioma.");
@@ -100,6 +114,10 @@ function auditSeo(html, robotsText, sitemapText) {
         hasSitemap ? "sitemap.xml lista a URL de produção." :
             "sitemap.xml está ausente ou não lista " + PUBLIC_URL + ".");
 
+    addSeo(validStructuredData ? "pass" : "error", "json-ld-structured-data",
+        validStructuredData
+            ? "JSON-LD válido com entidades Person e WebSite aponta para o domínio de produção."
+            : "JSON-LD ausente ou inválido; é necessário definir Person e WebSite com a URL pública correta.");
     addSeo(rootInner.trim() ? "pass" : "warning", "static-html-content",
         rootInner.trim()
             ? "O HTML inicial contém conteúdo na raiz React."
@@ -399,6 +417,7 @@ async function main() {
         console.error("\n[audit] FAILED: " + seo.summary.error + " static SEO error(s), " +
             accessibility.violationGroups + " Axe violation group(s), " + errors + " interaction error(s), " +
             semanticErrors + " semantic error(s).");
+        process.exitCode = 1;
     } else {
         console.log("\n[audit] PASSED: no blocking static SEO errors or Axe violations. Review warnings in the reports.");
     }

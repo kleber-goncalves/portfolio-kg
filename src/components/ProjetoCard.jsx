@@ -200,10 +200,15 @@ function ProjetoCard({ numero, titulo, descricao, tecnologias = [], tecnologiasC
 
                                     mudarImagem(index);
                                 }}
-                                className={`h-1.5 rounded-full transition-all duration-300 ${index === imagemAtual ? "w-8 bg-white" : "w-2 bg-white/40"}`}
+                                className={`flex h-6 items-center justify-center rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${index === imagemAtual ? "w-8" : "w-6"}`}
                                 aria-label={`Mostrar imagem ${index + 1}`}
                                 title={`Mostrar imagem ${index + 1}`}
-                            />
+                            >
+                                <span
+                                    aria-hidden="true"
+                                    className={`h-1.5 rounded-full transition-all duration-300 ${index === imagemAtual ? "w-8 bg-white" : "w-2 bg-white/40"}`}
+                                />
+                            </button>
                         ))}
                     </div>
                 )}
