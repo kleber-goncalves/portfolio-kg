@@ -3,6 +3,8 @@ name: Menu Mobile Overlay And Scroll Lock
 on:
   push:
     branches:
+      - main
+      - dev
       - feat/responsividadeFull
     paths:
       - ".github/workflows/menu-mobile-overlay.yml"

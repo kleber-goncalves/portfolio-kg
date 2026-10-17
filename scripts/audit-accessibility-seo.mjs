@@ -9,7 +9,7 @@ const DIST = path.join(ROOT, "dist");
 const REPORT_DIR = path.join(ROOT, "artifacts", "accessibility-seo");
 const BASE_URL = process.env.AUDIT_BASE_URL || "http://127.0.0.1:4173/";
 const PUBLIC_URL = process.env.AUDIT_PUBLIC_URL || "https://kleber-dev1.vercel.app/";
-const SOCIAL_IMAGE_URL = new URL("euNv.png", PUBLIC_URL).href;
+const SOCIAL_IMAGE_URL = new URL("preview.png", PUBLIC_URL).href;
 const seo = { checks: [], summary: { pass: 0, warning: 0, error: 0 } };
 const accessibility = { scans: [], semantics: [], interactions: [], violationGroups: 0 };
 

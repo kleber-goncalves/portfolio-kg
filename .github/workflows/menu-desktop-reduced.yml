@@ -3,6 +3,8 @@ name: Menu Desktop Reduced Visibility
 on:
   push:
     branches:
+      - main
+      - dev
       - feat/responsividadeFull
     paths:
       - ".github/workflows/menu-desktop-reduced.yml"

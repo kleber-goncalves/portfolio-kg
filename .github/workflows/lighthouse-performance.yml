@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - dev
       - feat/responsividadeFull
   workflow_dispatch:
 
@@ -21,7 +22,7 @@ jobs:
     timeout-minutes: 20
 
     env:
-      PREVIEW_URL: "${{ github.ref_name == 'main' && 'https://kleber-dev1.vercel.app/' || 'https://portfolio-kg-git-feat-respon-0847d0-kleber-goncalves-s-projects.vercel.app/' }}"
+      PREVIEW_URL: "${{ github.ref_name == 'main' && 'https://kleber-dev1.vercel.app/' || github.ref_name == 'dev' && 'https://portfolio-kg-git-dev-kleber-goncalves-s-projects.vercel.app/' || 'https://portfolio-kg-git-feat-respon-0847d0-kleber-goncalves-s-projects.vercel.app/' }}"
 
     steps:
       - name: Checkout repository

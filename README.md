@@ -230,7 +230,7 @@ Os metadados globais ficam em <code>index.html</code>, enquanto os arquivos púb
 | **Open Graph** | Metadados para título, descrição, site, idioma e imagem de compartilhamento. |
 | **Twitter Cards** | Cartão de compartilhamento com imagem ampla e descrição. |
 | **Dados estruturados** | JSON-LD com informações do tipo <code>Person</code> e <code>WebSite</code>. |
-| **Imagem de preview** | <code>public/preview.png</code> é usada na prévia visual do README; o HTML aponta para uma imagem de compartilhamento. |
+| **Imagem de preview e compartilhamento** | <code>public/preview.png</code> é usada no README e nos metadados Open Graph/Twitter para representar visualmente o portfólio. |
 | **Auditoria** | Workflow específico de SEO e acessibilidade com verificações Lighthouse para desktop e mobile. |
 
 Como se trata de um portfólio de página única, o sitemap atual lista apenas a página inicial. Caso o domínio público seja alterado, a URL canônica, os metadados de compartilhamento, o arquivo <code>robots.txt</code> e o sitemap devem ser revisados juntos.
