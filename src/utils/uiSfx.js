@@ -3,7 +3,8 @@ import { createUISFX } from "uisfx";
 const ENABLED_STORAGE_KEY = "kleber-dev:ui-sounds-enabled";
 const PLAYER_PREFERENCES_KEY = "kleber-dev:ui-sfx";
 const CHANGE_EVENT = "kleber-dev:ui-sfx-change";
-const DEFAULT_VOLUME = 100;
+const DEFAULT_VOLUME_PERCENT = 100;
+const VOLUME_STORAGE_KEY = "kleber-dev:ui-sounds-volume";
 
 let player = null;
 let isUnlocked = false;
@@ -17,6 +18,47 @@ export function getUiSoundsEnabled() {
     } catch {
         return false;
     }
+}
+
+export function getUiSoundVolume() {
+    if (typeof window === "undefined") return DEFAULT_VOLUME_PERCENT;
+
+    try {
+        const storedVolume = window.localStorage.getItem(VOLUME_STORAGE_KEY);
+        if (storedVolume === null) return DEFAULT_VOLUME_PERCENT;
+
+        const volume = Number(storedVolume);
+        if (!Number.isFinite(volume)) return DEFAULT_VOLUME_PERCENT;
+
+        return Math.max(0, Math.min(100, Math.round(volume)));
+    } catch {
+        return DEFAULT_VOLUME_PERCENT;
+    }
+}
+
+function persistVolume(volume) {
+    try {
+        window.localStorage.setItem(VOLUME_STORAGE_KEY, String(volume));
+    } catch {
+        // O volume continua aplicado durante a sessão se o storage estiver indisponível.
+    }
+
+    window.dispatchEvent(new CustomEvent(CHANGE_EVENT, {
+        detail: { volume },
+    }));
+}
+
+export function setUiSoundVolume(nextVolume) {
+    const numericVolume = Number(nextVolume);
+    if (!Number.isFinite(numericVolume)) return getUiSoundVolume();
+
+    const volume = Math.max(0, Math.min(100, Math.round(numericVolume)));
+    const soundPlayer = getPlayer();
+
+    soundPlayer?.setVolume(volume / 100);
+    persistVolume(volume);
+
+    return volume;
 }
 
 function persistEnabled(enabled) {
@@ -36,17 +78,18 @@ function getPlayer() {
     if (player) return player;
 
     const enabled = getUiSoundsEnabled();
+    const volume = getUiSoundVolume() / 100;
 
     player = createUISFX({
         pack: "zen",
-        volume: DEFAULT_VOLUME,
+        volume,
         enabled,
         preferences: { key: PLAYER_PREFERENCES_KEY },
     });
 
-    // Mantém a identidade sonora do portfólio e aplica a preferência explícita do site.
+    // Mantém a identidade sonora e restaura o volume escolhido pelo visitante.
     player.setPack("zen");
-    player.setVolume(DEFAULT_VOLUME);
+    player.setVolume(volume);
     player.setEnabled(enabled);
 
     return player;
@@ -57,6 +100,22 @@ export function subscribeUiSounds(callback) {
 
     const handleChange = (event) => {
         callback(Boolean(event?.detail?.enabled ?? getUiSoundsEnabled()));
+    };
+
+    window.addEventListener(CHANGE_EVENT, handleChange);
+    window.addEventListener("storage", handleChange);
+
+    return () => {
+        window.removeEventListener(CHANGE_EVENT, handleChange);
+        window.removeEventListener("storage", handleChange);
+    };
+}
+
+export function subscribeUiSoundVolume(callback) {
+    if (typeof window === "undefined") return () => {};
+
+    const handleChange = (event) => {
+        callback(Number(event?.detail?.volume ?? getUiSoundVolume()));
     };
 
     window.addEventListener(CHANGE_EVENT, handleChange);
@@ -141,7 +200,7 @@ export async function toggleUiSounds() {
     }
 
     soundPlayer.setPack("zen");
-    soundPlayer.setVolume(DEFAULT_VOLUME);
+    soundPlayer.setVolume(getUiSoundVolume() / 100);
     soundPlayer.setEnabled(true);
     persistEnabled(true);
     soundPlayer.play("toggle-on");
