@@ -160,7 +160,7 @@ function hasVisualHoverState(element) {
     if (cached !== undefined) return cached;
 
     const hasOwnHoverClass = Array.from(element.classList).some((name) =>
-        /(^|:)(hover|focus-within|group-hover|peer-hover):/.test(name)
+        /(^|:)(hover|focus-within|group-hover(?:\/[^:]+)?|peer-hover(?:\/[^:]+)?):/.test(name)
     );
 
     if (hasOwnHoverClass || element.hasAttribute("data-ui-sfx-hover")) {
@@ -171,11 +171,11 @@ function hasVisualHoverState(element) {
     // Cartões/links às vezes animam apenas os filhos ao passar o mouse
     // (por exemplo, ícone ou texto com group-hover). Inspecionamos filhos
     // somente quando o controle usa a classe "group".
-    if (element.classList.contains("group")) {
+    if (element.classList.contains("group") || Array.from(element.classList).some((name) => name.startsWith("group/"))) {
         const descendants = element.querySelectorAll("*");
         for (const descendant of descendants) {
             const hasGroupHover = Array.from(descendant.classList).some((name) =>
-                /(^|:)(group-hover|peer-hover):/.test(name)
+                /(^|:)(group-hover(?:\/[^:]+)?|peer-hover(?:\/[^:]+)?):/.test(name)
             );
             if (hasGroupHover) {
                 hoverTargetCache.set(element, true);
