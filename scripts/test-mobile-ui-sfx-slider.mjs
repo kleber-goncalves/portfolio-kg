@@ -92,6 +92,23 @@ async function dragSliderWithTouch(page, context, slider, targetRatio) {
             });
         }
 
+        // A preferência só é persistida ao soltar o dedo, não a cada touchmove.
+        const storedDuringDrag = await page.evaluate((key) => localStorage.getItem(key), volumeKey);
+        assert.equal(
+            storedDuringDrag,
+            String(currentValue),
+            "The mobile slider must not persist each intermediate touch movement.",
+        );
+
+        const fillTransition = await page.locator("[data-volume-fill]").evaluate((element) => ({
+            duration: getComputedStyle(element).transitionDuration,
+        }));
+        assert.equal(
+            fillTransition.duration,
+            "0s",
+            "The filled track must follow the finger without a spring transition while dragging.",
+        );
+
         await session.send("Input.dispatchTouchEvent", {
             type: "touchEnd",
             touchPoints: [],

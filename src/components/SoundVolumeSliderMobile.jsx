@@ -22,41 +22,78 @@ const RANGE_KEYS = new Set([
 
 function SoundVolumeSliderMobile() {
     const [volume, setVolume] = useState(() => getUiSoundVolume());
+    const [isInteracting, setIsInteracting] = useState(false);
     const sliderId = useId();
     const reducedMotion = useReducedMotion();
-    const interactionRef = useRef({ source: null, changed: false });
+    const interactionRef = useRef({
+        source: null,
+        changed: false,
+        value: getUiSoundVolume(),
+    });
 
-    useEffect(() => subscribeUiSoundVolume(setVolume), []);
+    useEffect(() => subscribeUiSoundVolume((nextVolume) => {
+        setVolume(nextVolume);
+        if (!interactionRef.current.source) {
+            interactionRef.current.value = nextVolume;
+        }
+    }), []);
 
     const handleChange = (event) => {
         const nextValue = Number(event.currentTarget.value);
         if (!Number.isFinite(nextValue) || nextValue === volume) return;
 
-        setVolume(setUiSoundVolume(nextValue));
+        // Durante o arraste, atualiza apenas o valor visual. Gravar no localStorage
+        // e disparar um CustomEvent em cada touchmove pode bloquear arrastes rápidos.
+        interactionRef.current.value = nextValue;
+        setVolume(nextValue);
 
         if (interactionRef.current.source) {
             interactionRef.current.changed = true;
+            return;
         }
+
+        const committedVolume = setUiSoundVolume(nextValue);
+        interactionRef.current.value = committedVolume;
+        setVolume(committedVolume);
     };
 
     const beginPointerInteraction = () => {
-        interactionRef.current = { source: "pointer", changed: false };
+        interactionRef.current = {
+            source: "pointer",
+            changed: false,
+            value: volume,
+        };
+        setIsInteracting(true);
     };
 
     const beginKeyboardInteraction = (event) => {
         if (!RANGE_KEYS.has(event.key)) return;
-        interactionRef.current = { source: "keyboard", changed: false };
+
+        if (interactionRef.current.source !== "keyboard") {
+            interactionRef.current = {
+                source: "keyboard",
+                changed: false,
+                value: volume,
+            };
+        }
+        setIsInteracting(true);
     };
 
     const finishInteraction = () => {
-        const changed = interactionRef.current.changed;
-        interactionRef.current = { source: null, changed: false };
+        const { changed, value } = interactionRef.current;
+        interactionRef.current = {
+            source: null,
+            changed: false,
+            value,
+        };
+        setIsInteracting(false);
 
-        if (changed) playUiSound("volume-change");
-    };
+        if (!changed) return;
 
-    const cancelInteraction = () => {
-        interactionRef.current = { source: null, changed: false };
+        const committedVolume = setUiSoundVolume(value);
+        interactionRef.current.value = committedVolume;
+        setVolume(committedVolume);
+        playUiSound("volume-change");
     };
 
     const transition = reducedMotion
@@ -97,11 +134,12 @@ function SoundVolumeSliderMobile() {
                     aria-hidden="true"
                     className="pointer-events-none absolute left-2 right-2 h-1.5 overflow-hidden rounded-full bg-steel/20"
                 >
-                    <motion.div
-                        initial={false}
-                        animate={{ width: ((volume / MAX_VOLUME) * 100) + "%" }}
-                        transition={transition}
-                        className="h-full rounded-full bg-bronze"
+                    <div
+                        data-volume-fill
+                        className={isInteracting
+                            ? "h-full rounded-full bg-bronze transition-none"
+                            : "h-full rounded-full bg-bronze transition-[width] duration-150 ease-out"}
+                        style={{ width: ((volume / MAX_VOLUME) * 100) + "%" }}
                     />
                 </div>
 
@@ -117,12 +155,12 @@ function SoundVolumeSliderMobile() {
                     onChange={handleChange}
                     onPointerDown={beginPointerInteraction}
                     onPointerUp={finishInteraction}
-                    onPointerCancel={cancelInteraction}
+                    onPointerCancel={finishInteraction}
                     onKeyDown={beginKeyboardInteraction}
                     onKeyUp={(event) => {
                         if (RANGE_KEYS.has(event.key)) finishInteraction();
                     }}
-                    onBlur={cancelInteraction}
+                    onBlur={finishInteraction}
                     style={{ touchAction: "pan-y" }}
                     className="
                         relative z-10 h-8 w-full cursor-pointer appearance-none
