@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { ChevronDown, SlidersHorizontal, Volume2, VolumeX } from "lucide-react";
+import Slider05 from "./ui/Slider05";
 import {
     getUiSoundsEnabled,
     getUiSoundVolume,
@@ -68,8 +69,8 @@ function SoundControls({ className = "" }) {
         setIsVolumeOpen(nextOpen);
     };
 
-    const handleVolumeChange = (event) => {
-        const nextVolume = setUiSoundVolume(Number(event.target.value));
+    const handleVolumeChange = (nextValue) => {
+        const nextVolume = setUiSoundVolume(nextValue);
         setVolume(nextVolume);
     };
 
@@ -167,19 +168,14 @@ function SoundControls({ className = "" }) {
                             </span>
                         </div>
 
-                        <input
-                            id={volumePanelId + "-range"}
-                            type="range"
-                            min="0"
-                            max="800"
-                            step="5"
+                        <Slider05
+                            min={0}
+                            max={800}
+                            step={5}
                             value={volume}
                             onChange={handleVolumeChange}
-                            onPointerUp={handleVolumePreview}
-                            onKeyUp={handleVolumePreview}
-                            aria-labelledby={volumeLabelId}
-                            aria-valuetext={`${volume}% do volume original`}
-                            className="h-2 w-full cursor-pointer accent-bronze"
+                            onPreview={handleVolumePreview}
+                            labelId={volumeLabelId}
                         />
 
                         <div className="mt-2 flex items-center justify-between font-space text-[9px] uppercase tracking-[0.12em] text-steel/80">
