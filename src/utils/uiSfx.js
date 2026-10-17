@@ -11,14 +11,18 @@ const VOLUME_MIGRATION_KEY = "kleber-dev:ui-sounds-volume-v2-migrated";
 let player = null;
 let isUnlocked = false;
 let unlockPromise = null;
+let unlockPromiseGeneration = null;
+let unlockGeneration = 0;
 
 export function getUiSoundsEnabled() {
     if (typeof window === "undefined") return false;
 
     try {
-        return window.localStorage.getItem(ENABLED_STORAGE_KEY) === "true";
+        const storedPreference = window.localStorage.getItem(ENABLED_STORAGE_KEY);
+        return storedPreference === null ? true : storedPreference === "true";
     } catch {
-        return false;
+        // Sem acesso ao armazenamento, aplica o padrão sem bloquear a interface.
+        return true;
     }
 }
 
@@ -136,6 +140,61 @@ function getPlayer() {
     return player;
 }
 
+/**
+ * Tenta desbloquear o contexto de áudio. A Promise só é considerada bem-sucedida
+ * quando a biblioteca confirma que o AudioContext está em execução.
+ *
+ * A função deve ser chamada a partir de uma interação real do usuário ou do
+ * manipulador explícito do botão de ativação.
+ */
+function requestAudioUnlock(soundPlayer = getPlayer()) {
+    if (!soundPlayer) return Promise.resolve(false);
+
+    // Uma tentativa antiga invalidada por desativação não deve bloquear uma nova.
+    if (unlockPromise && unlockPromiseGeneration === unlockGeneration) {
+        return unlockPromise;
+    }
+
+    const attemptGeneration = ++unlockGeneration;
+    let unlockResult;
+
+    try {
+        // Chamada síncrona: mantém o resume() dentro do gesto real do usuário.
+        unlockResult = soundPlayer.unlock();
+    } catch {
+        isUnlocked = false;
+        return Promise.resolve(false);
+    }
+
+    // Enquanto o resume está pendente, não alegamos que o áudio está pronto.
+    isUnlocked = false;
+
+    let attempt;
+    attempt = Promise.resolve(unlockResult)
+        .then((unlocked) => {
+            const succeeded = unlocked === true && attemptGeneration === unlockGeneration;
+            isUnlocked = succeeded;
+            return succeeded;
+        })
+        .catch(() => {
+            if (attemptGeneration === unlockGeneration) {
+                isUnlocked = false;
+            }
+            return false;
+        })
+        .finally(() => {
+            // Uma tentativa antiga nunca pode limpar a referência da mais nova.
+            if (unlockPromise === attempt) {
+                unlockPromise = null;
+                unlockPromiseGeneration = null;
+            }
+        });
+
+    unlockPromise = attempt;
+    unlockPromiseGeneration = attemptGeneration;
+    return attempt;
+}
+
 export function subscribeUiSounds(callback) {
     if (typeof window === "undefined") return () => {};
 
@@ -169,32 +228,22 @@ export function subscribeUiSoundVolume(callback) {
 }
 
 export function playUiSound(cue) {
-    const soundPlayer = getPlayer();
+    if (!getUiSoundsEnabled()) return null;
 
-    if (!soundPlayer || !getUiSoundsEnabled()) return null;
+    // Hover, renderização ou outra execução sem gesto não iniciam o desbloqueio.
+    // O áudio só é tocado após uma tentativa iniciada por interação confiável.
+    if (!isUnlocked && !unlockPromise) return null;
+
+    const soundPlayer = getPlayer();
+    if (!soundPlayer) return null;
 
     if (isUnlocked) {
         return playWithConfiguredVolume(soundPlayer, cue);
     }
 
-    // unlock() é invocado dentro da interação real do usuário. Não há autoplay
-    // nem fila de sons disparados por atualizações assíncronas sem gesto.
-    if (!unlockPromise) {
-        unlockPromise = Promise.resolve(soundPlayer.unlock())
-            .then(() => {
-                isUnlocked = true;
-            })
-            .catch(() => {
-                isUnlocked = false;
-            })
-            .finally(() => {
-                unlockPromise = null;
-            });
-    }
-
     const pendingUnlock = unlockPromise;
-    void pendingUnlock.then(() => {
-        if (isUnlocked && getUiSoundsEnabled()) {
+    void pendingUnlock.then((unlocked) => {
+        if (unlocked && isUnlocked && getUiSoundsEnabled()) {
             playWithConfiguredVolume(soundPlayer, cue);
         }
     });
@@ -209,34 +258,21 @@ export async function toggleUiSounds() {
     const nextEnabled = !getUiSoundsEnabled();
 
     if (!nextEnabled) {
+        // Invalida qualquer desbloqueio pendente antes de desligar o motor.
+        unlockGeneration += 1;
+        isUnlocked = false;
         soundPlayer.stopAll();
         soundPlayer.setEnabled(false);
         persistEnabled(false);
         return false;
     }
 
-    // A chamada começa diretamente no clique/toque do botão, respeitando
-    // a política de reprodução do navegador.
-    try {
-        unlockPromise = Promise.resolve(soundPlayer.unlock())
-            .then(() => {
-                isUnlocked = true;
-            })
-            .catch(() => {
-                isUnlocked = false;
-            })
-            .finally(() => {
-                unlockPromise = null;
-            });
+    const unlocked = await requestAudioUnlock(soundPlayer);
 
-        await unlockPromise;
-    } catch {
-        isUnlocked = false;
-    }
-
-    if (!isUnlocked) {
-        persistEnabled(false);
+    if (!unlocked) {
+        soundPlayer.stopAll();
         soundPlayer.setEnabled(false);
+        persistEnabled(false);
         return false;
     }
 
@@ -302,6 +338,31 @@ export function attachUiSfxHoverListeners() {
         playUiSound("hover");
     };
 
+    const handleTrustedPointerDown = (event) => {
+        if (!event.isTrusted || !getUiSoundsEnabled()) return;
+
+        // A primeira interação real prepara o áudio; o carregamento e o hover não.
+        void requestAudioUnlock();
+    };
+
+    const unlockKeys = new Set([
+        "Enter", " ", "Spacebar",
+        "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown",
+        "PageDown", "PageUp", "Home", "End",
+    ]);
+
+    const handleTrustedKeyDown = (event) => {
+        if (!event.isTrusted || !unlockKeys.has(event.key) || !getUiSoundsEnabled()) return;
+        void requestAudioUnlock();
+    };
+
     document.addEventListener("pointerover", handlePointerOver, { passive: true });
-    return () => document.removeEventListener("pointerover", handlePointerOver);
+    document.addEventListener("pointerdown", handleTrustedPointerDown, { passive: true });
+    document.addEventListener("keydown", handleTrustedKeyDown);
+
+    return () => {
+        document.removeEventListener("pointerover", handlePointerOver);
+        document.removeEventListener("pointerdown", handleTrustedPointerDown);
+        document.removeEventListener("keydown", handleTrustedKeyDown);
+    };
 }

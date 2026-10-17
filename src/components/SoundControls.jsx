@@ -180,11 +180,11 @@ function SoundControls({ className = "" }) {
 
                         <div className="mt-2 flex items-center justify-between font-space text-[9px] uppercase tracking-[0.12em] text-steel/80">
                             <span>Silêncio</span>
-                            <span>Amplificação 4×</span>
+                            <span>Escala 8×</span>
                         </div>
 
                         <p className="mt-4 border-t border-graphite pt-3 text-[10px] leading-4 text-steel">
-                            100% é o volume original da biblioteca. Acima disso, os efeitos são amplificados até 400%. A escolha fica salva neste navegador.
+                            100% é o volume de referência de cada efeito. A escala vai até 800%, respeitando o limite máximo de ganho de cada efeito. A escolha fica salva neste navegador.
                         </p>
                     </motion.div>
                 )}
