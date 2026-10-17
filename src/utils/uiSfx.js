@@ -148,3 +148,67 @@ export async function toggleUiSounds() {
 
     return true;
 }
+
+
+const HOVERABLE_SELECTOR = "button, a[href], [role='button'], [role='link'], [data-ui-sfx-hover]";
+const hoverTargetCache = new WeakMap();
+
+function hasVisualHoverState(element) {
+    if (!element) return false;
+
+    const cached = hoverTargetCache.get(element);
+    if (cached !== undefined) return cached;
+
+    const hasOwnHoverClass = Array.from(element.classList).some((name) =>
+        /(^|:)(hover|focus-within|group-hover|peer-hover):/.test(name)
+    );
+
+    if (hasOwnHoverClass || element.hasAttribute("data-ui-sfx-hover")) {
+        hoverTargetCache.set(element, true);
+        return true;
+    }
+
+    // Cartões/links às vezes animam apenas os filhos ao passar o mouse
+    // (por exemplo, ícone ou texto com group-hover). Inspecionamos filhos
+    // somente quando o controle usa a classe "group".
+    if (element.classList.contains("group")) {
+        const descendants = element.querySelectorAll("*");
+        for (const descendant of descendants) {
+            const hasGroupHover = Array.from(descendant.classList).some((name) =>
+                /(^|:)(group-hover|peer-hover):/.test(name)
+            );
+            if (hasGroupHover) {
+                hoverTargetCache.set(element, true);
+                return true;
+            }
+        }
+    }
+
+    hoverTargetCache.set(element, false);
+    return false;
+}
+
+/**
+ * Dispara o cue "hover" do pacote Zen apenas para controles interativos
+ * que já declaram classes de hover/foco no visual. O evento é delegado,
+ * não adiciona handlers React a dezenas de componentes nem toca em touch.
+ */
+export function attachUiSfxHoverListeners() {
+    if (typeof document === "undefined") return () => {};
+
+    const handlePointerOver = (event) => {
+        if (event.pointerType !== "mouse" && event.pointerType !== "pen") return;
+        if (!(event.target instanceof Element)) return;
+
+        const element = event.target.closest(HOVERABLE_SELECTOR);
+        if (!element) return;
+        if (element.contains(event.relatedTarget)) return;
+        if (element.matches(":disabled, [aria-disabled='true']")) return;
+        if (!hasVisualHoverState(element)) return;
+
+        playUiSound("hover");
+    };
+
+    document.addEventListener("pointerover", handlePointerOver, { passive: true });
+    return () => document.removeEventListener("pointerover", handlePointerOver);
+}
