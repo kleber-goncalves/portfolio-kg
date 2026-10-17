@@ -173,7 +173,9 @@ function requestAudioUnlock(soundPlayer = getPlayer()) {
     attempt = Promise.resolve(unlockResult)
         .then((unlocked) => {
             const succeeded = unlocked === true && attemptGeneration === unlockGeneration;
-            isUnlocked = succeeded;
+            if (attemptGeneration === unlockGeneration) {
+                isUnlocked = succeeded;
+            }
             return succeeded;
         })
         .catch(() => {
