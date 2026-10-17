@@ -112,25 +112,26 @@ function ExperienceDropdown({ experienceMode = getExperienceMode() || "full", on
     ============================================================
     */
 
-    const handleExperienceChange = (mode) => {
+    const handleExperienceChange = async (mode) => {
         if (mode === experienceMode) {
             if (isOpen) playUiSound("collapse");
             setIsOpen(false);
             return;
         }
 
-        // Ao escolher outro modo a página recarrega para aplicar a configuração;
-        // não iniciamos o áudio de fechamento nesse caminho para evitar som cortado.
+        // Ao escolher outro modo, o dropdown também está sendo recolhido.
+        // Espera apenas o fim do som curto, quando o áudio está ativado,
+        // antes de recarregar a página e aplicar a configuração.
+        const collapseSound = isOpen ? playUiSound("collapse") : null;
         setIsOpen(false);
 
         setExperienceMode(mode);
 
         onChange?.(mode);
 
-        /*
-        Recarrega a página para aplicar
-        o novo modo em toda a aplicação.
-        */
+        if (collapseSound?.ended) {
+            await collapseSound.ended;
+        }
 
         window.location.reload();
     };
