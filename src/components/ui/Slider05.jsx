@@ -238,7 +238,7 @@ function Slider05({
     };
 
     return (
-        <div className={`group relative w-full select-none ${className}`}>
+        <div className={`group relative w-full select-none pt-8 ${className}`}>
             <AnimatePresence>
                 {isActive && (
                     <motion.div
