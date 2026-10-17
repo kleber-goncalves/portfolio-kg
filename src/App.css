@@ -1,13 +1,393 @@
 @import "tailwindcss";
 
+/*
+ * Breakpoints responsivos ativam somente em dispositivos com mouse/ponteiro fino.
+ * Celulares e tablets touch mantêm a composição mobile, em qualquer orientação.
+ */
+@custom-variant a-sm (@media (width >= 40rem) and (height > 600px) and (hover: hover) and (pointer: fine));
+@custom-variant b-md (@media (width >= 48rem) and (height > 600px) and (hover: hover) and (pointer: fine));
+@custom-variant c-lg (@media (width >= 64rem) and (height > 600px) and (hover: hover) and (pointer: fine));
+@custom-variant d-xl (@media (width >= 80rem) and (height > 600px) and (hover: hover) and (pointer: fine));
+@custom-variant e-2xl (@media (width >= 96rem) and (height > 600px) and (hover: hover) and (pointer: fine));
+
+
+@theme {
+    --color-obsidian: #0d0d0d;
+    --color-carbon: #151515;
+    --color-graphite: #242424;
+
+    --color-t-sec: #020810;
+
+    --color-steel: #8b8b8b; /* informação secundária */
+    --color-ivory: #f2f0ec; /* informação principal */
+
+    --color-bronze: #a87852; /* palavras e elementos importantes */
+    --color-warm-bronze: #c49a78; /* interação / hover */
+    --color-champagne: #d8c2aa; /* detalhe premium */
+
+    --font-space: "Space Grotesk", sans-serif;
+    --font-bebas: "Bebas Neue", sans-serif;
+
+    --background-image-gradientaa: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.08),
+        transparent
+    );
+}
+
 @layer base {
     * {
-        font-family: "Montserrat", sans-serif;
+        padding: 0;
+        margin: 0;
+        font-family: "DM Mono", monospace;
         box-sizing: border-box;
     }
 }
 
+
+
 html {
+    scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
 }
 
+/* ScrollSmooth - Lenis */
+html.lenis,
+html.lenis body {
+    height: auto;
+}
+
+html.lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+}
+
+html.lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+}
+
+html.lenis.lenis-stopped {
+    overflow: hidden;
+}
+
+html::-webkit-scrollbar {
+  display: none; /* ou width: 0px; */
+}
+
+
+:root {
+    /* Paleta de Cores */
+    --bg-primary: #0d0d0d;
+    --bg-secondary: #151515;
+    --border: #242424;
+
+    --text-primary: #f2f0ec;
+    --text-secondary: #8b8b8b;
+
+    --accent: #a87852;
+    --accent-hover: #c49a78;
+    --accent-light: #d8c2aa;
+
+    /* Tipografia */
+    --font-bebas: "Bebas Neue", sans-serif;
+    --font-dm: "DM Mono", monospace;
+    --font-space: "Space Grotesk", sans-serif;
+
+    --gradienteFundo:
+        radial-gradient(
+            circle at 70% 20%,
+            rgba(168, 120, 82, 0.08),
+            transparent 35%
+        ),
+        #0d0d0d;
+}
+
+.bebas-neue-regular {
+    font-family: "Bebas Neue", sans-serif;
+
+    font-style: normal;
+}
+
+.fundo-principal {
+    background-color: #0d0d0d;
+}
+.gradienteFundo {
+    background:
+        radial-gradient(
+            circle at 70% 20%,
+            rgba(168, 120, 82, 0.08),
+            transparent 35%
+        ),
+        #0d0d0d;
+}
+
+#card2:active #contentNumber {
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+/* ============================================================
+   HERO — GEOMETRIA
+============================================================ */
+
+.hero-panel {
+    isolation: isolate;
+}
+
+
+/* ============================================================
+   LOGO
+
+   O logo fica visualmente fora do painel.
+============================================================ */
+
+.hero-logo {
+    margin-left: 0.25rem;
+}
+
+
+/* ============================================================
+   MENU
+
+   Cria o aspecto de "botão encaixado" no canto.
+============================================================ */
+
+.hero-menu {
+    border-bottom-left-radius: 2rem;
+    border-bottom-right-radius: 0;
+}
+
+
+/* ============================================================
+   RECORTES
+============================================================ */
+
+.hero-cut {
+    position: absolute;
+    z-index: 20;
+    pointer-events: none;
+    background: var(--bg-obsidian);
+}
+
+
+/* ------------------------------------------------------------
+   RECORTE SUPERIOR ESQUERDO
+
+   Produz:
+
+        K
+      ╭──────
+      │
+      │
+------------------------------------------------------------ */
+
+.hero-cut-top-left {
+    top: 0;
+    left: 0;
+
+    width: 5.5rem;
+    height: 5.5rem;
+
+    border-bottom-right-radius: 2.5rem;
+}
+
+
+/* ------------------------------------------------------------
+   RECORTE INFERIOR ESQUERDO
+------------------------------------------------------------ */
+
+.hero-cut-bottom-left {
+    bottom: 0;
+    left: 0;
+
+    width: 8rem;
+    height: 4rem;
+
+    border-top-right-radius: 2.5rem;
+}
+
+
+/* ------------------------------------------------------------
+   RECORTE INFERIOR DIREITO
+------------------------------------------------------------ */
+
+.hero-cut-bottom-right {
+    right: 0;
+    bottom: 0;
+
+    width: 4rem;
+    height: 4rem;
+
+    border-top-left-radius: 2.5rem;
+}
+
+
+/* ============================================================
+   DESKTOP
+============================================================ */
+
+@media (min-width: 768px) and (hover: hover) and (pointer: fine) and (orientation: portrait), (min-width: 768px) and (hover: hover) and (pointer: fine) and (orientation: landscape) and (min-height: 601px) {
+
+    .hero-cut-top-left {
+        width: 7rem;
+        height: 7rem;
+
+        border-bottom-right-radius: 3rem;
+    }
+
+
+    .hero-cut-bottom-left {
+        width: 10rem;
+        height: 5rem;
+
+        border-top-right-radius: 3rem;
+    }
+
+
+    .hero-cut-bottom-right {
+        width: 5rem;
+        height: 5rem;
+
+        border-top-left-radius: 3rem;
+    }
+
+}
+
+/* #content::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 25px;
+    height: 25px;
+    background-color: #ff0000;
+    border-radius: 50%;
+    box-shadow: -10px 10px 0 #000000;
+} */
+
+/* =========================================================
+   CONTENT NUMBER
+========================================================= */
+
+#contetNumber {
+    position: relative;
+
+    border-right: 1px solid var(--border);
+}
+
+/* =========================================================
+   BORDA GRADIENTE
+========================================================= */
+
+#contetNumber::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: -2px;
+
+    width: 4px;
+    height: 100%;
+
+    background: linear-gradient(
+        to bottom,
+        var(--accent),
+        var(--accent-light),
+        var(--accent-hover)
+    );
+
+    transform: scaleY(0);
+
+    transform-origin: top;
+
+    transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* =========================================================
+   CARD SELECIONADO
+========================================================= */
+
+#contetNumber.is-selected::before {
+    transform: scaleY(1);
+}
+
+/* =========================================================
+   NÚMERO
+========================================================= */
+
+#number {
+    transition: color 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* =========================================================
+   INDICADOR MOBILE — ARRASTE
+   ========================================================= */
+
+/* ============================================================
+   INDICADOR DO SLIDER — MOBILE
+   ============================================================ */
+
+.indicator-arrow-left {
+    animation: indicator-left 2s ease-in-out infinite;
+}
+
+.indicator-arrow-right {
+    animation: indicator-right 2s ease-in-out infinite;
+}
+
+/* ============================================================
+   SETA ESQUERDA
+   ============================================================ */
+
+@keyframes indicator-left {
+    0%,
+    100% {
+        transform: translateX(0);
+        opacity: 0.4;
+    }
+
+    50% {
+        transform: translateX(-4px);
+        opacity: 0.8;
+    }
+}
+
+/* ============================================================
+   SETA DIREITA
+   ============================================================ */
+
+@keyframes indicator-right {
+    0%,
+    100% {
+        transform: translateX(0);
+        opacity: 0.4;
+    }
+
+    50% {
+        transform: translateX(4px);
+        opacity: 0.8;
+    }
+}
+
+
+/* Acessibilidade: foco de teclado visível e preferência por movimento reduzido. */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+    outline: 2px solid var(--accent-light, #d8c2aa);
+    outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html,
+    html:focus-within {
+        scroll-behavior: auto !important;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

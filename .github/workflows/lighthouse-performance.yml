@@ -1,0 +1,82 @@
+name: Lighthouse Performance
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+      - feat/responsividadeFull
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lighthouse-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lighthouse:
+    name: Build and validate Vercel preview performance
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    env:
+      PREVIEW_URL: "${{ github.ref_name == 'main' && 'https://kleber-dev1.vercel.app/' || github.ref_name == 'dev' && 'https://portfolio-kg-git-dev-kleber-goncalves-s-projects.vercel.app/' || 'https://portfolio-kg-git-feat-respon-0847d0-kleber-goncalves-s-projects.vercel.app/' }}"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate production build
+        run: npm run build
+
+      - name: Allow Vercel to finish deploying
+        run: |
+          echo "Aguardando 60 segundos para a Vercel concluir o deployment da branch."
+          sleep 60
+
+      - name: Wait for Vercel preview
+        run: |
+          echo "Verificando o preview em $PREVIEW_URL"
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent --show-error "$PREVIEW_URL" --output /dev/null; then
+              echo "Preview da Vercel está respondendo."
+              exit 0
+            fi
+
+            echo "Tentativa $attempt/30: preview ainda indisponível."
+            sleep 10
+          done
+
+          echo "A preview da Vercel não ficou disponível dentro do tempo limite."
+          exit 1
+
+      - name: Configure Lighthouse target for current branch
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFileSync, writeFileSync } from "node:fs";
+
+          const configPath = "lighthouserc.json";
+          const config = JSON.parse(readFileSync(configPath, "utf8"));
+          config.ci.collect.url = [process.env.PREVIEW_URL];
+          writeFileSync(configPath, JSON.stringify(config, null, 2) + "\n");
+
+          console.log(`Lighthouse target: ${process.env.PREVIEW_URL}`);
+          NODE
+
+      - name: Run Lighthouse against Vercel preview
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          configPath: ./lighthouserc.json
+          uploadArtifacts: true
+          temporaryPublicStorage: false

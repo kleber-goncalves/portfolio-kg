@@ -1,0 +1,388 @@
+import { useEffect, useRef } from "react";
+
+import { gsap } from "gsap";
+
+import "../styles/editorialCard.css";
+
+export default function Card1({ title, text, text_2, variant = "default", className = "", classNameText = "", classNameTitle = "", classNametext2 = "", experienceMode = "full", ...props }) {
+    const cardRef = useRef(null);
+
+    /*
+    ============================================================
+    EXPERIENCE MODE
+    ============================================================
+    */
+
+    const isReducedExperience = experienceMode === "reduced";
+
+    /*
+    ============================================================
+    MOUSE EFFECTS
+    ============================================================
+    */
+
+    useEffect(() => {
+        const card = cardRef.current;
+
+        if (!card) return;
+
+        /*
+        --------------------------------------------------------
+        REDUCED EXPERIENCE
+        --------------------------------------------------------
+
+        No modo reduzido os efeitos de mouse não são
+        registrados nem executados.
+        */
+
+        if (isReducedExperience) {
+            return;
+        }
+
+        /*
+        --------------------------------------------------------
+        DESKTOP / MOUSE
+        --------------------------------------------------------
+
+        Só ativa quando o dispositivo possui mouse/trackpad
+        real.
+        */
+
+        const mediaQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
+
+        if (!mediaQuery.matches) return;
+
+        /*
+        ========================================================
+        MOUSE ENTER
+        ========================================================
+        */
+
+        const handleMouseEnter = () => {
+            card.style.setProperty("--spotlight-opacity", "1");
+
+            card.style.setProperty("--border-glow-opacity", "1");
+
+            gsap.to(card, {
+                y: -3,
+
+                duration: 0.35,
+
+                ease: "power2.out",
+
+                overwrite: false,
+            });
+        };
+
+        /*
+        ========================================================
+        MOUSE MOVE
+        ========================================================
+        */
+
+        const handleMouseMove = (e) => {
+            const rect = card.getBoundingClientRect();
+
+            const x = e.clientX - rect.left;
+
+            const y = e.clientY - rect.top;
+
+            /*
+            ----------------------------------------------------
+            SPOTLIGHT
+            ----------------------------------------------------
+            */
+
+            const percentX = (x / rect.width) * 100;
+
+            const percentY = (y / rect.height) * 100;
+
+            card.style.setProperty("--mouse-x", `${percentX}%`);
+
+            card.style.setProperty("--mouse-y", `${percentY}%`);
+
+            /*
+            ----------------------------------------------------
+            TILT
+            ----------------------------------------------------
+            */
+
+            const centerX = rect.width / 2;
+
+            const centerY = rect.height / 2;
+
+            const mouseX = x - centerX;
+
+            const mouseY = y - centerY;
+
+            const rotateX = (mouseY / centerY) * -1.5;
+
+            const rotateY = (mouseX / centerX) * 1.5;
+
+            gsap.to(card, {
+                rotateX,
+                rotateY,
+
+                duration: 0.18,
+
+                ease: "power2.out",
+
+                transformPerspective: 500,
+
+                overwrite: true,
+            });
+        };
+
+        /*
+        ========================================================
+        MOUSE LEAVE
+        ========================================================
+        */
+
+        const handleMouseLeave = () => {
+            card.style.setProperty("--spotlight-opacity", "0");
+
+            card.style.setProperty("--border-glow-opacity", "0");
+
+            gsap.to(card, {
+                y: 0,
+
+                rotateX: 0,
+                rotateY: 0,
+
+                duration: 0.5,
+
+                ease: "power3.out",
+
+                overwrite: true,
+            });
+        };
+
+        /*
+        ========================================================
+        EVENT LISTENERS
+        ========================================================
+        */
+
+        card.addEventListener("mouseenter", handleMouseEnter);
+
+        card.addEventListener("mousemove", handleMouseMove);
+
+        card.addEventListener("mouseleave", handleMouseLeave);
+
+        /*
+        ========================================================
+        CLEANUP
+        ========================================================
+        */
+
+        return () => {
+            card.removeEventListener("mouseenter", handleMouseEnter);
+
+            card.removeEventListener("mousemove", handleMouseMove);
+
+            card.removeEventListener("mouseleave", handleMouseLeave);
+
+            gsap.killTweensOf(card);
+        };
+    }, [isReducedExperience]);
+
+    /*
+    ============================================================
+    VARIANTS
+    ============================================================
+    */
+
+    const variants = {
+        default: {
+            text: "text-bronze",
+            title: "text-ivory",
+            description: "text-steel",
+        },
+
+        v1: {
+            text: "text-white",
+            title: "text-white",
+            description: "text-white",
+        },
+
+        v2: {
+            text: "text-white",
+            title: "text-white",
+            description: "text-white",
+        },
+    };
+
+    const styles = variants[variant] || variants.default;
+
+    /*
+    ============================================================
+    RENDER
+    ============================================================
+    */
+
+    return (
+        <article
+            ref={cardRef}
+            className={`
+                group
+                editorial-card
+                relative
+                w-full
+
+                border-t
+                b-md:border-t-0
+                b-md:border-b
+
+                border-graphite
+
+                py-7
+                b-md:py-10
+
+                ${className}
+            `}
+            {...props}
+        >
+            {/* ==================================================
+                SPOTLIGHT
+            ================================================== */}
+
+            <span
+                className="
+                    editorial-card__spotlight
+                    absolute
+                    inset-0
+                    pointer-events-none
+                "
+            />
+
+            {/* ==================================================
+                GLOW
+            ================================================== */}
+
+            <span
+                className="
+                    editorial-card__glow
+                    absolute
+                    inset-0
+                    pointer-events-none
+                "
+            />
+
+            {/* ==================================================
+                CONTEÚDO
+            ================================================== */}
+
+            <div
+                className="
+                    relative
+                    z-[2]
+                    flex
+                    w-full
+
+                    b-md:min-h-[260px]
+
+                    flex-col
+                    items-start
+
+                    gap-3
+
+                    b-md:py-6
+                    b-md:pl-6
+                "
+            >
+                {/* ==================================================
+                    CATEGORIA
+                ================================================== */}
+
+                <p
+                    className={`
+                        font-bebas
+
+                        text-xs
+                        uppercase
+                        tracking-[0.2em]
+
+                        b-md:text-sm
+                        b-md:tracking-[0.25em]
+
+                        transition-colors
+                        duration-500
+                        ease-out
+
+                        group-hover:text-accent-hover
+
+                        ${styles.text}
+                        ${classNameText}
+                    `}
+                >
+                    {text}
+                </p>
+
+                {/* ==================================================
+                    TÍTULO
+                ================================================== */}
+
+                <div
+                    className="
+                        flex
+                        w-full
+                        items-center
+                        justify-between
+                        gap-4
+                    "
+                >
+                    <h3
+                        className={`
+                            font-space
+
+                            text-xl
+                            font-[600]
+                            leading-tight
+
+                            b-md:text-4xl
+
+                            transition-transform
+                            duration-500
+                            ease-out
+
+                            group-hover:translate-x-1
+
+                            ${styles.title}
+                            ${classNameTitle}
+                        `}
+                    >
+                        {title}
+                    </h3>
+                </div>
+
+                {/* ==================================================
+                    DESCRIÇÃO
+                ================================================== */}
+
+                <p
+                    className={`
+                        max-w-3xl
+
+                        text-sm
+                        leading-relaxed
+
+                        b-md:text-sm
+                        b-md:leading-6
+
+                        transition-colors
+                        duration-500
+                        ease-out
+
+                        text-ivory
+
+                        ${styles.description}
+                        ${classNametext2}
+                    `}
+                >
+                    {text_2}
+                </p>
+            </div>
+        </article>
+    );
+}

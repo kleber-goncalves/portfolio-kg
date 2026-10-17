@@ -1,0 +1,260 @@
+import { ArrowUpRight } from "lucide-react";
+
+export default function Card2({ title, number, text, variant = "default", className = "", classNameNumber = "", classNameTitle = "", classNameText = "", ...props }) {
+    const variants = {
+        default: {
+            number: "text-bronze",
+            title: "text-ivory",
+            description: "text-steel",
+        },
+
+        v1: {
+            number: "text-white",
+            title: "text-white",
+            description: "text-white",
+        },
+
+        v2: {
+            number: "text-white",
+            title: "text-white",
+            description: "text-white",
+        },
+    };
+
+    const styles = variants[variant] || variants.default;
+
+    return (
+        <article
+            className={`
+                group
+                relative
+                w-full
+
+                border-t
+                b-md:border-b
+                b-md:border-t-0
+
+                border-gray-700
+
+                py-7
+
+                b-md:py-9
+                c-lg:py-13
+                
+                transition-colors
+                duration-500
+                ease-out
+
+                ${className}
+            `}
+            {...props}
+        >
+            {/* =====================================================
+                LINHA DE DESTAQUE
+            ===================================================== */}
+
+            <span
+                className="
+                    absolute
+                    left-0
+                    top-[-1px]
+
+                    h-[2px]
+                    w-0
+
+                    bg-gradientaa
+
+                    transition-all
+                    duration-700
+                    ease-out
+                    
+                    group-hover:w-full
+                    group-active:w-full
+                "
+            />
+
+            {/* =====================================================
+                CONTEÚDO
+            ===================================================== */}
+
+            <div
+                className="
+                    grid
+
+                    grid-cols-[42px_1fr]
+                    gap-5
+
+                    b-md:grid-cols-[80px_1fr]
+                    b-md:gap-10
+
+                    c-lg:grid-cols-[50px_1fr]
+                    c-lg:gap-14
+
+                    items-start
+                "
+            >
+                {/* =================================================
+                    NÚMERO
+                ================================================= */}
+
+                <div className="pt-1">
+                    <span
+                        className={`
+                            font-bebas
+                            text-xs
+                            tracking-[0.2em]
+
+                            b-md:text-sm
+
+                            opacity-60
+
+                            transition-all
+                            duration-500
+                            ease-out
+
+                            group-hover:translate-x-1
+                            group-hover:opacity-100
+
+                            ${styles.number}
+                            ${classNameNumber}
+                        `}
+                    >
+                        {number}
+                    </span>
+                </div>
+
+                {/* =================================================
+                    CONTEÚDO PRINCIPAL
+                ================================================= */}
+
+                <div
+                    className="
+                        flex
+                        max-w-3xl
+                        flex-col
+                        gap-3
+
+                        c-lg:max-w-4xl
+
+                        transition-transform
+                        duration-500
+                        ease-out
+
+                        group-hover:translate-x-1
+                        group-active:translate-x-1
+                    "
+                >
+                    {/* =============================================
+                        TÍTULO
+                    ============================================= */}
+
+                    <div
+                        className="
+                            flex
+                            items-start
+                            justify-between
+                            gap-5
+                        "
+                    >
+                        <h3
+                            className={`
+                                font-space
+                                text-lg
+                                font-[600]
+                                leading-tight
+
+                                b-md:text-3xl
+                                c-lg:text-4xl
+
+                                ${styles.title}
+                                ${classNameTitle}
+                            `}
+                        >
+                            {title}
+                        </h3>
+
+                        {/* =========================================
+                            ÍCONE
+                        ========================================= */}
+
+                        <ArrowUpRight
+                            className="
+                                mt-1
+                                hidden
+                                h-5
+                                w-5
+                                shrink-0
+
+                                text-steel
+
+                                transition-all
+                                duration-500
+                                ease-out
+
+                                group-hover:-translate-y-1
+                                group-hover:translate-x-1
+                                group-hover:text-bronze
+
+                                b-md:hidden
+                            "
+                        />
+                    </div>
+
+                    {/* =============================================
+                        DESCRIÇÃO
+                    ============================================= */}
+
+                    <p
+                        className={`
+                            max-w-3xl
+
+                            text-sm
+                            leading-6
+
+                            b-md:text-sm
+                            b-md:leading-7
+
+                            c-lg:text-[15px]
+
+                            transition-colors
+                            duration-500
+                            ease-out
+
+                            group-hover:text-ivory
+                            group-active:text-ivory
+
+                            ${styles.description}
+                            ${classNameText}
+                        `}
+                    >
+                        {text}
+                    </p>
+                </div>
+            </div>
+
+            {/* =====================================================
+                MICRO INDICADOR
+            ===================================================== */}
+
+            <span
+                className="
+                    absolute
+                    bottom-0
+                    left-0
+
+                    h-px
+                    w-0
+
+                    bg-bronze/40
+
+                    transition-all
+                    duration-500
+                    ease-out
+
+                    group-hover:w-20
+                    group-active:w-20
+                "
+            />
+        </article>
+    );
+}

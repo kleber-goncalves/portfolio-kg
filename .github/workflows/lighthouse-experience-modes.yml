@@ -1,0 +1,146 @@
+name: Lighthouse Experience Mode Comparison
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+      - feat/responsividadeFull
+    paths:
+      - ".github/workflows/lighthouse-experience-modes.yml"
+      - "lighthouserc-experience-modes.json"
+      - "scripts/lhci-set-experience-mode.cjs"
+      - "scripts/summarize-lighthouse-modes.mjs"
+      - "src/**"
+      - "public/**"
+      - "index.html"
+      - "package.json"
+      - "package-lock.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lighthouse-modes-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  compare:
+    name: Compare full and reduced experience
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    env:
+      PREVIEW_URL: "${{ github.ref_name == 'main' && 'https://kleber-dev1.vercel.app/' || github.ref_name == 'dev' && 'https://portfolio-kg-git-dev-kleber-goncalves-s-projects.vercel.app/' || 'https://portfolio-kg-git-feat-respon-0847d0-kleber-goncalves-s-projects.vercel.app/' }}"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install project dependencies
+        run: npm ci
+
+      - name: Validate production build
+        run: npm run build
+
+      - name: Wait for Vercel preview
+        run: |
+          echo "Waiting for the branch preview: $PREVIEW_URL"
+          sleep 60
+
+          for attempt in $(seq 1 30); do
+            if curl --location --fail --silent --show-error "$PREVIEW_URL" --output /dev/null; then
+              echo "Preview is responding."
+              exit 0
+            fi
+
+            echo "Attempt $attempt/30: preview is not ready yet."
+            sleep 10
+          done
+
+          echo "The Vercel preview did not become available in time."
+          exit 1
+
+      - name: Configure Lighthouse target for current branch
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFileSync, writeFileSync } from "node:fs";
+
+          const configPath = "lighthouserc-experience-modes.json";
+          const config = JSON.parse(readFileSync(configPath, "utf8"));
+          config.ci.collect.url = [process.env.PREVIEW_URL];
+          writeFileSync(configPath, JSON.stringify(config, null, 2) + "\n");
+
+          console.log(`Lighthouse target: ${process.env.PREVIEW_URL}`);
+          NODE
+
+      - name: Install temporary Lighthouse CI tools
+        run: npm install --no-save --package-lock=false @lhci/cli@0.15.1 puppeteer
+
+      - name: Measure full animation mode (3 isolated Lighthouse runs)
+        env:
+          EXPERIENCE_MODE: full
+        run: |
+          set -euo pipefail
+          mkdir -p lighthouse-comparison/full
+
+          for run in 1 2 3; do
+            echo "Full animation mode: isolated run $run/3"
+            rm -rf .lighthouseci
+            npx lhci collect --config=./lighthouserc-experience-modes.json
+
+            report_json="$(find .lighthouseci -maxdepth 1 -type f -name 'lhr-*.json' -print -quit)"
+            if [ -z "$report_json" ]; then
+              echo "No Lighthouse JSON report was generated for full mode run $run."
+              exit 1
+            fi
+
+            cp "$report_json" "lighthouse-comparison/full/lhr-full-run-$run.json"
+            report_html="${report_json%.json}.html"
+            if [ -f "$report_html" ]; then
+              cp "$report_html" "lighthouse-comparison/full/lhr-full-run-$run.html"
+            fi
+          done
+
+      - name: Measure reduced animation mode (3 isolated Lighthouse runs)
+        env:
+          EXPERIENCE_MODE: reduced
+        run: |
+          set -euo pipefail
+          mkdir -p lighthouse-comparison/reduced
+
+          for run in 1 2 3; do
+            echo "Reduced animation mode: isolated run $run/3"
+            rm -rf .lighthouseci
+            npx lhci collect --config=./lighthouserc-experience-modes.json
+
+            report_json="$(find .lighthouseci -maxdepth 1 -type f -name 'lhr-*.json' -print -quit)"
+            if [ -z "$report_json" ]; then
+              echo "No Lighthouse JSON report was generated for reduced mode run $run."
+              exit 1
+            fi
+
+            cp "$report_json" "lighthouse-comparison/reduced/lhr-reduced-run-$run.json"
+            report_html="${report_json%.json}.html"
+            if [ -f "$report_html" ]; then
+              cp "$report_html" "lighthouse-comparison/reduced/lhr-reduced-run-$run.html"
+            fi
+          done
+
+      - name: Compare median Lighthouse metrics
+        run: node scripts/summarize-lighthouse-modes.mjs
+
+      - name: Upload full and reduced Lighthouse reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-experience-mode-comparison
+          path: lighthouse-comparison/
+          if-no-files-found: error
+          retention-days: 14

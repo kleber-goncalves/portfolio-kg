@@ -1,0 +1,51 @@
+.marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee 18s linear infinite;
+    will-change: transform;
+}
+
+.marquee-content {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 24vw;
+    line-height: 0.8;
+
+    white-space: nowrap;
+
+    color: #6D6D6D;
+}
+
+.marquee-star {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    font-family: sans-serif;
+    font-size: 0.30em;
+    line-height: 1;
+
+    margin-left: 0.08em;
+    margin-right: 0.08em;
+
+    transform: translateY(-0.05em);
+}
+
+@keyframes marquee {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .marquee-track {
+        animation: none;
+    }
+}
