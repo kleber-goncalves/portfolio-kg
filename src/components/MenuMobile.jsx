@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { lazy, Suspense, useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { createPortal } from "react-dom";
 import { Menu, X, ArrowUpRight } from "lucide-react";
@@ -6,7 +6,7 @@ import gsap from "gsap";
 import { startSmoothScroll, stopSmoothScroll } from "../utils/lenisControl";
 import { playUiSound } from "../utils/uiSfx";
 import SoundToggle from "./SoundToggle";
-import SoundVolumeSliderMobile from "./SoundVolumeSliderMobile";
+const SoundVolumeSliderMobile = lazy(() => import("./SoundVolumeSliderMobile"));
 
 function MenuMobile({ items = [] }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -379,7 +379,16 @@ function MenuMobile({ items = [] }) {
 
                         <div className="border-t border-graphite pt-5">
                             <SoundToggle />
-                            <SoundVolumeSliderMobile />
+                            <Suspense
+                                fallback={
+                                    <div
+                                        aria-hidden="true"
+                                        className="mt-3 h-[104px] border border-graphite bg-obsidian/40"
+                                    />
+                                }
+                            >
+                                <SoundVolumeSliderMobile />
+                            </Suspense>
                             <span className="mt-4 block text-[9px] uppercase tracking-[0.2em] text-steel">Kleber Dev · Portfolio</span>
                         </div>
                     </nav>
