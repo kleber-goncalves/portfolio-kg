@@ -156,6 +156,7 @@ function MagneticExternalLink({
             href={href}
             target={target}
             rel={rel}
+            data-ui-sfx-hover
             onMouseEnter={handleMouseEnter}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
