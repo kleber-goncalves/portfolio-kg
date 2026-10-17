@@ -334,8 +334,6 @@ export function attachUiSfxHoverListeners() {
         playUiSound(cue);
     };
 
-    window.addEventListener(PLAY_REQUEST_EVENT, handlePlayRequest);
-
     const handlePointerOver = (event) => {
         if (event.pointerType !== "mouse" && event.pointerType !== "pen") return;
         if (!(event.target instanceof Element)) return;
