@@ -1,4 +1,4 @@
-name: Mobile UI Sound Slider
+name: Mobile UI Sound Interactions
 
 on:
   push:
@@ -6,10 +6,13 @@ on:
       - dev
     paths:
       - "src/components/MenuMobile.jsx"
+      - "src/components/ProjetoCarouselMobile.jsx"
+      - "src/components/Socials.jsx"
       - "src/components/SoundToggle.jsx"
       - "src/components/SoundVolumeSliderMobile.jsx"
       - "src/utils/uiSfx.js"
       - "scripts/test-mobile-ui-sfx-slider.mjs"
+      - "scripts/test-mobile-socials-ui-sfx.mjs"
       - ".github/workflows/mobile-ui-sfx-slider.yml"
   workflow_dispatch:
 
@@ -22,7 +25,7 @@ concurrency:
 
 jobs:
   verify-mobile-ui-sfx-slider:
-    name: Verify touch slider, audio unlock, and persistence
+    name: Verify mobile slider, Socials and carousel sounds
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -70,3 +73,8 @@ jobs:
         env:
           BASE_URL: http://127.0.0.1:4173/
         run: node scripts/test-mobile-ui-sfx-slider.mjs
+
+      - name: Test mobile Socials and project carousel sound cues
+        env:
+          BASE_URL: http://127.0.0.1:4173/
+        run: node scripts/test-mobile-socials-ui-sfx.mjs

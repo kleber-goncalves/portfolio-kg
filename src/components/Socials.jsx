@@ -3,6 +3,7 @@ import gsap from "gsap";
 
 import { ArrowRight, X } from "lucide-react";
 import { Github, Linkedin, Instagram } from "@thesvg/react";
+import { playUiSound } from "../utils/uiSfx";
 
 function Socials() {
     const [isOpen, setIsOpen] = useState(false);
@@ -18,6 +19,8 @@ function Socials() {
     const maxDrag = useRef(0);
 
     const isDragging = useRef(false);
+    const isOpenRef = useRef(false);
+    const isClosingRef = useRef(false);
 
     const socials = [
         {
@@ -78,8 +81,10 @@ function Socials() {
     // =========================================
 
     const openSocials = () => {
-        if (isOpen) return;
+        if (isOpenRef.current || isClosingRef.current) return;
 
+        isOpenRef.current = true;
+        playUiSound("expand");
         setIsOpen(true);
 
         requestAnimationFrame(() => {
@@ -108,7 +113,14 @@ function Socials() {
     // =========================================
 
     const closeSocials = () => {
+        if (!isOpenRef.current || isClosingRef.current) return;
+
+        isClosingRef.current = true;
+        playUiSound("collapse");
+
         if (!panelRef.current) {
+            isOpenRef.current = false;
+            isClosingRef.current = false;
             setIsOpen(false);
             return;
         }
@@ -120,6 +132,8 @@ function Socials() {
             duration: 0.3,
             ease: "power2.in",
             onComplete: () => {
+                isOpenRef.current = false;
+                isClosingRef.current = false;
                 setIsOpen(false);
             },
         });
