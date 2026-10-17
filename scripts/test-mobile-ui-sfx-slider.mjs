@@ -290,7 +290,7 @@ try {
     await waitForRunningAudio(page);
     await waitForSourceStarts(page, 1);
 
-    console.log("Mobile scenario G: enabled preference and volume survive another reload without autoplay.");
+    console.log("Mobile scenario G: first trusted touch after reload must play a cue while preference stays enabled.");
     await page.reload({ waitUntil: "domcontentloaded", timeout: 60000 });
     await page.locator('[aria-label^="Carregamento do site:"]').waitFor({
         state: "detached",
@@ -300,9 +300,22 @@ try {
 
     diagnostics = await readDiagnostics(page);
     assert.equal(diagnostics.audioContextCount, 0, "Enabled preference must not autoplay or create audio on reload.");
+    assert.equal(diagnostics.sourceStarts, 0, "Reload must reset diagnostics without autoplaying audio.");
+    assert.equal(
+        await page.evaluate((key) => localStorage.getItem(key), enabledKey),
+        "true",
+        "The enabled preference must already be true before the first touch after reload.",
+    );
 
+    const sourceStartsBeforeFirstTouch = diagnostics.sourceStarts;
     await openMobileMenu(page);
     await page.getByRole("button", { name: "Desativar efeitos sonoros" }).waitFor({ state: "visible" });
+    await waitForSourceStarts(page, sourceStartsBeforeFirstTouch + 1);
+    assert.equal(
+        await page.evaluate((key) => localStorage.getItem(key), enabledKey),
+        "true",
+        "The first touch after reload must play audio without requiring a preference toggle.",
+    );
     assert.equal(
         Number(await page.getByRole("slider", { name: "Volume dos sons" }).inputValue()),
         volumeWhileDisabled,
