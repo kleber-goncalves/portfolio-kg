@@ -1,10 +1,12 @@
-import { createUISFX } from "uisfx";
+import { createRecipe, createUISFX } from "uisfx";
 
 const ENABLED_STORAGE_KEY = "kleber-dev:ui-sounds-enabled";
 const PLAYER_PREFERENCES_KEY = "kleber-dev:ui-sfx";
 const CHANGE_EVENT = "kleber-dev:ui-sfx-change";
-const DEFAULT_VOLUME_PERCENT = 100;
+const DEFAULT_VOLUME_PERCENT = 200;
+const MAX_VOLUME_PERCENT = 400;
 const VOLUME_STORAGE_KEY = "kleber-dev:ui-sounds-volume";
+const VOLUME_MIGRATION_KEY = "kleber-dev:ui-sounds-volume-v2-migrated";
 
 let player = null;
 let isUnlocked = false;
@@ -24,13 +26,30 @@ export function getUiSoundVolume() {
     if (typeof window === "undefined") return DEFAULT_VOLUME_PERCENT;
 
     try {
+        const isMigrated = window.localStorage.getItem(VOLUME_MIGRATION_KEY) === "true";
         const storedVolume = window.localStorage.getItem(VOLUME_STORAGE_KEY);
+
+        // Versões anteriores limitavam o controle a 100%. Migra o nível salvo
+        // para a nova escala sem diminuir o volume percebido pelo visitante.
+        if (!isMigrated) {
+            const previousVolume = storedVolume === null
+                ? DEFAULT_VOLUME_PERCENT / 2
+                : Number(storedVolume);
+            const migratedVolume = Number.isFinite(previousVolume)
+                ? Math.max(0, Math.min(MAX_VOLUME_PERCENT, Math.round(previousVolume * 2)))
+                : DEFAULT_VOLUME_PERCENT;
+
+            window.localStorage.setItem(VOLUME_STORAGE_KEY, String(migratedVolume));
+            window.localStorage.setItem(VOLUME_MIGRATION_KEY, "true");
+            return migratedVolume;
+        }
+
         if (storedVolume === null) return DEFAULT_VOLUME_PERCENT;
 
         const volume = Number(storedVolume);
         if (!Number.isFinite(volume)) return DEFAULT_VOLUME_PERCENT;
 
-        return Math.max(0, Math.min(100, Math.round(volume)));
+        return Math.max(0, Math.min(MAX_VOLUME_PERCENT, Math.round(volume)));
     } catch {
         return DEFAULT_VOLUME_PERCENT;
     }
@@ -52,10 +71,12 @@ export function setUiSoundVolume(nextVolume) {
     const numericVolume = Number(nextVolume);
     if (!Number.isFinite(numericVolume)) return getUiSoundVolume();
 
-    const volume = Math.max(0, Math.min(100, Math.round(numericVolume)));
+    const volume = Math.max(0, Math.min(MAX_VOLUME_PERCENT, Math.round(numericVolume)));
     const soundPlayer = getPlayer();
 
-    soundPlayer?.setVolume(volume / 100);
+    // O volume geral fica em 1; a amplificação adicional é aplicada ao efeito
+    // individual, pois a biblioteca limita seu ganho mestre a 0–1.
+    soundPlayer?.setVolume(1);
     persistVolume(volume);
 
     return volume;
@@ -73,23 +94,43 @@ function persistEnabled(enabled) {
     }));
 }
 
+const cueDefaultVolumeCache = new Map();
+
+function getEffectiveCueVolume(cue) {
+    let defaultVolume = cueDefaultVolumeCache.get(cue);
+
+    if (defaultVolume === undefined) {
+        defaultVolume = createRecipe("zen", cue).defaultVolume;
+        cueDefaultVolumeCache.set(cue, defaultVolume);
+    }
+
+    const amplification = getUiSoundVolume() / 100;
+    return Math.max(0, Math.min(1, defaultVolume * amplification));
+}
+
+function playWithConfiguredVolume(soundPlayer, cue) {
+    return soundPlayer.play(cue, {
+        volume: getEffectiveCueVolume(cue),
+    }) ?? null;
+}
+
 function getPlayer() {
     if (typeof window === "undefined") return null;
     if (player) return player;
 
     const enabled = getUiSoundsEnabled();
-    const volume = getUiSoundVolume() / 100;
 
+    // Mantém o ganho mestre em 1; cada cue recebe seu volume calculado para
+    // suportar amplificação acima de 100% sem ultrapassar o ganho da fonte.
     player = createUISFX({
         pack: "zen",
-        volume,
+        volume: 1,
         enabled,
         preferences: { key: PLAYER_PREFERENCES_KEY },
     });
 
-    // Mantém a identidade sonora e restaura o volume escolhido pelo visitante.
     player.setPack("zen");
-    player.setVolume(volume);
+    player.setVolume(1);
     player.setEnabled(enabled);
 
     return player;
@@ -133,7 +174,7 @@ export function playUiSound(cue) {
     if (!soundPlayer || !getUiSoundsEnabled()) return null;
 
     if (isUnlocked) {
-        return soundPlayer.play(cue) ?? null;
+        return playWithConfiguredVolume(soundPlayer, cue);
     }
 
     // unlock() é invocado dentro da interação real do usuário. Não há autoplay
@@ -154,7 +195,7 @@ export function playUiSound(cue) {
     const pendingUnlock = unlockPromise;
     void pendingUnlock.then(() => {
         if (isUnlocked && getUiSoundsEnabled()) {
-            soundPlayer.play(cue);
+            playWithConfiguredVolume(soundPlayer, cue);
         }
     });
 
@@ -200,10 +241,10 @@ export async function toggleUiSounds() {
     }
 
     soundPlayer.setPack("zen");
-    soundPlayer.setVolume(getUiSoundVolume() / 100);
+    soundPlayer.setVolume(1);
     soundPlayer.setEnabled(true);
     persistEnabled(true);
-    soundPlayer.play("toggle-on");
+    playWithConfiguredVolume(soundPlayer, "toggle-on");
 
     return true;
 }

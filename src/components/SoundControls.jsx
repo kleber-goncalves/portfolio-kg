@@ -73,6 +73,10 @@ function SoundControls({ className = "" }) {
         setVolume(nextVolume);
     };
 
+    const handleVolumePreview = () => {
+        playUiSound("volume-change");
+    };
+
     const buttonClassName = `
         inline-flex h-9 items-center justify-center gap-2
         border border-graphite/90 bg-obsidian/75 px-3
@@ -167,22 +171,24 @@ function SoundControls({ className = "" }) {
                             id={volumePanelId + "-range"}
                             type="range"
                             min="0"
-                            max="100"
-                            step="1"
+                            max="400"
+                            step="5"
                             value={volume}
                             onChange={handleVolumeChange}
+                            onPointerUp={handleVolumePreview}
+                            onKeyUp={handleVolumePreview}
                             aria-labelledby={volumeLabelId}
-                            aria-valuetext={`${volume}%`}
+                            aria-valuetext={`${volume}% do volume original`}
                             className="h-2 w-full cursor-pointer accent-bronze"
                         />
 
                         <div className="mt-2 flex items-center justify-between font-space text-[9px] uppercase tracking-[0.12em] text-steel/80">
                             <span>Silêncio</span>
-                            <span>Máximo</span>
+                            <span>Amplificação 4×</span>
                         </div>
 
                         <p className="mt-4 border-t border-graphite pt-3 text-[10px] leading-4 text-steel">
-                            O volume escolhido fica salvo neste navegador.
+                            100% é o volume original da biblioteca. Acima disso, os efeitos são amplificados até 400%. A escolha fica salva neste navegador.
                         </p>
                     </motion.div>
                 )}
