@@ -992,7 +992,7 @@ function ProjetoDesktop({ projetos, experienceMode = "full", onReady }) {
                             <div
                                 key={projeto.numero}
                                 className="
-                                        h-[360px]
+                                        h-[358px]
                                         w-full
                                         shrink-0
                                     "

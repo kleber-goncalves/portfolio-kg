@@ -40,6 +40,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, exper
     const socialsRef = useRef(null);
 
     const [activeHref, setActiveHref] = useState(null);
+    const activeHrefRef = useRef(null);
 
     // ============================================================
     // ACTIVE NAVIGATION
@@ -48,6 +49,14 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, exper
     useLayoutEffect(() => {
         let initialFrameId = null;
         let settledFrameId = null;
+        let scrollFrameId = null;
+
+        const setActiveHrefIfChanged = (nextHref) => {
+            if (activeHrefRef.current === nextHref) return;
+
+            activeHrefRef.current = nextHref;
+            setActiveHref(nextHref);
+        };
 
         const updateActiveSection = () => {
             // No topo real da página, o Hero é sempre a seção ativa.
@@ -56,7 +65,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, exper
             const heroItem = items.find((item) => item.href === "#hero");
 
             if (window.scrollY <= 1 && heroItem) {
-                setActiveHref(heroItem.href);
+                setActiveHrefIfChanged(heroItem.href);
                 return;
             }
 
@@ -79,7 +88,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, exper
                 }
             });
 
-            setActiveHref(currentSection);
+            setActiveHrefIfChanged(currentSection);
         };
 
         // Aguarda dois frames para que os efeitos de layout do React,
@@ -104,9 +113,19 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, exper
             });
         };
 
+        const scheduleScrollActiveSectionUpdate = () => {
+            // Scroll pode disparar várias vezes entre frames; agrupa as medições.
+            if (scrollFrameId !== null) return;
+
+            scrollFrameId = requestAnimationFrame(() => {
+                scrollFrameId = null;
+                updateActiveSection();
+            });
+        };
+
         scheduleActiveSectionUpdate();
 
-        window.addEventListener("scroll", updateActiveSection, {
+        window.addEventListener("scroll", scheduleScrollActiveSectionUpdate, {
             passive: true,
         });
 
@@ -126,7 +145,11 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, exper
                 cancelAnimationFrame(settledFrameId);
             }
 
-            window.removeEventListener("scroll", updateActiveSection);
+            if (scrollFrameId !== null) {
+                cancelAnimationFrame(scrollFrameId);
+            }
+
+            window.removeEventListener("scroll", scheduleScrollActiveSectionUpdate);
             window.removeEventListener("resize", scheduleActiveSectionUpdate);
             window.removeEventListener("pageshow", scheduleActiveSectionUpdate);
 

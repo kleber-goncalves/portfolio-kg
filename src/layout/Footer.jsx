@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import "../styles/loopText.css";
 import MagneticExternalLink from "../components/MagneticExternalLink";
+import { scrollToTarget } from "../utils/lenisControl";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -387,10 +388,7 @@ function Footer() {
                         title="Voltar ao início"
                         onClick={(event) => {
                             event.preventDefault();
-                            document.querySelector("#hero")?.scrollIntoView({
-                                behavior: "smooth",
-                                block: "start",
-                            });
+                            scrollToTarget(0, { duration: 1.05 });
                         }}
                         className="
                             block

@@ -11,10 +11,11 @@ export default function DotField({ dotRadius = 1, dotSpacing = 18, cursorRadius 
     */
 
     const frozenRef = useRef(frozen);
+    const renderFrameRef = useRef(null);
 
     useEffect(() => {
         frozenRef.current = frozen;
-
+        renderFrameRef.current?.();
     }, [frozen]);
 
     /*
@@ -49,6 +50,8 @@ export default function DotField({ dotRadius = 1, dotSpacing = 18, cursorRadius 
         */
 
         let animationFrame = null;
+        let scheduleDraw = null;
+        let stopDrawing = null;
 
         /*
         |--------------------------------------------------------------------------
@@ -79,6 +82,7 @@ export default function DotField({ dotRadius = 1, dotSpacing = 18, cursorRadius 
         */
 
         let isVisible = true;
+        let isDocumentVisible = !document.hidden;
 
         /*
         |--------------------------------------------------------------------------
@@ -111,7 +115,7 @@ export default function DotField({ dotRadius = 1, dotSpacing = 18, cursorRadius 
             canvas.style.height = `${height}px`;
 
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
+            scheduleDraw?.();
         };
 
         resizeCanvas();
@@ -125,7 +129,7 @@ export default function DotField({ dotRadius = 1, dotSpacing = 18, cursorRadius 
         */
 
         const handleMouseMove = (event) => {
-            if (!isVisible) return;
+            if (!isVisible || !isDocumentVisible || reducedMotion) return;
 
             const rect = container.getBoundingClientRect();
 
@@ -147,6 +151,7 @@ export default function DotField({ dotRadius = 1, dotSpacing = 18, cursorRadius 
 
             targetMouseX = nextX;
             targetMouseY = nextY;
+            scheduleDraw?.();
         };
 
         /*
@@ -164,6 +169,7 @@ export default function DotField({ dotRadius = 1, dotSpacing = 18, cursorRadius 
 
             targetMouseX = -9999;
             targetMouseY = -9999;
+            scheduleDraw?.();
         };
 
         /*
@@ -204,14 +210,14 @@ export default function DotField({ dotRadius = 1, dotSpacing = 18, cursorRadius 
 
         const handleVisibilityChange = () => {
             if (document.hidden) {
-                isVisible = false;
-
+                isDocumentVisible = false;
                 mouseActive = false;
-
                 targetMouseX = -9999;
                 targetMouseY = -9999;
+                stopDrawing?.();
             } else {
-                isVisible = true;
+                isDocumentVisible = true;
+                scheduleDraw?.();
             }
         };
 
@@ -243,6 +249,11 @@ export default function DotField({ dotRadius = 1, dotSpacing = 18, cursorRadius 
 
                 isVisible = entry.isIntersecting;
 
+                if (isVisible && isDocumentVisible) {
+                    scheduleDraw?.();
+                } else {
+                    stopDrawing?.();
+                }
             },
             {
                 threshold: 0,
@@ -276,6 +287,10 @@ export default function DotField({ dotRadius = 1, dotSpacing = 18, cursorRadius 
         */
 
         const draw = (time = 0) => {
+            animationFrame = null;
+
+            if (!isVisible || !isDocumentVisible) return;
+
             const currentlyFrozen = frozenRef.current;
 
             /*
@@ -304,8 +319,13 @@ export default function DotField({ dotRadius = 1, dotSpacing = 18, cursorRadius 
                 | para que o efeito desapareça suavemente.
                 */
 
-                mouseActive = true;
-
+                if (reducedMotion || isTouchDevice) {
+                    mouseX = -9999;
+                    mouseY = -9999;
+                    mouseActive = false;
+                } else {
+                    mouseActive = true;
+                }
             }
 
             /*
@@ -537,8 +557,57 @@ export default function DotField({ dotRadius = 1, dotSpacing = 18, cursorRadius 
             |--------------------------------------------------------------------------
             */
 
+            const hasContinuousMotion = !currentlyFrozen &&
+                !reducedMotion &&
+                !isTouchDevice &&
+                (sparkle || waveAmplitude !== 0);
+
+            if (hasContinuousMotion) {
+                scheduleDraw();
+                return;
+            }
+
+            if (mouseActive) {
+                if (currentlyFrozen) {
+                    const cursorOutsideCanvas =
+                        mouseX < -cursorRadius ||
+                        mouseX > width + cursorRadius ||
+                        mouseY < -cursorRadius ||
+                        mouseY > height + cursorRadius;
+
+                    if (cursorOutsideCanvas) {
+                        // O efeito do cursor já desapareceu; deixa o canvas estático.
+                        mouseActive = false;
+                    } else {
+                        scheduleDraw();
+                        return;
+                    }
+                } else {
+                    const cursorSettled =
+                        Math.abs(targetMouseX - mouseX) < 0.5 &&
+                        Math.abs(targetMouseY - mouseY) < 0.5;
+
+                    if (!cursorSettled) {
+                        scheduleDraw();
+                        return;
+                    }
+                }
+            }
+        };
+
+        stopDrawing = () => {
+            if (animationFrame !== null) {
+                cancelAnimationFrame(animationFrame);
+                animationFrame = null;
+            }
+        };
+
+        scheduleDraw = () => {
+            if (!isVisible || !isDocumentVisible || animationFrame !== null) return;
             animationFrame = requestAnimationFrame(draw);
         };
+
+        renderFrameRef.current = scheduleDraw;
 
         /*
         |--------------------------------------------------------------------------
@@ -555,8 +624,10 @@ export default function DotField({ dotRadius = 1, dotSpacing = 18, cursorRadius 
         */
 
         return () => {
-            if (animationFrame) {
-                cancelAnimationFrame(animationFrame);
+            stopDrawing?.();
+
+            if (renderFrameRef.current === scheduleDraw) {
+                renderFrameRef.current = null;
             }
 
             window.removeEventListener("resize", resizeCanvas);
