@@ -348,14 +348,14 @@ function MenuDesktop({ items = [], showMenu = false }) {
         window.requestAnimationFrame(() => {
             window.requestAnimationFrame(() => {
                 if (href === "#hero") {
-                    scrollToTarget(0, { duration: 1.05 });
+                    scrollToTarget(0, { duration: 1.4 });
                     return;
                 }
 
                 const section = document.querySelector(href);
 
                 if (section) {
-                    scrollToTarget(section, { duration: 1.05 });
+                    scrollToTarget(section, { duration: 1.4 });
                 }
             });
         });
