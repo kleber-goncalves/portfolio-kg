@@ -27,7 +27,7 @@ export function clearLenisInstance(instance) {
 export function scrollToTarget(
     target,
     {
-        duration = 1.05,
+        duration = 1.4,
         offset = 0,
         immediate = false,
         lock = false,
