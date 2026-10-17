@@ -24,6 +24,7 @@ async function readDiagnostics(page) {
         audioContextCount: window.__uiSfxMobileTest?.contexts.length ?? -1,
         audioContextStates: window.__uiSfxMobileTest?.contexts.map((context) => context.state) ?? [],
         sourceStarts: window.__uiSfxMobileTest?.sourceStarts ?? -1,
+        sourceStartStates: window.__uiSfxMobileTest?.sourceStartStates ?? [],
     }));
 }
 
@@ -155,7 +156,7 @@ const context = await browser.newContext({
 
 try {
     await context.addInitScript(() => {
-        const diagnostics = { contexts: [], sourceStarts: 0 };
+        const diagnostics = { contexts: [], sourceStarts: 0, sourceStartStates: [] };
         window.__uiSfxMobileTest = diagnostics;
 
         const NativeAudioContext = window.AudioContext;
@@ -174,6 +175,10 @@ try {
             const nativeStart = bufferSourcePrototype.start;
             bufferSourcePrototype.start = function (...args) {
                 diagnostics.sourceStarts += 1;
+                diagnostics.sourceStartStates.push({
+                    contextState: this.context?.state ?? "unknown",
+                    userActivation: navigator.userActivation?.isActive ?? null,
+                });
                 return nativeStart.apply(this, args);
             };
         }
@@ -308,9 +313,26 @@ try {
     );
 
     const sourceStartsBeforeFirstTouch = diagnostics.sourceStarts;
+    const sourceStartStatesBeforeFirstTouch = diagnostics.sourceStartStates.length;
     await openMobileMenu(page);
     await page.getByRole("button", { name: "Desativar efeitos sonoros" }).waitFor({ state: "visible" });
     await waitForSourceStarts(page, sourceStartsBeforeFirstTouch + 1);
+    diagnostics = await readDiagnostics(page);
+    const firstPostReloadSources = diagnostics.sourceStartStates.slice(sourceStartStatesBeforeFirstTouch);
+    assert.ok(
+        firstPostReloadSources.length > 0,
+        "The first touch after reload should record the audio source state.",
+    );
+    assert.ok(
+        firstPostReloadSources.every((source) => source.contextState === "running"),
+        "The first post-reload cue must start only after its AudioContext is running. " +
+            JSON.stringify(firstPostReloadSources),
+    );
+    console.log("First post-reload sound diagnostics: " + JSON.stringify({
+        preference: await page.evaluate((key) => localStorage.getItem(key), enabledKey),
+        contextStates: diagnostics.audioContextStates,
+        sources: firstPostReloadSources,
+    }));
     assert.equal(
         await page.evaluate((key) => localStorage.getItem(key), enabledKey),
         "true",
