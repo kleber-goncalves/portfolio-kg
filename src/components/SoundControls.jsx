@@ -79,7 +79,7 @@ function SoundControls({ className = "" }) {
     };
 
     const buttonClassName = `
-        inline-flex h-9 items-center justify-center gap-2
+        inline-flex cursor-pointer h-9 items-center justify-center gap-2
         border border-graphite/90 bg-obsidian/75 px-3
         font-space text-[9px] uppercase tracking-[0.14em] text-steel
         transition-colors duration-200
