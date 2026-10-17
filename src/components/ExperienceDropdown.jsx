@@ -179,6 +179,7 @@ function ExperienceDropdown({ experienceMode = getExperienceMode() || "full", on
             ================================================== */}
 
             <motion.button
+                data-ui-sfx-hover
                 type="button"
                 aria-expanded={isOpen}
                 aria-haspopup="menu"

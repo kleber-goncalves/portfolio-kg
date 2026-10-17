@@ -3,7 +3,7 @@ import { createUISFX } from "uisfx";
 const ENABLED_STORAGE_KEY = "kleber-dev:ui-sounds-enabled";
 const PLAYER_PREFERENCES_KEY = "kleber-dev:ui-sfx";
 const CHANGE_EVENT = "kleber-dev:ui-sfx-change";
-const DEFAULT_VOLUME = 0.24;
+const DEFAULT_VOLUME = 0.50;
 
 let player = null;
 let isUnlocked = false;

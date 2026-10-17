@@ -201,6 +201,7 @@ function MenuItem({ text, logos = [], speed, textColor, marqueeBgColor, marqueeT
 
     return (
         <div
+            data-ui-sfx-hover
             ref={itemRef}
             className="
                 group
