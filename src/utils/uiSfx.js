@@ -151,20 +151,15 @@ export async function toggleUiSounds() {
 
 
 const HOVERABLE_SELECTOR = "button, a[href], [role='button'], [role='link'], [data-ui-sfx-hover]";
-const hoverTargetCache = new WeakMap();
 
 function hasVisualHoverState(element) {
     if (!element) return false;
-
-    const cached = hoverTargetCache.get(element);
-    if (cached !== undefined) return cached;
 
     const hasOwnHoverClass = Array.from(element.classList).some((name) =>
         /(^|:)(hover|focus-within|group-hover(?:\/[^:]+)?|peer-hover(?:\/[^:]+)?):/.test(name)
     );
 
     if (hasOwnHoverClass || element.hasAttribute("data-ui-sfx-hover")) {
-        hoverTargetCache.set(element, true);
         return true;
     }
 
@@ -178,13 +173,11 @@ function hasVisualHoverState(element) {
                 /(^|:)(group-hover(?:\/[^:]+)?|peer-hover(?:\/[^:]+)?):/.test(name)
             );
             if (hasGroupHover) {
-                hoverTargetCache.set(element, true);
                 return true;
             }
         }
     }
 
-    hoverTargetCache.set(element, false);
     return false;
 }
 
