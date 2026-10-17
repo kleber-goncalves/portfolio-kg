@@ -3,6 +3,7 @@ import { createRecipe, createUISFX } from "uisfx";
 const ENABLED_STORAGE_KEY = "kleber-dev:ui-sounds-enabled";
 const PLAYER_PREFERENCES_KEY = "kleber-dev:ui-sfx";
 const CHANGE_EVENT = "kleber-dev:ui-sfx-change";
+const PLAY_REQUEST_EVENT = "kleber-dev:ui-sfx-request";
 const DEFAULT_VOLUME_PERCENT = 200;
 const MAX_VOLUME_PERCENT = 800;
 const VOLUME_STORAGE_KEY = "kleber-dev:ui-sounds-volume";
@@ -327,6 +328,14 @@ function hasVisualHoverState(element) {
 export function attachUiSfxHoverListeners() {
     if (typeof document === "undefined") return () => {};
 
+    const handlePlayRequest = (event) => {
+        const cue = event?.detail?.cue;
+        if (typeof cue !== "string") return;
+        playUiSound(cue);
+    };
+
+    window.addEventListener(PLAY_REQUEST_EVENT, handlePlayRequest);
+
     const handlePointerOver = (event) => {
         if (event.pointerType !== "mouse" && event.pointerType !== "pen") return;
         if (!(event.target instanceof Element)) return;
@@ -385,6 +394,7 @@ export function attachUiSfxHoverListeners() {
     };
 
     document.addEventListener("pointerover", handlePointerOver, { passive: true });
+    window.addEventListener(PLAY_REQUEST_EVENT, handlePlayRequest);
     document.addEventListener("pointerdown", handleTrustedPointerDown, { passive: true });
     document.addEventListener("pointerup", handleTrustedPointerUp, {
         capture: true,
@@ -395,6 +405,7 @@ export function attachUiSfxHoverListeners() {
 
     return () => {
         document.removeEventListener("pointerover", handlePointerOver);
+        window.removeEventListener(PLAY_REQUEST_EVENT, handlePlayRequest);
         document.removeEventListener("pointerdown", handleTrustedPointerDown);
         document.removeEventListener("pointerup", handleTrustedPointerUp, true);
         document.removeEventListener("click", handleTrustedClick, true);
