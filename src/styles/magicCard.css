@@ -275,7 +275,7 @@
    MOBILE
    ===================================================== */
 
-@media (max-width: 767px) {
+@media (max-width: 767px), (orientation: landscape) and (max-height: 600px) {
 
     .magic-card {
         min-height: 220px;

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { X } from "lucide-react";
+import { Link } from "react-router-dom";
 
 function NavbarDesktop({ items = [] }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -191,7 +192,7 @@ function NavbarDesktop({ items = [] }) {
             ref={menuRef}
             className="
                 hidden
-                md:block
+                b-md:block
             "
         >
             {/* =====================================================
@@ -202,6 +203,7 @@ function NavbarDesktop({ items = [] }) {
                 type="button"
                 onClick={() => setIsOpen(true)}
                 aria-label="Abrir menu"
+                title="Abrir menu"
                 aria-expanded={isOpen}
                 className="
                     fixed
@@ -225,8 +227,8 @@ function NavbarDesktop({ items = [] }) {
 
                     hover:text-bronze
 
-                    lg:right-17
-                    lg:top-10
+                    c-lg:right-17
+                    c-lg:top-10
                 "
             >
                 <span>Menu</span>
@@ -271,6 +273,7 @@ function NavbarDesktop({ items = [] }) {
 
             <div
                 ref={overlayRef}
+                data-a11y-click-surface="backdrop"
                 onClick={() => setIsOpen(false)}
                 className="
                     fixed
@@ -324,6 +327,7 @@ function NavbarDesktop({ items = [] }) {
             <aside
                 ref={panelRef}
                 aria-hidden={!isOpen}
+                inert={!isOpen}
                 className="
                     fixed
                     right-0
@@ -352,7 +356,7 @@ function NavbarDesktop({ items = [] }) {
                         px-12
                         py-10
 
-                        xl:px-16
+                        d-xl:px-16
                     "
                 >
                     {/* =================================================
@@ -379,7 +383,7 @@ function NavbarDesktop({ items = [] }) {
                                     uppercase
                                     tracking-[0.2em]
 
-                                    text-steel/60
+                                    text-steel
                                 "
                             >
                                 Navigation
@@ -389,6 +393,7 @@ function NavbarDesktop({ items = [] }) {
                                 type="button"
                                 onClick={() => setIsOpen(false)}
                                 aria-label="Fechar menu"
+                                title="Fechar menu"
                                 className="
                                     flex
                                     h-10
@@ -431,10 +436,10 @@ function NavbarDesktop({ items = [] }) {
                                 const isActive = activeItem === item.href;
 
                                 return (
-                                    <a
+                                    <Link
                                         key={item.href}
                                         ref={(element) => setLinkRef(element, index)}
-                                        href={item.href}
+                                        to={item.href}
                                         onClick={(event) => {
                                             event.preventDefault();
                                             handleNavigation(item.href);
@@ -458,7 +463,7 @@ function NavbarDesktop({ items = [] }) {
                                             transition-colors
                                             duration-300
 
-                                            xl:text-6xl
+                                            d-xl:text-6xl
                                         "
                                     >
                                         {/* indicador */}
@@ -484,12 +489,12 @@ function NavbarDesktop({ items = [] }) {
                                                 transition-all
                                                 duration-300
 
-                                                ${isActive ? "text-ivory translate-x-1" : "text-steel/45 group-hover:text-ivory group-hover:translate-x-1"}
+                                                ${isActive ? "text-ivory translate-x-1" : "text-steel group-hover:text-ivory group-hover:translate-x-1"}
                                             `}
                                         >
                                             {item.label}
                                         </span>
-                                    </a>
+                                    </Link>
                                 );
                             })}
                         </nav>
@@ -518,7 +523,7 @@ function NavbarDesktop({ items = [] }) {
                                     text-[9px]
                                     uppercase
                                     tracking-[0.18em]
-                                    text-steel/40
+                                    text-steel
                                 "
                             >
                                 KLEBER DEV
@@ -528,7 +533,7 @@ function NavbarDesktop({ items = [] }) {
                                 className="
                                     font-space
                                     text-[10px]
-                                    text-steel/50
+                                    text-steel
                                 "
                             >
                                 Software Developer
@@ -540,7 +545,7 @@ function NavbarDesktop({ items = [] }) {
                                 font-bebas
                                 text-2xl
                                 tracking-[0.08em]
-                                text-steel/20
+                                text-steel
                             "
                         >
                             01

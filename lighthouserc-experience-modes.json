@@ -1,0 +1,14 @@
+{
+  "ci": {
+    "collect": {
+      "url": [
+        "https://kleber-dev1.vercel.app/"
+      ],
+      "numberOfRuns": 1,
+      "puppeteerScript": "./scripts/lhci-set-experience-mode.cjs",
+      "settings": {
+        "disableStorageReset": true
+      }
+    }
+  }
+}

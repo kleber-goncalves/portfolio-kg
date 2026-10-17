@@ -2,8 +2,6 @@ import { useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-
 import ExperienceDropdown from "./ExperienceDropdown";
 
 import Socials from "../components/Socials";
@@ -11,17 +9,19 @@ import DotField from "../components/DotField";
 
 import { ArrowDownRight } from "lucide-react";
 
-import { setExperienceMode } from "../utils/experienceMode";
-
 import MagneticLink from "../components/MagneticNavLink";
 
 import "../styles/looptextHero.css";
 import "../styles/heroParallax.css";
 import GlobeIcon from "./GlobeIcon";
+import OptimizedImage from "./OptimizedImage";
 
 gsap.registerPlugin(ScrollTrigger);
 
-function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode = "full" }) {
+function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, experienceMode = "full" }) {
+    useLayoutEffect(() => {
+        onReady?.("desktop", { gsap, ScrollTrigger });
+    }, [onReady]);
     // ============================================================
     // REFS
     // ============================================================
@@ -39,16 +39,27 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
     const locationRef = useRef(null);
     const socialsRef = useRef(null);
 
-
     const [activeHref, setActiveHref] = useState(null);
-
 
     // ============================================================
     // ACTIVE NAVIGATION
     // ============================================================
 
     useLayoutEffect(() => {
+        let initialFrameId = null;
+        let settledFrameId = null;
+
         const updateActiveSection = () => {
+            // No topo real da página, o Hero é sempre a seção ativa.
+            // Isso evita que a sobreposição temporária do Stack durante
+            // a inicialização do GSAP marque o link errado.
+            const heroItem = items.find((item) => item.href === "#hero");
+
+            if (window.scrollY <= 1 && heroItem) {
+                setActiveHref(heroItem.href);
+                return;
+            }
+
             const viewportPosition = window.innerHeight * 0.35;
 
             let currentSection = null;
@@ -57,7 +68,6 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                 if (!item.href?.startsWith("#")) return;
 
                 const id = item.href.slice(1);
-
                 const section = document.getElementById(id);
 
                 if (!section) return;
@@ -72,18 +82,55 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
             setActiveHref(currentSection);
         };
 
-        updateActiveSection();
+        // Aguarda dois frames para que os efeitos de layout do React,
+        // as transformações iniciais do GSAP e o pin do ScrollTrigger
+        // tenham aplicado suas posições antes da medição.
+        const scheduleActiveSectionUpdate = () => {
+            if (initialFrameId !== null) {
+                cancelAnimationFrame(initialFrameId);
+            }
+
+            if (settledFrameId !== null) {
+                cancelAnimationFrame(settledFrameId);
+            }
+
+            initialFrameId = requestAnimationFrame(() => {
+                initialFrameId = null;
+
+                settledFrameId = requestAnimationFrame(() => {
+                    settledFrameId = null;
+                    updateActiveSection();
+                });
+            });
+        };
+
+        scheduleActiveSectionUpdate();
 
         window.addEventListener("scroll", updateActiveSection, {
             passive: true,
         });
 
-        window.addEventListener("resize", updateActiveSection);
+        window.addEventListener("resize", scheduleActiveSectionUpdate);
+        window.addEventListener("pageshow", scheduleActiveSectionUpdate);
+
+        // ScrollTrigger pode alterar o layout ao criar ou recalcular o pin.
+        // Revalidamos após o refresh, sem forçar um refresh novo.
+        ScrollTrigger.addEventListener("refresh", scheduleActiveSectionUpdate);
 
         return () => {
-            window.removeEventListener("scroll", updateActiveSection);
+            if (initialFrameId !== null) {
+                cancelAnimationFrame(initialFrameId);
+            }
 
-            window.removeEventListener("resize", updateActiveSection);
+            if (settledFrameId !== null) {
+                cancelAnimationFrame(settledFrameId);
+            }
+
+            window.removeEventListener("scroll", updateActiveSection);
+            window.removeEventListener("resize", scheduleActiveSectionUpdate);
+            window.removeEventListener("pageshow", scheduleActiveSectionUpdate);
+
+            ScrollTrigger.removeEventListener("refresh", scheduleActiveSectionUpdate);
         };
     }, [items]);
     // ============================================================
@@ -120,41 +167,6 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
     }, [experienceMenuOpen]);
 
     // ============================================================
-    // DEBUG
-    // ============================================================
-
-    const debugIdRef = useRef(`HERO-${Math.random().toString(36).slice(2, 7)}`);
-
-    const debugId = debugIdRef.current;
-
-    // ============================================================
-    // EXPERIENCE — ALTERAR MODO
-    // ============================================================
-
-    const handleExperienceChange = (mode) => {
-        // Se clicar no modo que já está ativo,
-        // apenas fecha o menu.
-
-        if (mode === experienceMode) {
-            setExperienceMenuOpen(false);
-            return;
-        }
-
-        // Fecha o menu
-
-        setExperienceMenuOpen(false);
-
-        // Salva o novo modo
-
-        setExperienceMode(mode);
-
-        // Recarrega para que todos os componentes
-        // sejam inicializados no novo modo.
-
-        window.location.reload();
-    };
-
-    // ============================================================
     // EXPERIENCE — CLIQUE FORA
     // ============================================================
 
@@ -180,16 +192,8 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
         const hero = heroRef.current;
 
         if (!hero) {
-            console.log(`%c[HERO DEBUG ${debugId}] ❌ heroRef não existe`, "color:red;font-weight:bold");
-
             return;
         }
-
-        console.log(`%c[HERO DEBUG ${debugId}] 🚀 useLayoutEffect ENTRADA iniciou`, "color:#00bcd4;font-weight:bold");
-
-        console.log(`[HERO DEBUG ${debugId}] scrollY no início:`, window.scrollY);
-
-        console.log(`[HERO DEBUG ${debugId}] experienceMode:`, experienceMode);
 
         const ctx = gsap.context(() => {
             const title = heroTitleRef.current;
@@ -203,12 +207,8 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
 
             const elements = [logo, nav, visual, title, location, text, socials].filter(Boolean);
 
-            console.log(`[HERO DEBUG ${debugId}] elementos encontrados:`, elements.length);
-
             if (!elements.length) {
-                console.log(`%c[HERO DEBUG ${debugId}] ❌ Nenhum elemento encontrado`, "color:red;font-weight:bold");
-
-                return;
+            return;
             }
 
             // ========================================================
@@ -216,10 +216,6 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
             // ========================================================
 
             const setVisibleState = () => {
-                console.log(`%c[HERO DEBUG ${debugId}] 👁️ setVisibleState()`, "color:#4caf50;font-weight:bold");
-
-                console.log(`[HERO DEBUG ${debugId}] scrollY ao definir visível:`, window.scrollY);
-
                 gsap.set(elements, {
                     opacity: 1,
                     x: 0,
@@ -239,33 +235,12 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
 
                 const heroTop = heroRect.top;
 
-                const heroBottom = heroRect.bottom;
-
-                const heroIsVisible = heroBottom > 0 && heroTop < window.innerHeight;
-
-                console.log(`%c[HERO DEBUG ${debugId}] 📍 initializeEntry()`, "color:#ff9800;font-weight:bold");
-
-                console.log(`[HERO DEBUG ${debugId}] scrollY:`, currentScroll);
-
-                console.log(`[HERO DEBUG ${debugId}] hero.top:`, heroTop);
-
-                console.log(`[HERO DEBUG ${debugId}] hero.bottom:`, heroBottom);
-
-                console.log(`[HERO DEBUG ${debugId}] hero.height:`, heroRect.height);
-
-                console.log(`[HERO DEBUG ${debugId}] viewport.height:`, window.innerHeight);
-
-                console.log(`[HERO DEBUG ${debugId}] heroIsVisible:`, heroIsVisible);
 
                 // ====================================================
                 // SE O SCROLL FOI RESTAURADO
                 // ====================================================
 
                 if (currentScroll > 50) {
-                    console.log(`%c[HERO DEBUG ${debugId}] 🟡 NÃO executar entrada`, "color:#ffc107;font-weight:bold");
-
-                    console.log(`[HERO DEBUG ${debugId}] Motivo: scrollY (${currentScroll}) > 50`);
-
                     setVisibleState();
 
                     return null;
@@ -276,10 +251,6 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                 // ====================================================
 
                 if (heroTop < -50) {
-                    console.log(`%c[HERO DEBUG ${debugId}] 🟡 NÃO executar entrada`, "color:#ffc107;font-weight:bold");
-
-                    console.log(`[HERO DEBUG ${debugId}] Motivo: hero.top (${heroTop}) < -50`);
-
                     setVisibleState();
 
                     return null;
@@ -289,13 +260,9 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                 // ENTRADA
                 // ====================================================
 
-                console.log(`%c[HERO DEBUG ${debugId}] 🟢 EXECUTANDO ANIMAÇÃO DE ENTRADA`, "color:#00e676;font-weight:bold");
-
                 // ====================================================
                 // ESTADO INICIAL
                 // ====================================================
-
-                console.log(`[HERO DEBUG ${debugId}] Aplicando estados iniciais`);
 
                 gsap.set(logo, {
                     opacity: 0,
@@ -341,17 +308,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                     defaults: {
                         ease: "power3.out",
                     },
-
-                    onStart: () => {
-                        console.log(`%c[HERO DEBUG ${debugId}] ▶️ TIMELINE DE ENTRADA START`, "color:#2196f3;font-weight:bold");
-                    },
-
-                    onComplete: () => {
-                        console.log(`%c[HERO DEBUG ${debugId}] ✅ TIMELINE DE ENTRADA COMPLETE`, "color:#2196f3;font-weight:bold");
-
-                        console.log(`[HERO DEBUG ${debugId}] scrollY no final da entrada:`, window.scrollY);
-                    },
-                });
+});
 
                 // ====================================================
                 // LOGO
@@ -470,11 +427,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                     );
                 }
 
-                console.log(`[HERO DEBUG ${debugId}] duração total da entrada:`, timeline.duration());
-
                 return () => {
-                    console.log(`%c[HERO DEBUG ${debugId}] 🧹 cleanup timeline ENTRADA`, "color:#9c27b0;font-weight:bold");
-
                     timeline.kill();
                 };
             };
@@ -482,26 +435,9 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
             // ========================================================
             // OBSERVAÇÃO DO SCROLL
             // ========================================================
-
-            let scrollLogCount = 0;
-
-            const handleScrollDebug = () => {
-                scrollLogCount++;
-
-                if (scrollLogCount <= 15) {
-                    console.log(`[HERO DEBUG ${debugId}] 📜 scroll event #${scrollLogCount} → scrollY:`, window.scrollY);
-                }
-            };
-
-            window.addEventListener("scroll", handleScrollDebug, {
-                passive: true,
-            });
-
-            // ========================================================
+// ========================================================
             // RESTAURAÇÃO DO SCROLL
             // ========================================================
-
-            console.log(`%c[HERO DEBUG ${debugId}] ⏳ aguardando restauração do scroll...`, "color:#795548;font-weight:bold");
 
             /*
             ============================================================
@@ -531,9 +467,6 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
 
                 const currentScroll = window.scrollY;
 
-                const heroRect = hero.getBoundingClientRect();
-
-                console.log(`[HERO DEBUG ${debugId}] Frame ${frameCount} → scrollY:`, currentScroll, "| hero.top:", heroRect.top, "| hero.bottom:", heroRect.bottom);
 
                 // ====================================================
                 // DETECTA POSIÇÃO ESTÁVEL
@@ -553,9 +486,6 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                  */
 
                 if (stableFrames >= 3) {
-                    console.log(`%c[HERO DEBUG ${debugId}] 🟢 posição do scroll estabilizou`, "color:#00e676;font-weight:bold");
-
-                    console.log(`[HERO DEBUG ${debugId}] scroll final detectado:`, currentScroll);
 
                     animationCleanup = initializeEntry();
 
@@ -567,9 +497,6 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                 // ====================================================
 
                 if (frameCount >= MAX_FRAMES) {
-                    console.log(`%c[HERO DEBUG ${debugId}] ⚠️ limite de frames atingido`, "color:#ff9800;font-weight:bold");
-
-                    console.log(`[HERO DEBUG ${debugId}] scrollY no limite:`, currentScroll);
 
                     animationCleanup = initializeEntry();
 
@@ -594,15 +521,11 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
             // ========================================================
 
             return () => {
-                console.log(`%c[HERO DEBUG ${debugId}] 🧹 cleanup useLayoutEffect ENTRADA`, "color:#9c27b0;font-weight:bold");
 
                 if (frameId !== null) {
                     cancelAnimationFrame(frameId);
                 }
-
-                window.removeEventListener("scroll", handleScrollDebug);
-
-                if (animationCleanup) {
+if (animationCleanup) {
                     animationCleanup();
                 }
             };
@@ -618,29 +541,18 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
     // ============================================================
 
     useLayoutEffect(() => {
-        console.log(`%c[HERO DEBUG ${debugId}] 🚀 useLayoutEffect SAÍDA iniciou`, "color:#e91e63;font-weight:bold");
-
-        console.log(`[HERO DEBUG ${debugId}] saída — experienceMode:`, experienceMode);
-
-        console.log(`[HERO DEBUG ${debugId}] saída — isReducedExperience:`, isReducedExperience);
-
-        console.log(`[HERO DEBUG ${debugId}] saída — scrollY inicial:`, window.scrollY);
 
         // ========================================================
         // FULL
         // ========================================================
 
         if (!isReducedExperience) {
-            console.log(`%c[HERO DEBUG ${debugId}] ⏭️ SAÍDA ignorada porque modo = FULL`, "color:#607d8b;font-weight:bold");
-
             return;
         }
 
         const hero = heroRef.current;
 
         if (!hero) {
-            console.log(`%c[HERO DEBUG ${debugId}] ❌ SAÍDA: heroRef não existe`, "color:red;font-weight:bold");
-
             return;
         }
 
@@ -662,8 +574,6 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
             // ========================================================
             // TIMELINE DE SAÍDA
             // ========================================================
-
-            console.log(`%c[HERO DEBUG ${debugId}] 🔴 criando TIMELINE DE SAÍDA`, "color:#f44336;font-weight:bold");
 
             const exitTimeline = gsap.timeline({
                 paused: true,
@@ -790,8 +700,6 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                 );
             }
 
-            console.log(`[HERO DEBUG ${debugId}] duração total da saída:`, exitTimeline.duration());
-
             // ========================================================
             // SCROLLTRIGGER
             // ========================================================
@@ -809,86 +717,16 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                 animation: exitTimeline,
 
                 markers: false,
-
-                onEnter: (self) => {
-                    console.log(`%c[HERO DEBUG ${debugId}] 🔴 SAÍDA onEnter`, "color:#f44336;font-weight:bold");
-
-                    console.log(`[HERO DEBUG ${debugId}] progress:`, self.progress);
-
-                    console.log(`[HERO DEBUG ${debugId}] scrollY:`, window.scrollY);
-                },
-
-                onUpdate: (self) => {
-                    const roundedProgress = Math.round(self.progress * 20) / 20;
-
-                    if (scrollTrigger._lastDebugProgress !== roundedProgress) {
-                        scrollTrigger._lastDebugProgress = roundedProgress;
-
-                        console.log(`%c[HERO DEBUG ${debugId}] 🔄 SAÍDA onUpdate`, "color:#ff5722;font-weight:bold");
-
-                        console.log(`[HERO DEBUG ${debugId}] progress:`, roundedProgress);
-
-                        console.log(`[HERO DEBUG ${debugId}] scrollY:`, window.scrollY);
-
-                        console.log(`[HERO DEBUG ${debugId}] start:`, self.start);
-
-                        console.log(`[HERO DEBUG ${debugId}] end:`, self.end);
-                    }
-                },
-
-                onLeave: (self) => {
-                    console.log(`%c[HERO DEBUG ${debugId}] 🔴 SAÍDA onLeave`, "color:#f44336;font-weight:bold");
-
-                    console.log(`[HERO DEBUG ${debugId}] progress:`, self.progress);
-
-                    console.log(`[HERO DEBUG ${debugId}] scrollY:`, window.scrollY);
-                },
-
-                onEnterBack: (self) => {
-                    console.log(`%c[HERO DEBUG ${debugId}] 🔵 SAÍDA onEnterBack`, "color:#2196f3;font-weight:bold");
-
-                    console.log(`[HERO DEBUG ${debugId}] progress:`, self.progress);
-
-                    console.log(`[HERO DEBUG ${debugId}] scrollY:`, window.scrollY);
-                },
-
-                onLeaveBack: (self) => {
-                    console.log(`%c[HERO DEBUG ${debugId}] 🟢 SAÍDA onLeaveBack`, "color:#4caf50;font-weight:bold");
-
-                    console.log(`[HERO DEBUG ${debugId}] progress:`, self.progress);
-
-                    console.log(`[HERO DEBUG ${debugId}] scrollY:`, window.scrollY);
-                },
-            });
-
-            console.log(`%c[HERO DEBUG ${debugId}] ✅ ScrollTrigger de SAÍDA criado`, "color:#8bc34a;font-weight:bold");
-
-            console.log(`[HERO DEBUG ${debugId}] trigger:`, scrollTrigger.trigger);
-
-            console.log(`[HERO DEBUG ${debugId}] start:`, scrollTrigger.start);
-
-            console.log(`[HERO DEBUG ${debugId}] end:`, scrollTrigger.end);
-
-            console.log(`[HERO DEBUG ${debugId}] progress inicial:`, scrollTrigger.progress);
+});
 
             // ========================================================
             // PRIMEIRO REFRESH
             // ========================================================
 
             requestAnimationFrame(() => {
-                console.log(`%c[HERO DEBUG ${debugId}] 🔄 ScrollTrigger.refresh()`, "color:#00bcd4;font-weight:bold");
-
-                console.log(`[HERO DEBUG ${debugId}] scrollY antes do refresh:`, window.scrollY);
 
                 ScrollTrigger.refresh();
 
-                console.log(`[HERO DEBUG ${debugId}] scrollY depois do refresh:`, window.scrollY);
-
-                console.log(`[HERO DEBUG ${debugId}] progress depois do refresh:`, scrollTrigger.progress);
-
-                console.log(`[HERO DEBUG ${debugId}] start depois do refresh:`, scrollTrigger.start);
-
-                console.log(`[HERO DEBUG ${debugId}] end depois do refresh:`, scrollTrigger.end);
             });
 
             // ========================================================
@@ -896,10 +734,6 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
             // ========================================================
 
             return () => {
-                console.log(`%c[HERO DEBUG ${debugId}] 🧹 cleanup SAÍDA`, "color:#9c27b0;font-weight:bold");
-
-                console.log(`[HERO DEBUG ${debugId}] progress no cleanup:`, scrollTrigger.progress);
-
                 scrollTrigger.kill();
 
                 exitTimeline.kill();
@@ -982,9 +816,9 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                         items-center
                         gap-5
 
-                        lg:left-18
-                        lg:top-10
-                        lg:gap-12
+                        c-lg:left-18
+                        c-lg:top-10
+                        c-lg:gap-12
                     "
                 >
                     <div
@@ -997,17 +831,19 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                             h-10
                             w-10
 
-                            lg:h-11
-                            lg:w-11
+                            c-lg:h-11
+                            c-lg:w-11
                         "
                         >
-                            <img
+                            <OptimizedImage
                                 src="/logo.svg"
                                 alt="Kleber Dev"
-                                className="
-                                h-full
-                                w-full
-                            "
+                                width={44}
+                                height={44}
+                                loading="eager"
+                                fetchPriority="high"
+                                wrapperClassName="h-full w-full"
+                                className="object-contain"
                             />
                         </div>
                     </div>
@@ -1030,9 +866,9 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
         items-center
         gap-5
 
-        lg:right-17
-        lg:top-10
-        lg:gap-7
+        c-lg:right-17
+        c-lg:top-10
+        c-lg:gap-7
     "
                 >
                     {items.map((item) => {
@@ -1049,7 +885,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                                     uppercase
                                     tracking-[0.12em]
 
-                                    lg:text-[10px]
+                                    c-lg:text-[10px]
                                 "
                                 isActive={isActive}
                             >
@@ -1084,16 +920,18 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
 
                         overflow-hidden
 
-                        lg:w-[440px]
-                        xl:w-[970px]
+                        c-lg:w-[440px]
+                        d-xl:w-[970px]
                     "
                 >
-                    <img
+                    <OptimizedImage
                         src="/euNv.png"
-                        alt="Kleber Dev"
+                        alt="Retrato de Kleber Gonçalves"
+                        sizes="(min-width: 1280px) 970px, (min-width: 1024px) 440px, 420px"
+                        loading="eager"
+                        fetchPriority="high"
+                        wrapperClassName="h-full w-full"
                         className="
-                            h-full
-                            w-full
                             object-cover
                             object-top
                         "
@@ -1158,7 +996,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
 
                         -translate-y-1/2
 
-                        lg:flex
+                        c-lg:flex
                     "
                 >
                     <div
@@ -1191,7 +1029,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                                     text-[14px]
                                     uppercase
                                     tracking-[0.22em]
-                                    text-steel/50
+                                    text-steel
                                 "
                             >
                                 Localização
@@ -1247,11 +1085,11 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
 
                         -translate-y-1/2
 
-                        lg:flex
-                        lg:flex-col
+                        c-lg:flex
+                        c-lg:flex-col
 
-                        xl:right-[0%]
-                        xl:w-[340px]
+                        d-xl:right-[0%]
+                        d-xl:w-[340px]
                     "
                 >
                     <div
@@ -1283,7 +1121,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                             flex-col
                         "
                     >
-                        <h2
+                        <h1
                             className="
                                 font-space
                                 text-4xl
@@ -1293,14 +1131,14 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
 
                                 text-ivory
 
-                                lg:text-5xl
-                                xl:text-6xl
+                                c-lg:text-5xl
+                                d-xl:text-6xl
                             "
                         >
                             Software
                             <br />
                             Developer
-                        </h2>
+                        </h1>
 
                         <p
                             className="
@@ -1311,7 +1149,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                                 text-sm
                                 leading-6
 
-                                text-steel/60
+                                text-steel
                             "
                         >
                             Frontend · Backend · Fullstack
@@ -1331,8 +1169,8 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, experienceMode
                         left-8
                         z-40
 
-                        lg:bottom-10
-                        lg:left-10
+                        c-lg:bottom-10
+                        c-lg:left-10
                     "
                 >
                     <Socials />

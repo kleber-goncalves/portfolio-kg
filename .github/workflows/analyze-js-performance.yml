@@ -1,0 +1,63 @@
+name: Analyze JavaScript Bundle
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+      - feat/responsividadeFull
+    paths:
+      - "src/**"
+      - "package.json"
+      - "package-lock.json"
+      - "vite.config.js"
+      - "vite.analysis.config.js"
+      - "scripts/analyze-js-bundle.mjs"
+      - ".github/workflows/analyze-js-performance.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: js-analysis-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  analyze:
+    name: Build bundle treemap and size report
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install project dependencies
+        run: npm ci
+
+      - name: Install temporary bundle visualizer
+        run: npm install --no-save --package-lock=false rollup-plugin-visualizer@7.1.1
+
+      - name: Build with bundle analyzer
+        run: npx vite build --config vite.analysis.config.js
+
+      - name: Summarize JavaScript asset sizes
+        run: node scripts/analyze-js-bundle.mjs
+
+      - name: Upload diagnostic reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: javascript-bundle-analysis
+          path: |
+            dist/bundle-analysis.html
+            dist/js-bundle-report.md
+            dist/js-bundle-report.json
+          if-no-files-found: error
+          retention-days: 14

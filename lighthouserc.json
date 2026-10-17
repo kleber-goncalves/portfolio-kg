@@ -1,0 +1,20 @@
+{
+  "ci": {
+    "collect": {
+      "url": [
+        "https://kleber-dev1.vercel.app/"
+      ],
+      "numberOfRuns": 3
+    },
+    "assert": {
+      "assertions": {
+        "categories:performance": [
+          "error",
+          {
+            "minScore": 0.6
+          }
+        ]
+      }
+    }
+  }
+}

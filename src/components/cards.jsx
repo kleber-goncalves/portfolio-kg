@@ -30,21 +30,21 @@ export default function Card({
 }) {
     // 🟦 BASES FIXAS
     const baseClass = "flex  flex-col  ";
-    const baseClassII = "flex  xl:px-6 xl:pl-10 pl-7 flex-col  ";
+    const baseClassII = "flex  d-xl:px-6 d-xl:pl-10 pl-7 flex-col  ";
     //const baseBarra = "border-l-4"; //Barra grossa - pegar o componete todo//
     const baseBarra = "border-l-4"; //Barra grossa - pegar o componete todo
-    const baseBarraII = "border-l lg:h-16 h-9"; //Barra fina - o tomanho da barra é fixo
+    const baseBarraII = "border-l c-lg:h-16 h-9"; //Barra fina - o tomanho da barra é fixo
     const baseBarraIII = "border-l"; //Barra fina - pegar o componete todo
-    const baseTitle = " md:text-2xl text-lg  leading-relaxed tracking-widest ";
+    const baseTitle = " b-md:text-2xl text-lg  leading-relaxed tracking-widest ";
     const baseText =
-        "md:text-base  text-xs  xl:max-w-md tracking-widest leading-relaxed";
+        "b-md:text-base  text-xs  d-xl:max-w-md tracking-widest leading-relaxed";
     const baseTextII =
-        "md:text-base text-[11px] text-justify md:text-left  max-w-md tracking-widest leading-relaxed";
+        "b-md:text-base text-[11px] text-justify b-md:text-left  max-w-md tracking-widest leading-relaxed";
     const baseButtonClassName =
         "flex-row flex border  cursor-pointer rounded-lg w-fit max-w-xs items-center tracking-wider transition-all duration-300 ";
-    const divPClassName = "md:px-4 px-3 py-2 border-r   ";
+    const divPClassName = "b-md:px-4 px-3 py-2 border-r   ";
     const divArrowClassName =
-        "cursor-pointer md:text-xl text-sm md:px-3 px-2 md:py-2.5 hover:border-l";
+        "cursor-pointer b-md:text-xl text-sm b-md:px-3 px-2 b-md:py-2.5 hover:border-l";
 
     // 🟨 VARIANTES
     const variants = {
@@ -205,7 +205,7 @@ export default function Card({
                                             <div
                                                 className={`${divPClassName} ${styles.divPClassName} `}
                                             >
-                                                <p className=" cursor-pointer text-xs md:text-base">
+                                                <p className=" cursor-pointer text-xs b-md:text-base">
                                                     {text_button}
                                                 </p>
                                             </div>

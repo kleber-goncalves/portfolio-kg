@@ -1,10 +1,14 @@
 import { useEffect, useState, useRef } from "react";
+import { Link } from "react-router-dom";
+import { createPortal } from "react-dom";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import gsap from "gsap";
+import { startSmoothScroll, stopSmoothScroll } from "../utils/lenisControl";
 
 function MenuMobile({ items = [] }) {
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef(null);
+    const pendingNavigationRef = useRef(null);
 
 
     const openMenu = () => {
@@ -61,6 +65,74 @@ function MenuMobile({ items = [] }) {
         return () => {
             document.removeEventListener("keydown", handleKeyDown);
         };
+    }, [isOpen]);
+
+    // =========================================
+    // BLOQUEIO DA ROLAGEM DA PÁGINA
+    // =========================================
+
+    useEffect(() => {
+        if (!isOpen) return undefined;
+
+        const html = document.documentElement;
+        const body = document.body;
+        const scrollY = window.scrollY;
+
+        const previousHtmlOverflow = html.style.overflow;
+        const previousHtmlScrollBehavior = html.style.scrollBehavior;
+        const previousBodyStyles = {
+            position: body.style.position,
+            top: body.style.top,
+            left: body.style.left,
+            right: body.style.right,
+            width: body.style.width,
+            overflow: body.style.overflow,
+        };
+
+        // Pausa o Lenis quando estiver inicializado e bloqueia o scroll nativo.
+        stopSmoothScroll();
+        html.style.overflow = "hidden";
+        html.style.scrollBehavior = "auto";
+        body.style.position = "fixed";
+        body.style.top = "-" + scrollY + "px";
+        body.style.left = "0";
+        body.style.right = "0";
+        body.style.width = "100%";
+        body.style.overflow = "hidden";
+
+        return () => {
+            body.style.position = previousBodyStyles.position;
+            body.style.top = previousBodyStyles.top;
+            body.style.left = previousBodyStyles.left;
+            body.style.right = previousBodyStyles.right;
+            body.style.width = previousBodyStyles.width;
+            body.style.overflow = previousBodyStyles.overflow;
+
+            html.style.overflow = previousHtmlOverflow;
+            window.scrollTo(0, scrollY);
+            html.style.scrollBehavior = previousHtmlScrollBehavior;
+
+            startSmoothScroll();
+        };
+    }, [isOpen]);
+
+    // Só navega depois que o painel fechou e o bloqueio da página foi removido.
+    useEffect(() => {
+        if (isOpen || !pendingNavigationRef.current) return undefined;
+
+        const href = pendingNavigationRef.current;
+        pendingNavigationRef.current = null;
+
+        const frameId = requestAnimationFrame(() => {
+            const section = document.querySelector(href);
+
+            section?.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+            });
+        });
+
+        return () => cancelAnimationFrame(frameId);
     }, [isOpen]);
 
     // =========================================
@@ -123,22 +195,12 @@ function MenuMobile({ items = [] }) {
     // =========================================
 
     const handleNavigation = (href) => {
+        pendingNavigationRef.current = href;
         closeMenu();
-
-        setTimeout(() => {
-            const section = document.querySelector(href);
-
-            if (section) {
-                section.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start",
-                });
-            }
-        }, 400);
     };
 
     return (
-        <div className="md:hidden">
+        <div className="b-md:hidden">
             {/* =========================================
                 BOTÃO HAMBÚRGUER
             ========================================== */}
@@ -148,6 +210,7 @@ function MenuMobile({ items = [] }) {
                     type="button"
                     onClick={openMenu}
                     aria-label="Abrir menu"
+                    title="Abrir menu"
                     aria-expanded={isOpen}
                     className="
                         flex
@@ -164,11 +227,11 @@ function MenuMobile({ items = [] }) {
                         hover:text-bronze
                         group
                         active:scale-95
-                        active:text-bronze/20
+                        active:text-bronze
                         
                     "
                 >
-                    <Menu className="h-12 w-12 group-active:text-bronze/29" />
+                    <Menu className="h-12 w-12 group-active:text-bronze" />
                 </button>
             )}
 
@@ -176,13 +239,17 @@ function MenuMobile({ items = [] }) {
                 MENU
             ========================================== */}
 
-            {isOpen && (
+            {isOpen && createPortal(
                 <div
+                    data-mobile-menu-overlay
+                    data-a11y-click-surface="backdrop"
                     className="
                         fixed
                         inset-0
-                        z-[100]
+                        z-[9999]
+                        overscroll-contain
                         bg-black/30
+                        b-md:hidden
                     "
                     onClick={handleOverlayClick}
                 >
@@ -197,7 +264,9 @@ function MenuMobile({ items = [] }) {
                             w-[82%]
                             max-w-[360px]
                             flex-col
-                            overflow-hidden
+                            overflow-x-hidden
+                            overflow-y-auto
+                            overscroll-contain
                             border-r
                             border-graphite
                             bg-carbon
@@ -221,6 +290,7 @@ function MenuMobile({ items = [] }) {
                                 type="button"
                                 onClick={closeMenu}
                                 aria-label="Fechar menu"
+                                title="Fechar menu"
                                 className="
                                     flex
                                     h-11
@@ -250,11 +320,14 @@ function MenuMobile({ items = [] }) {
 
                         <div className="flex flex-1 flex-col pt-8">
                             {items.map((item, index) => (
-                                <button
+                                <Link
                                     key={item.href}
-                                    type="button"
+                                    to={item.href}
                                     data-mobile-menu-link
-                                    onClick={() => handleNavigation(item.href)}
+                                    onClick={(event) => {
+                                        event.preventDefault();
+                                        handleNavigation(item.href);
+                                    }}
                                     className="
                                         group
                                         flex
@@ -267,15 +340,19 @@ function MenuMobile({ items = [] }) {
                                         transition-colors
                                         duration-300
                                         hover:border-bronze
+                                        focus-visible:outline
+                                        focus-visible:outline-2
+                                        focus-visible:outline-offset-4
+                                        focus-visible:outline-champagne
                                     "
                                 >
-                                    <div className="flex items-center gap-4">
+                                    <span className="flex items-center gap-4">
                                         <span className="font-mono text-[10px] text-bronze">{String(index + 1).padStart(2, "0")}</span>
-
                                         <span className="font-space text-sm uppercase tracking-wider text-ivory">{item.label}</span>
-                                    </div>
+                                    </span>
 
                                     <ArrowUpRight
+                                        aria-hidden="true"
                                         className="
                                             h-4
                                             w-4
@@ -287,7 +364,7 @@ function MenuMobile({ items = [] }) {
                                             group-hover:text-bronze
                                         "
                                     />
-                                </button>
+                                </Link>
                             ))}
                         </div>
 
@@ -299,7 +376,8 @@ function MenuMobile({ items = [] }) {
                             <span className="text-[9px] uppercase tracking-[0.2em] text-steel">Kleber Dev · Portfolio</span>
                         </div>
                     </nav>
-                </div>
+                </div>,
+                document.body,
             )}
         </div>
     );

@@ -149,7 +149,7 @@ function ExperienceSelector() {
                     border-graphite
                     bg-carbon
                     p-6
-                    md:p-10
+                    b-md:p-10
                 "
             >
                 {/* =====================================
@@ -179,7 +179,7 @@ function ExperienceSelector() {
                                 text-[10px]
                                 uppercase
                                 tracking-[0.2em]
-                                text-steel/60
+                                text-steel
                             "
                         >
                             Experiência
@@ -193,7 +193,7 @@ function ExperienceSelector() {
                             font-medium
                             tracking-[-0.04em]
                             text-ivory
-                            md:text-4xl
+                            b-md:text-4xl
                         "
                     >
                         COMO VOCÊ QUER
@@ -207,7 +207,7 @@ function ExperienceSelector() {
                             max-w-[480px]
                             text-sm
                             leading-6
-                            text-steel/60
+                            text-steel
                         "
                     >
                         Escolha como deseja experimentar meu portfólio.
@@ -251,7 +251,7 @@ function ExperienceSelector() {
                                     justify-center
                                     border
 
-                                    ${selectedMode === "full" ? "border-bronze text-bronze" : "border-graphite text-steel/50"}
+                                    ${selectedMode === "full" ? "border-bronze text-bronze" : "border-graphite text-steel"}
                                 `}
                             >
                                 <Zap className="h-4 w-4" />
@@ -294,7 +294,7 @@ function ExperienceSelector() {
                                         mt-2
                                         text-xs
                                         leading-5
-                                        text-steel/60
+                                        text-steel
                                     "
                                 >
                                     Animações, transições, efeitos visuais e interações.
@@ -335,7 +335,7 @@ function ExperienceSelector() {
                                     justify-center
                                     border
 
-                                    ${selectedMode === "reduced" ? "border-bronze text-bronze" : "border-graphite text-steel/50"}
+                                    ${selectedMode === "reduced" ? "border-bronze text-bronze" : "border-graphite text-steel"}
                                 `}
                             >
                                 <Sparkles className="h-4 w-4" />
@@ -378,7 +378,7 @@ function ExperienceSelector() {
                                         mt-2
                                         text-xs
                                         leading-5
-                                        text-steel/60
+                                        text-steel
                                     "
                                 >
                                     Menos movimento e efeitos para uma navegação mais direta.
@@ -433,7 +433,7 @@ function ExperienceSelector() {
                         text-[9px]
                         uppercase
                         tracking-[0.14em]
-                        text-steel/30
+                        text-steel
                     "
                 >
                     Você poderá alterar essa preferência depois.

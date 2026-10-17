@@ -8,8 +8,9 @@ gsap.registerPlugin(ScrollTrigger);
 import { tecnologias } from "../data/tecnologias";
 import { ArrowUpRight } from "lucide-react";
 import MagneticExternalLinkHover from "./MagneticExternalLinkHover";
+import OptimizedImage from "./OptimizedImage";
 
-function ProjetoDesktop({ projetos, experienceMode = "full" }) {
+function ProjetoDesktop({ projetos, experienceMode = "full", onReady }) {
     // ============================================================
     // MODO DE EXPERIÊNCIA
     // ============================================================
@@ -545,6 +546,28 @@ function ProjetoDesktop({ projetos, experienceMode = "full" }) {
     }, [isReducedExperience, projetos]);
 
     // ============================================================
+    // NOTIFICAÇÃO DE PRONTIDÃO
+    // ============================================================
+
+    useLayoutEffect(() => {
+        let firstFrame = 0;
+        let secondFrame = 0;
+
+        // Aguarda o DOM, os gatilhos de rolagem e o layout antes de sinalizar prontidão.
+        firstFrame = window.requestAnimationFrame(() => {
+            secondFrame = window.requestAnimationFrame(() => {
+                ScrollTrigger.refresh(true);
+                onReady?.();
+            });
+        });
+
+        return () => {
+            window.cancelAnimationFrame(firstFrame);
+            window.cancelAnimationFrame(secondFrame);
+        };
+    }, [onReady]);
+
+    // ============================================================
     // RENDER
     // ============================================================
 
@@ -602,7 +625,7 @@ function ProjetoDesktop({ projetos, experienceMode = "full" }) {
                                 uppercase
                                 tracking-wide
                                 text-steel
-                                lg:text-7xl
+                                c-lg:text-7xl
                             "
                         >
                             // Projetos
@@ -616,7 +639,7 @@ function ProjetoDesktop({ projetos, experienceMode = "full" }) {
                                 h-0.5
                                 flex-1
                                 bg-gradientaa
-                                md:h-1
+                                b-md:h-1
                             "
                         />
 
@@ -631,7 +654,7 @@ function ProjetoDesktop({ projetos, experienceMode = "full" }) {
                                 text-sm
                                 leading-6
                                 text-steel
-                                lg:block
+                                c-lg:block
                             "
                         >
                             Uma seleção de projetos desenvolvidos durante minha evolução como desenvolvedor
@@ -795,7 +818,7 @@ function ProjetoDesktop({ projetos, experienceMode = "full" }) {
                                                             ease-out
                                                             group-hover:translate-x-2
                                                             group-hover:text-ivory
-                                                            lg:text-4xl
+                                                            c-lg:text-4xl
                                                         "
                                                 >
                                                     {projeto.titulo}
@@ -856,7 +879,7 @@ function ProjetoDesktop({ projetos, experienceMode = "full" }) {
                                                                                                                                     py-1.5
                                                                                                                                     text-[11px]
                                                                                                                                     tracking-[0.15em]
-                                                                                                                                    text-steel/60
+                                                                                                                                    text-steel
                                                                                                                                     transition-all
                                                                                                                                     duration-500
                                                                                                                                     ease-out
@@ -949,7 +972,7 @@ function ProjetoDesktop({ projetos, experienceMode = "full" }) {
                         bg-carbon
                         shadow-2xl
                         shadow-black
-                        lg:block
+                        c-lg:block
                     "
                 >
                     {/* ==============================================
@@ -974,14 +997,15 @@ function ProjetoDesktop({ projetos, experienceMode = "full" }) {
                                         shrink-0
                                     "
                             >
-                                <img
+                                <OptimizedImage
                                     src={projeto.preview || projeto.imagens?.[0]}
-                                    alt={`Preview de ${projeto.titulo}`}
-                                    className="
-                                            h-full
-                                            w-full
-                                            object-cover
-                                        "
+                                    alt={`Captura de tela do projeto ${projeto.titulo}`}
+                                    width={560}
+                                    height={360}
+                                    loading="lazy"
+                                    fetchPriority="low"
+                                    wrapperClassName="h-full w-full"
+                                    className="object-cover"
                                 />
                             </div>
                         ))}
@@ -1007,8 +1031,9 @@ function ProjetoDesktop({ projetos, experienceMode = "full" }) {
                         BOTÃO PREVIEW
                     ============================================== */}
 
-                    <button
+                    <div
                         ref={previewButtonRef}
+                        aria-hidden="true"
                         className="
                             pointer-events-none
                             absolute
@@ -1036,7 +1061,7 @@ function ProjetoDesktop({ projetos, experienceMode = "full" }) {
                         >
                             View
                         </span>
-                    </button>
+                    </div>
                 </div>
             )}
         </section>

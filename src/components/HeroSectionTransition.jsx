@@ -1,15 +1,22 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { lazy, Suspense, useLayoutEffect, useRef, useState } from "react";
 
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import Hero from "../layout/HeroTeste2";
 import Seclogs from "../layout/Logo2";
-import MenuDesktop from "../components/MenuDesktop";
+const MenuDesktop = lazy(() => import("../components/MenuDesktop"));
+import useResponsive from "../hooks/useResponsive";
 
 gsap.registerPlugin(ScrollTrigger);
 
 function HeroSectionTransition({ experienceMode = "full" }) {
+    const { isMobileLayout } = useResponsive();
+    const requiredHeroLayout = isMobileLayout ? "mobile" : "desktop";
+    const requiredStackLayout = isMobileLayout ? "mobile" : "desktop";
+    const [readyHeroLayout, setReadyHeroLayout] = useState(null);
+    const [readyStackLayout, setReadyStackLayout] = useState(null);
+
     const sectionRef = useRef(null);
     const heroRef = useRef(null);
     const seclogsRef = useRef(null);
@@ -33,6 +40,8 @@ function HeroSectionTransition({ experienceMode = "full" }) {
      * o menu fica disponível desde o início.
      */
     const [showDesktopMenu, setShowDesktopMenu] = useState(false);
+    // Mantém o menu montado após a primeira aparição para permitir a animação de saída.
+    const [hasShownDesktopMenu, setHasShownDesktopMenu] = useState(false);
 
     const [dotFieldFrozen, setDotFieldFrozen] = useState(false);
 
@@ -44,7 +53,9 @@ function HeroSectionTransition({ experienceMode = "full" }) {
      * Esses refs evitam chamar setState repetidamente
      * durante o onUpdate do ScrollTrigger.
      */
-    const menuVisibleRef = useRef(experienceMode === "reduced");
+    // Espelha a visibilidade real inicial: showDesktopMenu começa em false.
+    // No Reduced, o primeiro cálculo precisa conseguir mudar ref e estado para true.
+    const menuVisibleRef = useRef(false);
 
     const dotFieldFrozenRef = useRef(false);
 
@@ -54,7 +65,7 @@ function HeroSectionTransition({ experienceMode = "full" }) {
 
     const menuItems = [
         {
-            label: "Home",
+            label: "Hero",
             href: "#hero",
         },
         {
@@ -85,7 +96,7 @@ function HeroSectionTransition({ experienceMode = "full" }) {
 
     const handleHeroNavigation = (href) => {
         // ========================================================
-        // HOME
+        // Hero
         // ========================================================
 
         if (href === "#hero") {
@@ -183,6 +194,32 @@ function HeroSectionTransition({ experienceMode = "full" }) {
 
         if (!section) return;
 
+        // Mantém o Stack fora da tela durante o carregamento do layout lazy.
+        // Este contexto separado é revertido nos retornos antecipados e no cleanup.
+        const initialContext = gsap.context(() => {
+            if (experienceMode === "full" && !isMobileLayout) {
+                const seclogs = seclogsRef.current;
+
+                if (seclogs) {
+                    gsap.set(seclogs, {
+                        yPercent: 100,
+                    });
+                }
+            }
+        }, section);
+
+        // A transição depende do DOM do Hero correspondente à viewport.
+        // Aguarda o módulo lazy carregar antes de criar animações e ScrollTriggers.
+        if (readyHeroLayout !== requiredHeroLayout) {
+            return () => initialContext.revert();
+        }
+
+        // A transição pinada no desktop precisa medir o Stack real,
+        // não o espaço reservado enquanto o módulo lazy carrega.
+        if (experienceMode === "full" && !isMobileLayout && readyStackLayout !== requiredStackLayout) {
+            return () => initialContext.revert();
+        }
+
         // ========================================================
         // EXPERIÊNCIA REDUZIDA
         // ========================================================
@@ -205,7 +242,7 @@ function HeroSectionTransition({ experienceMode = "full" }) {
         if (experienceMode === "reduced") {
             const hero = heroRef.current;
 
-            if (!hero) return;
+            if (!hero) return () => initialContext.revert();
 
             const updateReducedMenu = () => {
                 const heroRect = hero.getBoundingClientRect();
@@ -222,35 +259,55 @@ function HeroSectionTransition({ experienceMode = "full" }) {
                 if (menuVisibleRef.current !== shouldShowMenu) {
                     menuVisibleRef.current = shouldShowMenu;
 
+                    if (shouldShowMenu) {
+                        setHasShownDesktopMenu(true);
+                    }
+
                     setShowDesktopMenu(shouldShowMenu);
                 }
             };
 
             /*
-             * Estado inicial
+             * Estado inicial.
+             *
+             * Mede novamente após dois frames para incluir o layout lazy
+             * e a restauração de scroll do navegador após refresh.
              */
             updateReducedMenu();
 
+            let firstReducedMenuFrame = 0;
+            let secondReducedMenuFrame = 0;
+
+            firstReducedMenuFrame = requestAnimationFrame(() => {
+                secondReducedMenuFrame = requestAnimationFrame(updateReducedMenu);
+            });
+
             /*
-             * Atualiza enquanto o usuário rola.
+             * Mantém o estado sincronizado em rolagem, resize e pageshow.
              */
             window.addEventListener("scroll", updateReducedMenu, { passive: true });
-
-            /*
-             * Atualiza em resize.
-             */
             window.addEventListener("resize", updateReducedMenu);
+            window.addEventListener("pageshow", updateReducedMenu);
 
             return () => {
-                window.removeEventListener("scroll", updateReducedMenu);
+                cancelAnimationFrame(firstReducedMenuFrame);
+                cancelAnimationFrame(secondReducedMenuFrame);
 
+                window.removeEventListener("scroll", updateReducedMenu);
                 window.removeEventListener("resize", updateReducedMenu);
+                window.removeEventListener("pageshow", updateReducedMenu);
+
+                initialContext.revert();
             };
         }
 
         // ========================================================
         // EXPERIÊNCIA COMPLETA
         // ========================================================
+
+        // O pin do Hero/Stack altera os offsets dos ScrollTriggers abaixo.
+        // Recalcula todos depois que a geometria do pin estiver aplicada.
+        let pinRefreshFrameId = null;
 
         const ctx = gsap.context(() => {
             const hero = heroRef.current;
@@ -264,7 +321,7 @@ function HeroSectionTransition({ experienceMode = "full" }) {
             // DESKTOP
             // ====================================================
 
-            mm.add("(min-width: 768px)", () => {
+            mm.add("(min-width: 768px) and (hover: hover) and (pointer: fine) and (orientation: portrait), (min-width: 768px) and (hover: hover) and (pointer: fine) and (orientation: landscape) and (min-height: 601px)", () => {
                 // =================================================
                 // ELEMENTOS DO HERO
                 // =================================================
@@ -307,7 +364,6 @@ function HeroSectionTransition({ experienceMode = "full" }) {
                     });
                 }
 
-
                 /*
                  * DotField começa visível.
                  */
@@ -334,6 +390,10 @@ function HeroSectionTransition({ experienceMode = "full" }) {
                         scrub: true,
 
                         pin: true,
+
+                        // O Hero é carregado sob demanda e pode criar o pin depois dos gatilhos abaixo.
+                        // Prioriza sua medição para que o espaço pinado seja incluído nos starts/ends seguintes.
+                        refreshPriority: 1,
 
                         anticipatePin: 1,
 
@@ -374,6 +434,10 @@ function HeroSectionTransition({ experienceMode = "full" }) {
                              */
                             if (menuVisibleRef.current !== shouldShowMenu) {
                                 menuVisibleRef.current = shouldShowMenu;
+
+                                if (shouldShowMenu) {
+                                    setHasShownDesktopMenu(true);
+                                }
 
                                 setShowDesktopMenu(shouldShowMenu);
                             }
@@ -518,12 +582,26 @@ function HeroSectionTransition({ experienceMode = "full" }) {
             };
         }, sectionRef);
 
+        // O pin já está criado neste ponto; espera um frame para medir
+        // as seções seguintes com os offsets definitivos do ScrollTrigger.
+        if (experienceMode === "full" && !isMobileLayout) {
+            pinRefreshFrameId = requestAnimationFrame(() => {
+                pinRefreshFrameId = null;
+                ScrollTrigger.refresh();
+            });
+        }
+
         // ========================================================
         // CLEANUP GSAP CONTEXT
         // ========================================================
 
         return () => {
+            if (pinRefreshFrameId !== null) {
+                cancelAnimationFrame(pinRefreshFrameId);
+            }
+
             ctx.revert();
+            initialContext.revert();
 
             const heroTransition = ScrollTrigger.getById("heroTransition");
 
@@ -531,7 +609,7 @@ function HeroSectionTransition({ experienceMode = "full" }) {
                 heroTransition.kill();
             }
         };
-    }, [experienceMode]);
+    }, [experienceMode, readyHeroLayout, requiredHeroLayout, readyStackLayout, requiredStackLayout, isMobileLayout]);
 
     // ============================================================
     // MODO ATUAL
@@ -559,9 +637,9 @@ function HeroSectionTransition({ experienceMode = "full" }) {
                 z-0
                 w-full
 
-                md:absolute
-                md:inset-0
-                md:h-full
+                b-md:absolute
+                b-md:inset-0
+                b-md:h-full
             `
         : `
                 relative
@@ -592,11 +670,11 @@ function HeroSectionTransition({ experienceMode = "full" }) {
 
                 bg-obsidian
 
-                md:absolute
-                md:inset-0
-                md:h-auto
+                b-md:absolute
+                b-md:inset-0
+                b-md:h-auto
 
-                md:shadow-[0_-25px_60px_rgba(0,0,0,0.55)]
+                b-md:shadow-[0_-25px_60px_rgba(0,0,0,0.55)]
             `
         : `
                 relative
@@ -620,16 +698,16 @@ function HeroSectionTransition({ experienceMode = "full" }) {
                         w-full
                         h-auto
 
-                        md:h-screen
-                        md:overflow-hidden
+                        b-md:h-screen
+                        b-md:overflow-hidden
                     `
                     : `
                         relative
                         w-full
                         h-auto
 
-                        md:h-auto
-                        md:overflow-visible
+                        b-md:h-auto
+                        b-md:overflow-visible
                     `
             }
         >
@@ -638,7 +716,7 @@ function HeroSectionTransition({ experienceMode = "full" }) {
             ================================================== */}
 
             <div ref={heroRef} className={heroWrapperClass}>
-                <Hero dotFieldFrozen={dotFieldFrozen} onNavigate={handleHeroNavigation} experienceMode={experienceMode} />
+                <Hero isMobileLayout={isMobileLayout} dotFieldFrozen={dotFieldFrozen} onNavigate={handleHeroNavigation} onReady={setReadyHeroLayout} experienceMode={experienceMode} />
                 {isFullExperience === false && (
                     <div
                         className="
@@ -662,14 +740,18 @@ function HeroSectionTransition({ experienceMode = "full" }) {
             ================================================== */}
 
             <div ref={seclogsRef} className={stackWrapperClass}>
-                <Seclogs />
+                <Seclogs onReady={setReadyStackLayout} />
             </div>
 
             {/* ==================================================
                 MENU DESKTOP
             ================================================== */}
 
-            <MenuDesktop items={menuItems} showMenu={showDesktopMenu} />
+            {hasShownDesktopMenu && (
+                <Suspense fallback={null}>
+                    <MenuDesktop items={menuItems} showMenu={showDesktopMenu} />
+                </Suspense>
+            )}
         </section>
     );
 }

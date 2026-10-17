@@ -1,0 +1,95 @@
+name: Analyze Unused JavaScript
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+      - feat/responsividadeFull
+    paths:
+      - "src/**"
+      - "package.json"
+      - "package-lock.json"
+      - "vite.config.js"
+      - "vite.analysis.config.js"
+      - "scripts/analyze-js-runtime-coverage.mjs"
+      - "scripts/check-reduced-mode-scroll.mjs"
+      - ".github/workflows/analyze-js-runtime-coverage.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: js-runtime-coverage-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  coverage:
+    name: Measure runtime JavaScript coverage
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install project dependencies
+        run: npm ci
+
+      - name: Install temporary runtime-coverage tools
+        run: npm install --no-save --package-lock=false playwright @jridgewell/trace-mapping rollup-plugin-visualizer@7.1.1
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Build diagnostic bundle with source maps
+        run: npm run build -- --config vite.analysis.config.js
+
+      - name: Start local production preview
+        run: |
+          npx vite preview --host 127.0.0.1 --port 4173 --strictPort > /tmp/vite-preview.log 2>&1 &
+          echo $! > /tmp/vite-preview.pid
+
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4173/ --output /dev/null; then
+              echo "Local production preview is responding."
+              exit 0
+            fi
+            echo "Attempt $attempt/30: waiting for the preview."
+            sleep 2
+          done
+
+          cat /tmp/vite-preview.log
+          exit 1
+
+      - name: Verify reduced-mode scrolling on desktop and mobile
+        run: node scripts/check-reduced-mode-scroll.mjs
+
+      - name: Analyze JavaScript execution on desktop and mobile
+        run: node scripts/analyze-js-runtime-coverage.mjs
+
+      - name: Upload runtime coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: javascript-runtime-coverage
+          path: |
+            dist/js-runtime-coverage.md
+            dist/js-runtime-coverage.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Show runtime coverage summary
+        if: always()
+        run: |
+          if [ -f dist/js-runtime-coverage.md ]; then
+            cat dist/js-runtime-coverage.md
+          else
+            echo "Runtime coverage report was not generated."
+          fi

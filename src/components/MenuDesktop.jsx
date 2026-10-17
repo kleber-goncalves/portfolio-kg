@@ -1,9 +1,11 @@
 import { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
 import { motion, useMotionValue, useSpring } from "motion/react";
+import { Link } from "react-router-dom";
 import { stopSmoothScroll, startSmoothScroll } from "../utils/lenisControl";
 
 import { getExperienceMode, setExperienceMode } from "../utils/experienceMode";
+
 
 function MenuDesktop({ items = [], showMenu = false }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -13,7 +15,6 @@ function MenuDesktop({ items = [], showMenu = false }) {
     // =====================================
 
     const [activeHref, setActiveHref] = useState("#hero");
-    const [hoveredHref, setHoveredHref] = useState(null);
     // =====================================
     // MODO DE EXPERIÊNCIA
     // =====================================
@@ -289,6 +290,9 @@ function MenuDesktop({ items = [], showMenu = false }) {
         // =====================================
 
         window.setTimeout(() => {
+            // O modo Full adiciona um trecho pinado ao fluxo vertical.
+            // Evita restaurar o scroll antigo em uma geometria diferente após o reload.
+            window.scrollTo(0, 0);
             window.location.reload();
         }, 500);
     };
@@ -634,7 +638,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
     // =====================================
 
     const menuContent = (
-        <div className="hidden md:block">
+        <div className="hidden b-md:block">
             {/* =================================
                 OVERLAY
             ================================= */}
@@ -668,7 +672,9 @@ function MenuDesktop({ items = [], showMenu = false }) {
                     initial="closed"
                     animate={isOpen ? "open" : "closed"}
                     transition={panelSpring}
+                    aria-label="Menu principal"
                     aria-hidden={!isOpen}
+                    inert={!isOpen}
                     className="
                         absolute
                         right-0
@@ -744,11 +750,8 @@ function MenuDesktop({ items = [], showMenu = false }) {
                             const isActive = item.href === activeHref;
 
                             return (
-                                <motion.button
+                                <motion.div
                                     key={item.href || index}
-                                    type="button"
-                                    data-desktop-menu-link
-                                    data-href={item.href}
                                     variants={linkVariants}
                                     initial="closed"
                                     animate={isOpen ? "open" : "closed"}
@@ -758,16 +761,14 @@ function MenuDesktop({ items = [], showMenu = false }) {
                                         ...elementSpring,
                                         delay: isOpen ? contentDelay + 0.08 + index * 0.055 : 0,
                                     }}
-                                    onHoverStart={() => {
-                                        if (!isActive) {
-                                            setHoveredHref(item.href);
-                                        }
-                                    }}
-                                    onHoverEnd={() => {
-                                        setHoveredHref(null);
-                                    }}
-                                    onClick={(event) => handleNavigation(item.href, event)}
-                                    className="
+                                    className="relative"
+                                >
+                                    <Link
+                                        to={item.href}
+                                        data-desktop-menu-link
+                                        data-href={item.href}
+                                        onClick={(event) => handleNavigation(item.href, event)}
+                                        className="
                                             group
                                             relative
                                             flex
@@ -783,7 +784,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
                                             duration-300
                                             hover:text-bronze
                                         "
-                                >
+                                    >
                                     {/* =========================
                                             ESQUERDA
                                         ========================= */}
@@ -886,7 +887,6 @@ function MenuDesktop({ items = [], showMenu = false }) {
                                         <motion.span
                                             aria-hidden="true"
                                             initial="rest"
-                                            animate={hoveredHref === item.href ? "hover" : "rest"}
                                             variants={hoverLineVariants}
                                             transition={HoverlineSpring}
                                             style={{
@@ -903,7 +903,8 @@ function MenuDesktop({ items = [], showMenu = false }) {
                                             "
                                         />
                                     )}
-                                </motion.button>
+                                    </Link>
+                                </motion.div>
                             );
                         })}
                     </motion.div>
@@ -951,6 +952,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
 
                             <motion.button
                                 type="button"
+                                data-experience-mode-option="full"
                                 onClick={() => handleExperienceChange("full")}
                                 whileHover={{
                                     y: -2,
@@ -1009,6 +1011,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
 
                             <motion.button
                                 type="button"
+                                data-experience-mode-option="reduced"
                                 onClick={() => handleExperienceChange("reduced")}
                                 whileHover={{
                                     y: -2,
@@ -1103,13 +1106,14 @@ function MenuDesktop({ items = [], showMenu = false }) {
                 ref={buttonRef}
                 type="button"
                 aria-label={isOpen ? "Fechar menu" : "Abrir menu"}
+                title={isOpen ? "Fechar menu" : "Abrir menu"}
                 aria-expanded={isOpen}
                 onClick={handleToggle}
                 onMouseMove={handleButtonMouseMove}
                 onMouseLeave={handleButtonMouseLeave}
                 initial={{
                     opacity: 0,
-                    scale: 10,
+                    scale: 2,
                 }}
                 animate={{
                     opacity: showMenu ? 1 : 0,
@@ -1143,8 +1147,8 @@ function MenuDesktop({ items = [], showMenu = false }) {
                     duration-300
                     hover:border-bronze
                     hover:text-bronze
-                    lg:right-4
-                    lg:top-10
+                    c-lg:right-4
+                    c-lg:top-10
                 "
                 style={{
                     pointerEvents: showMenu ? "auto" : "none",

@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
+import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -326,7 +327,6 @@ function Footer() {
     return (
         <footer
             ref={footerRef}
-            id="footer"
             className="
                 relative
                 flex
@@ -337,9 +337,9 @@ function Footer() {
                
                 py-5
 
-                md:min-h-[120vh]
+                b-md:min-h-[120vh]
 
-                md:py-1
+                b-md:py-1
                 mt-30
             "
         >
@@ -358,14 +358,14 @@ function Footer() {
                     max-w-[1500px]
                     flex-col
 
-                    md:min-h-[calc(120vh-5rem)]
+                    b-md:min-h-[calc(120vh-5rem)]
                 "
             >
                 {/* =================================================
                     TOPO
                 ================================================= */}
 
-                <header
+                <div
                     ref={headerRef}
                     className="
                         flex
@@ -375,15 +375,23 @@ function Footer() {
                         border-graphite
                         pt-6
                                          px-5
-                md:px-0
-                        md:pt-8
+                b-md:px-0
+                        b-md:pt-8
                     "
                 >
                     {/* LOGO */}
 
-                    <a
-                        href="#hero"
+                    <Link
+                        to="#hero"
                         aria-label="Voltar ao início"
+                        title="Voltar ao início"
+                        onClick={(event) => {
+                            event.preventDefault();
+                            document.querySelector("#hero")?.scrollIntoView({
+                                behavior: "smooth",
+                                block: "start",
+                            });
+                        }}
                         className="
                             block
                             h-8
@@ -392,8 +400,8 @@ function Footer() {
                             duration-300
                             hover:scale-105
 
-                            md:h-16
-                            md:w-16
+                            b-md:h-16
+                            b-md:w-16
                         "
                     >
                         <img
@@ -405,7 +413,7 @@ function Footer() {
                                 object-contain
                             "
                         />
-                    </a>
+                    </Link>
 
                     {/* IDENTIFICAÇÃO */}
 
@@ -417,7 +425,7 @@ function Footer() {
                                 tracking-[0.2em]
                                 text-steel
 
-                                md:text-sm
+                                b-md:text-sm
                             "
                         >
                             PORTFOLIO
@@ -428,13 +436,13 @@ function Footer() {
                                 text-[10px]
                                 uppercase
                                 tracking-[0.15em]
-                                text-steel/50
+                                text-steel
                             "
                         >
                             2026
                         </span>
                     </div>
-                </header>
+                </div>
 
                 {/* =================================================
                     ÁREA PRINCIPAL
@@ -450,9 +458,9 @@ function Footer() {
                         py-20
                         pb-[8vh]
                                          px-5
-                md:px-0
-                        md:py-24
-                        md:pb-30
+                b-md:px-0
+                        b-md:py-24
+                        b-md:pb-30
                     "
                 >
                     {/* LABEL */}
@@ -466,7 +474,7 @@ function Footer() {
                             tracking-[0.25em]
                             text-bronze
 
-                            md:text-sm
+                            b-md:text-sm
                         "
                     >
                         Disponível para novos projetos
@@ -486,9 +494,9 @@ function Footer() {
                             tracking-tight
                             text-ivory
 
-                            md:mt-7
-                            md:text-7xl
-                            lg:text-8xl
+                            b-md:mt-7
+                            b-md:text-7xl
+                            c-lg:text-8xl
                         "
                     >
                         Vamos construir
@@ -507,9 +515,9 @@ function Footer() {
                             leading-6
                             text-steel
 
-                            md:mt-8
-                            md:text-base
-                            md:leading-7
+                            b-md:mt-8
+                            b-md:text-base
+                            b-md:leading-7
                         "
                     >
                         Desenvolvimento de aplicações web com foco em experiência, arquitetura e soluções que fazem sentido para o produto.
@@ -527,7 +535,7 @@ function Footer() {
                             flex-wrap
                             gap-3
 
-                            md:mt-10
+                            b-md:mt-10
                         "
                     >
                         {/* GITHUB */}
@@ -566,10 +574,10 @@ function Footer() {
                         border-graphite
                         py-6
                                          px-5
-                md:px-0
-                        md:grid-cols-4
-                        md:gap-6
-                        md:py-7
+                b-md:px-0
+                        b-md:grid-cols-4
+                        b-md:gap-6
+                        b-md:py-7
                     "
                 >
                     {/* LOCAL */}
@@ -597,7 +605,7 @@ function Footer() {
                                 text-xs
                                 text-ivory
 
-                                md:text-sm
+                                b-md:text-sm
                             "
                         >
                             Brasil
@@ -630,7 +638,7 @@ function Footer() {
                                 uppercase
                                 text-ivory
 
-                                md:text-sm
+                                b-md:text-sm
                             "
                         >
                             {data}
@@ -664,7 +672,7 @@ function Footer() {
                                 leading-none
                                 text-bronze
 
-                                md:text-xl
+                                b-md:text-xl
                             "
                         >
                             {hora}
@@ -699,7 +707,7 @@ function Footer() {
                                 text-xs
                                 text-ivory
 
-                                md:text-sm
+                                b-md:text-sm
                             "
                         >
                             <span className="relative flex h-2 w-2">
@@ -751,12 +759,12 @@ function Footer() {
                         tracking-[0.12em]
                         text-steel
                                          px-5
-                md:px-0
-                        md:flex-row
-                        md:items-center
-                        md:justify-between
-                        md:text-[10px]
-                        md:pb-12
+                b-md:px-0
+                        b-md:flex-row
+                        b-md:items-center
+                        b-md:justify-between
+                        b-md:text-[10px]
+                        b-md:pb-12
                     "
                 >
                     <span>© 2026 Kleber Dev</span>
@@ -773,12 +781,12 @@ function Footer() {
                     className="
         relative
         left-1/2
-        md:left-192
+        b-md:left-192
         w-screen
         -translate-x-1/2
         overflow-hidden
         pb-23
-        md:pb-0
+        b-md:pb-0
     "
                 >
                     <div className="marquee-track">

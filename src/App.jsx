@@ -3,13 +3,11 @@ import SmoothScroll from "./components/SmoothScroll";
 
 // React
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
-// Layout
-import Competencia from "./layout/Competencia";
-import ProjetoT from "./layout/ProjetosTeste2";
-import Diferenciais from "./layout/DiferenciaisTeste";
-import Formacao from "./layout/Formacao";
-import Footer from "./layout/Footer";
+// Layouts carregados conforme se aproximam da viewport
+import DeferredLayoutSection from "./components/DeferredLayoutSection";
+import DeferredProjects from "./components/DeferredProjects";
 
 // Styles
 import "./App.css";
@@ -18,7 +16,7 @@ import "./App.css";
 import HeroSectionTransition from "./components/HeroSectionTransition";
 import ButtonReset from "./components/buttonReset";
 import CursorTrail from "./components/CursorTrail";
-
+import Preloader from "./components/Preloader";
 
 // Experience Mode
 import { getExperienceMode } from "./utils/experienceMode";
@@ -28,24 +26,40 @@ function App() {
 
     return (
         <>
+            <Preloader />
+
             <CursorTrail />
 
             <SmoothScroll>
-
                 <div className="relative z-[1] w-full">
+                    <Link
+                        to="#main-content"
+                        onClick={(event) => {
+                            event.preventDefault();
+                            const target = document.getElementById("main-content");
+                            target?.scrollIntoView({ behavior: "auto", block: "start" });
+                            target?.focus();
+                        }}
+                        className="sr-only fixed left-4 top-4 z-[10000] bg-champagne px-4 py-3 font-space text-sm font-semibold text-obsidian focus:not-sr-only focus:outline focus:outline-2 focus:outline-offset-4 focus:outline-champagne"
+                    >
+                        Pular para o conteúdo principal
+                    </Link>
+
                     <ButtonReset />
 
-                    <HeroSectionTransition experienceMode={experienceMode} />
+                    <main id="main-content" tabIndex={-1} className="w-full outline-none">
+                        <HeroSectionTransition experienceMode={experienceMode} />
 
-                    <Competencia experienceMode={experienceMode} />
+                        <DeferredLayoutSection section="competencia" experienceMode={experienceMode} />
 
-                    <ProjetoT experienceMode={experienceMode} />
+                        <DeferredProjects experienceMode={experienceMode} />
 
-                    <Diferenciais experienceMode={experienceMode} />
+                        <DeferredLayoutSection section="diferenciais" experienceMode={experienceMode} />
 
-                    <Formacao experienceMode={experienceMode} />
+                        <DeferredLayoutSection section="formacao" experienceMode={experienceMode} />
+                    </main>
 
-                    <Footer />
+                    <DeferredLayoutSection section="footer" />
                 </div>
             </SmoothScroll>
         </>

@@ -1,14 +1,27 @@
 const EXPERIENCE_MODE_KEY = "experienceMode";
 
-export function getExperienceMode() {
-    const mode = localStorage.getItem(EXPERIENCE_MODE_KEY);
+function readStoredMode() {
+    try {
+        return window.localStorage.getItem(EXPERIENCE_MODE_KEY);
+    } catch {
+        // O modo padrão continua disponível mesmo se o navegador bloquear armazenamento.
+        return null;
+    }
+}
 
-    if (mode === "reduced") {
-        return "reduced";
+export function getExperienceMode() {
+    const mode = readStoredMode();
+
+    if (mode === "reduced" || mode === "full") {
+        return mode;
     }
 
-    if (mode === "full") {
-        return "full";
+    if (
+        typeof window !== "undefined" &&
+        typeof window.matchMedia === "function" &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+        return "reduced";
     }
 
     return null;
@@ -19,7 +32,11 @@ export function setExperienceMode(mode) {
         return;
     }
 
-    localStorage.setItem(EXPERIENCE_MODE_KEY, mode);
+    try {
+        window.localStorage.setItem(EXPERIENCE_MODE_KEY, mode);
+    } catch {
+        // A preferência do sistema ainda é respeitada quando o armazenamento não está disponível.
+    }
 }
 
 export function isReducedMotion() {
@@ -27,5 +44,9 @@ export function isReducedMotion() {
 }
 
 export function clearExperienceMode() {
-    localStorage.removeItem(EXPERIENCE_MODE_KEY);
+    try {
+        window.localStorage.removeItem(EXPERIENCE_MODE_KEY);
+    } catch {
+        // Não bloquear a navegação por falha no armazenamento local.
+    }
 }

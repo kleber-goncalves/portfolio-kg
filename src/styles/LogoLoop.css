@@ -25,10 +25,14 @@
 .logoloop__track {
   display: flex;
   width: max-content;
-  will-change: transform;
   user-select: none;
   position: relative;
   z-index: 0;
+}
+
+/* Promove o trilho apenas enquanto a animação realmente está ativa. */
+.logoloop__track[data-animation-state="running"] {
+  will-change: transform;
 }
 
 .logoloop--vertical .logoloop__track {
@@ -174,6 +178,7 @@
 @media (prefers-reduced-motion: reduce) {
   .logoloop__track {
     transform: translate3d(0, 0, 0) !important;
+    will-change: auto;
   }
 
   .logoloop__item img,

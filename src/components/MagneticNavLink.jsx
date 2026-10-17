@@ -1,5 +1,8 @@
 import { motion, useMotionValue, useSpring } from "motion/react";
+import { Link } from "react-router-dom";
 import { useState } from "react";
+
+const MotionLink = motion.create(Link);
 
 function MagneticLink({
     href = "#",
@@ -14,6 +17,7 @@ function MagneticLink({
     isActive = false,
 
     accent = "#A87852",
+    hoverAccent = "#A87852",
     textColor = "#8B8B8B",
     hoverTextColor = "#0D0D0D",
 
@@ -26,36 +30,20 @@ function MagneticLink({
     // ============================================================
 
     const [isHovered, setIsHovered] = useState(false);
-    const [isFocused, setIsFocused] = useState(false);
 
     /*
     ------------------------------------------------------------
-    INTERAÇÃO
+    ESTADOS VISUAIS
     ------------------------------------------------------------
 
-    Hover e focus continuam sendo estados de interação.
+    A seção ativa precisa ser reconhecida sem confusão:
 
-    O isActive representa a seção atualmente ativa.
+    - isActive: destaque sólido da seção atual.
+    - isHovered: indicação discreta de interação.
+    - foco por teclado: contorno visível via focus-visible.
 
-    Quando qualquer um deles estiver ativo, o link recebe
-    o mesmo tratamento visual.
+    Hover e foco não devem imitar o destaque da seção ativa.
     */
-
-    const isInteractive = isHovered || isFocused;
-
-    /*
-    ------------------------------------------------------------
-    ESTADO VISUAL
-    ------------------------------------------------------------
-
-    O link fica visualmente ativo quando:
-
-    - está em hover
-    - está focado
-    - ou pertence à seção atual
-    */
-
-    const isVisuallyActive = isInteractive || isActive;
 
     // ============================================================
     // MOVIMENTO MAGNÉTICO
@@ -185,14 +173,13 @@ function MagneticLink({
     // ============================================================
 
     return (
-        <motion.a
-            href={href}
+        <MotionLink
+            to={href}
+            aria-current={isActive ? "location" : undefined}
             onClick={handleClick}
             onMouseEnter={handleMouseEnter}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
             style={{
                 x: springX,
                 y: springY,
@@ -207,6 +194,10 @@ function MagneticLink({
                 rounded-sm
                 py-1
                 px-2
+                focus-visible:outline
+                focus-visible:outline-2
+                focus-visible:outline-offset-2
+                focus-visible:outline-[#A87852]
                 
 
                 ${className}
@@ -226,7 +217,7 @@ function MagneticLink({
                     z-0
                 "
                 style={{
-                    backgroundColor: accent,
+                    backgroundColor: isActive ? accent : hoverAccent,
 
                     transformOrigin: `${originX.get() * 100}% ${originY.get() * 100}%`,
                 }}
@@ -235,8 +226,8 @@ function MagneticLink({
                     opacity: 0,
                 }}
                 animate={{
-                    scale: isVisuallyActive ? 1 : 0,
-                    opacity: isVisuallyActive ? 1 : 0,
+                    scale: isActive || isHovered ? 1 : 0,
+                    opacity: isActive || isHovered ? 1 : 0,
                 }}
                 transition={{
                     scale: {
@@ -267,10 +258,10 @@ function MagneticLink({
                     border
                 "
                 style={{
-                    borderColor: accent,
+                    borderColor: isActive ? accent : hoverAccent,
                 }}
                 animate={{
-                    opacity: isVisuallyActive ? 1 : 0,
+                    opacity: isActive || isHovered ? 1 : 0,
                 }}
                 transition={{
                     duration: 0.2,
@@ -292,7 +283,7 @@ function MagneticLink({
                     bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08),transparent_60%)]
                 "
                 animate={{
-                    opacity: isVisuallyActive ? 1 : 0,
+                    opacity: isActive || isHovered ? 1 : 0,
                 }}
                 transition={{
                     duration: 0.25,
@@ -311,12 +302,12 @@ function MagneticLink({
                     block
                 "
                 style={{
-                    color: isVisuallyActive ? hoverTextColor : textColor,
+                    color: isActive || isHovered ? hoverTextColor : textColor,
                 }}
                 animate={{
-                    y: isVisuallyActive ? -0.5 : 0,
+                    y: isActive || isHovered ? -0.5 : 0,
 
-                    letterSpacing: isVisuallyActive ? "0.14em" : "0.12em",
+                    letterSpacing: isActive || isHovered ? "0.14em" : "0.12em",
                 }}
                 transition={{
                     y: {
@@ -368,7 +359,7 @@ function MagneticLink({
                     transformOrigin: "left center",
                 }}
             />
-        </motion.a>
+        </MotionLink>
     );
 }
 

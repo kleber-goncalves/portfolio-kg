@@ -342,9 +342,6 @@ export default function MinhaTrajetoria({
 
                     invalidateOnRefresh: true,
 
-                    onRefresh: () => {
-                        updateLineHeights();
-                    },
                 },
             });
 
@@ -362,24 +359,6 @@ export default function MinhaTrajetoria({
             */
 
             const contentDelay = 0.001;
-
-            /*
-            ====================================================
-            LINHA
-            ====================================================
-            */
-
-            if (line) {
-                desktopTimeline.to(
-                    line,
-                    {
-                        scaleY: 1,
-                        duration: 1.5,
-                        ease: "none",
-                    },
-                    0
-                );
-            }
 
             /*
             ====================================================
@@ -456,9 +435,6 @@ export default function MinhaTrajetoria({
 
                     invalidateOnRefresh: true,
 
-                    onRefresh: () => {
-                        updateLineHeights();
-                    },
                 },
             });
 
@@ -474,15 +450,6 @@ export default function MinhaTrajetoria({
                     transformOrigin: "top center",
                 });
 
-                mobileTimeline.to(
-                    mobileLineRef.current,
-                    {
-                        scaleY: 1,
-                        duration: 1.5,
-                        ease: "none",
-                    },
-                    0
-                );
             }
 
             /*
@@ -545,11 +512,48 @@ export default function MinhaTrajetoria({
 
             /*
             ====================================================
+            PROGRESSO DA LINHA — INDEPENDENTE DOS EVENTOS
+            ============================================================
+
+            A linha acompanha diretamente o progresso do scroll
+            sobre toda a área da trajetória. Assim, sua duração
+            não depende da duração combinada das animações dos
+            textos e das bolinhas.
+            */
+
+            const progressLines = [
+                lineRef.current,
+                mobileLineRef.current,
+            ].filter(Boolean);
+
+            if (progressLines.length) {
+                gsap.fromTo(
+                    progressLines,
+                    {
+                        scaleY: 0,
+                    },
+                    {
+                        scaleY: 1,
+                        ease: "none",
+                        scrollTrigger: {
+                            trigger: timelineRef.current,
+                            start: "top 78%",
+                            end: "bottom 68%",
+                            scrub: 1,
+                            invalidateOnRefresh: true,
+                            onRefresh: updateLineHeights,
+                        },
+                    }
+                );
+            }
+
+            /*
+            ====================================================
             PRIMEIRO REFRESH
             ====================================================
             */
 
-            requestAnimationFrame(() => {
+            const initialRefreshFrame = requestAnimationFrame(() => {
                 updateLineHeights();
                 ScrollTrigger.refresh();
             });
@@ -577,6 +581,8 @@ export default function MinhaTrajetoria({
             */
 
             return () => {
+                cancelAnimationFrame(initialRefreshFrame);
+
                 window.removeEventListener(
                     "resize",
                     handleResize
@@ -601,7 +607,7 @@ export default function MinhaTrajetoria({
                 w-full
                 flex-col
                 gap-14
-                md:gap-20
+                b-md:gap-20
             "
         >
             {/* ==================================================
@@ -644,7 +650,7 @@ export default function MinhaTrajetoria({
                             uppercase
                             tracking-[0.2em]
                             text-steel
-                            md:text-sm
+                            b-md:text-sm
                         "
                     >
                         {subtitulo}
@@ -663,7 +669,7 @@ export default function MinhaTrajetoria({
                         leading-none
                         tracking-tight
                         text-ivory
-                        md:text-7xl
+                        b-md:text-7xl
                     "
                 >
                     {titulo}
@@ -679,8 +685,8 @@ export default function MinhaTrajetoria({
                         text-sm
                         leading-6
                         text-steel
-                        md:text-sm
-                        md:leading-7
+                        b-md:text-sm
+                        b-md:leading-7
                     "
                 >
                     {descricao}
@@ -693,6 +699,7 @@ export default function MinhaTrajetoria({
 
             <div
                 ref={timelineRef}
+                data-trajectory-timeline
                 className="
                     relative
                     w-full
@@ -707,7 +714,7 @@ export default function MinhaTrajetoria({
                         relative
                         hidden
                         w-full
-                        md:block
+                        b-md:block
                     "
                 >
                     {/* ==================================================
@@ -734,6 +741,7 @@ export default function MinhaTrajetoria({
 
                     <div
                         ref={lineRef}
+                        data-trajectory-progress-line="desktop"
                         className="
                             pointer-events-none
                             absolute
@@ -947,7 +955,7 @@ export default function MinhaTrajetoria({
                     className="
                         relative
                         w-full
-                        md:hidden
+                        b-md:hidden
                         ml-3
                     "
                 >
@@ -974,6 +982,7 @@ export default function MinhaTrajetoria({
 
                     <div
                         ref={mobileLineRef}
+                        data-trajectory-progress-line="mobile"
                         className="
                             pointer-events-none
                             absolute
@@ -1189,7 +1198,7 @@ function TimelineContent({
                     leading-[1.1]
                     tracking-tight
                     text-ivory
-                    lg:text-3xl
+                    c-lg:text-3xl
                 "
             >
                 {evento.titulo}

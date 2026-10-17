@@ -235,15 +235,15 @@ export default function Card2({ title, number, text, variant = "default", classN
                 w-full
 
                 border-t
-                md:border-b
-                md:border-t-0
+                b-md:border-b
+                b-md:border-t-0
 
                 border-gray-700
 
                 py-7
                 
-                md:py-9
-                lg:py-13
+                b-md:py-9
+                c-lg:py-13
 
                 transition-colors
                 duration-500
@@ -324,15 +324,15 @@ export default function Card2({ title, number, text, variant = "default", classN
                     grid-cols-[42px_1fr]
                     gap-5
 
-                    md:grid-cols-[80px_1fr]
-                    md:gap-10
+                    b-md:grid-cols-[80px_1fr]
+                    b-md:gap-10
 
-                    lg:grid-cols-[50px_1fr]
-                    lg:gap-6
+                    c-lg:grid-cols-[50px_1fr]
+                    c-lg:gap-6
 
                     items-start
-                    md:pr-6
-                    md:pl-6
+                    b-md:pr-6
+                    b-md:pl-6
                 "
             >
                 {/* =================================================
@@ -346,7 +346,7 @@ export default function Card2({ title, number, text, variant = "default", classN
                             text-xs
                             tracking-[0.2em]
 
-                            md:text-sm
+                            b-md:text-sm
 
                             opacity-60
 
@@ -376,7 +376,7 @@ export default function Card2({ title, number, text, variant = "default", classN
                         flex-col
                         gap-3
 
-                        lg:max-w-4xl
+                        c-lg:max-w-4xl
 
                         transition-transform
                         duration-500
@@ -405,8 +405,8 @@ export default function Card2({ title, number, text, variant = "default", classN
                                 font-[600]
                                 leading-tight
 
-                                md:text-3xl
-                                lg:text-4xl
+                                b-md:text-3xl
+                                c-lg:text-4xl
 
                                 ${styles.title}
                                 ${classNameTitle}
@@ -437,7 +437,7 @@ export default function Card2({ title, number, text, variant = "default", classN
                                 group-hover:translate-x-1
                                 group-hover:text-bronze
 
-                                md:hidden
+                                b-md:hidden
                             "
                         />
                     </div>
@@ -453,10 +453,10 @@ export default function Card2({ title, number, text, variant = "default", classN
                             text-sm
                             leading-6
 
-                            md:text-sm
-                            md:leading-7
+                            b-md:text-sm
+                            b-md:leading-7
 
-                            lg:text-[15px]
+                            c-lg:text-[15px]
 
                             transition-colors
                             duration-500

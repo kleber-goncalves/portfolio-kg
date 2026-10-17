@@ -13,7 +13,7 @@ function FlowingMenu({ items = [], speed = 18, textColor = "#F2F0EC", bgColor = 
                 backgroundColor: bgColor,
             }}
         >
-            <nav className="m-0 flex h-full flex-col p-0">
+            <nav aria-label="Navegação por projetos" className="m-0 flex h-full flex-col p-0">
                 {items.map((item, index) => (
                     <MenuItem key={index} {...item} speed={speed} textColor={textColor} marqueeBgColor={marqueeBgColor} marqueeTextColor={marqueeTextColor} borderColor={borderColor} isFirst={index === 0} />
                 ))}
@@ -227,7 +227,7 @@ function MenuItem({ text, logos = [], speed, textColor, marqueeBgColor, marqueeT
                     justify-between
                     px-5
 
-                    md:px-26
+                    b-md:px-26
                 "
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
@@ -262,7 +262,7 @@ function MenuItem({ text, logos = [], speed, textColor, marqueeBgColor, marqueeT
                         text-xs
                         tracking-[0.2em]
 
-                        text-steel/40
+                        text-steel
 
                         transition-all
                         duration-500
@@ -390,7 +390,7 @@ function LogoItem({ logo }) {
 
                 px-8
 
-                md:px-5
+                b-md:px-5
             "
         >
             {/* =================================================
@@ -407,8 +407,8 @@ function LogoItem({ logo }) {
                     items-center
                     justify-center
 
-                    md:h-12
-                    md:w-12
+                    b-md:h-12
+                    b-md:w-12
                 "
                 >
                     {logo.node}
@@ -426,7 +426,7 @@ function LogoItem({ logo }) {
                     text-base
                     font-medium
 
-                    md:text-lg
+                    b-md:text-lg
                 "
                 >
                     {logo.title}

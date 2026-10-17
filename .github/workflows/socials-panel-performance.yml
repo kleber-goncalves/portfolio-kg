@@ -1,0 +1,74 @@
+name: Socials Panel First Open Performance
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+      - feat/responsividadeFull
+    paths:
+      - "src/components/Socials.jsx"
+      - "src/components/Preloader.jsx"
+      - "src/components/HeroMobile.jsx"
+      - "src/components/HeroDesktop.jsx"
+      - "scripts/test-socials-panel-performance.mjs"
+      - ".github/workflows/socials-panel-performance.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: socials-panel-performance-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  measure:
+    name: Measure first and repeated Socials panel openings
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install project dependencies
+        run: npm ci
+
+      - name: Install temporary Playwright test runner
+        run: npm install --no-save playwright
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Validate production build
+        run: npm run build
+
+      - name: Start local production preview
+        run: |
+          npx vite preview --host 127.0.0.1 --port 4173 --strictPort > /tmp/socials-preview.log 2>&1 &
+          echo $! > /tmp/socials-preview.pid
+
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4173/ --output /dev/null; then
+              echo "Local production preview is responding."
+              exit 0
+            fi
+
+            echo "Attempt $attempt/30: waiting for the preview."
+            sleep 2
+          done
+
+          cat /tmp/socials-preview.log
+          exit 1
+
+      - name: Measure first open, repeated open, and resources
+        env:
+          BASE_URL: http://127.0.0.1:4173/
+        run: node scripts/test-socials-panel-performance.mjs

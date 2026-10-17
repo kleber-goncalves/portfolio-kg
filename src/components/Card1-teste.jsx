@@ -203,13 +203,13 @@ export default function Card1({ title, text, text_2, variant = "default", classN
         v1: {
             text: "text-white",
             title: "text-white",
-            description: "text-white/60",
+            description: "text-white",
         },
 
         v2: {
             text: "text-white",
             title: "text-white",
-            description: "text-white/60",
+            description: "text-white",
         },
     };
 
@@ -231,13 +231,13 @@ export default function Card1({ title, text, text_2, variant = "default", classN
                 w-full
 
                 border-t
-                md:border-t-0
-                md:border-b
+                b-md:border-t-0
+                b-md:border-b
 
                 border-graphite
 
                 py-7
-                md:py-10
+                b-md:py-10
 
                 ${className}
             `}
@@ -280,15 +280,15 @@ export default function Card1({ title, text, text_2, variant = "default", classN
                     flex
                     w-full
 
-                    md:min-h-[260px]
+                    b-md:min-h-[260px]
 
                     flex-col
                     items-start
 
                     gap-3
 
-                    md:py-6
-                    md:pl-6
+                    b-md:py-6
+                    b-md:pl-6
                 "
             >
                 {/* ==================================================
@@ -303,8 +303,8 @@ export default function Card1({ title, text, text_2, variant = "default", classN
                         uppercase
                         tracking-[0.2em]
 
-                        md:text-sm
-                        md:tracking-[0.25em]
+                        b-md:text-sm
+                        b-md:tracking-[0.25em]
 
                         transition-colors
                         duration-500
@@ -340,7 +340,7 @@ export default function Card1({ title, text, text_2, variant = "default", classN
                             font-[600]
                             leading-tight
 
-                            md:text-4xl
+                            b-md:text-4xl
 
                             transition-transform
                             duration-500
@@ -367,14 +367,14 @@ export default function Card1({ title, text, text_2, variant = "default", classN
                         text-sm
                         leading-relaxed
 
-                        md:text-sm
-                        md:leading-6
+                        b-md:text-sm
+                        b-md:leading-6
 
                         transition-colors
                         duration-500
                         ease-out
 
-                        text-ivory/70
+                        text-ivory
 
                         ${styles.description}
                         ${classNametext2}

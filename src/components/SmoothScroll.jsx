@@ -1,53 +1,75 @@
 import { useEffect } from "react";
 
-import Lenis from "lenis";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
 import { setLenisInstance, clearLenisInstance } from "../utils/lenisControl";
 
 import { isReducedMotion } from "../utils/experienceMode";
 
-gsap.registerPlugin(ScrollTrigger);
 
 function SmoothScroll({ children }) {
     useEffect(() => {
-        const reducedMotion = isReducedMotion();
+        // Respeita a experiência reduzida sem baixar o motor de animação.
+        if (isReducedMotion()) return;
 
-        // Modo reduzido:
-        // não inicializa o Lenis.
-        if (reducedMotion) {
-            return;
-        }
+        let cancelled = false;
+        let lenis = null;
+        let gsap = null;
+        let scrollTrigger = null;
+        let update = null;
+        let handleScroll = null;
 
-        const lenis = new Lenis({
-            duration: 1,
-            smoothWheel: true,
-            wheelMultiplier: 1,
-            touchMultiplier: 1,
-            syncTouch: false,
-        });
+        const initializeSmoothScroll = async () => {
+            try {
+                const [lenisModule, gsapModule, scrollTriggerModule] = await Promise.all([
+                    import("lenis"),
+                    import("gsap"),
+                    import("gsap/ScrollTrigger"),
+                ]);
 
-        setLenisInstance(lenis);
+                if (cancelled) return;
 
-        lenis.on("scroll", ScrollTrigger.update);
+                const Lenis = lenisModule.default;
+                gsap = gsapModule.default ?? gsapModule.gsap;
+                scrollTrigger = scrollTriggerModule.ScrollTrigger;
 
-        const update = (time) => {
-            lenis.raf(time * 1000);
+                gsap.registerPlugin(scrollTrigger);
+
+                lenis = new Lenis({
+                    duration: 1,
+                    smoothWheel: true,
+                    wheelMultiplier: 1,
+                    touchMultiplier: 1,
+                    syncTouch: false,
+                });
+
+                setLenisInstance(lenis);
+
+                handleScroll = () => scrollTrigger.update();
+                lenis.on("scroll", handleScroll);
+
+                update = (time) => {
+                    lenis.raf(time * 1000);
+                };
+
+                gsap.ticker.add(update);
+                gsap.ticker.lagSmoothing(0);
+            } catch (error) {
+                if (!cancelled) {
+                    console.error("Não foi possível inicializar a rolagem suave.", error);
+                }
+            }
         };
 
-        gsap.ticker.add(update);
-
-        gsap.ticker.lagSmoothing(0);
+        void initializeSmoothScroll();
 
         return () => {
-            gsap.ticker.remove(update);
+            cancelled = true;
 
-            lenis.off("scroll", ScrollTrigger.update);
-
-            lenis.destroy();
-
-            clearLenisInstance(lenis);
+            if (lenis && gsap && update) {
+                gsap.ticker.remove(update);
+                if (handleScroll) lenis.off("scroll", handleScroll);
+                lenis.destroy();
+                clearLenisInstance(lenis);
+            }
         };
     }, []);
 

@@ -1,0 +1,99 @@
+name: Deferred Section and Project Code Splitting
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+      - feat/responsividadeFull
+    paths:
+      - "src/App.jsx"
+      - "src/components/DeferredLayoutSection.jsx"
+      - "src/components/HeroSectionTransition.jsx"
+      - "src/components/SmoothScroll.jsx"
+      - "src/components/buttonReset.jsx"
+      - "src/components/DeferredProjects.jsx"
+      - "src/components/ProjetoDesktop.jsx"
+      - "src/components/ProjetoCarouselMobile.jsx"
+      - "src/layout/Competencia.jsx"
+      - "src/layout/DiferenciaisTeste.jsx"
+      - "src/layout/Formacao.jsx"
+      - "src/layout/Footer.jsx"
+      - "src/layout/ProjetosTeste2.jsx"
+      - "src/layout/Logo2.jsx"
+      - "src/layout/SeclogsMobile.jsx"
+      - "src/data/seclogsMobile.data.jsx"
+      - "src/data/tecnologias*"
+      - "scripts/test-code-splitting.mjs"
+      - ".github/workflows/test-code-splitting.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: code-splitting-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Verify deferred sections and viewport-specific chunks
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install project dependencies
+        run: npm ci
+
+      - name: Install temporary Playwright runner
+        run: npm install --no-save --package-lock=false playwright
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Validate production build
+        run: npm run build
+
+      - name: Report entry JavaScript size
+        run: |
+          node --input-type=module <<'NODE'
+          import { readdir, stat } from 'node:fs/promises';
+          import path from 'node:path';
+
+          const dir = 'dist/assets';
+          const files = (await readdir(dir)).filter((file) => /^index-.*\.js$/.test(file));
+          if (files.length !== 1) throw new Error('Esperava um chunk index-*.js; encontrei: ' + files.join(', '));
+          const size = (await stat(path.join(dir, files[0]))).size;
+          console.log('Entry chunk: ' + files[0] + ' — ' + (size / 1024).toFixed(1) + ' KiB raw');
+          NODE
+
+      - name: Start local production preview
+        run: |
+          npx vite preview --host 127.0.0.1 --port 4173 --strictPort > /tmp/code-splitting-preview.log 2>&1 &
+          echo $! > /tmp/code-splitting-preview.pid
+
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4173/ --output /dev/null; then
+              echo "Local production preview is responding."
+              exit 0
+            fi
+            echo "Attempt $attempt/30: waiting for preview."
+            sleep 2
+          done
+
+          cat /tmp/code-splitting-preview.log
+          exit 1
+
+      - name: Test mobile and desktop module loading
+        env:
+          BASE_URL: http://127.0.0.1:4173/
+        run: node scripts/test-code-splitting.mjs

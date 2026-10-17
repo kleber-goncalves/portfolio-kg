@@ -13,7 +13,7 @@ export default function CompetenciaItem({
                 border-t
                 border-graphite
                 py-10
-                md:py-14
+                b-md:py-14
             "
         >
             {/* ==================================================
@@ -25,8 +25,8 @@ export default function CompetenciaItem({
                     grid
                     grid-cols-1
                     gap-8
-                    md:grid-cols-[120px_1fr_0.8fr]
-                    md:gap-16
+                    b-md:grid-cols-[120px_1fr_0.8fr]
+                    b-md:gap-16
                 "
             >
                 {/* ==================================================
@@ -46,7 +46,7 @@ export default function CompetenciaItem({
                             duration-500
                             ease-out
                             group-hover:text-bronze
-                            md:text-7xl
+                            b-md:text-7xl
                         "
                     >
                         {numero}
@@ -66,7 +66,7 @@ export default function CompetenciaItem({
                             duration-500
                             ease-out
                             group-hover:w-8
-                            md:top-24
+                            b-md:top-24
                         "
                     />
                 </div>
@@ -93,7 +93,7 @@ export default function CompetenciaItem({
                                 duration-500
                                 ease-out
                                 group-hover:translate-x-1
-                                md:text-4xl
+                                b-md:text-4xl
                             "
                         >
                             {categoria}
@@ -127,9 +127,9 @@ export default function CompetenciaItem({
                                     ease-out
                                     group-hover:border-bronze/40
                                     group-hover:text-ivory
-                                    md:px-4
-                                    md:py-2
-                                    md:text-xs
+                                    b-md:px-4
+                                    b-md:py-2
+                                    b-md:text-xs
                                 "
                             >
                                 {tecnologia}
@@ -148,7 +148,7 @@ export default function CompetenciaItem({
                         flex-col
                         justify-between
                         gap-8
-                        md:min-h-full
+                        b-md:min-h-full
                     "
                 >
                     <p
@@ -157,7 +157,7 @@ export default function CompetenciaItem({
                             text-xs
                             leading-[1.8]
                             text-steel
-                            md:text-sm
+                            b-md:text-sm
                         "
                     >
                         {descricao}
@@ -171,7 +171,7 @@ export default function CompetenciaItem({
                             items-center
                             justify-end
                             gap-3
-                            md:flex
+                            b-md:flex
                         "
                     >
                         <span
@@ -179,7 +179,7 @@ export default function CompetenciaItem({
                                 text-[9px]
                                 uppercase
                                 tracking-[0.25em]
-                                text-steel/40
+                                text-steel
                             "
                         >
                             Expertise

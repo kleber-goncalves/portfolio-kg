@@ -1,55 +1,52 @@
-import HeroMobile from "../components/HeroMobile";
-import HeroDesktop from "../components/HeroDesktop";
+import { lazy, Suspense } from "react";
 
-function Hero({ dotFieldFrozen = false, onNavigate, experienceMode = "full" }) {
-    // ============================================================
-    // ITENS DO MENU
-    // ============================================================
+const HeroMobile = lazy(() => import("../components/HeroMobile"));
+const HeroDesktop = lazy(() => import("../components/HeroDesktop"));
 
-    const menuItems = [
-        {
-            label: "Home",
-            href: "#hero",
-        },
-        {
-            label: "Stack",
-            href: "#stack",
-        },
-        {
-            label: "Competências",
-            href: "#competencias",
-        },
-        {
-            label: "Projetos",
-            href: "#projetos",
-        },
-        {
-            label: "Diferenciais",
-            href: "#diferenciais",
-        },
-        {
-            label: "Formação",
-            href: "#formacao",
-        },
-    ];
+// Mantém a referência estável para que a navegação ativa não seja
+// recalculada apenas porque o componente pai renderizou novamente.
+const MENU_ITEMS = [
+    {
+        label: "Hero",
+        href: "#hero",
+    },
+    {
+        label: "Stack",
+        href: "#stack",
+    },
+    {
+        label: "Competências",
+        href: "#competencias",
+    },
+    {
+        label: "Projetos",
+        href: "#projetos",
+    },
+    {
+        label: "Diferenciais",
+        href: "#diferenciais",
+    },
+    {
+        label: "Formação",
+        href: "#formacao",
+    },
+];
+
+function Hero({ isMobileLayout, dotFieldFrozen = false, onNavigate, onReady, experienceMode = "full" }) {
 
     return (
         <section id="hero" className="relative">
-            {/* ==================================================
-                MOBILE
-            ================================================== */}
-
-            <div className="block md:hidden p-5">
-                <HeroMobile items={menuItems} />
-            </div>
-
-            {/* ==================================================
-                DESKTOP
-            ================================================== */}
-
-            <div className="hidden md:block">
-                <HeroDesktop items={menuItems} dotFieldFrozen={dotFieldFrozen} onNavigate={onNavigate} experienceMode={experienceMode} />
-            </div>
+            {isMobileLayout ? (
+                <div className="p-5">
+                    <Suspense fallback={<div aria-hidden="true" className="min-h-[calc(100svh-2.5rem)]" />}>
+                        <HeroMobile items={MENU_ITEMS} onReady={onReady} />
+                    </Suspense>
+                </div>
+            ) : (
+                <Suspense fallback={<div aria-hidden="true" className="h-screen w-full" />}>
+                    <HeroDesktop items={MENU_ITEMS} dotFieldFrozen={dotFieldFrozen} onNavigate={onNavigate} onReady={onReady} experienceMode={experienceMode} />
+                </Suspense>
+            )}
         </section>
     );
 }

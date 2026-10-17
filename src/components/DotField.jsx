@@ -15,7 +15,6 @@ export default function DotField({ dotRadius = 1, dotSpacing = 18, cursorRadius 
     useEffect(() => {
         frozenRef.current = frozen;
 
-        console.log("❄️ DOTFIELD FROZEN MUDOU:", frozen);
     }, [frozen]);
 
     /*
@@ -113,10 +112,6 @@ export default function DotField({ dotRadius = 1, dotSpacing = 18, cursorRadius 
 
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-            console.log("📐 DOTFIELD RESIZE:", {
-                width: Math.round(width),
-                height: Math.round(height),
-            });
         };
 
         resizeCanvas();
@@ -137,13 +132,6 @@ export default function DotField({ dotRadius = 1, dotSpacing = 18, cursorRadius 
             const nextX = event.clientX - rect.left;
 
             const nextY = event.clientY - rect.top;
-
-            console.log("🖱️ DOTFIELD MOUSEMOVE:", {
-                mouseX: Math.round(nextX),
-                mouseY: Math.round(nextY),
-                frozen: frozenRef.current,
-                mouseActive,
-            });
 
             /*
             |--------------------------------------------------------------------------
@@ -255,7 +243,6 @@ export default function DotField({ dotRadius = 1, dotSpacing = 18, cursorRadius 
 
                 isVisible = entry.isIntersecting;
 
-                console.log("👁️ DOTFIELD VISIBLE:", isVisible);
             },
             {
                 threshold: 0,
@@ -298,8 +285,6 @@ export default function DotField({ dotRadius = 1, dotSpacing = 18, cursorRadius 
             */
 
             if (currentlyFrozen && !previousFrozen) {
-                console.log("🔄 DOTFIELD: ENTROU NO FREEZE");
-
                 /*
                 |--------------------------------------------------------------------------
                 | Remove a posição do mouse.
@@ -321,10 +306,6 @@ export default function DotField({ dotRadius = 1, dotSpacing = 18, cursorRadius 
 
                 mouseActive = true;
 
-                console.log("🎯 RESET DO TARGET:", {
-                    targetMouseX,
-                    targetMouseY,
-                });
             }
 
             /*
@@ -334,8 +315,6 @@ export default function DotField({ dotRadius = 1, dotSpacing = 18, cursorRadius 
             */
 
             if (!currentlyFrozen && previousFrozen) {
-                console.log("▶️ DOTFIELD: SAIU DO FREEZE");
-
                 /*
                 | O próximo mousemove assume o controle.
                 */
@@ -551,32 +530,6 @@ export default function DotField({ dotRadius = 1, dotSpacing = 18, cursorRadius 
             }
 
             ctx.globalAlpha = 1;
-
-            /*
-            |--------------------------------------------------------------------------
-            | Debug
-            |--------------------------------------------------------------------------
-            */
-
-            if (currentlyFrozen) {
-                const now = performance.now();
-
-                if (!draw.lastFreezeLog || now - draw.lastFreezeLog > 700) {
-                    console.log("🧊 DOTFIELD CONGELADO:", {
-                        mouseX: Math.round(mouseX),
-
-                        mouseY: Math.round(mouseY),
-
-                        targetMouseX: Math.round(targetMouseX),
-
-                        targetMouseY: Math.round(targetMouseY),
-
-                        mouseActive,
-                    });
-
-                    draw.lastFreezeLog = now;
-                }
-            }
 
             /*
             |--------------------------------------------------------------------------

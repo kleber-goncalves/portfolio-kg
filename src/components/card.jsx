@@ -10,16 +10,16 @@ export default function Card1({
     ...props
 }) {
     const cardClass =
-        "w-full h-full relative overflow-hidden flex flex-col md:grid md:grid-cols-3 md:grid-rows-2 items-start gap-5 p-5 md:p-11 bg-carbon rounded-xl border border-graphite";
+        "w-full h-full relative overflow-hidden flex flex-col b-md:grid b-md:grid-cols-3 b-md:grid-rows-2 items-start gap-5 p-5 b-md:p-11 bg-carbon rounded-xl border border-graphite";
 
     // Contents
     const contetText = "flex flex-col items-start text-bronze";
     const contetCetral = "flex flex-col items-start gap-3";
 
     // Typography
-    const Text = "text-xs md:text-sm";
-    const Title = "font-space text-sm md:text-2xl text-ivory";
-    const TextII = "text-xs md:text-sm text-steel";
+    const Text = "text-xs b-md:text-sm";
+    const Title = "font-space text-sm b-md:text-2xl text-ivory";
+    const TextII = "text-xs b-md:text-sm text-steel";
 
     const variants = {
         default: {

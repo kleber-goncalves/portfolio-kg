@@ -96,7 +96,7 @@ function Socials() {
                     opacity: 1,
                     y: 0,
                     scale: 1,
-                    duration: 0.45,
+                    duration: 0.30,
                     ease: "power3.out",
                 },
             );
@@ -266,7 +266,7 @@ function Socials() {
 
             gsap.to(progressRef.current, {
                 scaleX: 1,
-                duration: 0.2,
+                duration: 0.12,
                 ease: "power2.out",
             });
 
@@ -296,7 +296,7 @@ function Socials() {
     };
 
     return (
-        <div ref={containerRef} className="relative w-[78%] md:hidden">
+        <div ref={containerRef} className="relative w-[78%] b-md:hidden">
             {/* =====================================
                 BOTÃO DE ARRASTE
             ====================================== */}
@@ -370,6 +370,7 @@ function Socials() {
                         ref={buttonRef}
                         type="button"
                         aria-label="Arraste para abrir as redes sociais"
+                        title="Abrir redes sociais"
                         onClick={openSocials}
                         onPointerDown={handlePointerDown}
                         onPointerMove={handlePointerMove}
@@ -450,6 +451,7 @@ function Socials() {
                             type="button"
                             onClick={closeSocials}
                             aria-label="Fechar redes sociais"
+                            title="Fechar redes sociais"
                             className="
                                 flex
                                 h-11
