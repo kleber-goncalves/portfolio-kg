@@ -106,8 +106,20 @@ async function dragSliderWithTouch(page, context, slider, targetRatio) {
         assert.equal(
             fillTransition.duration,
             "0s",
-            "The filled track must follow the finger without a spring transition while dragging.",
+            "The filled track must follow the finger without a CSS transition while dragging.",
         );
+
+        await page.waitForFunction(() => {
+            const sliderElement = document.querySelector('[data-mobile-sound-volume] input[type="range"]');
+            const fill = document.querySelector("[data-volume-fill]");
+            const displayedValue = document.querySelector("[data-volume-value]");
+            if (!sliderElement || !fill || !displayedValue) return false;
+
+            const sliderValue = Number(sliderElement.value);
+            const fillPercentage = Number.parseFloat(fill.style.width);
+            return Math.abs(fillPercentage - sliderValue / 8) < 0.8 &&
+                displayedValue.textContent.trim() === String(sliderValue) + "%";
+        }, null, { timeout: 5000 });
 
         await session.send("Input.dispatchTouchEvent", {
             type: "touchEnd",
