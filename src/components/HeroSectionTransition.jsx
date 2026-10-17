@@ -97,7 +97,7 @@ function HeroSectionTransition({ experienceMode = "full" }) {
 
     const handleHeroNavigation = (href) => {
         if (href === "#hero") {
-            scrollToTarget(0, { duration: 1.05 });
+            scrollToTarget(0, { duration: 1.4 });
             return;
         }
 
@@ -107,7 +107,7 @@ function HeroSectionTransition({ experienceMode = "full" }) {
 
                 if (heroTransition) {
                     // O Stack pertence à transição pinada; seu destino correto é o fim do pin.
-                    scrollToTarget(heroTransition.end, { duration: 1.05 });
+                    scrollToTarget(heroTransition.end, { duration: 1.4 });
                     return;
                 }
 
@@ -115,12 +115,12 @@ function HeroSectionTransition({ experienceMode = "full" }) {
             }
 
             const section = document.querySelector("#stack");
-            if (section) scrollToTarget(section, { duration: 1.05 });
+            if (section) scrollToTarget(section, { duration: 1.4 });
             return;
         }
 
         const section = document.querySelector(href);
-        if (section) scrollToTarget(section, { duration: 1.05 });
+        if (section) scrollToTarget(section, { duration: 1.4 });
     };
 
     // ============================================================
