@@ -55,7 +55,7 @@ const CursorTrail = ({ dotSize = 6, borderSize = 28, speed = 0.18 }) => {
         // =========================================
 
         const handleMouseOver = (event) => {
-            const clickable = event.target.closest("a, button, [role='button']");
+            const clickable = event.target.closest("a, button, [role='button'], [data-cursor-trail-hidden]");
 
             if (clickable) {
                 dotElement.classList.add("is-hidden");
@@ -68,7 +68,7 @@ const CursorTrail = ({ dotSize = 6, borderSize = 28, speed = 0.18 }) => {
         // =========================================
 
         const handleMouseOut = (event) => {
-            const clickable = event.target.closest("a, button, [role='button']");
+            const clickable = event.target.closest("a, button, [role='button'], [data-cursor-trail-hidden]");
 
             if (!clickable) return;
 
