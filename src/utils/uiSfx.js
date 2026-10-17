@@ -4,7 +4,7 @@ const ENABLED_STORAGE_KEY = "kleber-dev:ui-sounds-enabled";
 const PLAYER_PREFERENCES_KEY = "kleber-dev:ui-sfx";
 const CHANGE_EVENT = "kleber-dev:ui-sfx-change";
 const DEFAULT_VOLUME_PERCENT = 200;
-const MAX_VOLUME_PERCENT = 400;
+const MAX_VOLUME_PERCENT = 800;
 const VOLUME_STORAGE_KEY = "kleber-dev:ui-sounds-volume";
 const VOLUME_MIGRATION_KEY = "kleber-dev:ui-sounds-volume-v2-migrated";
 
