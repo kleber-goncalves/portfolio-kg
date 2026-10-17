@@ -65,12 +65,14 @@ try {
             });
         }
 
-        const sourcePrototype = window.AudioScheduledSourceNode?.prototype;
-        if (sourcePrototype && typeof sourcePrototype.start === "function") {
-            const nativeStart = sourcePrototype.start;
-            sourcePrototype.start = function (...args) {
+        // UISFX builds cues with AudioBufferSourceNode; instrument its concrete
+        // start() method so the test observes the actual source used by the player.
+        const bufferSourcePrototype = window.AudioBufferSourceNode?.prototype;
+        if (bufferSourcePrototype && typeof bufferSourcePrototype.start === "function") {
+            const nativeBufferStart = bufferSourcePrototype.start;
+            bufferSourcePrototype.start = function (...args) {
                 diagnostics.sourceStarts += 1;
-                return nativeStart.apply(this, args);
+                return nativeBufferStart.apply(this, args);
             };
         }
 
