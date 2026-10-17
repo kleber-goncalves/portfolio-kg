@@ -191,7 +191,7 @@ function Slider05({
     };
 
     const handleKeyDown = (event) => {
-        let nextValue = value;
+        let nextValue;
 
         switch (event.key) {
             case "ArrowLeft":
@@ -264,17 +264,7 @@ function Slider05({
                             shadow-[0_8px_24px_rgba(0,0,0,0.3)]
                         "
                     >
-                        <AnimatePresence mode="wait" initial={false}>
-                            <motion.span
-                                key={displayedValue}
-                                initial={{ opacity: 0, y: 5 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -5 }}
-                                transition={{ duration: 0.12 }}
-                            >
-                                {displayedValue}%
-                            </motion.span>
-                        </AnimatePresence>
+                        <span>{displayedValue}%</span>
                     </motion.div>
                 )}
             </AnimatePresence>
