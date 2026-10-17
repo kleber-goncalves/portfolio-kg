@@ -39,6 +39,82 @@ async function waitForPageReady(page) {
     });
 }
 
+async function dragSocialsButton(page, context) {
+    const button = page.getByRole("button", { name: "Arraste para abrir as redes sociais" });
+    await button.waitFor({ state: "visible", timeout: 10000 });
+    await button.scrollIntoViewIfNeeded();
+
+    const geometry = await button.evaluate((element) => {
+        const rail = element.parentElement;
+        const buttonRect = element.getBoundingClientRect();
+        const railRect = rail.getBoundingClientRect();
+        return {
+            startX: buttonRect.x + buttonRect.width / 2,
+            y: buttonRect.y + buttonRect.height / 2,
+            maxDrag: Math.max(0, railRect.width - buttonRect.width - 16),
+        };
+    });
+    assert.ok(geometry.maxDrag > 100, "The Socials drag button must have enough travel for the sound test.");
+
+    const sourceCountBeforeDrag = (await readDiagnostics(page)).sourceStarts;
+    const startX = geometry.startX;
+    const endX = startX + geometry.maxDrag * 0.68;
+    const session = await context.newCDPSession(page);
+    const point = (x) => ({
+        x: Math.round(x),
+        y: Math.round(geometry.y),
+        id: 1,
+        radiusX: 3,
+        radiusY: 3,
+        force: 1,
+    });
+
+    try {
+        await session.send("Input.dispatchTouchEvent", {
+            type: "touchStart",
+            touchPoints: [point(startX)],
+        });
+
+        // Keep the finger moving long enough to verify repeated cues before release.
+        for (let index = 1; index <= 20; index += 1) {
+            const progress = index / 20;
+            const x = startX + (endX - startX) * progress;
+            await session.send("Input.dispatchTouchEvent", {
+                type: "touchMove",
+                touchPoints: [point(x)],
+            });
+            await page.waitForTimeout(24);
+        }
+
+        const duringDrag = await readDiagnostics(page);
+        assert.ok(
+            duringDrag.sourceStarts >= sourceCountBeforeDrag + 2,
+            "Dragging the Socials button must play repeated sound cues before touch release. " +
+                JSON.stringify({ sourceCountBeforeDrag, duringDrag }),
+        );
+    } finally {
+        await session.send("Input.dispatchTouchEvent", {
+            type: "touchEnd",
+            touchPoints: [],
+        }).catch(() => {});
+        await session.detach();
+    }
+
+    // The normal tap/open behavior and its expand cue remain unchanged.
+    await page.waitForTimeout(600);
+    const closeButton = page.getByRole("button", { name: "Fechar redes sociais" });
+    if (await closeButton.isVisible().catch(() => false)) {
+        const beforeClose = (await readDiagnostics(page)).sourceStarts;
+        await closeButton.tap();
+        await button.waitFor({ state: "visible", timeout: 10000 });
+        await waitForNewSound(page, beforeClose, "The Socials collapse cue after drag");
+    } else {
+        await button.waitFor({ state: "visible", timeout: 10000 });
+    }
+
+    return (await readDiagnostics(page)).sourceStarts;
+}
+
 async function swipeProjectCarousel(page, context) {
     const section = page.locator("#projetos");
     await section.scrollIntoViewIfNeeded();
@@ -180,7 +256,10 @@ try {
     });
     lastSourceCount = await waitForNewSound(page, lastSourceCount, "The Socials collapse cue");
 
-    console.log("Scenario C: a real horizontal touch swipe advances the project carousel and plays drag-start.");
+    console.log("Scenario C: the Socials drag button plays repeated cues while moving, before release.");
+    lastSourceCount = await dragSocialsButton(page, context);
+
+    console.log("Scenario D: a real horizontal touch swipe advances the project carousel and plays drag-start.");
     const sourceCountBeforeSwipe = lastSourceCount;
     const previousIndex = await swipeProjectCarousel(page, context);
     await waitForNewSound(page, sourceCountBeforeSwipe, "The project carousel drag-start cue");
@@ -193,7 +272,7 @@ try {
     assert.ok(diagnostics.sourceStarts > sourceCountBeforeSwipe, "The carousel swipe must start an audio source.");
 
     console.log(JSON.stringify({
-        scenarios: ["no autoplay", "Socials expand", "Socials collapse", "carousel drag-start"],
+        scenarios: ["no autoplay", "Socials expand", "Socials collapse", "Socials drag movement", "carousel drag-start"],
         previousIndex,
         finalIndex,
         sourceStarts: diagnostics.sourceStarts,

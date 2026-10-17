@@ -19,6 +19,8 @@ function Socials() {
     const maxDrag = useRef(0);
 
     const isDragging = useRef(false);
+    const lastDragSoundAt = useRef(0);
+    const lastDragSoundX = useRef(0);
     const isOpenRef = useRef(false);
     const isClosingRef = useRef(false);
 
@@ -189,6 +191,8 @@ function Socials() {
         startX.current = event.clientX;
 
         currentX.current = 0;
+        lastDragSoundAt.current = 0;
+        lastDragSoundX.current = 0;
 
         event.currentTarget.setPointerCapture(event.pointerId);
 
@@ -214,6 +218,18 @@ function Socials() {
         const distance = Math.max(0, Math.min(delta, maxDrag.current));
 
         currentX.current = distance;
+
+        // Reproduz o cue durante o movimento, sem dispará-lo a cada pixel.
+        const soundDistance = Math.abs(distance - lastDragSoundX.current);
+        const now = performance.now();
+        if (
+            soundDistance >= 24 &&
+            (lastDragSoundAt.current === 0 || now - lastDragSoundAt.current >= 180)
+        ) {
+            requestUiSound("drag-start");
+            lastDragSoundAt.current = now;
+            lastDragSoundX.current = distance;
+        }
 
         // =====================================
         // PROGRESSO
