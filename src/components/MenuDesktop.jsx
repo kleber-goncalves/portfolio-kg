@@ -224,7 +224,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
 
     const closeMenu = (shouldPlaySound = true) => {
         // O menu pode fechar por Escape ou pelo backdrop. Ao navegar, usamos o som da navegação.
-        if (shouldPlaySound && isOpen) playUiSound("close");
+        if (shouldPlaySound && isOpen) playUiSound("collapse");
         setIsOpen(false);
     };
 
@@ -306,7 +306,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
     const handleToggle = () => {
         const next = !isOpen;
         setIsOpen(next);
-        playUiSound(next ? "open" : "close");
+        playUiSound(next ? "expand" : "collapse");
     };
 
     // =====================================

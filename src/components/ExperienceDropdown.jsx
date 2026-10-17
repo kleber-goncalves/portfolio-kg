@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
 
 import { getExperienceMode, setExperienceMode } from "../utils/experienceMode";
+import { playUiSound } from "../utils/uiSfx";
 
 function ExperienceDropdown({ experienceMode = getExperienceMode() || "full", onChange }) {
     /*
@@ -100,7 +101,9 @@ function ExperienceDropdown({ experienceMode = getExperienceMode() || "full", on
     */
 
     const toggleDropdown = () => {
-        setIsOpen((previous) => !previous);
+        const nextIsOpen = !isOpen;
+        playUiSound(nextIsOpen ? "expand" : "collapse");
+        setIsOpen(nextIsOpen);
     };
 
     /*
@@ -110,11 +113,15 @@ function ExperienceDropdown({ experienceMode = getExperienceMode() || "full", on
     */
 
     const handleExperienceChange = (mode) => {
-        setIsOpen(false);
-
         if (mode === experienceMode) {
+            if (isOpen) playUiSound("collapse");
+            setIsOpen(false);
             return;
         }
+
+        // Ao escolher outro modo a página recarrega para aplicar a configuração;
+        // não iniciamos o áudio de fechamento nesse caminho para evitar som cortado.
+        setIsOpen(false);
 
         setExperienceMode(mode);
 
@@ -135,8 +142,11 @@ function ExperienceDropdown({ experienceMode = getExperienceMode() || "full", on
     */
 
     useEffect(() => {
+        if (!isOpen) return undefined;
+
         const handleClickOutside = (event) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                playUiSound("collapse");
                 setIsOpen(false);
             }
         };
@@ -146,7 +156,7 @@ function ExperienceDropdown({ experienceMode = getExperienceMode() || "full", on
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, []);
+    }, [isOpen]);
 
     /*
     ============================================================
