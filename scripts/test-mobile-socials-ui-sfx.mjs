@@ -58,8 +58,10 @@ async function swipeProjectCarousel(page, context) {
     const bounds = await swiper.boundingBox();
     assert.ok(bounds && bounds.width > 200 && bounds.height > 100, "The mobile project carousel must have a usable touch area.");
 
-    const startX = bounds.x + bounds.width * 0.76;
-    const endX = bounds.x + bounds.width * 0.24;
+    // Make the synthetic touch gesture long enough for mobile Chromium to
+    // deliver each move frame instead of coalescing the entire swipe.
+    const startX = bounds.x + bounds.width * 0.86;
+    const endX = bounds.x + bounds.width * 0.14;
     const y = bounds.y + bounds.height * 0.55;
     const session = await context.newCDPSession(page);
     const point = (x) => ({
@@ -77,13 +79,14 @@ async function swipeProjectCarousel(page, context) {
             touchPoints: [point(startX)],
         });
 
-        for (let index = 1; index <= 8; index += 1) {
-            const progress = index / 8;
+        for (let index = 1; index <= 12; index += 1) {
+            const progress = index / 12;
             const x = startX + (endX - startX) * progress;
             await session.send("Input.dispatchTouchEvent", {
                 type: "touchMove",
                 touchPoints: [point(x)],
             });
+            await page.waitForTimeout(16);
         }
 
         await session.send("Input.dispatchTouchEvent", {
