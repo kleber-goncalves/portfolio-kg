@@ -6,6 +6,7 @@ import gsap from "gsap";
 import { startSmoothScroll, stopSmoothScroll } from "../utils/lenisControl";
 import { playUiSound } from "../utils/uiSfx";
 import SoundToggle from "./SoundToggle";
+import SoundVolumeSliderMobile from "./SoundVolumeSliderMobile";
 
 function MenuMobile({ items = [] }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -378,6 +379,7 @@ function MenuMobile({ items = [] }) {
 
                         <div className="border-t border-graphite pt-5">
                             <SoundToggle />
+                            <SoundVolumeSliderMobile />
                             <span className="mt-4 block text-[9px] uppercase tracking-[0.2em] text-steel">Kleber Dev · Portfolio</span>
                         </div>
                     </nav>
