@@ -8,6 +8,7 @@ import Seclogs from "../layout/Logo2";
 const MenuDesktop = lazy(() => import("../components/MenuDesktop"));
 import useResponsive from "../hooks/useResponsive";
 import { scrollToTarget } from "../utils/lenisControl";
+import { playUiSound } from "../utils/uiSfx";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -96,6 +97,8 @@ function HeroSectionTransition({ experienceMode = "full" }) {
     // ============================================================
 
     const handleHeroNavigation = (href) => {
+        playUiSound(href === "#hero" ? "back" : "forward");
+
         if (href === "#hero") {
             scrollToTarget(0, { duration: 1.4 });
             return;

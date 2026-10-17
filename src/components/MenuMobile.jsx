@@ -4,6 +4,8 @@ import { createPortal } from "react-dom";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import gsap from "gsap";
 import { startSmoothScroll, stopSmoothScroll } from "../utils/lenisControl";
+import { playUiSound } from "../utils/uiSfx";
+import SoundToggle from "./SoundToggle";
 
 function MenuMobile({ items = [] }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -12,12 +14,13 @@ function MenuMobile({ items = [] }) {
 
 
     const openMenu = () => {
-        
+        playUiSound("open");
         setIsOpen(true);
     };
 
-    const closeMenu = () => {
+    const closeMenu = (shouldPlaySound = true) => {
          if (!menuRef.current) return;
+         if (shouldPlaySound && isOpen) playUiSound("close");
 
           const links = menuRef.current.querySelectorAll("[data-mobile-menu-link]");
 
@@ -196,7 +199,8 @@ function MenuMobile({ items = [] }) {
 
     const handleNavigation = (href) => {
         pendingNavigationRef.current = href;
-        closeMenu();
+        playUiSound(href === "#hero" ? "back" : "forward");
+        closeMenu(false);
     };
 
     return (
@@ -373,7 +377,8 @@ function MenuMobile({ items = [] }) {
                         ========================================== */}
 
                         <div className="border-t border-graphite pt-5">
-                            <span className="text-[9px] uppercase tracking-[0.2em] text-steel">Kleber Dev · Portfolio</span>
+                            <SoundToggle />
+                            <span className="mt-4 block text-[9px] uppercase tracking-[0.2em] text-steel">Kleber Dev · Portfolio</span>
                         </div>
                     </nav>
                 </div>,
