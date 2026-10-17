@@ -7,6 +7,7 @@ import Hero from "../layout/HeroTeste2";
 import Seclogs from "../layout/Logo2";
 const MenuDesktop = lazy(() => import("../components/MenuDesktop"));
 import useResponsive from "../hooks/useResponsive";
+import { scrollToTarget } from "../utils/lenisControl";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -95,94 +96,31 @@ function HeroSectionTransition({ experienceMode = "full" }) {
     // ============================================================
 
     const handleHeroNavigation = (href) => {
-        // ========================================================
-        // Hero
-        // ========================================================
-
         if (href === "#hero") {
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth",
-            });
-
+            scrollToTarget(0, { duration: 1.05 });
             return;
         }
 
-        // ========================================================
-        // STACK
-        // ========================================================
-
         if (href === "#stack") {
-            // ----------------------------------------------------
-            // EXPERIÊNCIA COMPLETA
-            // ----------------------------------------------------
-
             if (experienceMode === "full") {
                 const heroTransition = ScrollTrigger.getById("heroTransition");
 
-                if (!heroTransition) {
-                    console.warn("ScrollTrigger 'heroTransition' não encontrado.");
-
-                    const section = document.querySelector("#stack");
-
-                    if (section) {
-                        section.scrollIntoView({
-                            behavior: "smooth",
-                            block: "start",
-                        });
-                    }
-
+                if (heroTransition) {
+                    // O Stack pertence à transição pinada; seu destino correto é o fim do pin.
+                    scrollToTarget(heroTransition.end, { duration: 1.05 });
                     return;
                 }
 
-                /*
-                 * No Full, o Stack faz parte da transição
-                 * pinada do Hero.
-                 *
-                 * Por isso navegamos até o final
-                 * do ScrollTrigger da transição.
-                 */
-                window.scrollTo({
-                    top: heroTransition.end,
-                    behavior: "smooth",
-                });
-
-                return;
+                console.warn("ScrollTrigger 'heroTransition' não encontrado.");
             }
 
-            // ----------------------------------------------------
-            // EXPERIÊNCIA REDUZIDA
-            // ----------------------------------------------------
-
-            /*
-             * No Reduced não existe a transição pinada.
-             *
-             * Hero e Stack estão no fluxo normal.
-             */
             const section = document.querySelector("#stack");
-
-            if (section) {
-                section.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start",
-                });
-            }
-
+            if (section) scrollToTarget(section, { duration: 1.05 });
             return;
         }
 
-        // ========================================================
-        // OUTRAS SEÇÕES
-        // ========================================================
-
         const section = document.querySelector(href);
-
-        if (!section) return;
-
-        section.scrollIntoView({
-            behavior: "smooth",
-            block: "start",
-        });
+        if (section) scrollToTarget(section, { duration: 1.05 });
     };
 
     // ============================================================

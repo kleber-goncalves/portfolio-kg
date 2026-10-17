@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
 import { motion, useMotionValue, useSpring } from "motion/react";
 import { Link } from "react-router-dom";
-import { stopSmoothScroll, startSmoothScroll } from "../utils/lenisControl";
+import { stopSmoothScroll, startSmoothScroll, scrollToTarget } from "../utils/lenisControl";
 
 import { getExperienceMode, setExperienceMode } from "../utils/experienceMode";
 
@@ -341,30 +341,24 @@ function MenuDesktop({ items = [], showMenu = false }) {
         event.preventDefault();
 
         setActiveHref(href);
-
         closeMenu();
 
-        if (href === "#hero") {
-            window.setTimeout(() => {
-                window.scrollTo({
-                    top: 0,
-                    behavior: "smooth",
-                });
-            }, 450);
+        // Dá dois frames para o React remover o bloqueio do menu e reativar Lenis.
+        // A rolagem começa em seguida, em paralelo com a animação visual de fechamento.
+        window.requestAnimationFrame(() => {
+            window.requestAnimationFrame(() => {
+                if (href === "#hero") {
+                    scrollToTarget(0, { duration: 1.05 });
+                    return;
+                }
 
-            return;
-        }
+                const section = document.querySelector(href);
 
-        window.setTimeout(() => {
-            const section = document.querySelector(href);
-
-            if (!section) return;
-
-            section.scrollIntoView({
-                behavior: "smooth",
-                block: "start",
+                if (section) {
+                    scrollToTarget(section, { duration: 1.05 });
+                }
             });
-        }, 450);
+        });
     };
 
     // =====================================

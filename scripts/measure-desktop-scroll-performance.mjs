@@ -147,9 +147,26 @@ async function installInstrumentation(context, mode) {
             scrollDistancePx: 0,
             previousScrollY: null,
             maxObservedScrollY: 0,
+            navigation: null,
         };
 
         window.__scrollInteractionPerf = state;
+
+        // Timestamp the actual click on the global desktop-menu link to Hero.
+        document.addEventListener("click", (event) => {
+            const target = event.target instanceof Element
+                ? event.target.closest('[data-desktop-menu-link][data-href="#hero"]')
+                : null;
+
+            if (!target) return;
+
+            state.navigation = {
+                clickAt: performance.now(),
+                startY: window.scrollY,
+                firstScrollAt: null,
+                topReachedAt: null,
+            };
+        }, true);
 
         let previousFrameTimestamp = null;
         const observeFrames = (timestamp) => {
@@ -178,6 +195,20 @@ async function installInstrumentation(context, mode) {
             state.previousScrollY = currentY;
             state.scrollEventCount += 1;
             state.maxObservedScrollY = Math.max(state.maxObservedScrollY, currentY);
+
+            const navigation = state.navigation;
+            if (navigation) {
+                if (
+                    navigation.firstScrollAt === null &&
+                    Math.abs(currentY - navigation.startY) > 1
+                ) {
+                    navigation.firstScrollAt = performance.now();
+                }
+
+                if (navigation.topReachedAt === null && currentY <= 10) {
+                    navigation.topReachedAt = performance.now();
+                }
+            }
         }, { passive: true });
 
         if (typeof PerformanceObserver !== "undefined") {
@@ -324,8 +355,60 @@ async function runSample(browser, mode, run) {
 
         const down = await scrollToBoundary(page, 1);
         await page.waitForTimeout(180);
-        const up = await scrollToBoundary(page, -1);
+
+        // Reproduce the reported issue: from the footer, open the desktop menu and click Hero.
+        await page.waitForFunction(() => {
+            const button = document.querySelector('button[aria-label="Abrir menu"]');
+            if (!button) return false;
+
+            const rect = button.getBoundingClientRect();
+            const opacity = Number.parseFloat(getComputedStyle(button).opacity);
+            return rect.width > 5 && rect.height > 5 && opacity > 0.9;
+        }, null, { timeout: 15000 });
+
+        await page.locator('button[aria-label="Abrir menu"]').click({ timeout: 10000 });
+
+        const heroLinkSelector = '[data-desktop-menu-link][data-href="#hero"]';
+        await page.waitForFunction((selector) => {
+            const link = document.querySelector(selector);
+            if (!link) return false;
+
+            const rect = link.getBoundingClientRect();
+            return rect.width > 0 && rect.height > 0;
+        }, heroLinkSelector, { timeout: 15000 });
+        await page.waitForTimeout(350);
+
+        await page.locator(heroLinkSelector).click({ timeout: 10000 });
+        await page.waitForFunction(() => window.scrollY <= 10, null, { timeout: 15000 });
         await page.waitForTimeout(180);
+
+        const navigationMetrics = await page.evaluate(() => {
+            const navigation = window.__scrollInteractionPerf.navigation;
+
+            return {
+                firstScrollDelayMs: navigation?.firstScrollAt == null
+                    ? null
+                    : navigation.firstScrollAt - navigation.clickAt,
+                durationSeconds: navigation?.topReachedAt == null
+                    ? null
+                    : (navigation.topReachedAt - navigation.clickAt) / 1000,
+                reachedTop: window.scrollY <= 10,
+                startY: navigation?.startY ?? null,
+            };
+        });
+
+        assert.ok(
+            Number.isFinite(navigationMetrics.firstScrollDelayMs),
+            `Menu navigation did not produce a measurable scroll start for mode=${mode}, run=${run}.`,
+        );
+        assert.ok(
+            navigationMetrics.firstScrollDelayMs < 350,
+            `Menu navigation waited ${navigationMetrics.firstScrollDelayMs.toFixed(1)} ms before scrolling (limit: 350 ms; mode=${mode}, run=${run}).`,
+        );
+        assert.ok(
+            navigationMetrics.reachedTop,
+            `Menu navigation did not reach Hero for mode=${mode}, run=${run}.`,
+        );
 
         const captured = await page.evaluate(() => {
             const state = window.__scrollInteractionPerf;
@@ -371,9 +454,11 @@ async function runSample(browser, mode, run) {
         captured.run = run;
         captured.documentHeightBeforeScroll = dimensions.documentHeight;
         captured.downwardSteps = down.steps;
-        captured.upwardSteps = up.steps;
         captured.reachedBottom = down.reachedBoundary;
-        captured.reachedTop = up.reachedBoundary;
+        captured.reachedTop = navigationMetrics.reachedTop;
+        captured.navigationFirstScrollDelayMs = navigationMetrics.firstScrollDelayMs;
+        captured.navigationDurationSeconds = navigationMetrics.durationSeconds;
+        captured.navigationStartY = navigationMetrics.startY;
 
         assert.ok(
             captured.frameIntervalsMs.length > 20,
@@ -391,7 +476,10 @@ async function runSample(browser, mode, run) {
         sample.reachedBottom = captured.reachedBottom;
         sample.reachedTop = captured.reachedTop;
         sample.downwardWheelSteps = captured.downwardSteps;
-        sample.upwardWheelSteps = captured.upwardSteps;
+        sample.navigationFirstScrollDelayMs = captured.navigationFirstScrollDelayMs;
+        sample.navigationDurationSeconds = captured.navigationDurationSeconds;
+        sample.navigationStartY = captured.navigationStartY;
+        sample.navigationReachedTop = captured.reachedTop;
         sample.documentHeightBeforeScroll = captured.documentHeightBeforeScroll;
 
         console.log(JSON.stringify(sample));
@@ -446,6 +534,8 @@ const summaries = Object.fromEntries(
             "scrollEventCount",
             "scrollDistancePx",
             "maxScrollCoveragePct",
+            "navigationFirstScrollDelayMs",
+            "navigationDurationSeconds",
         ];
 
         const values = Object.fromEntries(
@@ -472,6 +562,8 @@ const comparisonDefinitions = [
     ["Long Animation Frame entries", "longAnimationFrameCount", "", 0],
     ["Scroll events", "scrollEventCount", "", 0],
     ["Measured scroll distance", "scrollDistancePx", " px", 0],
+    ["Menu click → first scroll", "navigationFirstScrollDelayMs", " ms", 1],
+    ["Menu click → Hero", "navigationDurationSeconds", " s", 2],
 ];
 
 const tableRows = comparisonDefinitions.map(([label, key, unit, digits]) =>
@@ -479,16 +571,16 @@ const tableRows = comparisonDefinitions.map(([label, key, unit, digits]) =>
 );
 
 const sampleRows = samples.map((sample) =>
-    `| ${sample.mode} | ${sample.run} | ${format(sample.durationSeconds, 2)} s | ${format(sample.medianFrameIntervalMs, 2)} ms | ${format(sample.p95FrameIntervalMs, 1)} ms | ${format(sample.framesOver20msPct, 1)}% | ${sample.framesOver33ms} | ${sample.framesOver50ms} | ${sample.longTaskCount} | ${format(sample.estimatedBlockingMs, 1)} ms | ${format(sample.maxScrollCoveragePct, 1)}% |`,
+    `| ${sample.mode} | ${sample.run} | ${format(sample.durationSeconds, 2)} s | ${format(sample.medianFrameIntervalMs, 2)} ms | ${format(sample.p95FrameIntervalMs, 1)} ms | ${format(sample.framesOver20msPct, 1)}% | ${sample.framesOver33ms} | ${sample.framesOver50ms} | ${sample.longTaskCount} | ${format(sample.estimatedBlockingMs, 1)} ms | ${format(sample.maxScrollCoveragePct, 1)}% | ${format(sample.navigationFirstScrollDelayMs, 1)} ms | ${format(sample.navigationDurationSeconds, 2)} s |`,
 );
 
 const summary = [
     "# Desktop scroll interaction performance",
     "",
-    "- **Test type:** scripted real mouse-wheel input in Chromium while collecting browser performance entries.",
+    "- **Test type:** scripted mouse-wheel scrolling to the footer, then a click on the desktop-menu Hero link to measure the return-to-top navigation in Chromium.",
     "- **Viewport:** 1365 × 900, desktop, device scale factor 1.",
     "- **Runs:** 3 per mode; tables show the median of each mode's three samples.",
-    "- **Important:** this measures scroll interaction, not the standard Lighthouse page-load score. Frame gaps over 20/33/50 ms are proxies for delayed frames, not a direct physical display measurement.",
+    "- **Important:** this measures scroll interaction and menu navigation, not the standard Lighthouse page-load score. Frame gaps over 20/33/50 ms are proxies for delayed frames, not a direct physical display measurement.",
     "- **Navigation:** every sample uses a fresh browser context with the requested `experienceMode` set before the app code executes.",
     "",
     "## Median comparison",
@@ -501,8 +593,8 @@ const summary = [
     "",
     "## Individual samples",
     "",
-    "| Mode | Run | Duration | Median frame interval | p95 frame interval | Frames >20 ms | Frames >33 ms | Frames >50 ms | Long tasks | Blocking time | Max scroll coverage |",
-    "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
+    "| Mode | Run | Duration | Median frame interval | p95 frame interval | Frames >20 ms | Frames >33 ms | Frames >50 ms | Long tasks | Blocking time | Max scroll coverage | Menu first-scroll delay | Menu to Hero |",
+    "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
     ...sampleRows,
     "",
     "## Interpretation notes",
