@@ -25,6 +25,7 @@ async function readDiagnostics(page) {
         audioContextStates: window.__uiSfxMobileTest?.contexts.map((context) => context.state) ?? [],
         sourceStarts: window.__uiSfxMobileTest?.sourceStarts ?? -1,
         sourceStartStates: window.__uiSfxMobileTest?.sourceStartStates ?? [],
+        contextCreations: window.__uiSfxMobileTest?.contextCreations ?? [],
     }));
 }
 
@@ -156,8 +157,39 @@ const context = await browser.newContext({
 
 try {
     await context.addInitScript(() => {
-        const diagnostics = { contexts: [], sourceStarts: 0, sourceStartStates: [] };
+        const diagnostics = {
+            contexts: [],
+            sourceStarts: 0,
+            sourceStartStates: [],
+            contextCreations: [],
+            lastTrustedPointerEvent: null,
+        };
         window.__uiSfxMobileTest = diagnostics;
+
+        document.addEventListener("pointerdown", (event) => {
+            if (!event.isTrusted) return;
+            diagnostics.lastTrustedPointerEvent = {
+                type: event.type,
+                pointerType: event.pointerType,
+                userActivation: navigator.userActivation?.isActive ?? null,
+            };
+        }, true);
+        document.addEventListener("pointerup", (event) => {
+            if (!event.isTrusted) return;
+            diagnostics.lastTrustedPointerEvent = {
+                type: event.type,
+                pointerType: event.pointerType,
+                userActivation: navigator.userActivation?.isActive ?? null,
+            };
+        }, true);
+        document.addEventListener("click", (event) => {
+            if (!event.isTrusted) return;
+            diagnostics.lastTrustedPointerEvent = {
+                type: event.type,
+                pointerType: event.pointerType ?? "keyboard",
+                userActivation: navigator.userActivation?.isActive ?? null,
+            };
+        }, true);
 
         const NativeAudioContext = window.AudioContext;
         if (NativeAudioContext) {
@@ -165,6 +197,10 @@ try {
                 construct(target, args) {
                     const audioContext = Reflect.construct(target, args);
                     diagnostics.contexts.push(audioContext);
+                    diagnostics.contextCreations.push({
+                        trigger: diagnostics.lastTrustedPointerEvent,
+                        initialState: audioContext.state,
+                    });
                     return audioContext;
                 },
             });
@@ -198,6 +234,12 @@ try {
     });
 
     const page = await context.newPage();
+    const autoplayWarnings = [];
+    page.on("console", (message) => {
+        if (/AudioContext was not allowed to start/i.test(message.text())) {
+            autoplayWarnings.push(message.text());
+        }
+    });
 
     console.log("Mobile scenario A: no audio context or playback on first page load.");
     await waitForReady(page);
@@ -328,10 +370,28 @@ try {
         "The first post-reload cue must start only after its AudioContext is running. " +
             JSON.stringify(firstPostReloadSources),
     );
+    const firstTouchContextCreations = diagnostics.contextCreations.slice();
+    assert.ok(
+        firstTouchContextCreations.length > 0,
+        "The first trusted touch should initialize the audio context.",
+    );
+    assert.ok(
+        firstTouchContextCreations.every((entry) => entry.trigger?.type !== "pointerdown"),
+        "Touch must not construct the AudioContext during pointerdown, which Chrome rejected in mobile emulation. " +
+            JSON.stringify(firstTouchContextCreations),
+    );
+    assert.equal(
+        autoplayWarnings.length,
+        0,
+        "Mobile interactions must not trigger Chrome's AudioContext autoplay-blocked warning. " +
+            JSON.stringify(autoplayWarnings),
+    );
     console.log("First post-reload sound diagnostics: " + JSON.stringify({
         preference: await page.evaluate((key) => localStorage.getItem(key), enabledKey),
         contextStates: diagnostics.audioContextStates,
+        contextCreations: firstTouchContextCreations,
         sources: firstPostReloadSources,
+        autoplayWarnings,
     }));
     assert.equal(
         await page.evaluate((key) => localStorage.getItem(key), enabledKey),

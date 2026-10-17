@@ -343,7 +343,33 @@ export function attachUiSfxHoverListeners() {
     const handleTrustedPointerDown = (event) => {
         if (!event.isTrusted || !getUiSoundsEnabled()) return;
 
-        // A primeira interação real prepara o áudio; o carregamento e o hover não.
+        // Desktop: mantém o desbloqueio no pointerdown, que já funciona bem para mouse/caneta.
+        // Em touch, o pointerdown pode chegar antes da ativação reconhecida pelo navegador.
+        if (event.pointerType === "touch") return;
+
+        void requestAudioUnlock();
+    };
+
+    const handleTrustedPointerUp = (event) => {
+        if (
+            !event.isTrusted ||
+            event.pointerType !== "touch" ||
+            !getUiSoundsEnabled()
+        ) {
+            return;
+        }
+
+        // No toque, tenta desbloquear após o gesto em vez de no início do contato.
+        if (isUnlocked || unlockPromise) return;
+        void requestAudioUnlock();
+    };
+
+    const handleTrustedClick = (event) => {
+        if (!event.isTrusted || !getUiSoundsEnabled()) return;
+
+        // Fallback para navegadores/emulação que só liberam áudio no click.
+        // O capture executa antes dos handlers React que tentam reproduzir o cue.
+        if (isUnlocked || unlockPromise) return;
         void requestAudioUnlock();
     };
 
@@ -360,11 +386,18 @@ export function attachUiSfxHoverListeners() {
 
     document.addEventListener("pointerover", handlePointerOver, { passive: true });
     document.addEventListener("pointerdown", handleTrustedPointerDown, { passive: true });
+    document.addEventListener("pointerup", handleTrustedPointerUp, {
+        capture: true,
+        passive: true,
+    });
+    document.addEventListener("click", handleTrustedClick, { capture: true });
     document.addEventListener("keydown", handleTrustedKeyDown);
 
     return () => {
         document.removeEventListener("pointerover", handlePointerOver);
         document.removeEventListener("pointerdown", handleTrustedPointerDown);
+        document.removeEventListener("pointerup", handleTrustedPointerUp, true);
+        document.removeEventListener("click", handleTrustedClick, true);
         document.removeEventListener("keydown", handleTrustedKeyDown);
     };
 }
