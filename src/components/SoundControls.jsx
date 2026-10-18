@@ -79,18 +79,17 @@ function SoundControls({ className = "" }) {
     };
 
     const buttonClassName = `
-        inline-flex cursor-pointer h-9 items-center justify-center gap-2
-        border border-graphite/90 bg-obsidian/75 px-3
+        inline-flex h-9 cursor-pointer items-center justify-center gap-2 px-3
         font-space text-[9px] uppercase tracking-[0.14em] text-steel
         transition-colors duration-200
-        hover:border-bronze hover:text-ivory
+        hover:bg-graphite/35 hover:text-ivory
         focus-visible:outline focus-visible:outline-2
         focus-visible:outline-offset-2 focus-visible:outline-champagne
         disabled:cursor-wait disabled:opacity-60
     `;
 
     return (
-        <div ref={rootRef} className={`relative flex shrink-0 items-center gap-1.5  ${className}`}>
+        <div ref={rootRef} className={`relative inline-flex shrink-0 items-center rounded-sm border border-graphite/90 bg-obsidian/75 transition-colors duration-200 hover:border-bronze ${className}`}>
             <button
                 type="button"
                 data-ui-sfx-hover
