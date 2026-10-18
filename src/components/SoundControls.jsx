@@ -90,7 +90,7 @@ function SoundControls({ className = "" }) {
     `;
 
     return (
-        <div ref={rootRef} className={`relative flex shrink-0 items-center gap-1.5 ${className}`}>
+        <div ref={rootRef} className={`relative flex shrink-0 items-center gap-1.5  ${className}`}>
             <button
                 type="button"
                 data-ui-sfx-hover
