@@ -52,7 +52,7 @@ export const stackLogos = [
         href: "https://gsap.com/",
     },
     {
-        node: <Motion variant="light" className="h-10 w-10 fill-current text-[#ffffff]" />,
+        node: <Motion variant="dark" className="h-10 w-10 fill-current text-[#ffffff]" />,
         title: "Motion",
         href: "https://gsap.com/",
     },
@@ -75,7 +75,7 @@ export const backendLogos = [
         href: "https://supabase.com/",
     },
     {
-        node: <Prisma variant="light" className="h-10 w-10 fill-current text-ivory" />,
+        node: <Prisma variant="dark" className="h-10 w-10 fill-current text-ivory" />,
         title: "Prisma",
         href: "https://supabase.com/",
     },
@@ -117,7 +117,7 @@ export const toolsLogos = [
     },
 
     {
-        node: <Github className="h-10 w-10 fill-current text-black" variant="mono" />,
+        node: <Github className="h-10 w-10 fill-current text-black" variant="dark" />,
         title: "GitHub",
         href: "https://github.com/",
     },
