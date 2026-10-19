@@ -79,10 +79,10 @@ function SoundControls({ className = "" }) {
     };
 
     const buttonClassName = `
-        inline-flex h-9 cursor-pointer items-center justify-center gap-2 px-3
-        font-space text-[9px] uppercase tracking-[0.14em] text-steel
+        inline-flex group py-1 cursor-pointer items-center justify-center gap-2 px-3
+        font-space text-[9px] uppercase tracking-[0.14em] c-lg:text-[10px] text-[#8B8B8B]
         transition-colors duration-200
-        hover:bg-graphite/35 hover:text-ivory
+        hover:bg-[#A87852] hover:text-[#0D0D0D]
         focus-visible:outline focus-visible:outline-2
         focus-visible:outline-offset-2 focus-visible:outline-champagne
         disabled:cursor-wait disabled:opacity-60
@@ -90,44 +90,16 @@ function SoundControls({ className = "" }) {
 
     return (
         <div ref={rootRef} className={`relative inline-flex shrink-0 items-center rounded-sm border border-graphite/90 bg-obsidian/75 transition-colors duration-200 hover:border-bronze ${className}`}>
-            <button
-                type="button"
-                data-ui-sfx-hover
-                onClick={handleToggle}
-                disabled={isUpdating}
-                aria-pressed={enabled}
-                aria-label={enabled ? "Desativar efeitos sonoros" : "Ativar efeitos sonoros"}
-                title={enabled ? "Desativar efeitos sonoros" : "Ativar efeitos sonoros"}
-                className={buttonClassName}
-            >
-                {enabled ? (
-                    <Volume2 aria-hidden="true" className="h-3.5 w-3.5 text-bronze" />
-                ) : (
-                    <VolumeX aria-hidden="true" className="h-3.5 w-3.5" />
-                )}
+            <button type="button" data-ui-sfx-hover onClick={handleToggle} disabled={isUpdating} aria-pressed={enabled} aria-label={enabled ? "Desativar efeitos sonoros" : "Ativar efeitos sonoros"} title={enabled ? "Desativar efeitos sonoros" : "Ativar efeitos sonoros"} className={buttonClassName}>
+                {enabled ? <Volume2 aria-hidden="true" className="h-3.5 w-3.5 text-bronze group-hover:text-[#0D0D0D]" /> : <VolumeX aria-hidden="true" className="h-3.5 w-3.5" />}
                 <span>{enabled ? "Som on" : "Som off"}</span>
             </button>
 
-            <button
-                type="button"
-                data-ui-sfx-hover
-                onClick={handleVolumeButton}
-                aria-expanded={isVolumeOpen}
-                aria-haspopup="dialog"
-                aria-controls={volumePanelId}
-                aria-label={`Configurar volume: ${volume}%`}
-                title="Configurar volume"
-                className={buttonClassName}
-            >
-                <SlidersHorizontal aria-hidden="true" className="h-3.5 w-3.5 text-bronze" />
+            <button type="button" data-ui-sfx-hover onClick={handleVolumeButton} aria-expanded={isVolumeOpen} aria-haspopup="dialog" aria-controls={volumePanelId} aria-label={`Configurar volume: ${volume}%`} title="Configurar volume" className={buttonClassName}>
+                <SlidersHorizontal aria-hidden="true" className="h-3.5 w-3.5 text-bronze group-hover:text-[#0D0D0D]" />
                 <span>{volume}%</span>
-                <motion.span
-                    aria-hidden="true"
-                    animate={{ rotate: isVolumeOpen ? 180 : 0 }}
-                    transition={{ type: "spring", stiffness: 360, damping: 22 }}
-                    className="inline-flex"
-                >
-                    <ChevronDown className="h-3 w-3" />
+                <motion.span aria-hidden="true" animate={{ rotate: isVolumeOpen ? 180 : 0 }} transition={{ type: "spring", stiffness: 360, damping: 22 }} className="inline-flex">
+                    <ChevronDown className="h-3 w-3 " />
                 </motion.span>
             </button>
 
@@ -155,36 +127,20 @@ function SoundControls({ className = "" }) {
                         "
                     >
                         <div className="mb-4 flex items-center justify-between gap-3">
-                            <label
-                                id={volumeLabelId}
-                                htmlFor={volumePanelId + "-range"}
-                                className="font-space text-[10px] uppercase tracking-[0.16em] text-steel"
-                            >
+                            <label id={volumeLabelId} htmlFor={volumePanelId + "-range"} className="font-space text-[10px] uppercase tracking-[0.16em] text-steel">
                                 Volume dos sons
                             </label>
-                            <span className="font-space text-xs tabular-nums text-bronze">
-                                {volume}%
-                            </span>
+                            <span className="font-space text-xs tabular-nums text-bronze">{volume}%</span>
                         </div>
 
-                        <Slider05
-                            min={0}
-                            max={800}
-                            step={5}
-                            value={volume}
-                            onChange={handleVolumeChange}
-                            onPreview={handleVolumePreview}
-                            labelId={volumeLabelId}
-                        />
+                        <Slider05 min={0} max={800} step={5} value={volume} onChange={handleVolumeChange} onPreview={handleVolumePreview} labelId={volumeLabelId} />
 
                         <div className="mt-2 flex items-center justify-between font-space text-[9px] uppercase tracking-[0.12em] text-steel/80">
                             <span>Silêncio</span>
                             <span>Escala 8×</span>
                         </div>
 
-                        <p className="mt-4 border-t border-graphite pt-3 text-[10px] leading-4 text-steel">
-                            100% é o volume de referência de cada efeito. A escala vai até 800%, respeitando o limite máximo de ganho de cada efeito. A escolha fica salva neste navegador.
-                        </p>
+                        <p className="mt-4 border-t border-graphite pt-3 text-[10px] leading-4 text-steel">100% é o volume de referência de cada efeito. A escala vai até 800%, respeitando o limite máximo de ganho de cada efeito. A escolha fica salva neste navegador.</p>
                     </motion.div>
                 )}
             </AnimatePresence>
