@@ -32,14 +32,14 @@ const MENU_ITEMS = [
     },
 ];
 
-function Hero({ isMobileLayout, dotFieldFrozen = false, onNavigate, onReady, experienceMode = "full" }) {
+function Hero({ isMobileLayout, isCompactLandscape = false, dotFieldFrozen = false, onNavigate, onReady, experienceMode = "full" }) {
 
     return (
         <section id="hero" className="relative">
             {isMobileLayout ? (
                 <div className="p-5">
                     <Suspense fallback={<div aria-hidden="true" className="min-h-[calc(100svh-2.5rem)]" />}>
-                        <HeroMobile items={MENU_ITEMS} onReady={onReady} />
+                        <HeroMobile items={MENU_ITEMS} onReady={onReady} isCompactLandscape={isCompactLandscape} />
                     </Suspense>
                 </div>
             ) : (

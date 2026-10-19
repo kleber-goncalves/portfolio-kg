@@ -13,7 +13,7 @@ import { playUiSound } from "../utils/uiSfx";
 gsap.registerPlugin(ScrollTrigger);
 
 function HeroSectionTransition({ experienceMode = "full" }) {
-    const { isMobileLayout } = useResponsive();
+    const { isMobileLayout, isCompactLandscape } = useResponsive();
     const requiredHeroLayout = isMobileLayout ? "mobile" : "desktop";
     const requiredStackLayout = isMobileLayout ? "mobile" : "desktop";
     const [readyHeroLayout, setReadyHeroLayout] = useState(null);
@@ -657,7 +657,7 @@ function HeroSectionTransition({ experienceMode = "full" }) {
             ================================================== */}
 
             <div ref={heroRef} className={heroWrapperClass}>
-                <Hero isMobileLayout={isMobileLayout} dotFieldFrozen={dotFieldFrozen} onNavigate={handleHeroNavigation} onReady={setReadyHeroLayout} experienceMode={experienceMode} />
+                <Hero isMobileLayout={isMobileLayout} isCompactLandscape={isCompactLandscape} dotFieldFrozen={dotFieldFrozen} onNavigate={handleHeroNavigation} onReady={setReadyHeroLayout} experienceMode={experienceMode} />
                 {isFullExperience === false && (
                     <div
                         className="

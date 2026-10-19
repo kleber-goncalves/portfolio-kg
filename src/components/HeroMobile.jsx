@@ -4,7 +4,7 @@ import Socials from "../components/Socials";
 import MenuMobile from "../components/MenuMobile";
 import OptimizedImage from "./OptimizedImage";
 
-function HeroMobile({ items, onReady }) {
+function HeroMobile({ items, onReady, isCompactLandscape = false }) {
     useLayoutEffect(() => {
         onReady?.("mobile");
     }, [onReady]);
@@ -22,11 +22,23 @@ function HeroMobile({ items, onReady }) {
             {/* O conteúdo em fluxo determina a altura do Hero */}
             <div className="relative z-10 flex flex-col">
                 {/* LOGO */}
-                <div className="absolute left-5 top-4 h-13 w-13">
+                <div
+                    data-hero-mobile-logo-container
+                    className={
+                        isCompactLandscape
+                            ? "absolute left-5 top-4 w-32"
+                            : "absolute left-5 top-4 h-13 w-13"
+                    }
+                >
                     <img
-                        src="/logo.svg"
+                        data-hero-mobile-logo
+                        src={isCompactLandscape ? "/logo-completa-bra.svg" : "/logo.svg"}
                         alt="Kleber Dev"
-                        className="h-full w-full"
+                        className={
+                            isCompactLandscape
+                                ? "block h-auto w-full object-contain"
+                                : "h-full w-full"
+                        }
                     />
                 </div>
 

@@ -34,6 +34,76 @@ async function openPage(browser, mode) {
     return { context, page };
 }
 
+async function testHeroMobileLogoOrientation(page, mode) {
+    const logo = page.locator("[data-hero-mobile-logo]");
+
+    await page.waitForFunction(
+        () => document.querySelector("[data-hero-mobile-logo]")?.getAttribute("src") === "/logo.svg",
+        null,
+        { timeout: 10000 },
+    );
+
+    const portraitBefore = await logo.evaluate((image) => {
+        const rect = image.getBoundingClientRect();
+        return {
+            src: image.getAttribute("src"),
+            width: rect.width,
+            height: rect.height,
+        };
+    });
+
+    assert.equal(portraitBefore.src, "/logo.svg", "Portrait mobile must use the compact logo.");
+    assert.ok(
+        Math.abs(portraitBefore.width - portraitBefore.height) < 1,
+        "Portrait mobile should keep the existing square logo container. " + JSON.stringify(portraitBefore),
+    );
+
+    await page.setViewportSize({ width: 844, height: 390 });
+
+    await page.waitForFunction(
+        () => window.matchMedia("(orientation: landscape) and (max-height: 600px)").matches &&
+            document.querySelector("[data-hero-mobile-logo]")?.getAttribute("src") === "/logo-completa-bra.svg",
+        null,
+        { timeout: 10000 },
+    );
+
+    const landscape = await logo.evaluate((image) => {
+        const rect = image.getBoundingClientRect();
+        return {
+            src: image.getAttribute("src"),
+            complete: image.complete,
+            naturalWidth: image.naturalWidth,
+            naturalHeight: image.naturalHeight,
+            width: rect.width,
+            height: rect.height,
+        };
+    });
+
+    assert.equal(landscape.src, "/logo-completa-bra.svg", "Compact landscape mobile must use the full logo.");
+    assert.ok(landscape.complete && landscape.naturalWidth > 0, "The full horizontal logo must load.");
+    assert.ok(
+        Math.abs(landscape.width / landscape.height - 1024 / 300) < 0.04,
+        "The horizontal logo must preserve its SVG aspect ratio. " + JSON.stringify(landscape),
+    );
+
+    await page.setViewportSize({ width: 390, height: 1000 });
+
+    await page.waitForFunction(
+        () => window.matchMedia("(orientation: portrait)").matches &&
+            document.querySelector("[data-hero-mobile-logo]")?.getAttribute("src") === "/logo.svg",
+        null,
+        { timeout: 10000 },
+    );
+
+    console.log(JSON.stringify({
+        mode,
+        logoPortrait: "/logo.svg",
+        logoLandscape: "/logo-completa-bra.svg",
+        landscapeAspectRatio: Number((landscape.width / landscape.height).toFixed(3)),
+        result: "passed",
+    }));
+}
+
 async function inspectStacking(page) {
     return page.evaluate(() => {
         const overlay = document.querySelector("[data-mobile-menu-overlay]");
@@ -90,6 +160,8 @@ async function testMenuOverlayAndScrollLock(browser, mode) {
 
     try {
         console.log("Testing mobile menu overlay and page scroll lock: mode=" + mode);
+
+        await testHeroMobileLogoOrientation(page, mode);
 
         await page.locator('button[aria-label="Abrir menu"]').click();
         await page.waitForSelector("[data-mobile-menu-overlay]", {
