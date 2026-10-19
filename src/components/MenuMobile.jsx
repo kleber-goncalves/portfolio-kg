@@ -39,6 +39,7 @@ function MenuMobile({ items = [] }) {
               ease: "power2.in",
           });
 
+
           tl.to(
               menuRef.current,
               {
@@ -387,7 +388,7 @@ function MenuMobile({ items = [] }) {
                                     />
                                 }
                             >
-                                <SoundVolumeSliderMobile />
+                                <SoundVolumeSliderMobile  />
                             </Suspense>
                             <span className="mt-4 block text-[9px] uppercase tracking-[0.2em] text-steel">Kleber Dev · Portfolio</span>
                         </div>

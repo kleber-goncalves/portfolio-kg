@@ -164,9 +164,9 @@ function SoundVolumeSliderMobile() {
                 borderColor: isInteracting ? "#A87852" : "#242424",
             }}
             transition={transition}
-            className="mt-3 border border-graphite bg-obsidian/40 px-4 py-4"
+            className="mt-3 border border-graphite rounded-sm bg-obsidian/40 px-4 py-4"
         >
-            <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center  justify-between gap-3">
                 <label
                     htmlFor={sliderId}
                     className="flex items-center gap-2 font-space text-[10px] uppercase tracking-[0.16em] text-steel"
@@ -258,7 +258,7 @@ function SoundVolumeSliderMobile() {
             </div>
 
             <p className="mt-3 border-t border-graphite pt-3 text-[10px] leading-4 text-steel">
-                100% é o volume de referência. O ajuste fica salvo neste navegador.
+                800% é o volume de referência. O ajuste fica salvo neste navegador.
             </p>
         </motion.section>
     );

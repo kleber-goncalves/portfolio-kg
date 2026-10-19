@@ -33,7 +33,7 @@ function SoundToggle() {
             aria-label={enabled ? "Desativar efeitos sonoros" : "Ativar efeitos sonoros"}
             title={enabled ? "Desativar efeitos sonoros" : "Ativar efeitos sonoros"}
             className="
-                flex w-full items-center justify-between gap-3
+                flex w-full rounded-sm items-center justify-between gap-3
                 border border-graphite bg-obsidian/40 px-4 py-3
                 text-left text-steel transition-colors duration-300
                 hover:border-bronze hover:text-ivory
