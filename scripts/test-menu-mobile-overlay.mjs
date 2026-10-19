@@ -34,40 +34,42 @@ async function openPage(browser, mode) {
     return { context, page };
 }
 
-async function testHeroMobileLogoOrientation(page, mode) {
-    const logo = page.locator("[data-hero-mobile-logo]");
+async function expectLogo(page, { width, height, expectedSrc, label, expectFullLogo }) {
+    await page.setViewportSize({ width, height });
 
     await page.waitForFunction(
-        () => document.querySelector("[data-hero-mobile-logo]")?.getAttribute("src") === "/logo.svg",
-        null,
+        ({ expectedSrc, expectCompactLandscape }) => {
+            const image = document.querySelector("[data-hero-mobile-logo]");
+            const isCompactLandscape = window.matchMedia(
+                "(orientation: landscape) and (max-height: 600px)",
+            ).matches;
+
+            return Boolean(
+                image &&
+                image.getAttribute("src") === expectedSrc &&
+                (expectCompactLandscape === null || isCompactLandscape === expectCompactLandscape)
+            );
+        },
+        {
+            expectedSrc,
+            expectCompactLandscape:
+                label === "phone-landscape" ? true :
+                label === "phone-portrait" ? false :
+                null,
+        },
         { timeout: 10000 },
     );
 
-    const portraitBefore = await logo.evaluate((image) => {
-        const rect = image.getBoundingClientRect();
-        return {
-            src: image.getAttribute("src"),
-            width: rect.width,
-            height: rect.height,
-        };
-    });
+    if (label.startsWith("tablet")) {
+        await page.waitForFunction(
+            () => window.matchMedia("(hover: none) and (pointer: coarse)").matches &&
+                window.innerWidth >= 768,
+            null,
+            { timeout: 10000 },
+        );
+    }
 
-    assert.equal(portraitBefore.src, "/logo.svg", "Portrait mobile must use the compact logo.");
-    assert.ok(
-        Math.abs(portraitBefore.width - portraitBefore.height) < 1,
-        "Portrait mobile should keep the existing square logo container. " + JSON.stringify(portraitBefore),
-    );
-
-    await page.setViewportSize({ width: 844, height: 390 });
-
-    await page.waitForFunction(
-        () => window.matchMedia("(orientation: landscape) and (max-height: 600px)").matches &&
-            document.querySelector("[data-hero-mobile-logo]")?.getAttribute("src") === "/logo-completa-bra.svg",
-        null,
-        { timeout: 10000 },
-    );
-
-    const landscape = await logo.evaluate((image) => {
+    const details = await page.locator("[data-hero-mobile-logo]").evaluate((image) => {
         const rect = image.getBoundingClientRect();
         return {
             src: image.getAttribute("src"),
@@ -79,31 +81,89 @@ async function testHeroMobileLogoOrientation(page, mode) {
         };
     });
 
-    assert.equal(landscape.src, "/logo-completa-bra.svg", "Compact landscape mobile must use the full logo.");
-    assert.ok(landscape.complete && landscape.naturalWidth > 0, "The full horizontal logo must load.");
-    assert.ok(
-        Math.abs(landscape.width / landscape.height - 1024 / 300) < 0.04,
-        "The horizontal logo must preserve its SVG aspect ratio. " + JSON.stringify(landscape),
+    assert.equal(
+        details.src,
+        expectedSrc,
+        label + " must use " + expectedSrc + ". " + JSON.stringify(details),
     );
 
-    await page.setViewportSize({ width: 390, height: 1000 });
+    if (expectFullLogo) {
+        assert.ok(
+            details.complete && details.naturalWidth > 0,
+            label + " must load the horizontal full logo.",
+        );
+        assert.ok(
+            Math.abs(details.width / details.height - 1024 / 300) < 0.04,
+            label + " must preserve the full logo's aspect ratio. " + JSON.stringify(details),
+        );
+    } else {
+        assert.ok(
+            Math.abs(details.width - details.height) < 1,
+            label + " should keep the existing square compact logo container. " + JSON.stringify(details),
+        );
+    }
 
+    return details;
+}
+
+async function testHeroMobileLogoOrientation(page, mode) {
     await page.waitForFunction(
-        () => window.matchMedia("(orientation: portrait)").matches &&
-            document.querySelector("[data-hero-mobile-logo]")?.getAttribute("src") === "/logo.svg",
+        () => document.querySelector("[data-hero-mobile-logo]")?.getAttribute("src") === "/logo.svg",
         null,
         { timeout: 10000 },
     );
 
+    const phonePortrait = await expectLogo(page, {
+        width: 390,
+        height: 1000,
+        expectedSrc: "/logo.svg",
+        label: "phone-portrait",
+        expectFullLogo: false,
+    });
+
+    const phoneLandscape = await expectLogo(page, {
+        width: 844,
+        height: 390,
+        expectedSrc: "/logo-completa-bra.svg",
+        label: "phone-landscape",
+        expectFullLogo: true,
+    });
+
+    const tabletPortrait = await expectLogo(page, {
+        width: 820,
+        height: 1180,
+        expectedSrc: "/logo-completa-bra.svg",
+        label: "tablet-portrait",
+        expectFullLogo: true,
+    });
+
+    const tabletLandscape = await expectLogo(page, {
+        width: 1180,
+        height: 820,
+        expectedSrc: "/logo-completa-bra.svg",
+        label: "tablet-landscape",
+        expectFullLogo: true,
+    });
+
+    // Return to the original mobile portrait viewport so the menu/scroll-lock checks
+    // below continue testing the same phone-sized layout as before.
+    await expectLogo(page, {
+        width: 390,
+        height: 1000,
+        expectedSrc: "/logo.svg",
+        label: "phone-portrait-after-resize",
+        expectFullLogo: false,
+    });
+
     console.log(JSON.stringify({
         mode,
-        logoPortrait: "/logo.svg",
-        logoLandscape: "/logo-completa-bra.svg",
-        landscapeAspectRatio: Number((landscape.width / landscape.height).toFixed(3)),
+        phonePortrait: phonePortrait.src,
+        phoneLandscape: phoneLandscape.src,
+        tabletPortrait: tabletPortrait.src,
+        tabletLandscape: tabletLandscape.src,
         result: "passed",
     }));
 }
-
 async function inspectStacking(page) {
     return page.evaluate(() => {
         const overlay = document.querySelector("[data-mobile-menu-overlay]");

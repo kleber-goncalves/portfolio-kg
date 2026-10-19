@@ -4,7 +4,8 @@ import Socials from "../components/Socials";
 import MenuMobile from "../components/MenuMobile";
 import OptimizedImage from "./OptimizedImage";
 
-function HeroMobile({ items, onReady, isCompactLandscape = false }) {
+function HeroMobile({ items, onReady, isCompactLandscape = false, isTablet = false }) {
+    const useFullLogo = isCompactLandscape || isTablet;
     useLayoutEffect(() => {
         onReady?.("mobile");
     }, [onReady]);
@@ -25,17 +26,17 @@ function HeroMobile({ items, onReady, isCompactLandscape = false }) {
                 <div
                     data-hero-mobile-logo-container
                     className={
-                        isCompactLandscape
+                        useFullLogo
                             ? "absolute left-5 top-4 w-32"
                             : "absolute left-5 top-4 h-13 w-13"
                     }
                 >
                     <img
                         data-hero-mobile-logo
-                        src={isCompactLandscape ? "/logo-completa-bra.svg" : "/logo.svg"}
+                        src={useFullLogo ? "/logo-completa-bra.svg" : "/logo.svg"}
                         alt="Kleber Dev"
                         className={
-                            isCompactLandscape
+                            useFullLogo
                                 ? "block h-auto w-full object-contain"
                                 : "h-full w-full"
                         }
