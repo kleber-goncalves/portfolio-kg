@@ -27,8 +27,8 @@ function HeroMobile({ items, onReady, isCompactLandscape = false, isTablet = fal
                     data-hero-mobile-logo-container
                     className={
                         useFullLogo
-                            ? "absolute left-5 top-4 w-32"
-                            : "absolute left-5 top-4 h-13 w-13"
+                            ? "absolute left-6 top-4 w-32"
+                            : "absolute left-2 top-4 h-13 w-13"
                     }
                 >
                     <img
