@@ -48,6 +48,7 @@
 - [Arquitetura da aplicação](#arquitetura-da-aplicação)
 - [Performance e carregamento](#performance-e-carregamento)
 - [Sistema de efeitos sonoros (UI SFX)](#sistema-de-efeitos-sonoros-ui-sfx)
+- [Efeito magnético com Motion](#efeito-magnético-com-motion)
 - [Acessibilidade](#acessibilidade)
 - [SEO e compartilhamento](#seo-e-compartilhamento)
 - [Stack tecnológico](#stack-tecnológico)
@@ -222,6 +223,14 @@ O ajuste de volume da interface utiliza uma escala de referência de **0% a 800%
 
 Para conhecer a arquitetura, exemplos React, tratamento de loops, acessibilidade, preferências e diferentes cenários, consulte a [documentação completa do sistema de sons](src/docs/sistema-de-efeitos-sonoros.md).
 
+## Efeito magnético com Motion
+
+Os links magnéticos reutilizáveis combinam valores de movimento, mola física e feedback visual por hover/foco usando [Motion for React](https://motion.dev/). O projeto mantém duas variações: <code>MagneticExternalLink</code>, com preenchimento que utiliza a origem do ponteiro e também responde ao foco, e <code>MagneticExternalLinkHover</code>, cujo preenchimento é controlado por um ancestral <code>group/preview</code>.
+
+A documentação técnica analisa os dois componentes, explica parâmetros como <code>stiffness</code>, <code>damping</code>, <code>mass</code> e <code>magneticStrength</code>, mostra como reutilizá-los e registra um detalhe de reatividade encontrado na origem do preenchimento de <code>MagneticExternalLink</code>.
+
+Consulte [Efeito magnético e preenchimento com Motion](src/docs/efeito-magnetico-motion.md) para ver a análise completa e os exemplos de implementação.
+
 ## Acessibilidade
 
 A acessibilidade é tratada como parte da experiência da interface. Entre os mecanismos identificados no código estão:
@@ -265,6 +274,7 @@ SEO técnico ajuda os mecanismos de busca a interpretar a página, mas não gara
 | [Vite 8](https://vite.dev/) | Servidor de desenvolvimento e build de produção. |
 | [Tailwind CSS 4](https://tailwindcss.com/) | Estilização e tokens visuais. |
 | [GSAP](https://gsap.com/) e [ScrollTrigger](https://gsap.com/docs/v3/Plugins/ScrollTrigger/) | Animações e interações vinculadas à rolagem. |
+| [Motion for React](https://motion.dev/) | Valores de movimento, animações spring, hover/foco e efeitos magnéticos nos links reutilizáveis. |
 | [Lenis](https://lenis.darkroom.engineering/) | Integração de rolagem suave. |
 | [Swiper](https://swiperjs.com/) | Carrossel de projetos na composição mobile. |
 | [Lucide React](https://lucide.dev/) | Ícones da interface. |
