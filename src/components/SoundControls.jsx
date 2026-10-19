@@ -26,15 +26,15 @@ function SoundControls({ className = "" }) {
     const y = useMotionValue(0);
 
     const springX = useSpring(x, {
-        stiffness: 600,
-        damping: 18,
-        mass: 0.45,
+        stiffness: 280,
+        damping: 16,
+        mass: 1.1,
     });
 
     const springY = useSpring(y, {
-        stiffness: 600,
-        damping: 18,
-        mass: 0.45,
+        stiffness: 280,
+        damping: 12,
+        mass: 1.1,
     });
 
     const handleMouseMove = (event) => {
@@ -148,19 +148,19 @@ function SoundControls({ className = "" }) {
                         id={volumePanelId}
                         role="dialog"
                         aria-label="Controle de volume dos efeitos sonoros"
-                        initial={{ opacity: 0, y: -8, scale: 0.96 }}
+                        initial={{ opacity: 0, y: -8, scale: 0 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: -6, scale: 0.97 }}
+                        exit={{ opacity: 0, y: -8, scale: 0 }}
                         transition={{
                             type: "spring",
-                            stiffness: 340,
-                            damping: 26,
-                            mass: 0.7,
+                            stiffness: 230,
+                            damping: 18,
+                            mass: 1.1,
                         }}
                         style={{ transformOrigin: "top right" }}
                         className="
-                            absolute right-0 top-full z-[80] mt-3 w-56
-                            border border-graphite bg-obsidian p-4
+                            absolute -right-9 rounded-sm top-full z-[80] mt-3 w-56
+                            border border-graphite bg-carbon/95 p-4
                             shadow-[0_18px_50px_rgba(0,0,0,0.42)]
                         "
                     >

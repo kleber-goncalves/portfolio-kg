@@ -240,7 +240,7 @@ function Slider05({
     return (
         <div
             data-cursor-trail-hidden
-            className={`group relative w-full select-none pt-8 ${className}`}
+            className={`group relative w-full select-none pt-2 ${className}`}
         >
             <AnimatePresence>
                 {isActive && (

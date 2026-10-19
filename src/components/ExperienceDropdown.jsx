@@ -42,15 +42,15 @@ function ExperienceDropdown({ experienceMode = getExperienceMode() || "full", on
     */
 
     const springX = useSpring(x, {
-        stiffness: 600,
-        damping: 18,
-        mass: 0.45,
+        stiffness: 280,
+        damping: 12,
+        mass: 1.45,
     });
 
     const springY = useSpring(y, {
-        stiffness: 600,
-        damping: 18,
-        mass: 0.45,
+        stiffness: 280,
+        damping: 12,
+        mass: 1.45,
     });
 
     /*
