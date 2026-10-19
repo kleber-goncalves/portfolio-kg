@@ -375,6 +375,8 @@ function Socials() {
                             absolute
                             inset-0
                             flex
+                            max-[390px]:flex-col
+                            min-[390px]:flex-row
                             items-center
                             justify-center
                             gap-2
@@ -387,7 +389,7 @@ function Socials() {
                     >
                         <span>Arraste</span>
 
-                        <span className="text-bronze">→</span>
+                        <span className="max-[390px]:hidden min-[390px]:block text-bronze">→</span>
 
                         <span className="text-ivory">Redes Sociais</span>
                     </div>
