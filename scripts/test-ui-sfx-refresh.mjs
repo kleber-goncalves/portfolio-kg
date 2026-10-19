@@ -206,7 +206,79 @@ try {
     );
 
     await context.close();
-    console.log("UI sound refresh regression checks passed.");
+
+    console.log("Scenario F: the two SoundControls buttons move together with a magnetic spring.");
+    const magneticContext = await browser.newContext({
+        viewport: { width: 1365, height: 900 },
+        reducedMotion: "no-preference",
+    });
+
+    try {
+        const magneticPage = await magneticContext.newPage();
+        await waitForReady(magneticPage, "Desativar efeitos sonoros");
+
+        const soundToggle = magneticPage.getByRole("button", { name: "Desativar efeitos sonoros" });
+        const volumeButton = magneticPage.getByRole("button", { name: /^Configurar volume:/ });
+        const soundGroup = soundToggle.locator("xpath=..");
+
+        let groupBounds = await soundGroup.boundingBox();
+        assert.ok(groupBounds, "The desktop SoundControls group must have a bounding box.");
+
+        await magneticPage.mouse.move(
+            groupBounds.x + groupBounds.width / 2,
+            groupBounds.y + groupBounds.height / 2,
+        );
+        await magneticPage.waitForTimeout(120);
+
+        groupBounds = await soundGroup.boundingBox();
+        const toggleBounds = await soundToggle.boundingBox();
+        const volumeBounds = await volumeButton.boundingBox();
+        assert.ok(groupBounds && toggleBounds && volumeBounds, "Both sound buttons must share a visible group.");
+
+        await magneticPage.mouse.move(
+            groupBounds.x + groupBounds.width * 0.72,
+            groupBounds.y + groupBounds.height * 0.7,
+        );
+        await magneticPage.waitForTimeout(350);
+
+        const movedGroupBounds = await soundGroup.boundingBox();
+        const movedToggleBounds = await soundToggle.boundingBox();
+        const movedVolumeBounds = await volumeButton.boundingBox();
+        assert.ok(movedGroupBounds && movedToggleBounds && movedVolumeBounds, "The magnetic group must remain visible.");
+        assert.ok(
+            Math.abs(movedGroupBounds.x - groupBounds.x) > 2,
+            "The SoundControls group must move when the pointer moves inside it.",
+        );
+
+        const toggleDelta = {
+            x: movedToggleBounds.x - toggleBounds.x,
+            y: movedToggleBounds.y - toggleBounds.y,
+        };
+        const volumeDelta = {
+            x: movedVolumeBounds.x - volumeBounds.x,
+            y: movedVolumeBounds.y - volumeBounds.y,
+        };
+        assert.ok(
+            Math.abs(toggleDelta.x - volumeDelta.x) <= 1.5 &&
+            Math.abs(toggleDelta.y - volumeDelta.y) <= 1.5,
+            "Both buttons must follow the same wrapper transform instead of moving magnetically one by one.",
+        );
+
+        await magneticPage.mouse.move(groupBounds.x - 24, groupBounds.y - 24);
+        await magneticPage.waitForTimeout(350);
+
+        const restoredBounds = await soundGroup.boundingBox();
+        assert.ok(restoredBounds, "The SoundControls group must remain present after pointer leave.");
+        assert.ok(
+            Math.abs(restoredBounds.x - groupBounds.x) <= 1.5 &&
+            Math.abs(restoredBounds.y - groupBounds.y) <= 1.5,
+            "The spring must return the complete SoundControls group to its original position.",
+        );
+    } finally {
+        await magneticContext.close();
+    }
+
+    console.log("UI sound refresh and magnetic spring checks passed.");
 } finally {
     await browser.close();
 }

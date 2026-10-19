@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, useMotionValue, useSpring } from "motion/react";
 import { ChevronDown, SlidersHorizontal, Volume2, VolumeX } from "lucide-react";
 import Slider05 from "./ui/Slider05";
 import {
@@ -21,6 +21,37 @@ function SoundControls({ className = "" }) {
     const rootRef = useRef(null);
     const volumeLabelId = useId();
     const volumePanelId = useId();
+
+    const x = useMotionValue(0);
+    const y = useMotionValue(0);
+
+    const springX = useSpring(x, {
+        stiffness: 600,
+        damping: 18,
+        mass: 0.45,
+    });
+
+    const springY = useSpring(y, {
+        stiffness: 600,
+        damping: 18,
+        mass: 0.45,
+    });
+
+    const handleMouseMove = (event) => {
+        const rect = event.currentTarget.getBoundingClientRect();
+        const mouseX = event.clientX - rect.left;
+        const mouseY = event.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        x.set((mouseX - centerX) * 0.22);
+        y.set((mouseY - centerY) * 0.22);
+    };
+
+    const handleMouseLeave = () => {
+        x.set(0);
+        y.set(0);
+    };
 
     useEffect(() => subscribeUiSounds(setEnabled), []);
     useEffect(() => subscribeUiSoundVolume(setVolume), []);
@@ -89,19 +120,26 @@ function SoundControls({ className = "" }) {
     `;
 
     return (
-        <div ref={rootRef} className={`relative inline-flex shrink-0 items-center rounded-sm border border-graphite/90 bg-obsidian/75 transition-colors duration-200 hover:border-bronze ${className}`}>
-            <button type="button" data-ui-sfx-hover onClick={handleToggle} disabled={isUpdating} aria-pressed={enabled} aria-label={enabled ? "Desativar efeitos sonoros" : "Ativar efeitos sonoros"} title={enabled ? "Desativar efeitos sonoros" : "Ativar efeitos sonoros"} className={buttonClassName}>
-                {enabled ? <Volume2 aria-hidden="true" className="h-3.5 w-3.5 text-bronze group-hover:text-[#0D0D0D]" /> : <VolumeX aria-hidden="true" className="h-3.5 w-3.5" />}
-                <span>{enabled ? "Som on" : "Som off"}</span>
-            </button>
+        <div ref={rootRef} className="relative inline-flex shrink-0 items-center">
+            <motion.div
+                onMouseMove={handleMouseMove}
+                onMouseLeave={handleMouseLeave}
+                style={{ x: springX, y: springY }}
+                className={`relative inline-flex shrink-0 items-center rounded-sm border border-graphite/90 bg-obsidian/75 transition-colors duration-200 hover:border-bronze ${className}`}
+            >
+                <button type="button" data-ui-sfx-hover onClick={handleToggle} disabled={isUpdating} aria-pressed={enabled} aria-label={enabled ? "Desativar efeitos sonoros" : "Ativar efeitos sonoros"} title={enabled ? "Desativar efeitos sonoros" : "Ativar efeitos sonoros"} className={buttonClassName}>
+                    {enabled ? <Volume2 aria-hidden="true" className="h-3.5 w-3.5 text-bronze group-hover:text-[#0D0D0D]" /> : <VolumeX aria-hidden="true" className="h-3.5 w-3.5" />}
+                    <span>{enabled ? "Som on" : "Som off"}</span>
+                </button>
 
-            <button type="button" data-ui-sfx-hover onClick={handleVolumeButton} aria-expanded={isVolumeOpen} aria-haspopup="dialog" aria-controls={volumePanelId} aria-label={`Configurar volume: ${volume}%`} title="Configurar volume" className={buttonClassName}>
-                <SlidersHorizontal aria-hidden="true" className="h-3.5 w-3.5 text-bronze group-hover:text-[#0D0D0D]" />
-                <span>{volume}%</span>
-                <motion.span aria-hidden="true" animate={{ rotate: isVolumeOpen ? 180 : 0 }} transition={{ type: "spring", stiffness: 360, damping: 22 }} className="inline-flex">
-                    <ChevronDown className="h-3 w-3 " />
-                </motion.span>
-            </button>
+                <button type="button" data-ui-sfx-hover onClick={handleVolumeButton} aria-expanded={isVolumeOpen} aria-haspopup="dialog" aria-controls={volumePanelId} aria-label={`Configurar volume: ${volume}%`} title="Configurar volume" className={buttonClassName}>
+                    <SlidersHorizontal aria-hidden="true" className="h-3.5 w-3.5 text-bronze group-hover:text-[#0D0D0D]" />
+                    <span>{volume}%</span>
+                    <motion.span aria-hidden="true" animate={{ rotate: isVolumeOpen ? 180 : 0 }} transition={{ type: "spring", stiffness: 360, damping: 22 }} className="inline-flex">
+                        <ChevronDown className="h-3 w-3 " />
+                    </motion.span>
+                </button>
+            </motion.div>
 
             <AnimatePresence>
                 {isVolumeOpen && (
