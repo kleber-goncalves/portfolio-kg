@@ -122,7 +122,7 @@ async function testHeroMobileLogoOrientation(page, mode) {
     });
 
     const phoneLandscape = await expectLogo(page, {
-        width: 844,
+        width: 667,
         height: 390,
         expectedSrc: "/logo-completa-bra.svg",
         label: "phone-landscape",
