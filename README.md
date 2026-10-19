@@ -47,6 +47,7 @@
 - [Direção visual e design](#direção-visual-e-design)
 - [Arquitetura da aplicação](#arquitetura-da-aplicação)
 - [Performance e carregamento](#performance-e-carregamento)
+- [Sistema de efeitos sonoros (UI SFX)](#sistema-de-efeitos-sonoros-ui-sfx)
 - [Acessibilidade](#acessibilidade)
 - [SEO e compartilhamento](#seo-e-compartilhamento)
 - [Stack tecnológico](#stack-tecnológico)
@@ -203,6 +204,24 @@ Os workflows do GitHub Actions realizam build de produção e verificações com
 
 **Importante:** a existência desses mecanismos não representa, por si só, uma nota específica de Lighthouse ou uma garantia de ausência de regressões. Os resultados mais recentes devem ser consultados na aba [Actions do repositório](https://github.com/kleber-goncalves/portfolio-kg/actions).
 
+## Sistema de efeitos sonoros (UI SFX)
+
+O portfólio inclui efeitos sonoros de interface para reforçar ações como abrir e fechar menus, navegar entre seções, interagir com redes sociais, arrastar elementos e ajustar o volume. A integração usa a biblioteca [UI SFX](https://uisfx.com/) por meio de uma camada central própria, em vez de cada componente criar seu próprio motor de áudio.
+
+### Como a integração é organizada
+
+- **Biblioteca:** o pacote npm <code>uisfx</code> fornece efeitos semânticos, como <code>open</code>, <code>close</code>, <code>expand</code>, <code>collapse</code>, <code>drag-start</code> e <code>volume-change</code>. O projeto usa o perfil sonoro <code>zen</code>.
+- **Camada central:** <code>src/utils/uiSfx.js</code> mantém o player compartilhado, controla o desbloqueio do áudio, o estado ativado/desativado, o volume e a persistência das preferências.
+- **Eventos desacoplados:** <code>src/utils/uiSfxEvents.js</code> disponibiliza <code>requestUiSound(cue)</code>, que envia um pedido de som para a camada central sem importar o motor de áudio em componentes como Socials e o carrossel.
+- **Controles:** <code>SoundControls.jsx</code> reúne o controle desktop; <code>SoundToggle.jsx</code> e <code>SoundVolumeSliderMobile.jsx</code> fornecem os controles usados no menu mobile.
+- **Hover:** <code>src/App.jsx</code> registra uma única camada de listeners delegados por meio de <code>attachUiSfxHoverListeners()</code>.
+
+O som não é iniciado automaticamente ao carregar a página. O sistema aguarda uma interação confiável de mouse, toque ou teclado para tentar desbloquear o áudio de acordo com as restrições do navegador. A preferência de som começa ativada quando ainda não existe uma escolha salva, mas isso não elimina a exigência de interação do usuário.
+
+O ajuste de volume da interface utiliza uma escala de referência de **0% a 800%**. Esse valor é convertido em ganho por efeito e limitado ao intervalo aceito pela fonte de áudio; portanto, 800% não significa uma multiplicação garantida de oito vezes na percepção de volume de todos os sons.
+
+Para conhecer a arquitetura, exemplos React, tratamento de loops, acessibilidade, preferências e diferentes cenários, consulte a [documentação completa do sistema de sons](src/docs/sistema-de-efeitos-sonoros.md).
+
 ## Acessibilidade
 
 A acessibilidade é tratada como parte da experiência da interface. Entre os mecanismos identificados no código estão:
@@ -249,6 +268,7 @@ SEO técnico ajuda os mecanismos de busca a interpretar a página, mas não gara
 | [Lenis](https://lenis.darkroom.engineering/) | Integração de rolagem suave. |
 | [Swiper](https://swiperjs.com/) | Carrossel de projetos na composição mobile. |
 | [Lucide React](https://lucide.dev/) | Ícones da interface. |
+| [UI SFX](https://uisfx.com/) | Efeitos sonoros semânticos de interface, integrados pelo wrapper central <code>src/utils/uiSfx.js</code>. |
 | [DotLottie React](https://lottiefiles.com/) | Suporte a animações Lottie. |
 | [Sharp](https://sharp.pixelplumbing.com/) | Geração automatizada de variantes WebP pelo script de otimização. |
 | [Playwright](https://playwright.dev/) | Automação de navegador nos testes e auditorias. |
@@ -294,7 +314,7 @@ portfolio-kg/
 │   ├── hooks/                  # Hooks compartilhados, incluindo responsividade
 │   ├── layout/                 # Seções principais do portfólio
 │   ├── styles/                 # Estilos específicos de componentes
-│   ├── utils/                  # Preferências e utilitários
+│   ├── utils/                  # UI SFX, preferências e utilitários
 │   ├── App.jsx
 │   ├── App.css
 │   └── main.jsx
