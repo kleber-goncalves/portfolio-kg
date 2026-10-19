@@ -157,10 +157,7 @@ function SoundVolumeSliderMobile() {
     return (
         <motion.section
             data-mobile-sound-volume
-            initial={{ opacity: 0, y: reducedMotion ? 0 : 8 }}
             animate={{
-                opacity: 1,
-                y: 0,
                 borderColor: isInteracting ? "#A87852" : "#242424",
             }}
             transition={transition}

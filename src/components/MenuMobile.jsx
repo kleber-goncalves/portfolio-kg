@@ -23,7 +23,7 @@ function MenuMobile({ items = [] }) {
          if (!menuRef.current) return;
          if (shouldPlaySound && isOpen) playUiSound("close");
 
-          const links = menuRef.current.querySelectorAll("[data-mobile-menu-link]");
+          const links = menuRef.current.querySelectorAll("[data-mobile-menu-link], [data-mobile-menu-entry]");
 
           const tl = gsap.timeline({
               onComplete: () => {
@@ -149,11 +149,11 @@ function MenuMobile({ items = [] }) {
 
         requestAnimationFrame(() => {
             const menu = menuRef.current;
-            const links = document.querySelectorAll("[data-mobile-menu-link]");
 
             if (!menu) return;
 
-
+            const links = menu.querySelectorAll("[data-mobile-menu-link]");
+            const entries = menu.querySelectorAll("[data-mobile-menu-entry]");
 
             gsap.fromTo(
                 menu,
@@ -179,6 +179,24 @@ function MenuMobile({ items = [] }) {
                     duration: 0.50,
                     stagger: 0.26,
                     delay: 0.15,
+                    ease: "power1.out",
+                },
+            );
+
+            const entriesDelay = 0.15 + Math.max(0, links.length - 1) * 0.2;
+
+            gsap.fromTo(
+                entries,
+                {
+                    opacity: 0,
+                    x: -20,
+                },
+                {
+                    opacity: 1,
+                    x: 0,
+                    duration: 0.50,
+                    stagger: 0.18,
+                    delay: entriesDelay,
                     ease: "power1.out",
                 },
             );
@@ -379,17 +397,21 @@ function MenuMobile({ items = [] }) {
                         ========================================== */}
 
                         <div className="border-t border-graphite pt-5">
-                            <SoundToggle />
-                            <Suspense
-                                fallback={
-                                    <div
-                                        aria-hidden="true"
-                                        className="mt-3 h-[104px] border border-graphite bg-obsidian/40"
-                                    />
-                                }
-                            >
-                                <SoundVolumeSliderMobile  />
-                            </Suspense>
+                            <div data-mobile-menu-entry>
+                                <SoundToggle />
+                            </div>
+                            <div data-mobile-menu-entry>
+                                <Suspense
+                                    fallback={
+                                        <div
+                                            aria-hidden="true"
+                                            className="mt-3 h-[104px] border border-graphite bg-obsidian/40"
+                                        />
+                                    }
+                                >
+                                    <SoundVolumeSliderMobile />
+                                </Suspense>
+                            </div>
                             <span className="mt-4 block text-[9px] uppercase tracking-[0.2em] text-steel">Kleber Dev · Portfolio</span>
                         </div>
                     </nav>

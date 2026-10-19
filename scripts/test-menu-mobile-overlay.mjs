@@ -101,6 +101,35 @@ async function testMenuOverlayAndScrollLock(browser, mode) {
             timeout: 10000,
         });
 
+        const soundEntries = page.locator("[data-mobile-menu-entry]");
+        assert.equal(
+            await soundEntries.count(),
+            2,
+            "Sound toggle and volume slider must have independent entry-animation wrappers.",
+        );
+
+        await page.waitForFunction(() => {
+            const entries = [...document.querySelectorAll("[data-mobile-menu-entry]")];
+            return entries.length === 2 && entries.every((entry) => {
+                const style = getComputedStyle(entry);
+                const translateX = style.transform === "none"
+                    ? 0
+                    : new DOMMatrixReadOnly(style.transform).m41;
+                return Number(style.opacity) < 0.99 && translateX < -1;
+            });
+        }, null, { timeout: 5000 });
+
+        await page.waitForFunction(() => {
+            const entries = [...document.querySelectorAll("[data-mobile-menu-entry]")];
+            return entries.length === 2 && entries.every((entry) => {
+                const style = getComputedStyle(entry);
+                const translateX = style.transform === "none"
+                    ? 0
+                    : new DOMMatrixReadOnly(style.transform).m41;
+                return Number(style.opacity) >= 0.99 && Math.abs(translateX) < 0.5;
+            });
+        }, null, { timeout: 10000 });
+
         const stacking = await inspectStacking(page);
         assert.ok(stacking.overlayExists, "Mobile menu overlay must exist. " + JSON.stringify(stacking));
         assert.ok(stacking.socialsExists, "Socials drag button should remain in the DOM behind the overlay.");
