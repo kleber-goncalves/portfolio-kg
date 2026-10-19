@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
 
 import { getExperienceMode, setExperienceMode } from "../utils/experienceMode";
+import { playUiSound } from "../utils/uiSfx";
 
 function ExperienceDropdown({ experienceMode = getExperienceMode() || "full", onChange }) {
     /*
@@ -41,15 +42,15 @@ function ExperienceDropdown({ experienceMode = getExperienceMode() || "full", on
     */
 
     const springX = useSpring(x, {
-        stiffness: 600,
-        damping: 18,
-        mass: 0.45,
+        stiffness: 280,
+        damping: 12,
+        mass: 1.45,
     });
 
     const springY = useSpring(y, {
-        stiffness: 600,
-        damping: 18,
-        mass: 0.45,
+        stiffness: 280,
+        damping: 12,
+        mass: 1.45,
     });
 
     /*
@@ -100,7 +101,9 @@ function ExperienceDropdown({ experienceMode = getExperienceMode() || "full", on
     */
 
     const toggleDropdown = () => {
-        setIsOpen((previous) => !previous);
+        const nextIsOpen = !isOpen;
+        playUiSound(nextIsOpen ? "expand" : "collapse");
+        setIsOpen(nextIsOpen);
     };
 
     /*
@@ -109,21 +112,26 @@ function ExperienceDropdown({ experienceMode = getExperienceMode() || "full", on
     ============================================================
     */
 
-    const handleExperienceChange = (mode) => {
-        setIsOpen(false);
-
+    const handleExperienceChange = async (mode) => {
         if (mode === experienceMode) {
+            if (isOpen) playUiSound("collapse");
+            setIsOpen(false);
             return;
         }
+
+        // Ao escolher outro modo, o dropdown também está sendo recolhido.
+        // Espera apenas o fim do som curto, quando o áudio está ativado,
+        // antes de recarregar a página e aplicar a configuração.
+        const collapseSound = isOpen ? playUiSound("collapse") : null;
+        setIsOpen(false);
 
         setExperienceMode(mode);
 
         onChange?.(mode);
 
-        /*
-        Recarrega a página para aplicar
-        o novo modo em toda a aplicação.
-        */
+        if (collapseSound?.ended) {
+            await collapseSound.ended;
+        }
 
         window.location.reload();
     };
@@ -135,8 +143,11 @@ function ExperienceDropdown({ experienceMode = getExperienceMode() || "full", on
     */
 
     useEffect(() => {
+        if (!isOpen) return undefined;
+
         const handleClickOutside = (event) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                playUiSound("collapse");
                 setIsOpen(false);
             }
         };
@@ -146,7 +157,7 @@ function ExperienceDropdown({ experienceMode = getExperienceMode() || "full", on
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, []);
+    }, [isOpen]);
 
     /*
     ============================================================
@@ -168,6 +179,7 @@ function ExperienceDropdown({ experienceMode = getExperienceMode() || "full", on
             ================================================== */}
 
             <motion.button
+                data-ui-sfx-hover
                 type="button"
                 aria-expanded={isOpen}
                 aria-haspopup="menu"

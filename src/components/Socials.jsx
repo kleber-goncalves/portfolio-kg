@@ -3,6 +3,7 @@ import gsap from "gsap";
 
 import { ArrowRight, X } from "lucide-react";
 import { Github, Linkedin, Instagram } from "@thesvg/react";
+import { requestUiSound } from "../utils/uiSfxEvents";
 
 function Socials() {
     const [isOpen, setIsOpen] = useState(false);
@@ -18,6 +19,10 @@ function Socials() {
     const maxDrag = useRef(0);
 
     const isDragging = useRef(false);
+    const lastDragSoundAt = useRef(0);
+    const lastDragSoundX = useRef(0);
+    const isOpenRef = useRef(false);
+    const isClosingRef = useRef(false);
 
     const socials = [
         {
@@ -78,8 +83,10 @@ function Socials() {
     // =========================================
 
     const openSocials = () => {
-        if (isOpen) return;
+        if (isOpenRef.current || isClosingRef.current) return;
 
+        isOpenRef.current = true;
+        requestUiSound("expand");
         setIsOpen(true);
 
         requestAnimationFrame(() => {
@@ -108,7 +115,14 @@ function Socials() {
     // =========================================
 
     const closeSocials = () => {
+        if (!isOpenRef.current || isClosingRef.current) return;
+
+        isClosingRef.current = true;
+        requestUiSound("collapse");
+
         if (!panelRef.current) {
+            isOpenRef.current = false;
+            isClosingRef.current = false;
             setIsOpen(false);
             return;
         }
@@ -120,6 +134,8 @@ function Socials() {
             duration: 0.3,
             ease: "power2.in",
             onComplete: () => {
+                isOpenRef.current = false;
+                isClosingRef.current = false;
                 setIsOpen(false);
             },
         });
@@ -175,6 +191,8 @@ function Socials() {
         startX.current = event.clientX;
 
         currentX.current = 0;
+        lastDragSoundAt.current = 0;
+        lastDragSoundX.current = 0;
 
         event.currentTarget.setPointerCapture(event.pointerId);
 
@@ -200,6 +218,18 @@ function Socials() {
         const distance = Math.max(0, Math.min(delta, maxDrag.current));
 
         currentX.current = distance;
+
+        // Reproduz o cue durante o movimento, sem dispará-lo a cada pixel.
+        const soundDistance = Math.abs(distance - lastDragSoundX.current);
+        const now = performance.now();
+        if (
+            soundDistance >= 24 &&
+            (lastDragSoundAt.current === 0 || now - lastDragSoundAt.current >= 180)
+        ) {
+            requestUiSound("drag-start");
+            lastDragSoundAt.current = now;
+            lastDragSoundX.current = distance;
+        }
 
         // =====================================
         // PROGRESSO
@@ -345,6 +375,8 @@ function Socials() {
                             absolute
                             inset-0
                             flex
+                            max-[390px]:flex-col
+                            min-[390px]:flex-row
                             items-center
                             justify-center
                             gap-2
@@ -357,7 +389,7 @@ function Socials() {
                     >
                         <span>Arraste</span>
 
-                        <span className="text-bronze">→</span>
+                        <span className="max-[390px]:hidden min-[390px]:block text-bronze">→</span>
 
                         <span className="text-ivory">Redes Sociais</span>
                     </div>

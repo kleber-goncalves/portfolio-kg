@@ -3,6 +3,7 @@ import {
     useMotionValue,
     useSpring,
 } from "motion/react";
+import { playUiSound } from "../utils/uiSfx";
 
 function MagneticExternalLinkHover({
     href = "#",
@@ -120,6 +121,14 @@ function MagneticExternalLinkHover({
             href={href}
             target={target}
             rel={rel}
+            data-ui-sfx-hover
+            onPointerDown={() => playUiSound("press")}
+            onClick={(event) => {
+                // Também toca ao ativar o link pelo teclado.
+                if (event.detail === 0) {
+                    playUiSound("press");
+                }
+            }}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
             style={{
@@ -190,8 +199,6 @@ function MagneticExternalLinkHover({
                     backgroundColor: "var(--accent-color)",
                 }}
             />
-
-
 
             {/* =====================================================
                 CONTEÚDO

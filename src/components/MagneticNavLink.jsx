@@ -177,6 +177,7 @@ function MagneticLink({
             to={href}
             aria-current={isActive ? "location" : undefined}
             onClick={handleClick}
+            data-ui-sfx-hover
             onMouseEnter={handleMouseEnter}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}

@@ -1,6 +1,7 @@
 import { motion, useMotionValue, useSpring } from "motion/react";
 
 import { useState } from "react";
+import { playUiSound } from "../utils/uiSfx";
 
 function MagneticExternalLink({
     href = "#",
@@ -156,6 +157,14 @@ function MagneticExternalLink({
             href={href}
             target={target}
             rel={rel}
+            data-ui-sfx-hover
+            onPointerDown={() => playUiSound("press")}
+            onClick={(event) => {
+                // Também toca ao ativar o link pelo teclado.
+                if (event.detail === 0) {
+                    playUiSound("press");
+                }
+            }}
             onMouseEnter={handleMouseEnter}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}

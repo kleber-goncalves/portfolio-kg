@@ -1,9 +1,12 @@
-import { useEffect, useState, useRef } from "react";
+import { lazy, Suspense, useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { createPortal } from "react-dom";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import gsap from "gsap";
 import { startSmoothScroll, stopSmoothScroll } from "../utils/lenisControl";
+import { playUiSound } from "../utils/uiSfx";
+import SoundToggle from "./SoundToggle";
+const SoundVolumeSliderMobile = lazy(() => import("./SoundVolumeSliderMobile"));
 
 function MenuMobile({ items = [] }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -12,14 +15,15 @@ function MenuMobile({ items = [] }) {
 
 
     const openMenu = () => {
-        
+        playUiSound("open");
         setIsOpen(true);
     };
 
-    const closeMenu = () => {
+    const closeMenu = (shouldPlaySound = true) => {
          if (!menuRef.current) return;
+         if (shouldPlaySound && isOpen) playUiSound("close");
 
-          const links = menuRef.current.querySelectorAll("[data-mobile-menu-link]");
+          const links = menuRef.current.querySelectorAll("[data-mobile-menu-link], [data-mobile-menu-entry]");
 
           const tl = gsap.timeline({
               onComplete: () => {
@@ -34,6 +38,7 @@ function MenuMobile({ items = [] }) {
               stagger: 0.05,
               ease: "power2.in",
           });
+
 
           tl.to(
               menuRef.current,
@@ -144,11 +149,11 @@ function MenuMobile({ items = [] }) {
 
         requestAnimationFrame(() => {
             const menu = menuRef.current;
-            const links = document.querySelectorAll("[data-mobile-menu-link]");
 
             if (!menu) return;
 
-
+            const links = menu.querySelectorAll("[data-mobile-menu-link]");
+            const entries = menu.querySelectorAll("[data-mobile-menu-entry]");
 
             gsap.fromTo(
                 menu,
@@ -177,6 +182,24 @@ function MenuMobile({ items = [] }) {
                     ease: "power1.out",
                 },
             );
+
+            const entriesDelay = 0.15 + Math.max(0, links.length - 1) * 0.2;
+
+            gsap.fromTo(
+                entries,
+                {
+                    opacity: 0,
+                    x: -20,
+                },
+                {
+                    opacity: 1,
+                    x: 0,
+                    duration: 0.50,
+                    stagger: 0.18,
+                    delay: entriesDelay,
+                    ease: "power1.out",
+                },
+            );
         });
     }, [isOpen]);
 
@@ -196,7 +219,8 @@ function MenuMobile({ items = [] }) {
 
     const handleNavigation = (href) => {
         pendingNavigationRef.current = href;
-        closeMenu();
+        playUiSound(href === "#hero" ? "back" : "forward");
+        closeMenu(false);
     };
 
     return (
@@ -210,6 +234,7 @@ function MenuMobile({ items = [] }) {
                     type="button"
                     onClick={openMenu}
                     aria-label="Abrir menu"
+                    data-mobile-menu-trigger
                     title="Abrir menu"
                     aria-expanded={isOpen}
                     className="
@@ -256,7 +281,12 @@ function MenuMobile({ items = [] }) {
                     <nav
                         ref={menuRef}
                         data-mobile-menu
+                        data-lenis-prevent
                         aria-label="Menu principal"
+                        style={{
+                            touchAction: "pan-y",
+                            WebkitOverflowScrolling: "touch",
+                        }}
                         className="
                             relative
                             flex
@@ -266,6 +296,7 @@ function MenuMobile({ items = [] }) {
                             flex-col
                             overflow-x-hidden
                             overflow-y-auto
+                            touch-pan-y
                             overscroll-contain
                             border-r
                             border-graphite
@@ -373,7 +404,22 @@ function MenuMobile({ items = [] }) {
                         ========================================== */}
 
                         <div className="border-t border-graphite pt-5">
-                            <span className="text-[9px] uppercase tracking-[0.2em] text-steel">Kleber Dev · Portfolio</span>
+                            <div data-mobile-menu-entry>
+                                <SoundToggle />
+                            </div>
+                            <div data-mobile-menu-entry>
+                                <Suspense
+                                    fallback={
+                                        <div
+                                            aria-hidden="true"
+                                            className="mt-3 h-[104px] border border-graphite bg-obsidian/40"
+                                        />
+                                    }
+                                >
+                                    <SoundVolumeSliderMobile />
+                                </Suspense>
+                            </div>
+                            <span className="mt-4 block text-[9px] uppercase tracking-[0.2em] text-steel">Kleber Dev · Portfolio</span>
                         </div>
                     </nav>
                 </div>,

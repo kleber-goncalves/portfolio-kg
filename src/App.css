@@ -73,6 +73,11 @@ html::-webkit-scrollbar {
   display: none; /* ou width: 0px; */
 }
 
+::selection {
+    background: #c49a78;
+    color: #26231f;
+}
+
 
 :root {
     /* Paleta de Cores */

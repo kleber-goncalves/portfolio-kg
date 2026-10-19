@@ -2,7 +2,7 @@
 import SmoothScroll from "./components/SmoothScroll";
 
 // React
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 // Layouts carregados conforme se aproximam da viewport
@@ -20,9 +20,12 @@ import Preloader from "./components/Preloader";
 
 // Experience Mode
 import { getExperienceMode } from "./utils/experienceMode";
+import { attachUiSfxHoverListeners } from "./utils/uiSfx";
 
 function App() {
     const [experienceMode] = useState(() => getExperienceMode() || "full");
+
+    useEffect(() => attachUiSfxHoverListeners(), []);
 
     return (
         <>

@@ -5,6 +5,7 @@ import { MoveLeft, MoveRight } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow } from "swiper/modules";
 import { tecnologias } from "../data/tecnologias";
+import { requestUiSound } from "../utils/uiSfxEvents";
 
 import "swiper/css";
 import "swiper/css/effect-coverflow";
@@ -186,6 +187,7 @@ function ProjetoCarouselMobile({
                     spaceBetween={16}
                     grabCursor={true}
                     speed={500}
+                    onSliderFirstMove={() => requestUiSound("drag-start")}
                     onSlideChange={(swiper) => {
                         setSlideAtual(swiper.activeIndex);
                     }}

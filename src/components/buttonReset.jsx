@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronUp } from "lucide-react";
 import { Link } from "react-router-dom";
+import { playUiSound } from "../utils/uiSfx";
 
 export default function ButtonReset() {
     const [isVisible, setIsVisible] = useState(false);
@@ -46,6 +47,7 @@ export default function ButtonReset() {
 
     const handleBackToTop = (event) => {
         event.preventDefault();
+        playUiSound("back");
 
         window.scrollTo({
             top: 0,

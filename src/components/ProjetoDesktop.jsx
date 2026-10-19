@@ -695,6 +695,7 @@ function ProjetoDesktop({ projetos, experienceMode = "full", onReady }) {
 
                         return (
                             <article
+                                data-ui-sfx-hover
                                 key={projeto.numero}
                                 data-project-index={index}
                                 className="

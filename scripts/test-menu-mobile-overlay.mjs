@@ -28,12 +28,147 @@ async function openPage(browser, mode) {
         timeout: 60000,
     });
 
-    await page.waitForSelector('button[aria-label="Abrir menu"]', { timeout: 30000 });
+    await page.waitForSelector("[data-mobile-menu-trigger]", { timeout: 30000 });
     await page.waitForTimeout(1000);
 
     return { context, page };
 }
 
+async function expectLogo(page, { width, height, expectedSrc, label, expectFullLogo }) {
+    await page.setViewportSize({ width, height });
+
+    await page.waitForFunction(
+        ({ expectedSrc, expectCompactLandscape, expectTablet }) => {
+            const image = document.querySelector("[data-hero-mobile-logo]");
+            const isCompactLandscape = window.matchMedia(
+                "(orientation: landscape) and (max-height: 600px)",
+            ).matches;
+            const isTabletViewport = window.matchMedia(
+                "(hover: none) and (pointer: coarse)",
+            ).matches && window.innerWidth >= 768;
+
+            return Boolean(
+                image &&
+                image.getAttribute("src") === expectedSrc &&
+                (expectCompactLandscape === null || isCompactLandscape === expectCompactLandscape) &&
+                (!expectTablet || isTabletViewport)
+            );
+        },
+        {
+            expectedSrc,
+            expectCompactLandscape:
+                label === "phone-landscape" ? true :
+                label === "phone-portrait" || label === "phone-portrait-after-landscape" || label === "phone-portrait-after-tablet" ? false :
+                null,
+            expectTablet: label.startsWith("tablet"),
+        },
+        { timeout: 10000 },
+    );
+
+    const details = await page.locator("[data-hero-mobile-logo]").evaluate((image) => {
+        const rect = image.getBoundingClientRect();
+        return {
+            src: image.getAttribute("src"),
+            complete: image.complete,
+            naturalWidth: image.naturalWidth,
+            naturalHeight: image.naturalHeight,
+            width: rect.width,
+            height: rect.height,
+        };
+    });
+
+    assert.equal(
+        details.src,
+        expectedSrc,
+        label + " must use " + expectedSrc + ". " + JSON.stringify(details),
+    );
+
+    if (expectFullLogo) {
+        assert.ok(
+            details.complete && details.naturalWidth > 0,
+            label + " must load the horizontal full logo.",
+        );
+        assert.ok(
+            Math.abs(details.width / details.height - 1024 / 300) < 0.04,
+            label + " must preserve the full logo's aspect ratio. " + JSON.stringify(details),
+        );
+    } else {
+        assert.ok(
+            Math.abs(details.width - details.height) < 1,
+            label + " should keep the existing square compact logo container. " + JSON.stringify(details),
+        );
+    }
+
+    return details;
+}
+
+async function testHeroMobileLogoOrientation(page, mode) {
+    await page.waitForFunction(
+        () => document.querySelector("[data-hero-mobile-logo]")?.getAttribute("src") === "/logo.svg",
+        null,
+        { timeout: 10000 },
+    );
+
+    const phonePortrait = await expectLogo(page, {
+        width: 390,
+        height: 1000,
+        expectedSrc: "/logo.svg",
+        label: "phone-portrait",
+        expectFullLogo: false,
+    });
+
+    const phoneLandscape = await expectLogo(page, {
+        width: 667,
+        height: 390,
+        expectedSrc: "/logo-completa-bra.svg",
+        label: "phone-landscape",
+        expectFullLogo: true,
+    });
+
+    // Return to phone portrait first, so the tablet-portrait case must actually
+    // switch from the compact asset to the full logo rather than reuse stale state.
+    await expectLogo(page, {
+        width: 390,
+        height: 1000,
+        expectedSrc: "/logo.svg",
+        label: "phone-portrait-after-landscape",
+        expectFullLogo: false,
+    });
+
+    const tabletPortrait = await expectLogo(page, {
+        width: 820,
+        height: 1180,
+        expectedSrc: "/logo-completa-bra.svg",
+        label: "tablet-portrait",
+        expectFullLogo: true,
+    });
+
+    const tabletLandscape = await expectLogo(page, {
+        width: 1180,
+        height: 820,
+        expectedSrc: "/logo-completa-bra.svg",
+        label: "tablet-landscape",
+        expectFullLogo: true,
+    });
+
+    // Restore the phone-sized portrait viewport for the menu/scroll-lock checks below.
+    await expectLogo(page, {
+        width: 390,
+        height: 1000,
+        expectedSrc: "/logo.svg",
+        label: "phone-portrait-after-tablet",
+        expectFullLogo: false,
+    });
+
+    console.log(JSON.stringify({
+        mode,
+        phonePortrait: phonePortrait.src,
+        phoneLandscape: phoneLandscape.src,
+        tabletPortrait: tabletPortrait.src,
+        tabletLandscape: tabletLandscape.src,
+        result: "passed",
+    }));
+}
 async function inspectStacking(page) {
     return page.evaluate(() => {
         const overlay = document.querySelector("[data-mobile-menu-overlay]");
@@ -91,7 +226,17 @@ async function testMenuOverlayAndScrollLock(browser, mode) {
     try {
         console.log("Testing mobile menu overlay and page scroll lock: mode=" + mode);
 
-        await page.locator('button[aria-label="Abrir menu"]').click();
+        await testHeroMobileLogoOrientation(page, mode);
+
+        // Reproduz o cenário do usuário: celular em paisagem, com altura reduzida.
+        await page.setViewportSize({ width: 667, height: 390 });
+        await page.waitForFunction(() =>
+            window.innerWidth === 667 &&
+            window.innerHeight === 390 &&
+            document.querySelector("[data-hero-mobile-logo]")?.getAttribute("src") === "/logo-completa-bra.svg"
+        , null, { timeout: 10000 });
+
+        await page.locator("[data-mobile-menu-trigger]").click();
         await page.waitForSelector("[data-mobile-menu-overlay]", {
             state: "visible",
             timeout: 10000,
@@ -100,6 +245,140 @@ async function testMenuOverlayAndScrollLock(browser, mode) {
             state: "visible",
             timeout: 10000,
         });
+
+        const soundEntries = page.locator("[data-mobile-menu-entry]");
+        assert.equal(
+            await soundEntries.count(),
+            2,
+            "Sound toggle and volume slider must have independent entry-animation wrappers.",
+        );
+
+        await page.waitForFunction(() => {
+            const entries = [...document.querySelectorAll("[data-mobile-menu-entry]")];
+            return entries.length === 2 && entries.every((entry) => {
+                const style = getComputedStyle(entry);
+                const translateX = style.transform === "none"
+                    ? 0
+                    : new DOMMatrixReadOnly(style.transform).m41;
+                return Number(style.opacity) < 0.99 && translateX < -1;
+            });
+        }, null, { timeout: 5000 });
+
+        await page.waitForFunction(() => {
+            const entries = [...document.querySelectorAll("[data-mobile-menu-entry]")];
+            return entries.length === 2 && entries.every((entry) => {
+                const style = getComputedStyle(entry);
+                const translateX = style.transform === "none"
+                    ? 0
+                    : new DOMMatrixReadOnly(style.transform).m41;
+                return Number(style.opacity) >= 0.99 && Math.abs(translateX) < 0.5;
+            });
+        }, null, { timeout: 10000 });
+
+        // Verifica que o painel é rolável por toque em uma tela curta de paisagem.
+        const mobilePanel = page.locator("[data-mobile-menu]");
+        const initialPanelScroll = await mobilePanel.evaluate((panel) => ({
+            scrollTop: panel.scrollTop,
+            scrollHeight: panel.scrollHeight,
+            clientHeight: panel.clientHeight,
+            touchAction: getComputedStyle(panel).touchAction,
+        }));
+
+        assert.ok(
+            initialPanelScroll.scrollHeight > initialPanelScroll.clientHeight,
+            "At landscape height, the mobile menu must have content that overflows vertically. " +
+                JSON.stringify(initialPanelScroll),
+        );
+        assert.equal(
+            initialPanelScroll.touchAction,
+            "pan-y",
+            "The mobile menu must explicitly allow vertical touch gestures.",
+        );
+
+        async function swipeUpInsideMenu() {
+            const rect = await mobilePanel.boundingBox();
+            assert.ok(rect, "Mobile menu panel must have a visible bounding box.");
+
+            const client = await page.context().newCDPSession(page);
+            try {
+                const x = Math.round(rect.x + Math.min(12, rect.width / 4));
+                const startY = Math.round(rect.y + rect.height * 0.88);
+                const endY = Math.round(rect.y + rect.height * 0.18);
+                await client.send("Input.dispatchTouchEvent", {
+                    type: "touchStart",
+                    touchPoints: [{ x, y: startY, id: 1 }],
+                });
+
+                const steps = 12;
+                for (let step = 1; step <= steps; step++) {
+                    const y = Math.round(startY + (endY - startY) * step / steps);
+                    await client.send("Input.dispatchTouchEvent", {
+                        type: "touchMove",
+                        touchPoints: [{ x, y, id: 1 }],
+                    });
+                    await page.waitForTimeout(16);
+                }
+
+                await client.send("Input.dispatchTouchEvent", {
+                    type: "touchEnd",
+                    touchPoints: [],
+                });
+            } finally {
+                await client.detach();
+            }
+
+            await page.waitForTimeout(250);
+        }
+
+        let panelScroll = initialPanelScroll;
+        for (let attempt = 0; attempt < 5; attempt++) {
+            const maxScroll = panelScroll.scrollHeight - panelScroll.clientHeight;
+            if (panelScroll.scrollTop >= maxScroll - 2) break;
+
+            await swipeUpInsideMenu();
+            panelScroll = await mobilePanel.evaluate((panel) => ({
+                scrollTop: panel.scrollTop,
+                scrollHeight: panel.scrollHeight,
+                clientHeight: panel.clientHeight,
+            }));
+        }
+
+        const maxPanelScroll = panelScroll.scrollHeight - panelScroll.clientHeight;
+        assert.ok(
+            panelScroll.scrollTop > 0,
+            "A vertical touch swipe must scroll the mobile panel, not only the page. " +
+                JSON.stringify({ initial: initialPanelScroll, after: panelScroll }),
+        );
+        assert.ok(
+            panelScroll.scrollTop >= maxPanelScroll - 24,
+            "Repeated touch swipes must let the user reach the lower menu items. " +
+                JSON.stringify({ maxPanelScroll, after: panelScroll }),
+        );
+
+        const footerEntryVisibility = await mobilePanel.evaluate((panel) => {
+            const entries = [...panel.querySelectorAll("[data-mobile-menu-entry]")];
+            const entry = entries[entries.length - 1];
+            const panelRect = panel.getBoundingClientRect();
+            const entryRect = entry?.getBoundingClientRect();
+
+            return {
+                exists: Boolean(entryRect),
+                visible: Boolean(
+                    entryRect &&
+                    entryRect.top >= panelRect.top - 1 &&
+                    entryRect.bottom <= panelRect.bottom + 1
+                ),
+                entryTop: entryRect ? Math.round(entryRect.top) : null,
+                entryBottom: entryRect ? Math.round(entryRect.bottom) : null,
+                panelTop: Math.round(panelRect.top),
+                panelBottom: Math.round(panelRect.bottom),
+            };
+        });
+        assert.ok(
+            footerEntryVisibility.exists && footerEntryVisibility.visible,
+            "The lower sound-control entry must become visible after scrolling. " +
+                JSON.stringify(footerEntryVisibility),
+        );
 
         const stacking = await inspectStacking(page);
         assert.ok(stacking.overlayExists, "Mobile menu overlay must exist. " + JSON.stringify(stacking));
@@ -138,7 +417,11 @@ async function testMenuOverlayAndScrollLock(browser, mode) {
         );
 
         // Rola sobre a área escura fora do painel, onde a página ficaria acessível sem bloqueio.
-        await page.mouse.move(viewport.width - 3, Math.round(viewport.height * 0.65));
+        const currentViewport = await page.evaluate(() => ({
+            width: window.innerWidth,
+            height: window.innerHeight,
+        }));
+        await page.mouse.move(currentViewport.width - 3, Math.round(currentViewport.height * 0.65));
         await page.mouse.wheel(0, 650);
         await page.waitForTimeout(250);
 
@@ -203,6 +486,8 @@ async function testMenuOverlayAndScrollLock(browser, mode) {
             lockedScrollY: lockBeforeWheel.scrollY,
             scrollYAfterWheel: lockAfterWheel.scrollY,
             scrollYAfterNavigation: afterNavigation.scrollY,
+            panelScrollTop: panelScroll.scrollTop,
+            panelMaxScroll: maxPanelScroll,
             result: "passed",
         }));
     } finally {

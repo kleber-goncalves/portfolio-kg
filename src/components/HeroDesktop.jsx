@@ -3,6 +3,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import ExperienceDropdown from "./ExperienceDropdown";
+import SoundControls from "./SoundControls";
 
 import Socials from "../components/Socials";
 import DotField from "../components/DotField";
@@ -870,7 +871,10 @@ if (animationCleanup) {
                             />
                         </div>
                     </div>
-                    <ExperienceDropdown experienceMode={experienceMode} />
+                    <div className="flex items-center gap-2 c-lg:gap-3">
+                        <ExperienceDropdown experienceMode={experienceMode} />
+                        <SoundControls />
+                    </div>
                 </div>
 
                 {/* =================================================

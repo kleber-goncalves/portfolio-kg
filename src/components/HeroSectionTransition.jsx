@@ -8,11 +8,12 @@ import Seclogs from "../layout/Logo2";
 const MenuDesktop = lazy(() => import("../components/MenuDesktop"));
 import useResponsive from "../hooks/useResponsive";
 import { scrollToTarget } from "../utils/lenisControl";
+import { playUiSound } from "../utils/uiSfx";
 
 gsap.registerPlugin(ScrollTrigger);
 
 function HeroSectionTransition({ experienceMode = "full" }) {
-    const { isMobileLayout } = useResponsive();
+    const { isMobileLayout, isCompactLandscape, isTablet } = useResponsive();
     const requiredHeroLayout = isMobileLayout ? "mobile" : "desktop";
     const requiredStackLayout = isMobileLayout ? "mobile" : "desktop";
     const [readyHeroLayout, setReadyHeroLayout] = useState(null);
@@ -96,6 +97,8 @@ function HeroSectionTransition({ experienceMode = "full" }) {
     // ============================================================
 
     const handleHeroNavigation = (href) => {
+        playUiSound(href === "#hero" ? "back" : "forward");
+
         if (href === "#hero") {
             scrollToTarget(0, { duration: 1.4 });
             return;
@@ -654,7 +657,7 @@ function HeroSectionTransition({ experienceMode = "full" }) {
             ================================================== */}
 
             <div ref={heroRef} className={heroWrapperClass}>
-                <Hero isMobileLayout={isMobileLayout} dotFieldFrozen={dotFieldFrozen} onNavigate={handleHeroNavigation} onReady={setReadyHeroLayout} experienceMode={experienceMode} />
+                <Hero isMobileLayout={isMobileLayout} isCompactLandscape={isCompactLandscape} isTablet={isTablet} dotFieldFrozen={dotFieldFrozen} onNavigate={handleHeroNavigation} onReady={setReadyHeroLayout} experienceMode={experienceMode} />
                 {isFullExperience === false && (
                     <div
                         className="

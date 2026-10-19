@@ -3,6 +3,8 @@ import { createPortal } from "react-dom";
 import { motion, useMotionValue, useSpring } from "motion/react";
 import { Link } from "react-router-dom";
 import { stopSmoothScroll, startSmoothScroll, scrollToTarget } from "../utils/lenisControl";
+import { playUiSound } from "../utils/uiSfx";
+import SoundToggle from "./SoundToggle";
 
 import { getExperienceMode, setExperienceMode } from "../utils/experienceMode";
 
@@ -110,6 +112,12 @@ function MenuDesktop({ items = [], showMenu = false }) {
         // =====================================
 
         const handleWheel = (event) => {
+            // Se o viewport mudou enquanto o menu desktop estava aberto, preserve
+            // a rolagem independente do painel mobile que possa estar visível.
+            if (event.target instanceof Element && event.target.closest("[data-mobile-menu]")) {
+                return;
+            }
+
             event.preventDefault();
         };
 
@@ -118,6 +126,12 @@ function MenuDesktop({ items = [], showMenu = false }) {
         // =====================================
 
         const handleTouchMove = (event) => {
+            // Não cancele gestos que pertencem ao painel mobile após uma mudança
+            // de orientação ou viewport.
+            if (event.target instanceof Element && event.target.closest("[data-mobile-menu]")) {
+                return;
+            }
+
             event.preventDefault();
         };
 
@@ -220,9 +234,9 @@ function MenuDesktop({ items = [], showMenu = false }) {
     // FECHAR MENU
     // =====================================
 
-    const closeMenu = () => {
-        // Esconde o conteúdo imediatamente
-
+    const closeMenu = (shouldPlaySound = true) => {
+        // O menu pode fechar por Escape ou pelo backdrop. Ao navegar, usamos o som da navegação.
+        if (shouldPlaySound && isOpen) playUiSound("collapse");
         setIsOpen(false);
     };
 
@@ -302,25 +316,9 @@ function MenuDesktop({ items = [], showMenu = false }) {
     // =====================================
 
     const handleToggle = () => {
-        setIsOpen((previous) => {
-            const next = !previous;
-
-            // Se estiver fechando,
-            // esconde o conteúdo imediatamente.
-
-            /*
-            ====================================================
-            ABERTURA
-
-            O conteúdo NÃO é liberado aqui.
-
-            Ele possui seu próprio delay através
-            da variável contentDelay abaixo.
-            ====================================================
-            */
-
-            return next;
-        });
+        const next = !isOpen;
+        setIsOpen(next);
+        playUiSound(next ? "expand" : "collapse");
     };
 
     // =====================================
@@ -341,7 +339,8 @@ function MenuDesktop({ items = [], showMenu = false }) {
         event.preventDefault();
 
         setActiveHref(href);
-        closeMenu();
+        playUiSound(href === "#hero" ? "back" : "forward");
+        closeMenu(false);
 
         // Dá dois frames para o React remover o bloqueio do menu e reativar Lenis.
         // A rolagem começa em seguida, em paralelo com a animação visual de fechamento.
@@ -1059,6 +1058,10 @@ function MenuDesktop({ items = [], showMenu = false }) {
                             </motion.button>
                         </div>
                     </motion.div>
+
+                    <div className="mt-4">
+                        <SoundToggle />
+                    </div>
 
                     {/* =====================================
                         FOOTER
