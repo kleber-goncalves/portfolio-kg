@@ -22,7 +22,7 @@ function HeroMobile({ items, onReady }) {
             {/* O conteúdo em fluxo determina a altura do Hero */}
             <div className="relative z-10 flex flex-col">
                 {/* LOGO */}
-                <div className="absolute left-5 top-6 h-10 w-10">
+                <div className="absolute left-5 top-4 h-13 w-13">
                     <img
                         src="/logo.svg"
                         alt="Kleber Dev"
