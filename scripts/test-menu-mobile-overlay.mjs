@@ -38,36 +38,32 @@ async function expectLogo(page, { width, height, expectedSrc, label, expectFullL
     await page.setViewportSize({ width, height });
 
     await page.waitForFunction(
-        ({ expectedSrc, expectCompactLandscape }) => {
+        ({ expectedSrc, expectCompactLandscape, expectTablet }) => {
             const image = document.querySelector("[data-hero-mobile-logo]");
             const isCompactLandscape = window.matchMedia(
                 "(orientation: landscape) and (max-height: 600px)",
             ).matches;
+            const isTabletViewport = window.matchMedia(
+                "(hover: none) and (pointer: coarse)",
+            ).matches && window.innerWidth >= 768;
 
             return Boolean(
                 image &&
                 image.getAttribute("src") === expectedSrc &&
-                (expectCompactLandscape === null || isCompactLandscape === expectCompactLandscape)
+                (expectCompactLandscape === null || isCompactLandscape === expectCompactLandscape) &&
+                (!expectTablet || isTabletViewport)
             );
         },
         {
             expectedSrc,
             expectCompactLandscape:
                 label === "phone-landscape" ? true :
-                label === "phone-portrait" ? false :
+                label === "phone-portrait" || label === "phone-portrait-after-landscape" || label === "phone-portrait-after-tablet" ? false :
                 null,
+            expectTablet: label.startsWith("tablet"),
         },
         { timeout: 10000 },
     );
-
-    if (label.startsWith("tablet")) {
-        await page.waitForFunction(
-            () => window.matchMedia("(hover: none) and (pointer: coarse)").matches &&
-                window.innerWidth >= 768,
-            null,
-            { timeout: 10000 },
-        );
-    }
 
     const details = await page.locator("[data-hero-mobile-logo]").evaluate((image) => {
         const rect = image.getBoundingClientRect();
@@ -129,6 +125,16 @@ async function testHeroMobileLogoOrientation(page, mode) {
         expectFullLogo: true,
     });
 
+    // Return to phone portrait first, so the tablet-portrait case must actually
+    // switch from the compact asset to the full logo rather than reuse stale state.
+    await expectLogo(page, {
+        width: 390,
+        height: 1000,
+        expectedSrc: "/logo.svg",
+        label: "phone-portrait-after-landscape",
+        expectFullLogo: false,
+    });
+
     const tabletPortrait = await expectLogo(page, {
         width: 820,
         height: 1180,
@@ -145,13 +151,12 @@ async function testHeroMobileLogoOrientation(page, mode) {
         expectFullLogo: true,
     });
 
-    // Return to the original mobile portrait viewport so the menu/scroll-lock checks
-    // below continue testing the same phone-sized layout as before.
+    // Restore the phone-sized portrait viewport for the menu/scroll-lock checks below.
     await expectLogo(page, {
         width: 390,
         height: 1000,
         expectedSrc: "/logo.svg",
-        label: "phone-portrait-after-resize",
+        label: "phone-portrait-after-tablet",
         expectFullLogo: false,
     });
 
