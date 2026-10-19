@@ -112,6 +112,12 @@ function MenuDesktop({ items = [], showMenu = false }) {
         // =====================================
 
         const handleWheel = (event) => {
+            // Se o viewport mudou enquanto o menu desktop estava aberto, preserve
+            // a rolagem independente do painel mobile que possa estar visível.
+            if (event.target instanceof Element && event.target.closest("[data-mobile-menu]")) {
+                return;
+            }
+
             event.preventDefault();
         };
 
@@ -120,6 +126,12 @@ function MenuDesktop({ items = [], showMenu = false }) {
         // =====================================
 
         const handleTouchMove = (event) => {
+            // Não cancele gestos que pertencem ao painel mobile após uma mudança
+            // de orientação ou viewport.
+            if (event.target instanceof Element && event.target.closest("[data-mobile-menu]")) {
+                return;
+            }
+
             event.preventDefault();
         };
 

@@ -28,7 +28,7 @@ async function openPage(browser, mode) {
         timeout: 60000,
     });
 
-    await page.waitForSelector('button[aria-label="Abrir menu"]', { timeout: 30000 });
+    await page.waitForSelector("[data-mobile-menu-trigger]", { timeout: 30000 });
     await page.waitForTimeout(1000);
 
     return { context, page };
@@ -228,7 +228,15 @@ async function testMenuOverlayAndScrollLock(browser, mode) {
 
         await testHeroMobileLogoOrientation(page, mode);
 
-        await page.locator('button[aria-label="Abrir menu"]').click();
+        // Reproduz o cenário do usuário: celular em paisagem, com altura reduzida.
+        await page.setViewportSize({ width: 667, height: 390 });
+        await page.waitForFunction(() =>
+            window.innerWidth === 667 &&
+            window.innerHeight === 390 &&
+            document.querySelector("[data-hero-mobile-logo]")?.getAttribute("src") === "/logo-completa-bra.svg"
+        , null, { timeout: 10000 });
+
+        await page.locator("[data-mobile-menu-trigger]").click();
         await page.waitForSelector("[data-mobile-menu-overlay]", {
             state: "visible",
             timeout: 10000,
@@ -267,6 +275,111 @@ async function testMenuOverlayAndScrollLock(browser, mode) {
             });
         }, null, { timeout: 10000 });
 
+        // Verifica que o painel é rolável por toque em uma tela curta de paisagem.
+        const mobilePanel = page.locator("[data-mobile-menu]");
+        const initialPanelScroll = await mobilePanel.evaluate((panel) => ({
+            scrollTop: panel.scrollTop,
+            scrollHeight: panel.scrollHeight,
+            clientHeight: panel.clientHeight,
+            touchAction: getComputedStyle(panel).touchAction,
+        }));
+
+        assert.ok(
+            initialPanelScroll.scrollHeight > initialPanelScroll.clientHeight,
+            "At landscape height, the mobile menu must have content that overflows vertically. " +
+                JSON.stringify(initialPanelScroll),
+        );
+        assert.equal(
+            initialPanelScroll.touchAction,
+            "pan-y",
+            "The mobile menu must explicitly allow vertical touch gestures.",
+        );
+
+        async function swipeUpInsideMenu() {
+            const rect = await mobilePanel.boundingBox();
+            assert.ok(rect, "Mobile menu panel must have a visible bounding box.");
+
+            const client = await page.context().newCDPSession(page);
+            try {
+                const x = Math.round(rect.x + Math.min(12, rect.width / 4));
+                const startY = Math.round(rect.y + rect.height * 0.88);
+                const endY = Math.round(rect.y + rect.height * 0.18);
+                await client.send("Input.dispatchTouchEvent", {
+                    type: "touchStart",
+                    touchPoints: [{ x, y: startY, id: 1 }],
+                });
+
+                const steps = 12;
+                for (let step = 1; step <= steps; step++) {
+                    const y = Math.round(startY + (endY - startY) * step / steps);
+                    await client.send("Input.dispatchTouchEvent", {
+                        type: "touchMove",
+                        touchPoints: [{ x, y, id: 1 }],
+                    });
+                    await page.waitForTimeout(16);
+                }
+
+                await client.send("Input.dispatchTouchEvent", {
+                    type: "touchEnd",
+                    touchPoints: [],
+                });
+            } finally {
+                await client.detach();
+            }
+
+            await page.waitForTimeout(250);
+        }
+
+        let panelScroll = initialPanelScroll;
+        for (let attempt = 0; attempt < 5; attempt++) {
+            const maxScroll = panelScroll.scrollHeight - panelScroll.clientHeight;
+            if (panelScroll.scrollTop >= maxScroll - 2) break;
+
+            await swipeUpInsideMenu();
+            panelScroll = await mobilePanel.evaluate((panel) => ({
+                scrollTop: panel.scrollTop,
+                scrollHeight: panel.scrollHeight,
+                clientHeight: panel.clientHeight,
+            }));
+        }
+
+        const maxPanelScroll = panelScroll.scrollHeight - panelScroll.clientHeight;
+        assert.ok(
+            panelScroll.scrollTop > 0,
+            "A vertical touch swipe must scroll the mobile panel, not only the page. " +
+                JSON.stringify({ initial: initialPanelScroll, after: panelScroll }),
+        );
+        assert.ok(
+            panelScroll.scrollTop >= maxPanelScroll - 24,
+            "Repeated touch swipes must let the user reach the lower menu items. " +
+                JSON.stringify({ maxPanelScroll, after: panelScroll }),
+        );
+
+        const footerEntryVisibility = await mobilePanel.evaluate((panel) => {
+            const entries = [...panel.querySelectorAll("[data-mobile-menu-entry]")];
+            const entry = entries[entries.length - 1];
+            const panelRect = panel.getBoundingClientRect();
+            const entryRect = entry?.getBoundingClientRect();
+
+            return {
+                exists: Boolean(entryRect),
+                visible: Boolean(
+                    entryRect &&
+                    entryRect.top >= panelRect.top - 1 &&
+                    entryRect.bottom <= panelRect.bottom + 1
+                ),
+                entryTop: entryRect ? Math.round(entryRect.top) : null,
+                entryBottom: entryRect ? Math.round(entryRect.bottom) : null,
+                panelTop: Math.round(panelRect.top),
+                panelBottom: Math.round(panelRect.bottom),
+            };
+        });
+        assert.ok(
+            footerEntryVisibility.exists && footerEntryVisibility.visible,
+            "The lower sound-control entry must become visible after scrolling. " +
+                JSON.stringify(footerEntryVisibility),
+        );
+
         const stacking = await inspectStacking(page);
         assert.ok(stacking.overlayExists, "Mobile menu overlay must exist. " + JSON.stringify(stacking));
         assert.ok(stacking.socialsExists, "Socials drag button should remain in the DOM behind the overlay.");
@@ -304,7 +417,11 @@ async function testMenuOverlayAndScrollLock(browser, mode) {
         );
 
         // Rola sobre a área escura fora do painel, onde a página ficaria acessível sem bloqueio.
-        await page.mouse.move(viewport.width - 3, Math.round(viewport.height * 0.65));
+        const currentViewport = await page.evaluate(() => ({
+            width: window.innerWidth,
+            height: window.innerHeight,
+        }));
+        await page.mouse.move(currentViewport.width - 3, Math.round(currentViewport.height * 0.65));
         await page.mouse.wheel(0, 650);
         await page.waitForTimeout(250);
 
@@ -369,6 +486,8 @@ async function testMenuOverlayAndScrollLock(browser, mode) {
             lockedScrollY: lockBeforeWheel.scrollY,
             scrollYAfterWheel: lockAfterWheel.scrollY,
             scrollYAfterNavigation: afterNavigation.scrollY,
+            panelScrollTop: panelScroll.scrollTop,
+            panelMaxScroll: maxPanelScroll,
             result: "passed",
         }));
     } finally {

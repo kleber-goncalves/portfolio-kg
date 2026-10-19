@@ -234,6 +234,7 @@ function MenuMobile({ items = [] }) {
                     type="button"
                     onClick={openMenu}
                     aria-label="Abrir menu"
+                    data-mobile-menu-trigger
                     title="Abrir menu"
                     aria-expanded={isOpen}
                     className="
@@ -280,7 +281,12 @@ function MenuMobile({ items = [] }) {
                     <nav
                         ref={menuRef}
                         data-mobile-menu
+                        data-lenis-prevent
                         aria-label="Menu principal"
+                        style={{
+                            touchAction: "pan-y",
+                            WebkitOverflowScrolling: "touch",
+                        }}
                         className="
                             relative
                             flex
@@ -290,6 +296,7 @@ function MenuMobile({ items = [] }) {
                             flex-col
                             overflow-x-hidden
                             overflow-y-auto
+                            touch-pan-y
                             overscroll-contain
                             border-r
                             border-graphite
