@@ -1,7 +1,7 @@
 # KLEBER DEV — Portfólio pessoal
 
 <p align="center">
-  <a href="https://kleber-dev1.vercel.app/" target="_blank">
+  <a href="https://kleber-goncalves-dev.vercel.app/" target="_blank">
     <img src="./public/preview.png" alt="Prévia visual do portfólio KLEBER DEV" width="100%" />
   </a>
 </p>
@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  <a href="https://kleber-dev1.vercel.app/">Acessar portfólio</a>
+  <a href="https://kleber-goncalves-dev.vercel.app/">Acessar portfólio</a>
   &nbsp;·&nbsp;
   <a href="https://github.com/kleber-goncalves">GitHub</a>
   &nbsp;·&nbsp;
@@ -87,15 +87,15 @@ O portfólio também serve como laboratório de aprendizado. Nele, consigo testa
 
 A navegação é organizada como uma página única com seções interligadas por âncoras. O menu apresenta os principais destinos:
 
-| Seção | Propósito |
-| --- | --- |
-| **Hero** | Apresentar minha identidade profissional e introduzir o portfólio. |
-| **Tecnologias e ferramentas** | Mostrar parte do ecossistema técnico que utilizo e estudo. |
-| **Competências** | Organizar conhecimentos e áreas de atuação. |
-| **Projetos** | Apresentar trabalhos com descrição, tecnologias, imagens e links externos. |
-| **Diferenciais** | Explicar características e escolhas que ajudam a contextualizar meu trabalho. |
-| **Formação e trajetória** | Reunir informações sobre minha formação e evolução em tecnologia. |
-| **Rodapé e contato** | Facilitar o acesso aos perfis externos e retornar ao início. |
+| Seção                         | Propósito                                                                     |
+| ----------------------------- | ----------------------------------------------------------------------------- |
+| **Hero**                      | Apresentar minha identidade profissional e introduzir o portfólio.            |
+| **Tecnologias e ferramentas** | Mostrar parte do ecossistema técnico que utilizo e estudo.                    |
+| **Competências**              | Organizar conhecimentos e áreas de atuação.                                   |
+| **Projetos**                  | Apresentar trabalhos com descrição, tecnologias, imagens e links externos.    |
+| **Diferenciais**              | Explicar características e escolhas que ajudam a contextualizar meu trabalho. |
+| **Formação e trajetória**     | Reunir informações sobre minha formação e evolução em tecnologia.             |
+| **Rodapé e contato**          | Facilitar o acesso aos perfis externos e retornar ao início.                  |
 
 O site usa animações de entrada, transições acionadas pelo scroll, efeitos visuais e elementos interativos. A intensidade desses efeitos depende também do modo de experiência selecionado.
 
@@ -116,24 +116,24 @@ O design foi pensado como uma experiência **editorial, minimalista e técnica**
 
 A paleta é definida principalmente em <code>src/App.css</code> e reutilizada por meio de tokens do Tailwind CSS.
 
-| Token | Cor | Uso visual |
-| --- | --- | --- |
-| **Obsidian** | <code>#0D0D0D</code> | Fundo principal e base escura. |
-| **Carbon** | <code>#151515</code> | Superfícies secundárias. |
-| **Graphite** | <code>#242424</code> | Divisórias, bordas e separação de áreas. |
-| **Ivory** | <code>#F2F0EC</code> | Texto principal e contraste. |
-| **Steel** | <code>#8B8B8B</code> | Texto secundário e informações auxiliares. |
-| **Bronze** | <code>#A87852</code> | Destaques e elementos importantes. |
-| **Warm Bronze** | <code>#C49A78</code> | Interações, realces e estados de hover. |
-| **Champagne** | <code>#D8C2AA</code> | Detalhes claros e acentos visuais. |
+| Token           | Cor                  | Uso visual                                 |
+| --------------- | -------------------- | ------------------------------------------ |
+| **Obsidian**    | <code>#0D0D0D</code> | Fundo principal e base escura.             |
+| **Carbon**      | <code>#151515</code> | Superfícies secundárias.                   |
+| **Graphite**    | <code>#242424</code> | Divisórias, bordas e separação de áreas.   |
+| **Ivory**       | <code>#F2F0EC</code> | Texto principal e contraste.               |
+| **Steel**       | <code>#8B8B8B</code> | Texto secundário e informações auxiliares. |
+| **Bronze**      | <code>#A87852</code> | Destaques e elementos importantes.         |
+| **Warm Bronze** | <code>#C49A78</code> | Interações, realces e estados de hover.    |
+| **Champagne**   | <code>#D8C2AA</code> | Detalhes claros e acentos visuais.         |
 
 ### Tipografia
 
-| Família | Papel no design |
-| --- | --- |
-| **DM Mono** | Linguagem técnica, rótulos e textos com caráter monoespaçado. |
-| **Space Grotesk** | Títulos e textos com uma presença contemporânea. |
-| **Bebas Neue** | Títulos de maior impacto e contraste tipográfico. |
+| Família           | Papel no design                                               |
+| ----------------- | ------------------------------------------------------------- |
+| **DM Mono**       | Linguagem técnica, rótulos e textos com caráter monoespaçado. |
+| **Space Grotesk** | Títulos e textos com uma presença contemporânea.              |
+| **Bebas Neue**    | Títulos de maior impacto e contraste tipográfico.             |
 
 ### Composição e movimento
 
@@ -145,7 +145,7 @@ No mobile, o projeto pode utilizar componentes diferentes — como o carrossel d
 
 O projeto utiliza React com Vite e JavaScript/JSX. A aplicação é organizada por responsabilidades: entrada da aplicação, componentes reutilizáveis, layouts de seção, dados, hooks, estilos, utilitários e recursos estáticos.
 
-~~~mermaid
+```mermaid
 flowchart TD
     A["index.html<br/>Metadados e ponto de entrada"] --> B["src/main.jsx"]
     B --> C["src/App.jsx"]
@@ -160,7 +160,7 @@ flowchart TD
     F --> L["Projetos desktop"]
     F --> M["Carrossel de projetos mobile"]
     C --> N["Rodapé"]
-~~~
+```
 
 ### Responsabilidades principais
 
@@ -191,7 +191,7 @@ Os módulos de projetos desktop e mobile são importados sob demanda. O layout m
 
 ### 3. Imagens responsivas
 
-As imagens originais dos projetos ficam em <code>src/assets/projetos/</code>. O script <code>scripts/optimize-project-images.mjs</code>, utilizado pelo workflow de otimização, gera variantes WebP e atualiza os metadados em <code>src/generated/imageMetadata.json</code>. Os arquivos gerados são disponibilizados em <code>public/_optimized/</code>.
+As imagens originais dos projetos ficam em <code>src/assets/projetos/</code>. O script <code>scripts/optimize-project-images.mjs</code>, utilizado pelo workflow de otimização, gera variantes WebP e atualiza os metadados em <code>src/generated/imageMetadata.json</code>. Os arquivos gerados são disponibilizados em <code>public/\_optimized/</code>.
 
 O componente <code>OptimizedImage</code> usa os metadados quando disponíveis para selecionar recursos responsivos por meio de <code>srcSet</code> e <code>sizes</code>, reservar dimensões e configurar carregamento e prioridade. Em geral, imagens que não precisam estar disponíveis imediatamente podem usar carregamento tardio, enquanto recursos essenciais do Hero recebem tratamento prioritário no HTML.
 
@@ -248,18 +248,18 @@ Esses recursos são uma base de trabalho, não uma declaração de conformidade 
 
 Os metadados globais ficam em <code>index.html</code>, enquanto os arquivos públicos de rastreamento ficam em <code>public/</code>.
 
-| Recurso | Implementação |
-| --- | --- |
-| **Idioma do documento** | <code>lang="pt-BR"</code>. |
-| **Título e descrição** | Título do portfólio e descrição voltada a projetos, competências e trajetória. |
-| **URL canônica** | <code>https://kleber-dev1.vercel.app/</code>. |
-| **Robots** | Diretiva <code>index,follow</code> e arquivo <code>public/robots.txt</code>. |
-| **Sitemap** | <code>public/sitemap.xml</code>, que atualmente lista a página principal. |
-| **Open Graph** | Metadados para título, descrição, site, idioma e imagem de compartilhamento. |
-| **Twitter Cards** | Cartão de compartilhamento com imagem ampla e descrição. |
-| **Dados estruturados** | JSON-LD com informações do tipo <code>Person</code> e <code>WebSite</code>. |
+| Recurso                                  | Implementação                                                                                                                  |
+| ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| **Idioma do documento**                  | <code>lang="pt-BR"</code>.                                                                                                     |
+| **Título e descrição**                   | Título do portfólio e descrição voltada a projetos, competências e trajetória.                                                 |
+| **URL canônica**                         | <code>https://kleber-goncalves-dev.vercel.app/</code>.                                                                         |
+| **Robots**                               | Diretiva <code>index,follow</code> e arquivo <code>public/robots.txt</code>.                                                   |
+| **Sitemap**                              | <code>public/sitemap.xml</code>, que atualmente lista a página principal.                                                      |
+| **Open Graph**                           | Metadados para título, descrição, site, idioma e imagem de compartilhamento.                                                   |
+| **Twitter Cards**                        | Cartão de compartilhamento com imagem ampla e descrição.                                                                       |
+| **Dados estruturados**                   | JSON-LD com informações do tipo <code>Person</code> e <code>WebSite</code>.                                                    |
 | **Imagem de preview e compartilhamento** | <code>public/preview.png</code> é usada no README e nos metadados Open Graph/Twitter para representar visualmente o portfólio. |
-| **Auditoria** | Workflow específico de SEO e acessibilidade com verificações Lighthouse para desktop e mobile. |
+| **Auditoria**                            | Workflow específico de SEO e acessibilidade com verificações Lighthouse para desktop e mobile.                                 |
 
 Como se trata de um portfólio de página única, o sitemap atual lista apenas a página inicial. Caso o domínio público seja alterado, a URL canônica, os metadados de compartilhamento, o arquivo <code>robots.txt</code> e o sitemap devem ser revisados juntos.
 
@@ -267,43 +267,43 @@ SEO técnico ajuda os mecanismos de busca a interpretar a página, mas não gara
 
 ## Stack tecnológico
 
-| Tecnologia | Utilização no projeto |
-| --- | --- |
-| [React 19](https://react.dev/) | Construção da interface e composição de componentes. |
-| [JavaScript / JSX](https://developer.mozilla.org/docs/Web/JavaScript) | Linguagem da aplicação. |
-| [Vite 8](https://vite.dev/) | Servidor de desenvolvimento e build de produção. |
-| [Tailwind CSS 4](https://tailwindcss.com/) | Estilização e tokens visuais. |
-| [GSAP](https://gsap.com/) e [ScrollTrigger](https://gsap.com/docs/v3/Plugins/ScrollTrigger/) | Animações e interações vinculadas à rolagem. |
-| [Motion for React](https://motion.dev/) | Valores de movimento, animações spring, hover/foco e efeitos magnéticos nos links reutilizáveis. |
-| [Lenis](https://lenis.darkroom.engineering/) | Integração de rolagem suave. |
-| [Swiper](https://swiperjs.com/) | Carrossel de projetos na composição mobile. |
-| [Lucide React](https://lucide.dev/) | Ícones da interface. |
-| [UI SFX](https://uisfx.com/) | Efeitos sonoros semânticos de interface, integrados pelo wrapper central <code>src/utils/uiSfx.js</code>. |
-| [DotLottie React](https://lottiefiles.com/) | Suporte a animações Lottie. |
-| [Sharp](https://sharp.pixelplumbing.com/) | Geração automatizada de variantes WebP pelo script de otimização. |
-| [Playwright](https://playwright.dev/) | Automação de navegador nos testes e auditorias. |
-| [Lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci) e [Axe](https://www.deque.com/axe/) | Auditorias automatizadas de performance, SEO e acessibilidade. |
-| [GitHub Actions](https://docs.github.com/actions) | Execução dos workflows de validação. |
-| [Vercel](https://vercel.com/) | Hospedagem e previews de deploy. |
+| Tecnologia                                                                                         | Utilização no projeto                                                                                     |
+| -------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| [React 19](https://react.dev/)                                                                     | Construção da interface e composição de componentes.                                                      |
+| [JavaScript / JSX](https://developer.mozilla.org/docs/Web/JavaScript)                              | Linguagem da aplicação.                                                                                   |
+| [Vite 8](https://vite.dev/)                                                                        | Servidor de desenvolvimento e build de produção.                                                          |
+| [Tailwind CSS 4](https://tailwindcss.com/)                                                         | Estilização e tokens visuais.                                                                             |
+| [GSAP](https://gsap.com/) e [ScrollTrigger](https://gsap.com/docs/v3/Plugins/ScrollTrigger/)       | Animações e interações vinculadas à rolagem.                                                              |
+| [Motion for React](https://motion.dev/)                                                            | Valores de movimento, animações spring, hover/foco e efeitos magnéticos nos links reutilizáveis.          |
+| [Lenis](https://lenis.darkroom.engineering/)                                                       | Integração de rolagem suave.                                                                              |
+| [Swiper](https://swiperjs.com/)                                                                    | Carrossel de projetos na composição mobile.                                                               |
+| [Lucide React](https://lucide.dev/)                                                                | Ícones da interface.                                                                                      |
+| [UI SFX](https://uisfx.com/)                                                                       | Efeitos sonoros semânticos de interface, integrados pelo wrapper central <code>src/utils/uiSfx.js</code>. |
+| [DotLottie React](https://lottiefiles.com/)                                                        | Suporte a animações Lottie.                                                                               |
+| [Sharp](https://sharp.pixelplumbing.com/)                                                          | Geração automatizada de variantes WebP pelo script de otimização.                                         |
+| [Playwright](https://playwright.dev/)                                                              | Automação de navegador nos testes e auditorias.                                                           |
+| [Lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci) e [Axe](https://www.deque.com/axe/) | Auditorias automatizadas de performance, SEO e acessibilidade.                                            |
+| [GitHub Actions](https://docs.github.com/actions)                                                  | Execução dos workflows de validação.                                                                      |
+| [Vercel](https://vercel.com/)                                                                      | Hospedagem e previews de deploy.                                                                          |
 
 ## Projetos em destaque
 
 A seção de projetos apresenta trabalhos de estudo e desenvolvimento, com imagens, descrições, tecnologias e links para demonstrações.
 
-| Projeto | Descrição e links |
-| --- | --- |
-| **Autono** | Projeto fictício para demonstrar desenvolvimento web moderno. [Abrir demonstração](https://autono-kg.vercel.app/) · [Repositório](https://github.com/kleber-goncalves/autono) |
-| **GTA VI** | Landing page inspirada na estética promocional de Grand Theft Auto VI, com foco em narrativa visual e motion design. [Abrir demonstração](https://gtavi-kg.vercel.app/) · [Repositório](https://github.com/kleber-goncalves/GTA-VI) |
-| **Clone do iPhone 17 Pro** | Estudo de interface inspirado na apresentação de produto da Apple. [Abrir demonstração](https://iphone-17-pro-kg.vercel.app/) · [Repositório](https://github.com/kleber-goncalves/iphone-17-PRO-MAX) |
-| **Portfólio de Arquitetura — DNC** | Projeto focado em interface de arquitetura, React e integração com APIs. [Abrir demonstração](https://dnc-arq-kleber.vercel.app/) · [Repositório](https://github.com/kleber-goncalves/dnc-arq-kleber) |
-| **Dashboard de Vendas — DNC** | Projeto didático de visualização e organização de métricas. [Abrir demonstração](https://dashboard-de-vendas-psi.vercel.app/) |
-| **CAFENA — Café da Região** | MVP de uma página para uma cafeteria fictícia, com foco em apresentação visual. [Abrir demonstração](https://coffe-page-kl.vercel.app/) · [Repositório](https://github.com/kleber-goncalves/coffe-page) |
+| Projeto                            | Descrição e links                                                                                                                                                                                                                   |
+| ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Autono**                         | Projeto fictício para demonstrar desenvolvimento web moderno. [Abrir demonstração](https://autono-kg.vercel.app/) · [Repositório](https://github.com/kleber-goncalves/autono)                                                       |
+| **GTA VI**                         | Landing page inspirada na estética promocional de Grand Theft Auto VI, com foco em narrativa visual e motion design. [Abrir demonstração](https://gtavi-kg.vercel.app/) · [Repositório](https://github.com/kleber-goncalves/GTA-VI) |
+| **Clone do iPhone 17 Pro**         | Estudo de interface inspirado na apresentação de produto da Apple. [Abrir demonstração](https://iphone-17-pro-kg.vercel.app/) · [Repositório](https://github.com/kleber-goncalves/iphone-17-PRO-MAX)                                |
+| **Portfólio de Arquitetura — DNC** | Projeto focado em interface de arquitetura, React e integração com APIs. [Abrir demonstração](https://dnc-arq-kleber.vercel.app/) · [Repositório](https://github.com/kleber-goncalves/dnc-arq-kleber)                               |
+| **Dashboard de Vendas — DNC**      | Projeto didático de visualização e organização de métricas. [Abrir demonstração](https://dashboard-de-vendas-psi.vercel.app/)                                                                                                       |
+| **CAFENA — Café da Região**        | MVP de uma página para uma cafeteria fictícia, com foco em apresentação visual. [Abrir demonstração](https://coffe-page-kl.vercel.app/) · [Repositório](https://github.com/kleber-goncalves/coffe-page)                             |
 
 Os projetos e respectivos destinos podem evoluir. Para informações atualizadas sobre cada trabalho, consulte os links da própria demonstração e dos repositórios.
 
 ## Estrutura do repositório
 
-~~~text
+```text
 portfolio-kg/
 ├── .github/
 │   └── workflows/             # Auditorias e testes automatizados
@@ -332,7 +332,7 @@ portfolio-kg/
 ├── package.json
 ├── vite.config.js
 └── README.md
-~~~
+```
 
 ## Executar localmente
 
@@ -344,32 +344,32 @@ portfolio-kg/
 
 ### Instalação
 
-~~~bash
+```bash
 git clone https://github.com/kleber-goncalves/portfolio-kg.git
 cd portfolio-kg
 npm ci
 npm run dev
-~~~
+```
 
 O Vite mostrará no terminal o endereço local de desenvolvimento. Por padrão, a aplicação utiliza a porta <code>5173</code>; se essa porta já estiver ocupada, o servidor poderá apresentar um erro porque <code>strictPort</code> está habilitado.
 
 ### Build de produção
 
-~~~bash
+```bash
 npm run build
 npm run preview
-~~~
+```
 
 O comando de build gera os arquivos de produção em <code>dist/</code>. O comando preview serve essa versão para uma verificação local antes do deploy.
 
 ## Scripts disponíveis
 
-| Comando | Finalidade |
-| --- | --- |
-| <code>npm run dev</code> | Inicia o servidor de desenvolvimento do Vite. |
-| <code>npm run build</code> | Gera a versão de produção. |
-| <code>npm run preview</code> | Serve localmente a build de produção. |
-| <code>npm run lint</code> | Executa o ESLint no projeto. |
+| Comando                      | Finalidade                                    |
+| ---------------------------- | --------------------------------------------- |
+| <code>npm run dev</code>     | Inicia o servidor de desenvolvimento do Vite. |
+| <code>npm run build</code>   | Gera a versão de produção.                    |
+| <code>npm run preview</code> | Serve localmente a build de produção.         |
+| <code>npm run lint</code>    | Executa o ESLint no projeto.                  |
 
 O <code>package.json</code> não declara atualmente um comando <code>npm test</code>. Os testes especializados listados na próxima seção são executados por scripts e workflows do GitHub Actions.
 
@@ -377,29 +377,29 @@ O <code>package.json</code> não declara atualmente um comando <code>npm test</c
 
 A automação de qualidade está em <code>.github/workflows/</code>. Ela combina build de produção, auditorias em navegador e verificações específicas dos componentes mais interativos.
 
-| Workflow | O que verifica |
-| --- | --- |
-| [Lighthouse Performance](.github/workflows/lighthouse-performance.yml) | Build e análise Lighthouse em um preview da Vercel. |
-| [Lighthouse Experience Modes](.github/workflows/lighthouse-experience-modes.yml) | Comparação de resultados entre os modos Full e Reduced. |
-| [Accessibility and SEO Audit](.github/workflows/accessibility-seo.yml) | Build de produção, Lighthouse mobile/desktop e verificações Axe com Playwright. |
-| [Desktop Scroll Interaction Performance](.github/workflows/desktop-scroll-performance.yml) | Medição de interação durante a rolagem desktop nos modos de experiência. |
-| [Deferred Section and Project Code Splitting](.github/workflows/test-code-splitting.yml) | Verificação do carregamento de módulos e seções para desktop e mobile. |
-| [Analyze JavaScript Bundle](.github/workflows/analyze-js-performance.yml) | Análise do bundle JavaScript. |
-| [Analyze JavaScript Runtime Coverage](.github/workflows/analyze-js-runtime-coverage.yml) | Inspeção de cobertura de JavaScript em execução. |
-| [Optimize project images](.github/workflows/optimize-project-images.yml) | Geração das variantes WebP e atualização de metadados de imagem. |
+| Workflow                                                                                   | O que verifica                                                                  |
+| ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------- |
+| [Lighthouse Performance](.github/workflows/lighthouse-performance.yml)                     | Build e análise Lighthouse em um preview da Vercel.                             |
+| [Lighthouse Experience Modes](.github/workflows/lighthouse-experience-modes.yml)           | Comparação de resultados entre os modos Full e Reduced.                         |
+| [Accessibility and SEO Audit](.github/workflows/accessibility-seo.yml)                     | Build de produção, Lighthouse mobile/desktop e verificações Axe com Playwright. |
+| [Desktop Scroll Interaction Performance](.github/workflows/desktop-scroll-performance.yml) | Medição de interação durante a rolagem desktop nos modos de experiência.        |
+| [Deferred Section and Project Code Splitting](.github/workflows/test-code-splitting.yml)   | Verificação do carregamento de módulos e seções para desktop e mobile.          |
+| [Analyze JavaScript Bundle](.github/workflows/analyze-js-performance.yml)                  | Análise do bundle JavaScript.                                                   |
+| [Analyze JavaScript Runtime Coverage](.github/workflows/analyze-js-runtime-coverage.yml)   | Inspeção de cobertura de JavaScript em execução.                                |
+| [Optimize project images](.github/workflows/optimize-project-images.yml)                   | Geração das variantes WebP e atualização de metadados de imagem.                |
 
 Há também workflows e scripts voltados a interações específicas, incluindo menu desktop em Reduced, menu mobile, loop de logos, painel de redes sociais e scroll da trajetória.
 
 ### Fluxo resumido de validação
 
-~~~mermaid
+```mermaid
 flowchart LR
     A["Alteração no código"] --> B["GitHub Actions"]
     B --> C["Instalação e build"]
     C --> D["Testes e auditorias"]
     D --> E["Relatórios e artifacts"]
     E --> F["Revisar resultados antes de concluir"]
-~~~
+```
 
 Os resultados dependem da execução mais recente e das condições de cada workflow. Consulte [Actions](https://github.com/kleber-goncalves/portfolio-kg/actions) para ver o status real, abrir logs e consultar relatórios armazenados como artifacts.
 
@@ -407,7 +407,7 @@ Os resultados dependem da execução mais recente e das condições de cada work
 
 **Kleber Gonçalves** — portfólio pessoal de desenvolvimento web.
 
-- **Portfólio:** [kleber-dev1.vercel.app](https://kleber-dev1.vercel.app/)
+- **Portfólio:** [kleber-dev1.vercel.app](https://kleber-goncalves-dev.vercel.app/)
 - **GitHub:** [kleber-goncalves](https://github.com/kleber-goncalves)
 - **LinkedIn:** [Kleber Gonçalves](https://www.linkedin.com/in/kleber-goncalve-s/)
 
