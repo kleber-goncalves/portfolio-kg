@@ -275,6 +275,127 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 <!-- BEGIN AUTO-GENERATED SECTION -->
 
-Aguarde a primeira execução do workflow `AI Context — Synchronize` para gerar o inventário a partir da branch e do commit.
+## Snapshot automatizado do repositório
+
+> Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
+
+- **Commit de código analisado:** `e53b348e4b749683e9b809f9faa8e308b6e598fa`
+- **Data do commit analisado:** 2026-10-21T17:04:03-03:00
+- **Mensagem do commit:** ci(ai-context): sincronizar contexto técnico em commits e pull requests
+- **Branch de referência desta execução:** main
+- **Versão declarada do projeto:** portfolio-kg@0.0.0
+- **Scripts npm declarados:** 4
+- **Dependências de runtime:** 15
+- **Dependências de desenvolvimento:** 9
+- **Workflows encontrados:** 16
+- **Scripts de automação encontrados:** 18
+
+### Scripts npm
+
+| Comando | Definição |
+|---|---|
+| `npm run dev` | `vite --host` |
+| `npm run build` | `vite build` |
+| `npm run lint` | `eslint .` |
+| `npm run preview` | `vite preview` |
+
+### Dependências instaladas no projeto
+
+| Pacote | Versão declarada |
+|---|---|
+| `@gsap/react` | `^2.1.2` |
+| `@lottiefiles/dotlottie-react` | `^0.19.16` |
+| `@tailwindcss/vite` | `^4.3.3` |
+| `@thesvg/react` | `^3.3.1` |
+| `gsap` | `^3.15.0` |
+| `lenis` | `^1.3.26` |
+| `lucide-react` | `^1.37.0` |
+| `motion` | `^13.3.0` |
+| `react` | `^19.2.8` |
+| `react-dom` | `^19.2.8` |
+| `react-router-dom` | `^7.18.4` |
+| `swiper` | `^14.2.0` |
+| `tailwindcss` | `^4.3.3` |
+| `thesvg` | `^3.3.1` |
+| `uisfx` | `^0.4.0` |
+
+### Dependências de desenvolvimento
+
+| Pacote | Versão declarada |
+|---|---|
+| `@eslint/js` | `^10.0.1` |
+| `@types/react` | `^19.2.17` |
+| `@types/react-dom` | `^19.2.3` |
+| `@vitejs/plugin-react` | `^6.0.4` |
+| `eslint` | `^10.8.0` |
+| `eslint-plugin-react-hooks` | `^7.1.1` |
+| `eslint-plugin-react-refresh` | `^0.5.3` |
+| `globals` | `^17.7.0` |
+| `vite` | `^8.2.0` |
+
+### Workflows do GitHub Actions
+
+- `.github/workflows/accessibility-seo.yml` — Accessibility and SEO Audit
+- `.github/workflows/ai-context.yml` — AI Context — Synchronize
+- `.github/workflows/analyze-js-performance.yml` — Analyze JavaScript Bundle
+- `.github/workflows/analyze-js-runtime-coverage.yml` — Analyze Unused JavaScript
+- `.github/workflows/desktop-scroll-performance.yml` — Desktop Scroll Interaction Performance
+- `.github/workflows/lighthouse-experience-modes.yml` — Lighthouse Experience Mode Comparison
+- `.github/workflows/lighthouse-performance.yml` — Lighthouse Performance
+- `.github/workflows/logo-loop-performance.yml` — LogoLoop Visibility Performance
+- `.github/workflows/menu-desktop-reduced.yml` — Menu Desktop Reduced Visibility
+- `.github/workflows/menu-mobile-overlay.yml` — Menu Mobile Overlay And Scroll Lock
+- `.github/workflows/minha-trajetoria-scroll.yml` — Minha Trajetoria Scroll Progress
+- `.github/workflows/mobile-ui-sfx-slider.yml` — Mobile UI Sound Interactions
+- `.github/workflows/optimize-project-images.yml` — Optimize project images
+- `.github/workflows/socials-panel-performance.yml` — Socials Panel First Open Performance
+- `.github/workflows/test-code-splitting.yml` — Deferred Section and Project Code Splitting
+- `.github/workflows/ui-sfx-refresh.yml` — UI Sound Preference and Refresh
+
+### Scripts de automação
+
+- `scripts/analyze-js-bundle.mjs`
+- `scripts/analyze-js-runtime-coverage.mjs`
+- `scripts/audit-accessibility-seo.mjs`
+- `scripts/check-reduced-mode-scroll.mjs`
+- `scripts/lhci-set-experience-mode.cjs`
+- `scripts/measure-desktop-scroll-performance.mjs`
+- `scripts/optimize-project-images.mjs`
+- `scripts/summarize-lighthouse-modes.mjs`
+- `scripts/test-code-splitting.mjs`
+- `scripts/test-logo-loop-performance.mjs`
+- `scripts/test-menu-desktop-reduced.mjs`
+- `scripts/test-menu-mobile-overlay.mjs`
+- `scripts/test-minha-trajetoria-scroll.mjs`
+- `scripts/test-mobile-socials-ui-sfx.mjs`
+- `scripts/test-mobile-ui-sfx-slider.mjs`
+- `scripts/test-socials-panel-performance.mjs`
+- `scripts/test-ui-sfx-refresh.mjs`
+- `scripts/update-ai-context.mjs`
+
+### Diretórios principais de `src/`
+
+- `src/assets/`
+- `src/components/`
+- `src/data/`
+- `src/docs/`
+- `src/generated/`
+- `src/hooks/`
+- `src/layout/`
+- `src/styles/`
+- `src/utils/`
+
+### Oito commits recentes até o commit analisado
+
+| Commit | Data | Mensagem |
+|---|---|---|
+| `e53b348` | 2026-10-21 | ci(ai-context): sincronizar contexto técnico em commits e pull requests |
+| `7c63cb5` | 2026-10-21 | docs(ai-context): documentar estado e arquitetura atual do portfólio |
+| `de24e85` | 2026-10-21 | feat(docs): adicionar gerador do contexto automatizado para IAs |
+| `02bba3f` | 2026-10-21 | feat(Competencia): atualizar descrições para melhor clareza e foco em reutilização e segurança |
+| `733ce24` | 2026-10-21 | feat(portfolio): refine competencies and differentiators |
+| `1941376` | 2026-10-20 | fix: update references from kleber-dev1 to kleber-goncalves-dev across project files |
+| `effd79b` | 2026-10-19 | Merge pull request #32 from kleber-goncalves/dev |
+| `f3303b1` | 2026-10-19 | docs: documentar efeito magnético e preenchimento com Motion |
 
 <!-- END AUTO-GENERATED SECTION -->
