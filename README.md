@@ -57,6 +57,7 @@
 - [Executar localmente](#executar-localmente)
 - [Scripts disponíveis](#scripts-disponíveis)
 - [Qualidade e GitHub Actions](#qualidade-e-github-actions)
+- [Contexto técnico para IAs](#contexto-técnico-para-ias)
 - [Autoria e contato](#autoria-e-contato)
 
 ---
@@ -82,6 +83,12 @@ A proposta não é apenas exibir uma lista de tecnologias. Quero apresentar **co
 O objetivo principal é **apresentar meu trabalho e minha evolução como desenvolvedor**, permitindo que recrutadores, equipes técnicas, clientes e outros desenvolvedores conheçam os projetos, as decisões de implementação e as formas de entrar em contato.
 
 O portfólio também serve como laboratório de aprendizado. Nele, consigo testar e revisar técnicas de front-end, observar o impacto de animações no desempenho e documentar melhorias que podem ser verificadas pelo código e pelos workflows do repositório.
+
+## Contexto técnico para IAs
+
+O documento [\`docs/AI_CONTEXT.md\`](docs/AI_CONTEXT.md) reúne o contexto do projeto para retomar o desenvolvimento em novos chats ou com outras ferramentas de IA: propósito, arquitetura atual, decisões técnicas, funcionalidades, testes, resultados observados, problemas conhecidos e próximos passos.
+
+O workflow [AI Context — Synchronize](.github/workflows/ai-context.yml) atualiza automaticamente o snapshot verificável — commit de referência, scripts npm, dependências declaradas, inventário de workflows/scripts e histórico recente — quando há commits e pull requests no mesmo repositório. A documentação narrativa deve continuar sendo revisada quando uma mudança alterar regras, arquitetura, decisões ou comportamentos; a automação não presume que consegue entender semanticamente toda alteração de código.
 
 ## Experiência e conteúdo
 
