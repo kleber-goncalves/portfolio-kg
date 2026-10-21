@@ -279,9 +279,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `e53b348e4b749683e9b809f9faa8e308b6e598fa`
-- **Data do commit analisado:** 2026-10-21T17:04:03-03:00
-- **Mensagem do commit:** ci(ai-context): sincronizar contexto técnico em commits e pull requests
+- **Commit de código analisado:** `b5031b084aa24e3247d33c08f078b189dc89b836`
+- **Data do commit analisado:** 2026-10-21T17:05:13-03:00
+- **Mensagem do commit:** docs(readme): documentar contexto técnico para IAs
 - **Branch de referência desta execução:** main
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 4
@@ -389,13 +389,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `b5031b0` | 2026-10-21 | docs(readme): documentar contexto técnico para IAs |
+| `e9feb12` | 2026-10-21 | docs(ai-context): atualizar snapshot automaticamente |
 | `e53b348` | 2026-10-21 | ci(ai-context): sincronizar contexto técnico em commits e pull requests |
 | `7c63cb5` | 2026-10-21 | docs(ai-context): documentar estado e arquitetura atual do portfólio |
 | `de24e85` | 2026-10-21 | feat(docs): adicionar gerador do contexto automatizado para IAs |
 | `02bba3f` | 2026-10-21 | feat(Competencia): atualizar descrições para melhor clareza e foco em reutilização e segurança |
 | `733ce24` | 2026-10-21 | feat(portfolio): refine competencies and differentiators |
 | `1941376` | 2026-10-20 | fix: update references from kleber-dev1 to kleber-goncalves-dev across project files |
-| `effd79b` | 2026-10-19 | Merge pull request #32 from kleber-goncalves/dev |
-| `f3303b1` | 2026-10-19 | docs: documentar efeito magnético e preenchimento com Motion |
 
 <!-- END AUTO-GENERATED SECTION -->
