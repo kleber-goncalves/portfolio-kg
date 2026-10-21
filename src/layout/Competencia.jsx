@@ -38,13 +38,13 @@ function Competencia({ experienceMode = "full" }) {
             numero: "05",
             text: "ARCH.",
             title: "Organização e Arquitetura de Software",
-            description: "Divisão do código em partes com responsabilidades claras para facilitar a leitura, as correções, os testes e a evolução da aplicação.",
+            description: "Organização de componentes, dados e utilitários, com foco em reutilização, manutenção do código, carregamento eficiente e decisões técnicas adequadas a cada aplicação.",
         },
         {
             numero: "06",
             text: "SEC.",
             title: "Segurança e Validação",
-            description: "Cuidados para proteger aplicações, como validar dados recebidos, controlar solicitações, autenticar usuários e manter credenciais fora do código.",
+            description: "Aplicações seguras para proteger aplicações, como validar dados recebidos, controlar solicitações, autenticar usuários, tratamento de erros e cuidados com credenciais em integrações web.",
         },
     ];
 
