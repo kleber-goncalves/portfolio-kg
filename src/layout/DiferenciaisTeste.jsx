@@ -18,26 +18,26 @@ function Diferenciais({ experienceMode = "full" }) {
     const diferenciais = [
         {
             numero: "01",
-            titulo: "Foco em Design de Software",
-            texto: "Não escrevo código antes de pensar no sistema. Tomo decisões considerando arquitetura, manutenção, escalabilidade e o impacto que cada escolha pode gerar.",
+            titulo: "Performance orientada por medições",
+            texto: "Não avalio a velocidade de uma página apenas pela aparência. Uso ferramentas como Lighthouse e análises de JavaScript para encontrar oportunidades de melhoria e verificar o impacto das mudanças.",
         },
 
         {
             numero: "02",
-            titulo: "Visão de Sistema",
-            texto: "Procuro entender como frontend, backend, banco de dados, APIs e experiência do usuário se conectam para formar uma solução coerente.",
+            titulo: "Qualidade verificada automaticamente",
+            texto: "Configuro GitHub Actions para executar builds, auditorias de SEO e acessibilidade, análises de JavaScript e testes de comportamento. Assim, as mudanças passam por verificações repetíveis durante o desenvolvimento.",
         },
 
         {
             numero: "03",
-            titulo: "Aprendizado Contínuo",
-            texto: "Tenho uma postura de evolução constante. Busco compreender os fundamentos por trás das ferramentas, em vez de apenas reproduzir soluções prontas.",
+            titulo: "Experiência adaptada a diferentes usuários",
+            texto: "Considero o uso em celulares e computadores, a navegação por teclado e a preferência por movimento reduzido, buscando manter a interface acessível sem abrir mão da identidade visual.",
         },
 
         {
             numero: "04",
-            titulo: "Pensamento Orientado a Soluções",
-            texto: "Meu objetivo não é apenas fazer algo funcionar. Procuro entender o problema, avaliar alternativas e construir soluções simples, sustentáveis e úteis.",
+            titulo: "Visão da aplicação além da interface",
+            texto: "Meu foco principal é o desenvolvimento web, especialmente Front-end, mas também exploro APIs, armazenamento de dados e validação para entender como as partes da aplicação se conectam.",
         },
     ];
 
