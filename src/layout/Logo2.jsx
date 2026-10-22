@@ -17,8 +17,11 @@ function Seclogs({ onReady }) {
         if (!section) return undefined;
 
         if (!("IntersectionObserver" in window)) {
-            setShouldLoadMobile(true);
-            return undefined;
+            const fallbackTimer = window.setTimeout(() => {
+                setShouldLoadMobile(true);
+            }, 0);
+
+            return () => window.clearTimeout(fallbackTimer);
         }
 
         const observer = new IntersectionObserver(
