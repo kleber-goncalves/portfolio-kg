@@ -282,9 +282,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `c72db8c186928e6f7a4ecddd0ef063d5120b07bc`
-- **Data do commit analisado:** 2026-10-22T15:06:15-03:00
-- **Mensagem do commit:** fix: avoid synchronous state update in Logo2 effect
+- **Commit de código analisado:** `07b526971942417f59cd98cd2df494d0b5dd96f7`
+- **Data do commit analisado:** 2026-10-22T15:08:42-03:00
+- **Mensagem do commit:** remover componente CardTrajetoria
 - **Branch de referência desta execução:** main
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -399,13 +399,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `07b5269` | 2026-10-22 | remover componente CardTrajetoria |
+| `285eabf` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
 | `c72db8c` | 2026-10-22 | fix: avoid synchronous state update in Logo2 effect |
 | `5ddd08e` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
 | `5df2888` | 2026-10-22 | docs(ai-context): alinhar destinos dos pull requests |
 | `c67fcbf` | 2026-10-22 | ci: validar pull requests para main e dev |
 | `e0a0ce5` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
 | `b250642` | 2026-10-22 | docs(ai-context): esclarecer escopo do workflow de testes |
-| `d36b7db` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
-| `869a04c` | 2026-10-22 | ci: explicitar execução em qualquer push |
 
 <!-- END AUTO-GENERATED SECTION -->
