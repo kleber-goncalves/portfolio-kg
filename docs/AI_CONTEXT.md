@@ -155,7 +155,7 @@ A implementação é centralizada em `src/utils/uiSfx.js` e `src/utils/uiSfxEven
 - A preferência e o volume são persistidos no armazenamento local quando possível.
 - A interface expõe uma escala de volume de **0 a 800**; esse valor é um parâmetro de controle/ganho, não uma promessa de percepção sonora oito vezes maior.
 - O navegador pode exigir interação do visitante para desbloquear áudio. Não presumir que o som pode tocar automaticamente antes da interação.
-- Existem testes especializados para persistência, refresh, slider mobile, painel Socials e interações do carrossel.
+- Existem scripts de navegador para persistência após refresh, slider mobile, painel Socials e interações do carrossel. Eles validam fluxos integrados e complementam — mas não substituem — os testes unitários do motor de áudio.
 - Evitar duplicar o player ou criar lógica de áudio independente em cada componente.
 - Controles devem ter nomes acessíveis coerentes com o texto visível, `aria-pressed` apropriado e estados compreensíveis.
 
@@ -212,7 +212,7 @@ Para testes com Playwright, alguns workflows instalam ferramentas de forma tempo
 Notas importantes:
 - `package.json` oferece `npm test` (execução única), `npm run test:watch` (modo observação) e `npm run test:coverage` (cobertura via V8), além de `dev`, `build`, `lint` e `preview`.
 - `.github/workflows/unit-tests.yml` executa `npm ci`, `npm test`, `npm run lint` e `npm run build` em todo `push` para branches que contenham o workflow e a infraestrutura de testes; `pull_request` é filtrado para destinos `main` e `dev`. Também oferece execução manual via `workflow_dispatch`. A configuração foi propagada para `main` e `dev`; branches antigas sem esses arquivos precisam sincronizar a infraestrutura antes de executar testes em pushes próprios.
-- O primeiro conjunto de testes unitários usa Vitest/jsdom em `src/utils/test/experienceMode.test.js` e cobre nove cenários das preferências Full/Reduced. Esse registro descreve os testes existentes, não afirma que todas as execuções de CI passaram.
+- A suíte unitária atual usa Vitest/jsdom e tem **32 testes em três arquivos**: `src/utils/test/experienceMode.test.js` (9), `src/utils/test/lenisControl.test.js` (12) e `src/utils/test/uiSfxEvents.test.js` (11). Na execução local registrada em 22/10/2026, os 32 testes passaram. O workflow [Unit Tests na `dev`](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/39835048103) também concluiu com sucesso as etapas de teste, ESLint e build no commit de código `13d9186`. Isso confirma aquela execução; futuras alterações devem ser validadas novamente.
 - Os workflows atuais usam Node.js 24.
 - `vite.config.js` declara porta **3000** e `strictPort: true`; a documentação anterior no README menciona a porta padrão 5173. Verificar/corrigir essa inconsistência antes de depender de uma das portas.
 - O fato de um workflow estar verde significa que aquele job passou seus próprios checks. Não substitui testes físicos em aparelho, avaliação manual de acessibilidade ou análise de todos os fluxos.
@@ -249,7 +249,7 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 3. **Bundle:** avaliar imports de GSAP/ScrollTrigger e módulos grandes; medir o ganho antes de refatorar.
 4. **HTML inicial/SEO por rota:** se houver migração para páginas dedicadas, avaliar prerenderização e metadados por URL.
 5. **CI:** acompanhar o resultado real do workflow `Unit Tests` em `push` e `pull_request`, confirmar que teste/lint/build aparecem como etapas e ampliar a cobertura conforme necessário. A configuração do workflow, isoladamente, não prova que uma execução passou.
-6. **Testes unitários:** Vitest e jsdom estão configurados; os primeiros nove testes cobrem `experienceMode.js`. Adicionar testes de `lenisControl.js` e `uiSfxEvents.js` e corrigir casos de regressão encontrados.
+6. **Testes unitários:** Vitest e jsdom estão configurados; os três arquivos de teste cobrem `experienceMode.js`, `lenisControl.js` e `uiSfxEvents.js`, totalizando 32 casos. A próxima expansão prioritária é criar testes unitários para `uiSfx.js` (estado de áudio, desbloqueio, preferências, volume e limpeza) e `useResponsive.js` (breakpoints, orientação, touch e listeners), orientando o escopo pelo relatório `npm run test:coverage`.
 7. **Segurança de dependências:** avaliar auditoria das dependências e boas práticas de permissões de Actions, sem presumir que exista uma vulnerabilidade concreta.
 8. **Nomes de arquivos:** nomes como `HeroTeste2.jsx` e `ProjetosTeste2.jsx` podem merecer uma renomeação planejada se forem componentes consolidados; atualizar imports e validar build/testes.
 9. **Documentação de porta:** resolver a divergência entre a porta 3000 em `vite.config.js` e 5173 em partes da documentação.
@@ -258,7 +258,7 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 1. Resolver e revalidar o LCP desktop com relatórios comparáveis.
 2. Corrigir e testar os nomes acessíveis dos controles sonoros.
-3. Acompanhar os runs do workflow Unit Tests e ampliar gradualmente os testes unitários de utilitários.
+3. Executar `npm run test:coverage`, registrar a cobertura inicial e ampliar os testes unitários de `uiSfx.js` e `useResponsive.js` com mocks controlados; depois, cobrir outras lacunas reais reveladas pela cobertura.
 4. Planejar a arquitetura de rotas e o conteúdo de Home, Projetos, Sobre e Contato antes de separar as páginas.
 5. Implementar formulário de contato com envio real e proteção contra spam.
 6. Depois da mudança de rotas, atualizar metadados/sitemap, testar deep links, foco, teclado, Reduced, Lighthouse e Axe.
