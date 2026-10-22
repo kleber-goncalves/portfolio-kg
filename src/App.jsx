@@ -1,26 +1,49 @@
-// ScrollSmooth - Lenis
-import SmoothScroll from "./components/SmoothScroll";
-
-// React
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-
-// Layouts carregados conforme se aproximam da viewport
-import DeferredLayoutSection from "./components/DeferredLayoutSection";
-import DeferredProjects from "./components/DeferredProjects";
-
-// Styles
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { Link, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
 
-// Components
-import HeroSectionTransition from "./components/HeroSectionTransition";
+// Camada global da aplicação
+import SmoothScroll from "./components/SmoothScroll";
 import ButtonReset from "./components/buttonReset";
 import CursorTrail from "./components/CursorTrail";
 import Preloader from "./components/Preloader";
-
-// Experience Mode
 import { getExperienceMode } from "./utils/experienceMode";
+import { scrollToTarget } from "./utils/lenisControl";
 import { attachUiSfxHoverListeners } from "./utils/uiSfx";
+
+// As páginas são carregadas sob demanda para não enviar todo o conteúdo
+// de rotas secundárias no primeiro carregamento da Home.
+const Home = lazy(() => import("./pages/home/Home"));
+const Projetos = lazy(() => import("./pages/projetos/Projetos"));
+const Sobre = lazy(() => import("./pages/sobre/Sobre"));
+const Contato = lazy(() => import("./pages/contato/Contato"));
+
+function RouteScrollReset() {
+    const { pathname } = useLocation();
+    const previousPathname = useRef(pathname);
+
+    useEffect(() => {
+        // Não interfere no scroll/restauração inicial do navegador.
+        if (previousPathname.current === pathname) return;
+
+        previousPathname.current = pathname;
+        scrollToTarget(0, { immediate: true });
+    }, [pathname]);
+
+    return null;
+}
+
+function RouteFallback() {
+    return (
+        <div
+            role="status"
+            aria-label="Carregando página"
+            className="min-h-[50vh] bg-obsidian px-5 py-24 text-sm text-steel"
+        >
+            Carregando página...
+        </div>
+    );
+}
 
 function App() {
     const [experienceMode] = useState(() => getExperienceMode() || "full");
@@ -30,7 +53,6 @@ function App() {
     return (
         <>
             <Preloader />
-
             <CursorTrail />
 
             <SmoothScroll>
@@ -49,20 +71,23 @@ function App() {
                     </Link>
 
                     <ButtonReset />
+                    <RouteScrollReset />
 
-                    <main id="main-content" tabIndex={-1} className="w-full outline-none">
-                        <HeroSectionTransition experienceMode={experienceMode} />
-
-                        <DeferredLayoutSection section="competencia" experienceMode={experienceMode} />
-
-                        <DeferredProjects experienceMode={experienceMode} />
-
-                        <DeferredLayoutSection section="diferenciais" experienceMode={experienceMode} />
-
-                        <DeferredLayoutSection section="formacao" experienceMode={experienceMode} />
-                    </main>
-
-                    <DeferredLayoutSection section="footer" />
+                    <Suspense fallback={<RouteFallback />}>
+                        <Routes>
+                            <Route
+                                path="/"
+                                element={<Home experienceMode={experienceMode} />}
+                            />
+                            <Route
+                                path="/projetos"
+                                element={<Projetos experienceMode={experienceMode} />}
+                            />
+                            <Route path="/sobre" element={<Sobre />} />
+                            <Route path="/contato" element={<Contato />} />
+                            <Route path="*" element={<Navigate to="/" replace />} />
+                        </Routes>
+                    </Suspense>
                 </div>
             </SmoothScroll>
         </>

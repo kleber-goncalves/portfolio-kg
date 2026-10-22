@@ -7,7 +7,7 @@
 1. Leia este documento por inteiro antes de editar o código.
 2. Confirme o estado atual na branch e no commit do repositório. A seção automatizada indica a revisão usada pelo processo de sincronização; commits posteriores podem existir.
 3. Trate o código atual como fonte de verdade para o comportamento implementado. Este documento ajuda a entender contexto, mas pode estar desatualizado entre atualizações.
-4. Não confunda funcionalidade **implementada**, problema **observado**, decisão **vigente** e ideia **planejada**. As páginas `/sobre`, `/projetos` e `/contato` são uma proposta arquitetural discutida, não rotas já implementadas no estado analisado.
+4. Não confunda funcionalidade **implementada**, problema **observado**, decisão **vigente** e ideia **planejada**. As quatro rotas agora têm uma estrutura inicial; a Home foi preservada e as páginas Sobre e Contato ainda são scaffolds, não versões finais.
 5. Preserve a identidade visual, o uso de JavaScript/JSX e os comportamentos do portfólio. Não introduza TypeScript sem solicitação explícita.
 6. Faça mudanças pequenas e coesas. Antes de refatorar GSAP, ScrollTrigger, Lenis, carregamento diferido ou UI SFX, estude os fluxos atuais e os testes associados.
 7. Não declare testes aprovados sem executar ou consultar as evidências correspondentes. Diferencie testes automatizados em Chromium de validação em dispositivos físicos.
@@ -24,7 +24,7 @@
 - **Propósito:** portfólio pessoal para apresentar a identidade profissional, competências, diferenciais, formação, trajetória, tecnologias e projetos web.
 - **Público principal:** recrutadores, equipes técnicas, clientes potenciais e desenvolvedores que queiram avaliar os trabalhos.
 - **Direção:** experiência visual própria, interações cuidadas, responsividade, acessibilidade, SEO técnico e investigação contínua de desempenho. O site não deve ser tratado como um template genérico.
-- **Forma atual:** aplicação React de página única, com seções e âncoras. O projeto inclui `BrowserRouter`, mas o `App.jsx` analisado não define rotas dedicadas para Home, Sobre, Projetos e Contato.
+- **Forma atual:** aplicação React com `BrowserRouter` e rotas `/`, `/projetos`, `/sobre` e `/contato`. `src/pages/home/Home.jsx` preserva a composição da Home anterior; Projetos reutiliza a seção existente; Sobre e Contato têm estruturas iniciais que ainda precisam receber conteúdo final e validações.
 
 ## 3. Estado atual versus plano futuro
 
@@ -41,16 +41,24 @@
 - Carregamento diferido de seções e divisão de módulos por viewport.
 - Auditorias automatizadas de performance, acessibilidade, SEO e comportamentos específicos pelo GitHub Actions.
 
-### Plano discutido, ainda não tratado como implementado
+### Implementação inicial da separação de páginas
 
-Há uma proposta para reorganizar o portfólio em quatro páginas:
+- **src/App.jsx** declara as rotas `/`, `/projetos`, `/sobre` e `/contato` com React Router e carrega os componentes de página sob demanda.
+- **src/pages/home/Home.jsx** mantém a composição anterior da Home, incluindo Hero/Stack, competências, projetos, diferenciais, formação e footer diferido. Essa preservação reduz o risco de refatorar animações e seções ao mesmo tempo.
+- **src/pages/projetos/Projetos.jsx** reutiliza a seção de projetos existente como primeiro passo para uma página dedicada.
+- **src/pages/sobre/Sobre.jsx** e **src/pages/contato/Contato.jsx** são scaffolds temporários. Sobre ainda não recebeu o conteúdo migrado; Contato não tem formulário nem simula envio. Os canais GitHub e LinkedIn apontam para os perfis já usados no projeto.
+- **src/layouts/InteriorPageLayout.jsx** fornece navegação e estrutura comum às páginas internas, além de título e descrição no navegador.
+- **src/main.jsx** já inicializava `BrowserRouter`; essa configuração foi mantida. A navegação do menu personalizado da Home para as novas rotas e os metadados avançados por rota ainda precisam ser finalizados.
 
-- `/` — Home: Hero, projetos em destaque, breve apresentação/CTA e footer.
-- `/projetos` — catálogo completo dos projetos.
-- `/sobre` — trajetória, formação, competências e diferenciais.
-- `/contato` — formulário funcional para enviar uma mensagem.
+### Próximas etapas planejadas
 
-A proposta deve ser avaliada e implementada em uma mudança planejada, preservando a identidade visual. Antes de criar essas páginas, definir contratos de rota, conteúdo, títulos SEO, hierarquia dos headings, navegação, foco e testes. Não implementar um formulário que apenas simule sucesso: é necessário definir um destino real de envio, como uma função serverless ou serviço apropriado, junto com validação, estados de sucesso/erro e proteção contra spam.
+- Integrar os links da navegação atual da Home às novas rotas sem perder as âncoras de seções que continuarão na Home.
+- Decidir e migrar o conteúdo de cada página. Em especial, separar a trajetória do Hero/Stack com testes de regressão para GSAP e ScrollTrigger.
+- Construir a página Sobre usando dados e componentes existentes para trajetória, formação, competências e diferenciais, movendo para `pages/sobre/` apenas o que for realmente específico.
+- Definir a página Projetos como catálogo completo e manter na Home apenas a seleção de destaque.
+- Criar o formulário de Contato somente depois de definir um destino real de envio, validação, estados de sucesso/erro e proteção contra spam.
+- Validar build, lint, testes, navegação por teclado, foco, botão voltar/avançar, carregamento direto/reload das quatro rotas e rewrites da Vercel.
+- Atualizar sitemap/canonical/OG e avaliar prerenderização para SEO por rota; a atualização dinâmica do título/descrição no navegador não substitui prerenderização.
 
 ## 4. Stack tecnológica
 
@@ -79,7 +87,9 @@ Tecnologias principais observadas:
 Estrutura identificada no repositório:
 
 - `src/main.jsx`: inicializa React em `StrictMode` e `BrowserRouter`; inclui mensagem de boas-vindas no console do DevTools.
-- `src/App.jsx`: composição principal; Preloader, CursorTrail, SmoothScroll, link para pular ao conteúdo, Hero e seções carregadas sob demanda.
+- `src/App.jsx`: shell global, Preloader, CursorTrail, SmoothScroll, link para pular ao conteúdo, controles globais de UI SFX e definição das quatro rotas com carregamento sob demanda.
+- `src/pages/`: componentes de rota. `home/Home.jsx` mantém a composição anterior; `projetos/Projetos.jsx` reutiliza a seção de projetos; `sobre/Sobre.jsx` e `contato/Contato.jsx` são scaffolds para migração posterior.
+- `src/layouts/InteriorPageLayout.jsx`: estrutura compartilhada temporária das rotas internas, com navegação principal e metadados de título/descrição no navegador.
 - `src/layout/`: seções principais (Hero, tecnologias/Seclogs, competências, projetos, diferenciais, formação e footer).
 - `src/components/HeroSectionTransition.jsx`: controla a transição Hero/Stack e o comportamento do menu desktop associado à rolagem.
 - `src/components/DeferredLayoutSection.jsx`: carregamento diferido das seções usando `IntersectionObserver` e carregamento dinâmico.
@@ -187,12 +197,13 @@ Implementações observadas:
 
 Esses recursos são uma base de implementação, não uma declaração de conformidade integral com WCAG, nem uma garantia de indexação/ranking.
 
-Ao adicionar rotas:
-- Cada rota pública precisa de um `<h1>` único e informativo, títulos/metadados adequados e links reais com `href`.
-- Verificar navegação por teclado, foco após mudança de rota, botão de voltar/avançar e carregamento direto/reload de cada URL.
+As rotas iniciais já foram declaradas; ainda é necessário:
+- Integrar a navegação personalizada da Home com as rotas e preservar o comportamento das âncoras locais.
+- Dar conteúdo final a cada rota, com `<h1>` único e informativo e links reais.
+- Verificar navegação por teclado, foco após mudança de rota, botão voltar/avançar e carregamento direto/reload de cada URL.
 - Atualizar sitemap/canonical/OG com URLs consistentes.
 - Confirmar rewrites/fallbacks da Vercel para deep links.
-- Se SEO por rota for importante, avaliar prerenderização; hoje o HTML inicial é uma raiz React vazia para o conteúdo da aplicação.
+- Avaliar prerenderização para SEO por rota; títulos/descrições alterados no cliente não substituem conteúdo renderizado previamente.
 
 ## 12. GitHub Actions, scripts e ambiente de desenvolvimento
 
@@ -247,7 +258,7 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 1. **LCP desktop:** em uma auditoria de laboratório, LCP aproximou-se de 8 s. Investigar priorização da imagem e caminho de renderização do Hero antes de mexer no visual.
 2. **Controles sonoros:** verificar consistência entre texto visível e nome acessível dos botões, com teste dedicado.
 3. **Bundle:** avaliar imports de GSAP/ScrollTrigger e módulos grandes; medir o ganho antes de refatorar.
-4. **HTML inicial/SEO por rota:** se houver migração para páginas dedicadas, avaliar prerenderização e metadados por URL.
+4. **SEO por rota:** as rotas iniciais existem, mas precisam de conteúdo definitivo, canonical/OG consistentes, sitemap atualizado e avaliação de prerenderização.
 5. **CI:** acompanhar o resultado real do workflow `Unit Tests` em `push` e `pull_request`, confirmar que teste/lint/build aparecem como etapas e ampliar a cobertura conforme necessário. A configuração do workflow, isoladamente, não prova que uma execução passou.
 6. **Testes unitários:** Vitest e jsdom estão configurados; os três arquivos de teste cobrem `experienceMode.js`, `lenisControl.js` e `uiSfxEvents.js`, totalizando 32 casos. A próxima expansão prioritária é criar testes unitários para `uiSfx.js` (estado de áudio, desbloqueio, preferências, volume e limpeza) e `useResponsive.js` (breakpoints, orientação, touch e listeners), orientando o escopo pelo relatório `npm run test:coverage`.
 7. **Segurança de dependências:** avaliar auditoria das dependências e boas práticas de permissões de Actions, sem presumir que exista uma vulnerabilidade concreta.
@@ -259,10 +270,10 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 1. Resolver e revalidar o LCP desktop com relatórios comparáveis.
 2. Corrigir e testar os nomes acessíveis dos controles sonoros.
 3. Executar `npm run test:coverage`, registrar a cobertura inicial e ampliar os testes unitários de `uiSfx.js` e `useResponsive.js` com mocks controlados; depois, cobrir outras lacunas reais reveladas pela cobertura.
-4. Planejar a arquitetura de rotas e o conteúdo de Home, Projetos, Sobre e Contato antes de separar as páginas.
-5. Implementar formulário de contato com envio real e proteção contra spam.
-6. Depois da mudança de rotas, atualizar metadados/sitemap, testar deep links, foco, teclado, Reduced, Lighthouse e Axe.
-7. Continuar otimizando o bundle somente a partir de evidências e sem quebrar animações ou experiência mobile.
+4. Integrar a navegação da Home às rotas novas e testar a navegação entre páginas.
+5. Migrar as seções da Home para suas páginas de destino sem quebrar GSAP, ScrollTrigger, Lenis ou carregamento diferido.
+6. Implementar formulário de contato com envio real e proteção contra spam, após definir o serviço/destino.
+7. Atualizar canonical/OG/sitemap, testar deep links, foco, teclado, Reduced, Lighthouse e Axe; avaliar prerenderização por rota.
 
 ## 16. Regras para registrar futuras alterações neste contexto
 
