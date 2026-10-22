@@ -282,9 +282,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `13d91865925a4fca896d699094f2007a93c5f8bd`
-- **Data do commit analisado:** 2026-10-22T15:51:30-03:00
-- **Mensagem do commit:** Merge pull request #36 from kleber-goncalves/main
+- **Commit de código analisado:** `05ee9abf46d7e997987081c0bcdb35e7b0e39806`
+- **Data do commit analisado:** 2026-10-22T16:07:18-03:00
+- **Mensagem do commit:** docs: atualizar contexto dos testes unitários
 - **Branch de referência desta execução:** dev
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -399,13 +399,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `05ee9ab` | 2026-10-22 | docs: atualizar contexto dos testes unitários |
+| `3b08230` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
 | `13d9186` | 2026-10-22 | Merge pull request #36 from kleber-goncalves/main |
 | `df8ef52` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
 | `4e88ce3` | 2026-10-22 | Merge branch 'dev' into main |
 | `6de56dd` | 2026-10-22 | style: ajustar formatação do arquivo package.json |
 | `08bf15c` | 2026-10-22 | refactor: ajustar importações e comentários no arquivo de configuração do Vite |
 | `0d097b5` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
-| `833606b` | 2026-10-22 | test: cover uiSfxEvents requests |
-| `843a988` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
