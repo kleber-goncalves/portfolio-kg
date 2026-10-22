@@ -211,7 +211,7 @@ Para testes com Playwright, alguns workflows instalam ferramentas de forma tempo
 
 Notas importantes:
 - `package.json` oferece `npm test` (execução única), `npm run test:watch` (modo observação) e `npm run test:coverage` (cobertura via V8), além de `dev`, `build`, `lint` e `preview`.
-- `.github/workflows/unit-tests.yml` executa `npm ci`, `npm test`, `npm run lint` e `npm run build` em `push` e `pull_request` para `main`, `dev` e `feat/responsividadeFull`; também oferece execução manual via `workflow_dispatch`.
+- `.github/workflows/unit-tests.yml` executa `npm ci`, `npm test`, `npm run lint` e `npm run build` em todo `push` para branches que contenham o workflow e a infraestrutura de testes; `pull_request` é filtrado para destinos `main`, `dev` e `feat/responsividadeFull`. Também oferece execução manual via `workflow_dispatch`. A configuração foi propagada para `main` e `dev`; branches antigas sem esses arquivos precisam sincronizar a infraestrutura antes de executar testes em pushes próprios.
 - O primeiro conjunto de testes unitários usa Vitest/jsdom em `src/utils/test/experienceMode.test.js` e cobre nove cenários das preferências Full/Reduced. Esse registro descreve os testes existentes, não afirma que todas as execuções de CI passaram.
 - Os workflows atuais usam Node.js 24.
 - `vite.config.js` declara porta **3000** e `strictPort: true`; a documentação anterior no README menciona a porta padrão 5173. Verificar/corrigir essa inconsistência antes de depender de uma das portas.
