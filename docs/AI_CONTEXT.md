@@ -282,9 +282,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `b14077d0b99895f3fd198c4315089a8d5178540d`
-- **Data do commit analisado:** 2026-10-22T15:24:58-03:00
-- **Mensagem do commit:** test: cover uiSfxEvents requests
+- **Commit de código analisado:** `4e88ce342e403ecd0a98e619f07b7ccae7b40f34`
+- **Data do commit analisado:** 2026-10-22T15:50:29-03:00
+- **Mensagem do commit:** Merge branch 'dev' into main
 - **Branch de referência desta execução:** main
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -399,13 +399,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `4e88ce3` | 2026-10-22 | Merge branch 'dev' into main |
+| `6de56dd` | 2026-10-22 | style: ajustar formatação do arquivo package.json |
+| `08bf15c` | 2026-10-22 | refactor: ajustar importações e comentários no arquivo de configuração do Vite |
+| `0d097b5` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
+| `833606b` | 2026-10-22 | test: cover uiSfxEvents requests |
+| `843a988` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
+| `1c90032` | 2026-10-22 | test: cover lenisControl behavior |
 | `b14077d` | 2026-10-22 | test: cover uiSfxEvents requests |
-| `4e48511` | 2026-10-22 | test: cover lenisControl behavior |
-| `ed9ebbd` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
-| `07b5269` | 2026-10-22 | remover componente CardTrajetoria |
-| `285eabf` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
-| `c72db8c` | 2026-10-22 | fix: avoid synchronous state update in Logo2 effect |
-| `5ddd08e` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
-| `5df2888` | 2026-10-22 | docs(ai-context): alinhar destinos dos pull requests |
 
 <!-- END AUTO-GENERATED SECTION -->
