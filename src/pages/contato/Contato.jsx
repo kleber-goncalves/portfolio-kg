@@ -1,4 +1,4 @@
-import { ArrowUpRight, Github, Linkedin } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import InteriorPageLayout from "../../layouts/InteriorPageLayout";
 
 const CONTACT_LINKS = [
@@ -6,13 +6,13 @@ const CONTACT_LINKS = [
         label: "GitHub",
         description: "Repositórios e projetos",
         href: "https://github.com/kleber-goncalves",
-        Icon: Github,
+        mark: "GH",
     },
     {
         label: "LinkedIn",
         description: "Perfil profissional",
         href: "https://www.linkedin.com/in/kleber-goncalve-s/",
-        Icon: Linkedin,
+        mark: "in",
     },
 ];
 
@@ -36,7 +36,7 @@ function Contato() {
                     </p>
 
                     <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                        {CONTACT_LINKS.map(({ label, description, href, Icon }) => (
+                        {CONTACT_LINKS.map(({ label, description, href, mark }) => (
                             <a
                                 key={label}
                                 href={href}
@@ -45,7 +45,7 @@ function Contato() {
                                 className="group flex items-center justify-between gap-4 border border-graphite p-4 transition-colors hover:border-bronze"
                             >
                                 <span className="flex items-center gap-3">
-                                    <Icon aria-hidden="true" size={20} className="text-bronze" />
+                                    <span aria-hidden="true" className="flex h-9 w-9 shrink-0 items-center justify-center border border-graphite font-space text-xs font-semibold text-bronze">{mark}</span>
                                     <span>
                                         <span className="block text-sm text-ivory">
                                             {label}
