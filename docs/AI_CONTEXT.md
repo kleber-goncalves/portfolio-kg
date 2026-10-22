@@ -279,15 +279,15 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `8ef66f20a0c59b9afac699fb4413486cb5c157b2`
-- **Data do commit analisado:** 2026-10-22T14:17:03-03:00
-- **Mensagem do commit:** feat: add testing framework and implement tests for experience mode functionality
+- **Commit de código analisado:** `31cfd36126cf7c0b34f90747bba5d1fa4aa334e6`
+- **Data do commit analisado:** 2026-10-22T14:28:11-03:00
+- **Mensagem do commit:** ci: adicionar workflow de testes unitários
 - **Branch de referência desta execução:** main
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
 - **Dependências de runtime:** 15
 - **Dependências de desenvolvimento:** 12
-- **Workflows encontrados:** 16
+- **Workflows encontrados:** 17
 - **Scripts de automação encontrados:** 18
 
 ### Scripts npm
@@ -357,6 +357,7 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 - `.github/workflows/socials-panel-performance.yml` — Socials Panel First Open Performance
 - `.github/workflows/test-code-splitting.yml` — Deferred Section and Project Code Splitting
 - `.github/workflows/ui-sfx-refresh.yml` — UI Sound Preference and Refresh
+- `.github/workflows/unit-tests.yml` — Unit Tests
 
 ### Scripts de automação
 
@@ -395,13 +396,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `31cfd36` | 2026-10-22 | ci: adicionar workflow de testes unitários |
+| `2bae8bc` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
 | `8ef66f2` | 2026-10-22 | feat: add testing framework and implement tests for experience mode functionality |
 | `b745a62` | 2026-10-21 | docs(ai-context): atualizar snapshot automaticamente |
 | `b5031b0` | 2026-10-21 | docs(readme): documentar contexto técnico para IAs |
 | `e9feb12` | 2026-10-21 | docs(ai-context): atualizar snapshot automaticamente |
 | `e53b348` | 2026-10-21 | ci(ai-context): sincronizar contexto técnico em commits e pull requests |
 | `7c63cb5` | 2026-10-21 | docs(ai-context): documentar estado e arquitetura atual do portfólio |
-| `de24e85` | 2026-10-21 | feat(docs): adicionar gerador do contexto automatizado para IAs |
-| `02bba3f` | 2026-10-21 | feat(Competencia): atualizar descrições para melhor clareza e foco em reutilização e segurança |
 
 <!-- END AUTO-GENERATED SECTION -->
