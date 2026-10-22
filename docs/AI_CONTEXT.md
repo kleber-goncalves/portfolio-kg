@@ -293,9 +293,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `49b84f56f7ed6166cf6921535102015a2a7c0950`
-- **Data do commit analisado:** 2026-10-22T19:07:28Z
-- **Mensagem do commit:** docs(ai-context): atualizar snapshot automaticamente
+- **Commit de código analisado:** `81c4676be723688ff673f4be3c6523a4e0950ccb`
+- **Data do commit analisado:** 2026-10-22T16:39:10-03:00
+- **Mensagem do commit:** feat: iniciar separação das páginas do portfólio
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -403,6 +403,8 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 - `src/generated/`
 - `src/hooks/`
 - `src/layout/`
+- `src/layouts/`
+- `src/pages/`
 - `src/styles/`
 - `src/utils/`
 
@@ -410,13 +412,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `81c4676` | 2026-10-22 | feat: iniciar separação das páginas do portfólio |
+| `b1afc72` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
 | `49b84f5` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
 | `05ee9ab` | 2026-10-22 | docs: atualizar contexto dos testes unitários |
 | `3b08230` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
 | `13d9186` | 2026-10-22 | Merge pull request #36 from kleber-goncalves/main |
 | `df8ef52` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
 | `4e88ce3` | 2026-10-22 | Merge branch 'dev' into main |
-| `6de56dd` | 2026-10-22 | style: ajustar formatação do arquivo package.json |
-| `08bf15c` | 2026-10-22 | refactor: ajustar importações e comentários no arquivo de configuração do Vite |
 
 <!-- END AUTO-GENERATED SECTION -->
