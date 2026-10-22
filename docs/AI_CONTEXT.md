@@ -282,9 +282,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `869a04c43201fe3a5f1b64a7e2ace906bc203ed7`
-- **Data do commit analisado:** 2026-10-22T14:37:12-03:00
-- **Mensagem do commit:** ci: explicitar execução em qualquer push
+- **Commit de código analisado:** `b2506425ddf699f0c5dce2ab0997b8f4d83995a6`
+- **Data do commit analisado:** 2026-10-22T14:41:56-03:00
+- **Mensagem do commit:** docs(ai-context): esclarecer escopo do workflow de testes
 - **Branch de referência desta execução:** main
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -399,13 +399,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `b250642` | 2026-10-22 | docs(ai-context): esclarecer escopo do workflow de testes |
+| `d36b7db` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
 | `869a04c` | 2026-10-22 | ci: explicitar execução em qualquer push |
 | `95b78c8` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
 | `509e6eb` | 2026-10-22 | ci: executar testes em todas as branches |
 | `5dc4346` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
 | `148fdd4` | 2026-10-22 | ci: permitir execução manual dos testes unitários |
 | `5e3f349` | 2026-10-22 | docs(ai-context): atualizar contexto dos testes unitários |
-| `1e04f7e` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
-| `31cfd36` | 2026-10-22 | ci: adicionar workflow de testes unitários |
 
 <!-- END AUTO-GENERATED SECTION -->
