@@ -10,6 +10,9 @@ import Preloader from "./components/Preloader";
 import { getExperienceMode } from "./utils/experienceMode";
 import { scrollToTarget } from "./utils/lenisControl";
 import { attachUiSfxHoverListeners } from "./utils/uiSfx";
+import { NAVIGATION_ITEMS } from "./data/navigation";
+
+const MenuDesktop = lazy(() => import("./components/MenuDesktop"));
 
 // As páginas são carregadas sob demanda para não enviar todo o conteúdo
 // de rotas secundárias no primeiro carregamento da Home.
@@ -46,9 +49,38 @@ function RouteFallback() {
 }
 
 function App() {
+    const location = useLocation();
     const [experienceMode] = useState(() => getExperienceMode() || "full");
+    const [homeMenuVisible, setHomeMenuVisible] = useState(false);
+    const [routeNavigationVisible, setRouteNavigationVisible] = useState(true);
+    const [menuHasBeenShown, setMenuHasBeenShown] = useState(false);
+    const isHomePath = location.pathname === "/";
+    const showDesktopMenu = isHomePath ? homeMenuVisible : !routeNavigationVisible;
 
     useEffect(() => attachUiSfxHoverListeners(), []);
+
+    useEffect(() => {
+        if (isHomePath) return undefined;
+
+        setRouteNavigationVisible(true);
+
+        const header = document.querySelector("[data-route-navigation]");
+        if (!header) {
+            setRouteNavigationVisible(false);
+            return undefined;
+        }
+
+        const observer = new IntersectionObserver(([entry]) => {
+            if (entry) setRouteNavigationVisible(entry.isIntersecting);
+        }, { threshold: 0.01 });
+
+        observer.observe(header);
+        return () => observer.disconnect();
+    }, [isHomePath, location.pathname]);
+
+    useEffect(() => {
+        if (showDesktopMenu) setMenuHasBeenShown(true);
+    }, [showDesktopMenu]);
 
     return (
         <>
@@ -77,7 +109,7 @@ function App() {
                         <Routes>
                             <Route
                                 path="/"
-                                element={<Home experienceMode={experienceMode} />}
+                                element={<Home experienceMode={experienceMode} onMenuVisibilityChange={setHomeMenuVisible} />}
                             />
                             <Route path="/projetos" element={<Projetos />} />
                             <Route path="/sobre" element={<Sobre experienceMode={experienceMode} />} />
@@ -85,6 +117,12 @@ function App() {
                             <Route path="*" element={<Navigate to="/" replace />} />
                         </Routes>
                     </Suspense>
+
+                    {menuHasBeenShown && (
+                        <Suspense fallback={null}>
+                            <MenuDesktop items={NAVIGATION_ITEMS} showMenu={showDesktopMenu} />
+                        </Suspense>
+                    )}
                 </div>
             </SmoothScroll>
         </>

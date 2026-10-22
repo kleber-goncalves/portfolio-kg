@@ -1,16 +1,18 @@
 import { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
 import { motion, useMotionValue, useSpring } from "motion/react";
-import { Link, useNavigate } from "react-router-dom";
-import { stopSmoothScroll, startSmoothScroll, scrollToTarget } from "../utils/lenisControl";
+import { Link, useLocation } from "react-router-dom";
+import { stopSmoothScroll, startSmoothScroll } from "../utils/lenisControl";
 import { playUiSound } from "../utils/uiSfx";
 import SoundToggle from "./SoundToggle";
 
 import { getExperienceMode, setExperienceMode } from "../utils/experienceMode";
+import usePortfolioNavigation from "../hooks/usePortfolioNavigation";
 
 
 function MenuDesktop({ items = [], showMenu = false }) {
-    const navigate = useNavigate();
+    const navigatePortfolio = usePortfolioNavigation();
+    const { pathname } = useLocation();
     const [isOpen, setIsOpen] = useState(false);
 
     // =====================================
@@ -167,6 +169,13 @@ function MenuDesktop({ items = [], showMenu = false }) {
         if (!items.length) return;
 
         const updateActiveSection = () => {
+            if (pathname !== "/") {
+                const activeItem = items.find((item) => item.href === pathname);
+                setActiveHref(activeItem?.href ?? null);
+                scrollTickingRef.current = false;
+                return;
+            }
+
             if (window.scrollY <= 10) {
                 setActiveHref((previous) => (previous === "#hero" ? previous : "#hero"));
 
@@ -229,7 +238,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
 
             window.removeEventListener("resize", updateActiveSection);
         };
-    }, [items]);
+    }, [items, pathname]);
 
     // =====================================
     // FECHAR MENU
@@ -347,21 +356,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
         // A rolagem começa em seguida, em paralelo com a animação visual de fechamento.
         window.requestAnimationFrame(() => {
             window.requestAnimationFrame(() => {
-                if (!href.startsWith("#")) {
-                    navigate(href);
-                    return;
-                }
-
-                if (href === "#hero") {
-                    scrollToTarget(0, { duration: 1.4 });
-                    return;
-                }
-
-                const section = document.querySelector(href);
-
-                if (section) {
-                    scrollToTarget(section, { duration: 1.4 });
-                }
+                navigatePortfolio(href);
             });
         });
     };

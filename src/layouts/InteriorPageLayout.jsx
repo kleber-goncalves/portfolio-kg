@@ -1,14 +1,15 @@
 import { useEffect } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
-const NAVIGATION_ITEMS = [
-    { to: "/", label: "Home", end: true },
-    { to: "/projetos", label: "Projetos" },
-    { to: "/sobre", label: "Sobre" },
-    { to: "/contato", label: "Contato" },
-];
+import MenuMobile from "../components/MenuMobile";
+import PortfolioNavigation from "../components/PortfolioNavigation";
+import { NAVIGATION_ITEMS } from "../data/navigation";
+import usePortfolioNavigation from "../hooks/usePortfolioNavigation";
 
 function InteriorPageLayout({ title, eyebrow, description, children, footerContent = null, showFallbackFooter = true }) {
+    const { pathname } = useLocation();
+    const navigatePortfolio = usePortfolioNavigation();
+
     useEffect(() => {
         const previousTitle = document.title;
         const descriptionMeta = document.querySelector('meta[name="description"]');
@@ -28,7 +29,10 @@ function InteriorPageLayout({ title, eyebrow, description, children, footerConte
 
     return (
         <div className="min-h-screen w-full bg-obsidian text-ivory">
-            <header className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-5 py-6 b-md:flex-row b-md:items-center b-md:justify-between b-md:px-10">
+            <header
+                data-route-navigation
+                className="mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-6 b-md:px-10"
+            >
                 <Link
                     to="/"
                     aria-label="KLEBER DEV — voltar para Home"
@@ -40,27 +44,16 @@ function InteriorPageLayout({ title, eyebrow, description, children, footerConte
                     </span>
                 </Link>
 
-                <nav
-                    aria-label="Navegação principal"
-                    className="flex flex-wrap items-center gap-x-5 gap-y-3"
-                >
-                    {NAVIGATION_ITEMS.map(({ to, label, end }) => (
-                        <NavLink
-                            key={to}
-                            to={to}
-                            end={end}
-                            className={({ isActive }) =>
-                                `border-b pb-1 text-xs transition-colors duration-200 focus-visible:outline-offset-4 b-md:text-sm ${
-                                    isActive
-                                        ? "border-bronze text-champagne"
-                                        : "border-transparent text-steel hover:border-graphite hover:text-ivory"
-                                }`
-                            }
-                        >
-                            {label}
-                        </NavLink>
-                    ))}
-                </nav>
+                <div className="b-md:hidden">
+                    <MenuMobile items={NAVIGATION_ITEMS} />
+                </div>
+
+                <PortfolioNavigation
+                    items={NAVIGATION_ITEMS}
+                    activeHref={pathname}
+                    onNavigate={navigatePortfolio}
+                    className="hidden items-center gap-5 b-md:flex c-lg:gap-7"
+                />
             </header>
 
             <main id="main-content" tabIndex={-1} className="w-full outline-none">

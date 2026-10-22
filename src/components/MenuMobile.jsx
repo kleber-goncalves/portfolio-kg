@@ -1,15 +1,16 @@
 import { lazy, Suspense, useEffect, useState, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { createPortal } from "react-dom";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import gsap from "gsap";
 import { startSmoothScroll, stopSmoothScroll } from "../utils/lenisControl";
 import { playUiSound } from "../utils/uiSfx";
+import usePortfolioNavigation from "../hooks/usePortfolioNavigation";
 import SoundToggle from "./SoundToggle";
 const SoundVolumeSliderMobile = lazy(() => import("./SoundVolumeSliderMobile"));
 
 function MenuMobile({ items = [] }) {
-    const navigate = useNavigate();
+    const navigatePortfolio = usePortfolioNavigation();
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef(null);
     const pendingNavigationRef = useRef(null);
@@ -130,21 +131,11 @@ function MenuMobile({ items = [] }) {
         pendingNavigationRef.current = null;
 
         const frameId = requestAnimationFrame(() => {
-            if (!href.startsWith("#")) {
-                navigate(href);
-                return;
-            }
-
-            const section = document.querySelector(href);
-
-            section?.scrollIntoView({
-                behavior: "smooth",
-                block: "start",
-            });
+            navigatePortfolio(href);
         });
 
         return () => cancelAnimationFrame(frameId);
-    }, [isOpen, navigate]);
+    }, [isOpen, navigatePortfolio]);
 
     // =========================================
     // ANIMAÇÃO

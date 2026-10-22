@@ -1,32 +1,8 @@
 import { lazy, Suspense } from "react";
+import { NAVIGATION_ITEMS } from "../data/navigation";
 
 const HeroMobile = lazy(() => import("../components/HeroMobile"));
 const HeroDesktop = lazy(() => import("../components/HeroDesktop"));
-
-// Mantém a referência estável para que a navegação ativa não seja
-// recalculada apenas porque o componente pai renderizou novamente.
-const MENU_ITEMS = [
-    {
-        label: "Início",
-        href: "#hero",
-    },
-    {
-        label: "Stack",
-        href: "#stack",
-    },
-    {
-        label: "Projetos",
-        href: "/projetos",
-    },
-    {
-        label: "Sobre",
-        href: "/sobre",
-    },
-    {
-        label: "Contato",
-        href: "/contato",
-    },
-];
 
 function Hero({ isMobileLayout, isCompactLandscape = false, isTablet = false, dotFieldFrozen = false, onNavigate, onReady, experienceMode = "full" }) {
 
@@ -35,12 +11,12 @@ function Hero({ isMobileLayout, isCompactLandscape = false, isTablet = false, do
             {isMobileLayout ? (
                 <div className="p-5">
                     <Suspense fallback={<div aria-hidden="true" className="min-h-[calc(100svh-2.5rem)]" />}>
-                        <HeroMobile items={MENU_ITEMS} onReady={onReady} isCompactLandscape={isCompactLandscape} isTablet={isTablet} />
+                        <HeroMobile items={NAVIGATION_ITEMS} onReady={onReady} isCompactLandscape={isCompactLandscape} isTablet={isTablet} />
                     </Suspense>
                 </div>
             ) : (
                 <Suspense fallback={<div aria-hidden="true" className="h-screen w-full" />}>
-                    <HeroDesktop items={MENU_ITEMS} dotFieldFrozen={dotFieldFrozen} onNavigate={onNavigate} onReady={onReady} experienceMode={experienceMode} />
+                    <HeroDesktop items={NAVIGATION_ITEMS} dotFieldFrozen={dotFieldFrozen} onNavigate={onNavigate} onReady={onReady} experienceMode={experienceMode} />
                 </Suspense>
             )}
         </section>

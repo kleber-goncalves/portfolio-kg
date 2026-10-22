@@ -198,7 +198,7 @@ Implementações observadas:
 Esses recursos são uma base de implementação, não uma declaração de conformidade integral com WCAG, nem uma garantia de indexação/ranking.
 
 As rotas iniciais já foram declaradas; ainda é necessário:
-- Integrar a navegação personalizada da Home com as rotas e preservar o comportamento das âncoras locais.
+- Implementada navegação compartilhada: navbar magnética reaproveitada nas páginas internas, menu desktop flutuante global com visibilidade coordenada na Home e nas rotas internas, e menu mobile nas páginas internas. Os links Início/Stack de páginas internas retornam à Home e aguardam o carregamento dos módulos antes de rolar à âncora.
 - Dar conteúdo final a cada rota, com `<h1>` único e informativo e links reais.
 - Verificar navegação por teclado, foco após mudança de rota, botão voltar/avançar e carregamento direto/reload de cada URL.
 - Atualizar sitemap/canonical/OG com URLs consistentes.

@@ -10,7 +10,7 @@ import DotField from "../components/DotField";
 
 import { ArrowDownRight } from "lucide-react";
 
-import MagneticLink from "../components/MagneticNavLink";
+import PortfolioNavigation from "./PortfolioNavigation";
 
 import "../styles/looptextHero.css";
 import "../styles/heroParallax.css";
@@ -881,50 +881,13 @@ if (animationCleanup) {
                     NAVBAR
                 ================================================== */}
 
-                <nav
-                    ref={navRef}
-                    aria-label="Navegação principal"
-                    className="
-        absolute
-        right-8
-        top-8
-        z-40
-        flex
-        items-center
-        gap-5
-
-        c-lg:right-17
-        c-lg:top-10
-        c-lg:gap-7
-    "
-                >
-                    {items.map((item) => {
-                        const isActive = activeHref === item.href;
-
-                        return (
-                            <MagneticLink
-                                key={item.href}
-                                href={item.href}
-                                onNavigate={onNavigate}
-                                className="
-                                    font-space
-                                    text-[9px]
-                                    uppercase
-                                    tracking-[0.12em]
-
-                                    c-lg:text-[10px]
-                                "
-                                isActive={isActive}
-                            >
-                                {item.label}
-                            </MagneticLink>
-                        );
-                    })}
-
-                    {/* =================================================
-        EXPERIENCE
-    ================================================== */}
-                </nav>
+                <PortfolioNavigation
+                    navRef={navRef}
+                    items={items}
+                    activeHref={activeHref}
+                    onNavigate={onNavigate}
+                    className="absolute right-8 top-8 z-40 flex items-center gap-5 c-lg:right-17 c-lg:top-10 c-lg:gap-7"
+                />
 
                 {/* =================================================
                     FOTO CENTRAL
