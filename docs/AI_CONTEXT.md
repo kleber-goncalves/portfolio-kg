@@ -279,14 +279,14 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `b5031b084aa24e3247d33c08f078b189dc89b836`
-- **Data do commit analisado:** 2026-10-21T17:05:13-03:00
-- **Mensagem do commit:** docs(readme): documentar contexto técnico para IAs
+- **Commit de código analisado:** `8ef66f20a0c59b9afac699fb4413486cb5c157b2`
+- **Data do commit analisado:** 2026-10-22T14:17:03-03:00
+- **Mensagem do commit:** feat: add testing framework and implement tests for experience mode functionality
 - **Branch de referência desta execução:** main
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
-- **Scripts npm declarados:** 4
+- **Scripts npm declarados:** 7
 - **Dependências de runtime:** 15
-- **Dependências de desenvolvimento:** 9
+- **Dependências de desenvolvimento:** 12
 - **Workflows encontrados:** 16
 - **Scripts de automação encontrados:** 18
 
@@ -298,6 +298,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 | `npm run build` | `vite build` |
 | `npm run lint` | `eslint .` |
 | `npm run preview` | `vite preview` |
+| `npm run test` | `vitest run` |
+| `npm run test:watch` | `vitest` |
+| `npm run test:coverage` | `vitest run --coverage` |
 
 ### Dependências instaladas no projeto
 
@@ -327,11 +330,14 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 | `@types/react` | `^19.2.17` |
 | `@types/react-dom` | `^19.2.3` |
 | `@vitejs/plugin-react` | `^6.0.4` |
+| `@vitest/coverage-v8` | `^5.0.5` |
 | `eslint` | `^10.8.0` |
 | `eslint-plugin-react-hooks` | `^7.1.1` |
 | `eslint-plugin-react-refresh` | `^0.5.3` |
 | `globals` | `^17.7.0` |
+| `jsdom` | `^29.1.1` |
 | `vite` | `^8.2.0` |
+| `vitest` | `^5.0.5` |
 
 ### Workflows do GitHub Actions
 
@@ -389,13 +395,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `8ef66f2` | 2026-10-22 | feat: add testing framework and implement tests for experience mode functionality |
+| `b745a62` | 2026-10-21 | docs(ai-context): atualizar snapshot automaticamente |
 | `b5031b0` | 2026-10-21 | docs(readme): documentar contexto técnico para IAs |
 | `e9feb12` | 2026-10-21 | docs(ai-context): atualizar snapshot automaticamente |
 | `e53b348` | 2026-10-21 | ci(ai-context): sincronizar contexto técnico em commits e pull requests |
 | `7c63cb5` | 2026-10-21 | docs(ai-context): documentar estado e arquitetura atual do portfólio |
 | `de24e85` | 2026-10-21 | feat(docs): adicionar gerador do contexto automatizado para IAs |
 | `02bba3f` | 2026-10-21 | feat(Competencia): atualizar descrições para melhor clareza e foco em reutilização e segurança |
-| `733ce24` | 2026-10-21 | feat(portfolio): refine competencies and differentiators |
-| `1941376` | 2026-10-20 | fix: update references from kleber-dev1 to kleber-goncalves-dev across project files |
 
 <!-- END AUTO-GENERATED SECTION -->
