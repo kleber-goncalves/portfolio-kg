@@ -293,9 +293,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `81c4676be723688ff673f4be3c6523a4e0950ccb`
-- **Data do commit analisado:** 2026-10-22T16:39:10-03:00
-- **Mensagem do commit:** feat: iniciar separação das páginas do portfólio
+- **Commit de código analisado:** `48b2e447a68cbed097bff34c9a24d230d524b84b`
+- **Data do commit analisado:** 2026-10-22T16:40:35-03:00
+- **Mensagem do commit:** fix: ajustar marcas nos links de contato
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -412,13 +412,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `48b2e44` | 2026-10-22 | fix: ajustar marcas nos links de contato |
+| `127912a` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
 | `81c4676` | 2026-10-22 | feat: iniciar separação das páginas do portfólio |
 | `b1afc72` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
 | `49b84f5` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
 | `05ee9ab` | 2026-10-22 | docs: atualizar contexto dos testes unitários |
 | `3b08230` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
 | `13d9186` | 2026-10-22 | Merge pull request #36 from kleber-goncalves/main |
-| `df8ef52` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
-| `4e88ce3` | 2026-10-22 | Merge branch 'dev' into main |
 
 <!-- END AUTO-GENERATED SECTION -->
