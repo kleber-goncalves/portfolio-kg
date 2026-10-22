@@ -1,6 +1,6 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite';
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -14,4 +14,16 @@ export default defineConfig({
         },
     },
     plugins: [react(), tailwindcss()],
+
+    test: {
+        environment: "jsdom",
+        include: ["src/**/*.test.{js,jsx}"], // define onde o Vitest procurará os arquivos de testes
+        clearMocks: true,
+        restoreMocks: true,
+
+        coverage: {
+            provider: "v8",
+            reporter: ["text", "html"],
+        },
+    },
 });
