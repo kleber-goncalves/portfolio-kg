@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://kleber-dev1.vercel.app/sitemap.xml
+Sitemap: https://kleber-goncalves-dev.vercel.app/sitemap.xml

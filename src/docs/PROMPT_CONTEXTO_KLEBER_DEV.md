@@ -85,16 +85,16 @@ A estética é **editorial, escura, minimalista e técnica**, com identidade pr�
 
 Paleta predominante:
 
-| Token | Hex | Uso aproximado |
-|---|---|---|
-| Obsidian | `#0D0D0D` | Fundo principal |
-| Carbon | `#151515` | Superfícies secundárias |
-| Graphite | `#242424` | Bordas e divisórias |
-| Ivory | `#F2F0EC` | Texto principal |
-| Steel | `#8B8B8B` | Texto secundário |
-| Bronze | `#A87852` | Destaques |
-| Warm Bronze | `#C49A78` | Hover e realces |
-| Champagne | `#D8C2AA` | Acentos mais claros |
+| Token       | Hex       | Uso aproximado          |
+| ----------- | --------- | ----------------------- |
+| Obsidian    | `#0D0D0D` | Fundo principal         |
+| Carbon      | `#151515` | Superfícies secundárias |
+| Graphite    | `#242424` | Bordas e divisórias     |
+| Ivory       | `#F2F0EC` | Texto principal         |
+| Steel       | `#8B8B8B` | Texto secundário        |
+| Bronze      | `#A87852` | Destaques               |
+| Warm Bronze | `#C49A78` | Hover e realces         |
+| Champagne   | `#D8C2AA` | Acentos mais claros     |
 
 Famílias tipográficas documentadas no projeto: DM Mono, Space Grotesk e Bebas Neue. Confira os tokens CSS atuais antes de mudar fontes ou cores.
 
@@ -115,7 +115,7 @@ A preferência é persistida e também deve considerar `prefers-reduced-motion`.
 
 Repositório: [kleber-goncalves/portfolio-kg](https://github.com/kleber-goncalves/portfolio-kg)
 
-Portfólio público indicado no README: [https://kleber-dev1.vercel.app/](https://kleber-dev1.vercel.app/)
+Portfólio público indicado no README: [https://kleber-goncalves-dev.vercel.app/](https://kleber-goncalves-dev.vercel.app/)
 
 Preview usado pelo workflow para `dev`: `https://portfolio-kg-git-dev-kleber-goncalves-s-projects.vercel.app/`
 
@@ -253,16 +253,16 @@ A sequência recente, em ordem aproximada, explica por que a implementação est
 
 Commits recentes relevantes:
 
-| SHA curto | Mensagem |
-|---|---|
-| `b9abc77` | `perf(ui-sfx): decouple component cues from shared chunks` |
-| `c83ec81` | `fix(ui-sfx): register component cue bridge once` |
-| `4a29c8c` | `fix(ui-sfx): unlock audio after mobile touch activation` |
-| `5691c91` | `test(ui-sfx): stabilize touch swipe diagnostics` |
-| `324d73a` | `perf(mobile): lazy-load sound volume slider on menu open` |
-| `1a6b1de` | `feat(socials): play sound while dragging social button` |
-| `7d75135` | `style(sound-controls): unify desktop sound buttons` |
-| `af0a2b6` | `fix(config): update server port to 3000 for consistency` |
+| SHA curto | Mensagem                                                            |
+| --------- | ------------------------------------------------------------------- |
+| `b9abc77` | `perf(ui-sfx): decouple component cues from shared chunks`          |
+| `c83ec81` | `fix(ui-sfx): register component cue bridge once`                   |
+| `4a29c8c` | `fix(ui-sfx): unlock audio after mobile touch activation`           |
+| `5691c91` | `test(ui-sfx): stabilize touch swipe diagnostics`                   |
+| `324d73a` | `perf(mobile): lazy-load sound volume slider on menu open`          |
+| `1a6b1de` | `feat(socials): play sound while dragging social button`            |
+| `7d75135` | `style(sound-controls): unify desktop sound buttons`                |
+| `af0a2b6` | `fix(config): update server port to 3000 for consistency`           |
 | `28b3055` | merge de `dev` para `dev`, com as alterações anteriores preservadas |
 
 ### Alteração mais recente do desktop `SoundControls` — já feita
@@ -320,23 +320,23 @@ O projeto depende de GitHub Actions para validar alterações com build, Playwri
 
 Os nomes abaixo foram observados em `.github/workflows/` em 19/10/2026. Confirme os YAMLs antes de supor os gatilhos exatos:
 
-| Workflow / arquivo | Principal objetivo |
-|---|---|
-| `Analyze JavaScript Bundle` — `analyze-js-performance.yml` | Produz treemap/relatório de tamanho dos chunks JavaScript. |
-| `Analyze Unused JavaScript` — `analyze-js-runtime-coverage.yml` | Analisa JavaScript não utilizado/runtime coverage; verificar seu script e artifact ao analisar peso/execução de JS. |
-| `Accessibility and SEO Audit` — `accessibility-seo.yml` | Build, Lighthouse mobile/desktop, Axe/Playwright na página e em estados interativos. |
-| `Desktop Scroll Interaction Performance` — `desktop-scroll-performance.yml` | Mede comportamento de scroll, intervalos entre frames e long tasks. |
-| `Lighthouse Experience Mode Comparison` — `lighthouse-experience-modes.yml` | Executa medidas isoladas do modo Full e Reduced (três execuções cada no YAML observado), compara medianas. |
-| `Lighthouse Performance` — `lighthouse-performance.yml` | Build e auditoria Lighthouse na preview Vercel da branch atual. |
-| `LogoLoop Visibility Performance` — `logo-loop-performance.yml` | Pausa/retoma loop de logos e valida viewport/tab visibility/reduced motion. |
-| `Menu Desktop Reduced Visibility` — `menu-desktop-reduced.yml` | Verifica visibilidade/interação do hambúrguer desktop no modo Reduced após switch/refresh. |
-| `Menu Mobile Overlay And Scroll Lock` — `menu-mobile-overlay.yml` | Verifica sobreposição do menu mobile e bloqueio de scroll. |
-| `Minha Trajetoria Scroll Progress` — `minha-trajetoria-scroll.yml` | Confirma que a linha/progresso acompanha scroll nos modos Full e Reduced. |
-| `Mobile UI Sound Interactions` — `mobile-ui-sfx-slider.yml` | Testa slider mobile, som durante arrastes no Socials, carrossel, persistência e unlock mobile. |
-| `Optimize project images` — `optimize-project-images.yml` | Usa Sharp para gerar variantes WebP/metadata e pode commitar arquivos gerados na branch do evento. Tome cuidado com esse workflow que possui permissão de escrita. |
-| `Socials Panel First Open Performance` — `socials-panel-performance.yml` | Mede primeira abertura, aberturas seguintes e recursos do painel Socials. |
-| `Deferred Section and Project Code Splitting` — `test-code-splitting.yml` | Valida carregamento adiado das seções e módulos diferentes para desktop/mobile. |
-| `UI Sound Preference and Refresh` — `ui-sfx-refresh.yml` | Verifica unlock, preferência on/off, persistência após refresh e volume. |
+| Workflow / arquivo                                                          | Principal objetivo                                                                                                                                                 |
+| --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `Analyze JavaScript Bundle` — `analyze-js-performance.yml`                  | Produz treemap/relatório de tamanho dos chunks JavaScript.                                                                                                         |
+| `Analyze Unused JavaScript` — `analyze-js-runtime-coverage.yml`             | Analisa JavaScript não utilizado/runtime coverage; verificar seu script e artifact ao analisar peso/execução de JS.                                                |
+| `Accessibility and SEO Audit` — `accessibility-seo.yml`                     | Build, Lighthouse mobile/desktop, Axe/Playwright na página e em estados interativos.                                                                               |
+| `Desktop Scroll Interaction Performance` — `desktop-scroll-performance.yml` | Mede comportamento de scroll, intervalos entre frames e long tasks.                                                                                                |
+| `Lighthouse Experience Mode Comparison` — `lighthouse-experience-modes.yml` | Executa medidas isoladas do modo Full e Reduced (três execuções cada no YAML observado), compara medianas.                                                         |
+| `Lighthouse Performance` — `lighthouse-performance.yml`                     | Build e auditoria Lighthouse na preview Vercel da branch atual.                                                                                                    |
+| `LogoLoop Visibility Performance` — `logo-loop-performance.yml`             | Pausa/retoma loop de logos e valida viewport/tab visibility/reduced motion.                                                                                        |
+| `Menu Desktop Reduced Visibility` — `menu-desktop-reduced.yml`              | Verifica visibilidade/interação do hambúrguer desktop no modo Reduced após switch/refresh.                                                                         |
+| `Menu Mobile Overlay And Scroll Lock` — `menu-mobile-overlay.yml`           | Verifica sobreposição do menu mobile e bloqueio de scroll.                                                                                                         |
+| `Minha Trajetoria Scroll Progress` — `minha-trajetoria-scroll.yml`          | Confirma que a linha/progresso acompanha scroll nos modos Full e Reduced.                                                                                          |
+| `Mobile UI Sound Interactions` — `mobile-ui-sfx-slider.yml`                 | Testa slider mobile, som durante arrastes no Socials, carrossel, persistência e unlock mobile.                                                                     |
+| `Optimize project images` — `optimize-project-images.yml`                   | Usa Sharp para gerar variantes WebP/metadata e pode commitar arquivos gerados na branch do evento. Tome cuidado com esse workflow que possui permissão de escrita. |
+| `Socials Panel First Open Performance` — `socials-panel-performance.yml`    | Mede primeira abertura, aberturas seguintes e recursos do painel Socials.                                                                                          |
+| `Deferred Section and Project Code Splitting` — `test-code-splitting.yml`   | Valida carregamento adiado das seções e módulos diferentes para desktop/mobile.                                                                                    |
+| `UI Sound Preference and Refresh` — `ui-sfx-refresh.yml`                    | Verifica unlock, preferência on/off, persistência após refresh e volume.                                                                                           |
 
 Os testes Playwright geralmente fazem checkout, configuram Node 24, executam `npm ci`, instalam Playwright temporário sem gravá-lo no lockfile, instalam Chromium, validam o build de produção e iniciam um preview local antes de executar os scripts.
 
@@ -344,16 +344,16 @@ Os testes Playwright geralmente fazem checkout, configuram Node 24, executam `np
 
 Em 19/10/2026, os runs que tinham o head SHA atual `28b30550fde834a73ee39cafe4570a0f0e2292bf` terminaram com sucesso:
 
-| Workflow | Run |
-|---|---|
-| Analyze JavaScript Bundle | [39146311089](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/39146311089) |
-| Menu Desktop Reduced Visibility | [39146311154](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/39146311154) |
-| Menu Mobile Overlay And Scroll Lock | [39146311169](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/39146311169) |
-| Minha Trajetoria Scroll Progress | [39146311166](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/39146311166) |
+| Workflow                               | Run                                                                                      |
+| -------------------------------------- | ---------------------------------------------------------------------------------------- |
+| Analyze JavaScript Bundle              | [39146311089](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/39146311089) |
+| Menu Desktop Reduced Visibility        | [39146311154](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/39146311154) |
+| Menu Mobile Overlay And Scroll Lock    | [39146311169](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/39146311169) |
+| Minha Trajetoria Scroll Progress       | [39146311166](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/39146311166) |
 | Desktop Scroll Interaction Performance | [39146311145](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/39146311145) |
-| Lighthouse Performance | [39146311176](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/39146311176) |
-| Analyze Unused JavaScript | [39146311138](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/39146311138) |
-| Accessibility and SEO Audit | [39146311102](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/39146311102) |
+| Lighthouse Performance                 | [39146311176](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/39146311176) |
+| Analyze Unused JavaScript              | [39146311138](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/39146311138) |
+| Accessibility and SEO Audit            | [39146311102](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/39146311102) |
 
 Na alteração de estilo de `SoundControls` (SHA `7d7513558d273e99f85e523b4c5f7785fa1bbabd`), o workflow de preferência de som terminou com sucesso: [UI Sound Preference and Refresh — run 39146134442](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/39146134442). Também passaram build/bundle, Lighthouse Performance, scroll desktop e comparação Full/Reduced naquele SHA. Dois runs intermediários (Analyze Unused JavaScript e Accessibility/SEO) foram cancelados quando o commit de merge mais novo começou novos runs; os equivalentes correspondentes ao estado `28b3055` terminaram com sucesso.
 
