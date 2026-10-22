@@ -282,9 +282,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `4e485115b2a55acb10aa5b4960a5636bf1022f0e`
-- **Data do commit analisado:** 2026-10-22T15:24:53-03:00
-- **Mensagem do commit:** test: cover lenisControl behavior
+- **Commit de código analisado:** `b14077d0b99895f3fd198c4315089a8d5178540d`
+- **Data do commit analisado:** 2026-10-22T15:24:58-03:00
+- **Mensagem do commit:** test: cover uiSfxEvents requests
 - **Branch de referência desta execução:** main
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -399,6 +399,7 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `b14077d` | 2026-10-22 | test: cover uiSfxEvents requests |
 | `4e48511` | 2026-10-22 | test: cover lenisControl behavior |
 | `ed9ebbd` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
 | `07b5269` | 2026-10-22 | remover componente CardTrajetoria |
@@ -406,6 +407,5 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 | `c72db8c` | 2026-10-22 | fix: avoid synchronous state update in Logo2 effect |
 | `5ddd08e` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
 | `5df2888` | 2026-10-22 | docs(ai-context): alinhar destinos dos pull requests |
-| `c67fcbf` | 2026-10-22 | ci: validar pull requests para main e dev |
 
 <!-- END AUTO-GENERATED SECTION -->
