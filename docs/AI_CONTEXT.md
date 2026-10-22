@@ -293,9 +293,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `99742b5f8e17003e7fd80bd8dad16dab652d5726`
-- **Data do commit analisado:** 2026-10-22T16:53:21-03:00
-- **Mensagem do commit:** refactor: organizar conteúdo entre Home e Sobre
+- **Commit de código analisado:** `a631b418526fd25239d27fbdba3fa0c4339f7305`
+- **Data do commit analisado:** 2026-10-22T17:26:59-03:00
+- **Mensagem do commit:** feat: compartilhar navegacao entre as paginas
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -412,13 +412,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `a631b41` | 2026-10-22 | feat: compartilhar navegacao entre as paginas |
+| `d7174ea` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
 | `99742b5` | 2026-10-22 | refactor: organizar conteúdo entre Home e Sobre |
 | `2be81df` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
 | `48b2e44` | 2026-10-22 | fix: ajustar marcas nos links de contato |
 | `127912a` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
 | `81c4676` | 2026-10-22 | feat: iniciar separação das páginas do portfólio |
 | `b1afc72` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
-| `49b84f5` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
-| `05ee9ab` | 2026-10-22 | docs: atualizar contexto dos testes unitários |
 
 <!-- END AUTO-GENERATED SECTION -->
