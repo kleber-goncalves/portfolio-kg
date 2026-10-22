@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { Link, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
 
@@ -52,35 +52,45 @@ function App() {
     const location = useLocation();
     const [experienceMode] = useState(() => getExperienceMode() || "full");
     const [homeMenuVisible, setHomeMenuVisible] = useState(false);
-    const [routeNavigationVisible, setRouteNavigationVisible] = useState(true);
+    const [routeNavigationStatus, setRouteNavigationStatus] = useState(() => ({
+        pathname: location.pathname,
+        visible: true,
+    }));
     const [menuHasBeenShown, setMenuHasBeenShown] = useState(false);
     const isHomePath = location.pathname === "/";
+    const routeNavigationVisible = routeNavigationStatus.pathname === location.pathname
+        ? routeNavigationStatus.visible
+        : true;
     const showDesktopMenu = isHomePath ? homeMenuVisible : !routeNavigationVisible;
+
+    const handleHomeMenuVisibilityChange = useCallback((visible) => {
+        setHomeMenuVisible(visible);
+        if (visible) setMenuHasBeenShown(true);
+    }, []);
 
     useEffect(() => attachUiSfxHoverListeners(), []);
 
     useEffect(() => {
         if (isHomePath) return undefined;
 
-        setRouteNavigationVisible(true);
-
         const header = document.querySelector("[data-route-navigation]");
-        if (!header) {
-            setRouteNavigationVisible(false);
-            return undefined;
-        }
+        if (!header) return undefined;
 
+        const pathname = location.pathname;
         const observer = new IntersectionObserver(([entry]) => {
-            if (entry) setRouteNavigationVisible(entry.isIntersecting);
+            if (!entry) return;
+
+            setRouteNavigationStatus({
+                pathname,
+                visible: entry.isIntersecting,
+            });
+
+            if (!entry.isIntersecting) setMenuHasBeenShown(true);
         }, { threshold: 0.01 });
 
         observer.observe(header);
         return () => observer.disconnect();
     }, [isHomePath, location.pathname]);
-
-    useEffect(() => {
-        if (showDesktopMenu) setMenuHasBeenShown(true);
-    }, [showDesktopMenu]);
 
     return (
         <>
@@ -109,7 +119,7 @@ function App() {
                         <Routes>
                             <Route
                                 path="/"
-                                element={<Home experienceMode={experienceMode} onMenuVisibilityChange={setHomeMenuVisible} />}
+                                element={<Home experienceMode={experienceMode} onMenuVisibilityChange={handleHomeMenuVisibilityChange} />}
                             />
                             <Route path="/projetos" element={<Projetos />} />
                             <Route path="/sobre" element={<Sobre experienceMode={experienceMode} />} />
