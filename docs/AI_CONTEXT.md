@@ -282,9 +282,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `148fdd44bd1f763fd36f3efe1006ff116f4b9449`
-- **Data do commit analisado:** 2026-10-22T14:31:25-03:00
-- **Mensagem do commit:** ci: permitir execução manual dos testes unitários
+- **Commit de código analisado:** `509e6eb10c550d87457820fc4fed7b56e57ca3ad`
+- **Data do commit analisado:** 2026-10-22T14:36:34-03:00
+- **Mensagem do commit:** ci: executar testes em todas as branches
 - **Branch de referência desta execução:** main
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -399,13 +399,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `509e6eb` | 2026-10-22 | ci: executar testes em todas as branches |
+| `5dc4346` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
 | `148fdd4` | 2026-10-22 | ci: permitir execução manual dos testes unitários |
 | `5e3f349` | 2026-10-22 | docs(ai-context): atualizar contexto dos testes unitários |
 | `1e04f7e` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
 | `31cfd36` | 2026-10-22 | ci: adicionar workflow de testes unitários |
 | `2bae8bc` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
 | `8ef66f2` | 2026-10-22 | feat: add testing framework and implement tests for experience mode functionality |
-| `b745a62` | 2026-10-21 | docs(ai-context): atualizar snapshot automaticamente |
-| `b5031b0` | 2026-10-21 | docs(readme): documentar contexto técnico para IAs |
 
 <!-- END AUTO-GENERATED SECTION -->
