@@ -8,7 +8,7 @@ const NAVIGATION_ITEMS = [
     { to: "/contato", label: "Contato" },
 ];
 
-function InteriorPageLayout({ title, eyebrow, description, children }) {
+function InteriorPageLayout({ title, eyebrow, description, children, footerContent = null, showFallbackFooter = true }) {
     useEffect(() => {
         const previousTitle = document.title;
         const descriptionMeta = document.querySelector('meta[name="description"]');
@@ -79,15 +79,19 @@ function InteriorPageLayout({ title, eyebrow, description, children }) {
                 {children}
             </main>
 
-            <footer className="mx-auto mt-20 flex w-full max-w-7xl flex-col gap-3 border-t border-graphite px-5 py-6 text-xs text-steel b-md:flex-row b-md:items-center b-md:justify-between b-md:px-10">
-                <span>© {new Date().getFullYear()} KLEBER DEV</span>
-                <Link
-                    to="/"
-                    className="w-fit transition-colors hover:text-champagne"
-                >
-                    Voltar para a Home
-                </Link>
-            </footer>
+            {footerContent}
+
+            {showFallbackFooter && (
+                <footer className="mx-auto mt-20 flex w-full max-w-7xl flex-col gap-3 border-t border-graphite px-5 py-6 text-xs text-steel b-md:flex-row b-md:items-center b-md:justify-between b-md:px-10">
+                    <span>© {new Date().getFullYear()} KLEBER DEV</span>
+                    <Link
+                        to="/"
+                        className="w-fit transition-colors hover:text-champagne"
+                    >
+                        Voltar para a Home
+                    </Link>
+                </footer>
+            )}
         </div>
     );
 }

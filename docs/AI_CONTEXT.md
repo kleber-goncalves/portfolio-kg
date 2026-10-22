@@ -24,7 +24,7 @@
 - **Propósito:** portfólio pessoal para apresentar a identidade profissional, competências, diferenciais, formação, trajetória, tecnologias e projetos web.
 - **Público principal:** recrutadores, equipes técnicas, clientes potenciais e desenvolvedores que queiram avaliar os trabalhos.
 - **Direção:** experiência visual própria, interações cuidadas, responsividade, acessibilidade, SEO técnico e investigação contínua de desempenho. O site não deve ser tratado como um template genérico.
-- **Forma atual:** aplicação React com `BrowserRouter` e rotas `/`, `/projetos`, `/sobre` e `/contato`. `src/pages/home/Home.jsx` preserva a composição da Home anterior; Projetos reutiliza a seção existente; Sobre e Contato têm estruturas iniciais que ainda precisam receber conteúdo final e validações.
+- **Forma atual:** aplicação React com `BrowserRouter` e rotas `/`, `/projetos`, `/sobre` e `/contato`. A Home reúne apenas Hero/Stack, a seção de projetos em destaque e o footer. Sobre reúne competências, diferenciais, formação e footer. As páginas dedicadas de Projetos e Contato ainda estão em fase inicial.
 
 ## 3. Estado atual versus plano futuro
 
@@ -44,18 +44,18 @@
 ### Implementação inicial da separação de páginas
 
 - **src/App.jsx** declara as rotas `/`, `/projetos`, `/sobre` e `/contato` com React Router e carrega os componentes de página sob demanda.
-- **src/pages/home/Home.jsx** mantém a composição anterior da Home, incluindo Hero/Stack, competências, projetos, diferenciais, formação e footer diferido. Essa preservação reduz o risco de refatorar animações e seções ao mesmo tempo.
-- **src/pages/projetos/Projetos.jsx** reutiliza a seção de projetos existente como primeiro passo para uma página dedicada.
-- **src/pages/sobre/Sobre.jsx** e **src/pages/contato/Contato.jsx** são scaffolds temporários. Sobre ainda não recebeu o conteúdo migrado; Contato não tem formulário nem simula envio. Os canais GitHub e LinkedIn apontam para os perfis já usados no projeto.
-- **src/layouts/InteriorPageLayout.jsx** fornece navegação e estrutura comum às páginas internas, além de título e descrição no navegador.
-- **src/main.jsx** já inicializava `BrowserRouter`; essa configuração foi mantida. A navegação do menu personalizado da Home para as novas rotas e os metadados avançados por rota ainda precisam ser finalizados.
+- **src/pages/home/Home.jsx** contém apenas `HeroSectionTransition`, `DeferredProjects` e o footer (`DeferredLayoutSection` com `section="footer"`). Competências, diferenciais e formação não devem permanecer na Home.
+- **src/pages/sobre/Sobre.jsx** reúne `DeferredLayoutSection` para competências, diferenciais e formação, seguido pelo footer legado. O layout interno não duplica o footer legado nesta rota.
+- **src/pages/projetos/Projetos.jsx** é apenas um scaffold de rota; o catálogo dedicado ainda será construído. Não reutiliza `DeferredProjects`, que permanece como apresentação de projetos em destaque na Home.
+- **src/pages/contato/Contato.jsx** permanece inicial: apresenta canais já conhecidos, mas ainda não possui formulário de envio real.
+- **src/layouts/InteriorPageLayout.jsx** fornece navegação e estrutura comum às páginas internas, além de atualizar o título e a descrição do navegador. Sobre pode fornecer o footer legado; as demais páginas ainda usam um footer temporário.
+- O `BrowserRouter` já existia no `src/main.jsx` e foi mantido. Os menus da Home distinguem âncoras locais (`#hero`, `#stack`) das rotas `/projetos`, `/sobre` e `/contato`.
 
 ### Próximas etapas planejadas
 
-- Integrar os links da navegação atual da Home às novas rotas sem perder as âncoras de seções que continuarão na Home.
-- Decidir e migrar o conteúdo de cada página. Em especial, separar a trajetória do Hero/Stack com testes de regressão para GSAP e ScrollTrigger.
-- Construir a página Sobre usando dados e componentes existentes para trajetória, formação, competências e diferenciais, movendo para `pages/sobre/` apenas o que for realmente específico.
-- Definir a página Projetos como catálogo completo e manter na Home apenas a seleção de destaque.
+- Construir o catálogo completo da página Projetos; manter `DeferredProjects` na Home como apresentação de destaque até a separação própria ser definida.
+- Desenvolver a página Contato e somente criar o formulário quando estiver definido um destino real de envio, com validação, estados de sucesso/erro e proteção contra spam.
+- Refinar o conteúdo de Sobre, usando as seções legadas de competências, diferenciais e formação. Avaliar separadamente qualquer futura mudança na trajetória/Hero com testes de regressão GSAP/ScrollTrigger.
 - Criar o formulário de Contato somente depois de definir um destino real de envio, validação, estados de sucesso/erro e proteção contra spam.
 - Validar build, lint, testes, navegação por teclado, foco, botão voltar/avançar, carregamento direto/reload das quatro rotas e rewrites da Vercel.
 - Atualizar sitemap/canonical/OG e avaliar prerenderização para SEO por rota; a atualização dinâmica do título/descrição no navegador não substitui prerenderização.
@@ -88,7 +88,7 @@ Estrutura identificada no repositório:
 
 - `src/main.jsx`: inicializa React em `StrictMode` e `BrowserRouter`; inclui mensagem de boas-vindas no console do DevTools.
 - `src/App.jsx`: shell global, Preloader, CursorTrail, SmoothScroll, link para pular ao conteúdo, controles globais de UI SFX e definição das quatro rotas com carregamento sob demanda.
-- `src/pages/`: componentes de rota. `home/Home.jsx` mantém a composição anterior; `projetos/Projetos.jsx` reutiliza a seção de projetos; `sobre/Sobre.jsx` e `contato/Contato.jsx` são scaffolds para migração posterior.
+- `src/pages/`: componentes de rota. `home/Home.jsx` contém Hero/Stack, `DeferredProjects` e footer; `sobre/Sobre.jsx` contém competências, diferenciais, formação e footer; `projetos/Projetos.jsx` e `contato/Contato.jsx` ainda são implementações iniciais.
 - `src/layouts/InteriorPageLayout.jsx`: estrutura compartilhada temporária das rotas internas, com navegação principal e metadados de título/descrição no navegador.
 - `src/layout/`: seções principais (Hero, tecnologias/Seclogs, competências, projetos, diferenciais, formação e footer).
 - `src/components/HeroSectionTransition.jsx`: controla a transição Hero/Stack e o comportamento do menu desktop associado à rolagem.
@@ -270,9 +270,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 1. Resolver e revalidar o LCP desktop com relatórios comparáveis.
 2. Corrigir e testar os nomes acessíveis dos controles sonoros.
 3. Executar `npm run test:coverage`, registrar a cobertura inicial e ampliar os testes unitários de `uiSfx.js` e `useResponsive.js` com mocks controlados; depois, cobrir outras lacunas reais reveladas pela cobertura.
-4. Integrar a navegação da Home às rotas novas e testar a navegação entre páginas.
-5. Migrar as seções da Home para suas páginas de destino sem quebrar GSAP, ScrollTrigger, Lenis ou carregamento diferido.
-6. Implementar formulário de contato com envio real e proteção contra spam, após definir o serviço/destino.
+4. Construir a página dedicada de Projetos, mantendo os destaques na Home sem duplicação prematura.
+5. Finalizar a página de Contato, definindo serviço/destino real antes do formulário e incluindo validação e proteção contra spam.
+6. Refinar conteúdo e layout de Sobre, validando as seções diferidas e o footer.
 7. Atualizar canonical/OG/sitemap, testar deep links, foco, teclado, Reduced, Lighthouse e Axe; avaliar prerenderização por rota.
 
 ## 16. Regras para registrar futuras alterações neste contexto

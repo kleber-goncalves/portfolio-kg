@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
 import { motion, useMotionValue, useSpring } from "motion/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { stopSmoothScroll, startSmoothScroll, scrollToTarget } from "../utils/lenisControl";
 import { playUiSound } from "../utils/uiSfx";
 import SoundToggle from "./SoundToggle";
@@ -10,6 +10,7 @@ import { getExperienceMode, setExperienceMode } from "../utils/experienceMode";
 
 
 function MenuDesktop({ items = [], showMenu = false }) {
+    const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
 
     // =====================================
@@ -346,6 +347,11 @@ function MenuDesktop({ items = [], showMenu = false }) {
         // A rolagem começa em seguida, em paralelo com a animação visual de fechamento.
         window.requestAnimationFrame(() => {
             window.requestAnimationFrame(() => {
+                if (!href.startsWith("#")) {
+                    navigate(href);
+                    return;
+                }
+
                 if (href === "#hero") {
                     scrollToTarget(0, { duration: 1.4 });
                     return;

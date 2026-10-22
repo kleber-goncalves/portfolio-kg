@@ -1,4 +1,5 @@
 import { lazy, Suspense, useLayoutEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -13,6 +14,7 @@ import { playUiSound } from "../utils/uiSfx";
 gsap.registerPlugin(ScrollTrigger);
 
 function HeroSectionTransition({ experienceMode = "full" }) {
+    const navigate = useNavigate();
     const { isMobileLayout, isCompactLandscape, isTablet } = useResponsive();
     const requiredHeroLayout = isMobileLayout ? "mobile" : "desktop";
     const requiredStackLayout = isMobileLayout ? "mobile" : "desktop";
@@ -67,7 +69,7 @@ function HeroSectionTransition({ experienceMode = "full" }) {
 
     const menuItems = [
         {
-            label: "Hero",
+            label: "Início",
             href: "#hero",
         },
         {
@@ -75,20 +77,16 @@ function HeroSectionTransition({ experienceMode = "full" }) {
             href: "#stack",
         },
         {
-            label: "Competências",
-            href: "#competencias",
-        },
-        {
             label: "Projetos",
-            href: "#projetos",
+            href: "/projetos",
         },
         {
-            label: "Diferenciais",
-            href: "#diferenciais",
+            label: "Sobre",
+            href: "/sobre",
         },
         {
-            label: "Formação",
-            href: "#formacao",
+            label: "Contato",
+            href: "/contato",
         },
     ];
 
@@ -98,6 +96,11 @@ function HeroSectionTransition({ experienceMode = "full" }) {
 
     const handleHeroNavigation = (href) => {
         playUiSound(href === "#hero" ? "back" : "forward");
+
+        if (!href.startsWith("#")) {
+            navigate(href);
+            return;
+        }
 
         if (href === "#hero") {
             scrollToTarget(0, { duration: 1.4 });

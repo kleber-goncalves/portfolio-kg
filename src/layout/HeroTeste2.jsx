@@ -7,7 +7,7 @@ const HeroDesktop = lazy(() => import("../components/HeroDesktop"));
 // recalculada apenas porque o componente pai renderizou novamente.
 const MENU_ITEMS = [
     {
-        label: "Hero",
+        label: "Início",
         href: "#hero",
     },
     {
@@ -15,20 +15,16 @@ const MENU_ITEMS = [
         href: "#stack",
     },
     {
-        label: "Competências",
-        href: "#competencias",
-    },
-    {
         label: "Projetos",
-        href: "#projetos",
+        href: "/projetos",
     },
     {
-        label: "Diferenciais",
-        href: "#diferenciais",
+        label: "Sobre",
+        href: "/sobre",
     },
     {
-        label: "Formação",
-        href: "#formacao",
+        label: "Contato",
+        href: "/contato",
     },
 ];
 

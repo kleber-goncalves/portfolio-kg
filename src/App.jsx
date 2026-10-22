@@ -79,11 +79,8 @@ function App() {
                                 path="/"
                                 element={<Home experienceMode={experienceMode} />}
                             />
-                            <Route
-                                path="/projetos"
-                                element={<Projetos experienceMode={experienceMode} />}
-                            />
-                            <Route path="/sobre" element={<Sobre />} />
+                            <Route path="/projetos" element={<Projetos />} />
+                            <Route path="/sobre" element={<Sobre experienceMode={experienceMode} />} />
                             <Route path="/contato" element={<Contato />} />
                             <Route path="*" element={<Navigate to="/" replace />} />
                         </Routes>

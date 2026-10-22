@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useState, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { createPortal } from "react-dom";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import gsap from "gsap";
@@ -9,6 +9,7 @@ import SoundToggle from "./SoundToggle";
 const SoundVolumeSliderMobile = lazy(() => import("./SoundVolumeSliderMobile"));
 
 function MenuMobile({ items = [] }) {
+    const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef(null);
     const pendingNavigationRef = useRef(null);
@@ -129,6 +130,11 @@ function MenuMobile({ items = [] }) {
         pendingNavigationRef.current = null;
 
         const frameId = requestAnimationFrame(() => {
+            if (!href.startsWith("#")) {
+                navigate(href);
+                return;
+            }
+
             const section = document.querySelector(href);
 
             section?.scrollIntoView({
@@ -138,7 +144,7 @@ function MenuMobile({ items = [] }) {
         });
 
         return () => cancelAnimationFrame(frameId);
-    }, [isOpen]);
+    }, [isOpen, navigate]);
 
     // =========================================
     // ANIMAÇÃO
