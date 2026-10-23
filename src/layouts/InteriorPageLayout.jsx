@@ -57,7 +57,7 @@ function InteriorPageLayout({ title, eyebrow, description, heroContent = null, c
             </header>
 
             <main id="main-content" tabIndex={-1} className="w-full outline-none">
-{heroContent ?? (
+                {heroContent ?? (
                     <header className="mx-auto w-full max-w-7xl px-5 pb-10 pt-12 b-md:px-10 b-md:pb-16 b-md:pt-20">
                         <p className="text-xs uppercase tracking-[0.22em] text-bronze">
                             {eyebrow}
