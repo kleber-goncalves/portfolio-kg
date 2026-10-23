@@ -2,20 +2,17 @@ import { useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-import ExperienceDropdown from "./ExperienceDropdown";
-import SoundControls from "./SoundControls";
 
 import Socials from "../components/Socials";
 import DotField from "../components/DotField";
 
 import { ArrowDownRight } from "lucide-react";
 
-import PortfolioNavigation from "./PortfolioNavigation";
+import PortfolioDesktopHeader from "./PortfolioDesktopHeader";
 
 import "../styles/looptextHero.css";
 import "../styles/heroParallax.css";
 import GlobeIcon from "./GlobeIcon";
-import OptimizedImage from "./OptimizedImage";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -829,64 +826,14 @@ if (animationCleanup) {
                     LOGO
                 ================================================== */}
 
-                <div
-                    className="
-                        absolute
-                        left-8
-                        top-8
-                        z-40
-
-                        flex
-                        items-center
-                        gap-5
-
-                        c-lg:left-18
-                        c-lg:top-10
-                        c-lg:gap-12
-                    "
-                >
-                    <div
-                        ref={logoRef}
-                        className="
-                    "
-                    >
-                        <div
-                            className="
-                            h-10
-                            w-10
-
-                            c-lg:h-11
-                            c-lg:w-11
-                        "
-                        >
-                            <OptimizedImage
-                                src="/logo.svg"
-                                alt="Kleber Dev"
-                                width={44}
-                                height={44}
-                                loading="eager"
-                                fetchPriority="high"
-                                wrapperClassName="h-full w-full"
-                                className="object-contain"
-                            />
-                        </div>
-                    </div>
-                    <div className="flex items-center gap-2 c-lg:gap-3">
-                        <ExperienceDropdown experienceMode={experienceMode} />
-                        <SoundControls />
-                    </div>
-                </div>
-
-                {/* =================================================
-                    NAVBAR
-                ================================================== */}
-
-                <PortfolioNavigation
-                    navRef={navRef}
+                <PortfolioDesktopHeader
+                    placement="hero"
                     items={items}
                     activeHref={activeHref}
                     onNavigate={onNavigate}
-                    className="absolute right-8 top-8 z-40 flex items-center gap-5 c-lg:right-17 c-lg:top-10 c-lg:gap-7"
+                    navRef={navRef}
+                    logoRef={logoRef}
+                    experienceMode={experienceMode}
                 />
 
                 {/* =================================================
