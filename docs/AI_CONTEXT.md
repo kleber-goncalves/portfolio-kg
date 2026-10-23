@@ -293,9 +293,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `4923e3228680feea5ee6e8eaa87d586e19a77acd`
-- **Data do commit analisado:** 2026-10-22T17:28:59-03:00
-- **Mensagem do commit:** fix: ajustar estado do menu compartilhado
+- **Commit de código analisado:** `18d1c959fbad24165b941987038988ec2a44a3d3`
+- **Data do commit analisado:** 2026-10-23T13:54:19-03:00
+- **Mensagem do commit:** refactor: compose reusable desktop portfolio header
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -412,13 +412,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `18d1c95` | 2026-10-23 | refactor: compose reusable desktop portfolio header |
+| `41a0a92` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
 | `4923e32` | 2026-10-22 | fix: ajustar estado do menu compartilhado |
 | `712ec76` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
 | `a631b41` | 2026-10-22 | feat: compartilhar navegacao entre as paginas |
 | `d7174ea` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
 | `99742b5` | 2026-10-22 | refactor: organizar conteúdo entre Home e Sobre |
 | `2be81df` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
-| `48b2e44` | 2026-10-22 | fix: ajustar marcas nos links de contato |
-| `127912a` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
