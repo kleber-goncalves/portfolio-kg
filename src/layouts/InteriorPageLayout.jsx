@@ -2,13 +2,11 @@ import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import MenuMobile from "../components/MenuMobile";
-import PortfolioNavigation from "../components/PortfolioNavigation";
+import PortfolioDesktopHeader from "../components/PortfolioDesktopHeader";
 import { NAVIGATION_ITEMS } from "../data/navigation";
-import usePortfolioNavigation from "../hooks/usePortfolioNavigation";
 
 function InteriorPageLayout({ title, eyebrow, description, children, footerContent = null, showFallbackFooter = true }) {
     const { pathname } = useLocation();
-    const navigatePortfolio = usePortfolioNavigation();
 
     useEffect(() => {
         const previousTitle = document.title;
@@ -29,31 +27,30 @@ function InteriorPageLayout({ title, eyebrow, description, children, footerConte
 
     return (
         <div className="min-h-screen w-full bg-obsidian text-ivory">
-            <header
-                data-route-navigation
-                className="mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-6 b-md:px-10"
-            >
-                <Link
-                    to="/"
-                    aria-label="KLEBER DEV — voltar para Home"
-                    className="flex w-fit items-center gap-3"
-                >
-                    <img src="/logo.svg" alt="" className="h-9 w-9 object-contain" />
-                    <span className="font-space text-sm font-semibold tracking-[0.16em]">
-                        KLEBER <span className="text-bronze">DEV</span>
-                    </span>
-                </Link>
-
-                <div className="b-md:hidden">
-                    <MenuMobile items={NAVIGATION_ITEMS} />
+            <header data-route-navigation className="w-full">
+                <div className="hidden b-md:block">
+                    <PortfolioDesktopHeader
+                        placement="interior"
+                        items={NAVIGATION_ITEMS}
+                        activeHref={pathname}
+                        logoHref="/"
+                    />
                 </div>
 
-                <PortfolioNavigation
-                    items={NAVIGATION_ITEMS}
-                    activeHref={pathname}
-                    onNavigate={navigatePortfolio}
-                    className="hidden items-center gap-5 b-md:flex c-lg:gap-7"
-                />
+                <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-6 b-md:hidden">
+                    <Link
+                        to="/"
+                        aria-label="KLEBER DEV — voltar para Home"
+                        className="flex w-fit items-center gap-3"
+                    >
+                        <img src="/logo.svg" alt="" className="h-9 w-9 object-contain" />
+                        <span className="font-space text-sm font-semibold tracking-[0.16em]">
+                            KLEBER <span className="text-bronze">DEV</span>
+                        </span>
+                    </Link>
+
+                    <MenuMobile items={NAVIGATION_ITEMS} />
+                </div>
             </header>
 
             <main id="main-content" tabIndex={-1} className="w-full outline-none">
