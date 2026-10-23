@@ -45,16 +45,17 @@
 
 - **src/App.jsx** declara as rotas `/`, `/projetos`, `/sobre` e `/contato` com React Router e carrega os componentes de página sob demanda.
 - **src/pages/home/Home.jsx** contém apenas `HeroSectionTransition`, `DeferredProjects` e o footer (`DeferredLayoutSection` com `section="footer"`). Competências, diferenciais e formação não devem permanecer na Home.
-- **src/pages/sobre/Sobre.jsx** reúne `DeferredLayoutSection` para competências, diferenciais e formação, seguido pelo footer legado. O layout interno não duplica o footer legado nesta rota.
+- **src/pages/sobre/Sobre.jsx** apresenta um Hero editorial próprio por meio de `SobreHero.jsx`, seguido de `DeferredLayoutSection` para competências, diferenciais e formação. O footer legado é carregado ao final; o layout interno não o duplica nesta rota.
 - **src/pages/projetos/Projetos.jsx** é apenas um scaffold de rota; o catálogo dedicado ainda será construído. Não reutiliza `DeferredProjects`, que permanece como apresentação de projetos em destaque na Home.
 - **src/pages/contato/Contato.jsx** permanece inicial: apresenta canais já conhecidos, mas ainda não possui formulário de envio real.
-- **src/layouts/InteriorPageLayout.jsx** fornece estrutura comum às páginas internas e atualiza título/descrição do navegador. Em desktop, usa `PortfolioDesktopHeader` com o item ativo definido pela rota; em mobile, mantém o cabeçalho compacto e `MenuMobile`. Sobre pode fornecer o footer legado; as demais páginas ainda usam um footer temporário.
+- **src/layouts/InteriorPageLayout.jsx** fornece estrutura comum às páginas internas e atualiza título/descrição do navegador. Em desktop, usa `PortfolioDesktopHeader` com o item ativo definido pela rota; em mobile, mantém o cabeçalho compacto e `MenuMobile`. Aceita a prop opcional `heroContent`: quando fornecida, substitui o cabeçalho genérico de eyebrow/título/descrição, evitando duplicar o `h1`; quando omitida, Projetos e Contato mantêm o cabeçalho padrão. Sobre pode fornecer o footer legado; as demais páginas ainda usam um footer temporário.
 - O `BrowserRouter` já existia no `src/main.jsx` e foi mantido. A navegação usa uma lista central em `src/data/navigation.js`; os links para `#hero` e `#stack` são tratados como âncoras da Home, enquanto `/projetos`, `/sobre` e `/contato` são rotas.
 - **Cabeçalho desktop compartilhado:** `src/components/PortfolioDesktopHeader.jsx` compõe o logo via `OptimizedImage`, `ExperienceDropdown`, `SoundControls` e `PortfolioNavigation`. O modo `placement="hero"` conserva o posicionamento absoluto do Hero; o modo `placement="interior"` usa o conjunto nas páginas internas. `logoRef` e `navRef` continuam sendo encaminhados ao logo e à navegação para preservar as animações GSAP de entrada de `HeroDesktop`.
 - **Navegação reutilizável:** `src/components/PortfolioNavigation.jsx` renderiza os itens compartilhados usando `MagneticNavLink`. O estado ativo vem do contexto: seção atual no Hero e rota atual nas páginas internas.
 - **Navegação de rotas e âncoras:** `src/hooks/usePortfolioNavigation.js` centraliza os cliques. Ao acionar `#hero` ou `#stack` em uma rota interna, navega primeiro para `/` com `portfolioScrollTarget` no state do Router; `HeroSectionTransition` completa a rolagem quando o conteúdo da Home está pronto.
 - **Menu desktop flutuante é separado do cabeçalho horizontal:** `src/components/MenuDesktop.jsx` continua sendo o botão/painel que aparece conforme a rolagem. `App.jsx` o monta sob demanda depois da primeira exibição e coordena a visibilidade pela callback do `HeroSectionTransition` na Home e por `IntersectionObserver` de `[data-route-navigation]` nas páginas internas.
 - **Mobile preservado:** o cabeçalho interno mantém uma composição compacta com `MenuMobile`; os controles móveis de som (`SoundToggle` e `SoundVolumeSliderMobile`) continuam no painel mobile, sem renderizar a composição desktop completa em telas pequenas.
+- **Hero específico do Sobre:** `src/pages/sobre/SobreHero.jsx` apresenta o texto à esquerda e a fotografia `/euNvEnvt.png` à direita no desktop, mudando para uma coluna no mobile. Inclui CTAs para `#competencias` e `#formacao`, usando `scrollToTarget` para seguir a rolagem Lenis/nativa já existente. Não modifica o Hero da Home.
 
 ### Próximas etapas planejadas
 
@@ -92,8 +93,8 @@ Estrutura identificada no repositório:
 
 - `src/main.jsx`: inicializa React em `StrictMode` e `BrowserRouter`; inclui mensagem de boas-vindas no console do DevTools.
 - `src/App.jsx`: shell global, Preloader, CursorTrail, SmoothScroll, link para pular ao conteúdo, controles globais de UI SFX e definição das quatro rotas com carregamento sob demanda.
-- `src/pages/`: componentes de rota. `home/Home.jsx` contém Hero/Stack, `DeferredProjects` e footer; `sobre/Sobre.jsx` contém competências, diferenciais, formação e footer; `projetos/Projetos.jsx` e `contato/Contato.jsx` ainda são implementações iniciais.
-- `src/layouts/InteriorPageLayout.jsx`: estrutura compartilhada temporária das rotas internas, com navegação principal e metadados de título/descrição no navegador.
+- `src/pages/`: componentes de rota. `home/Home.jsx` contém Hero/Stack, `DeferredProjects` e footer; `sobre/Sobre.jsx` usa `SobreHero.jsx` antes das seções de competências, diferenciais e formação; `projetos/Projetos.jsx` e `contato/Contato.jsx` ainda são implementações iniciais.
+- `src/layouts/InteriorPageLayout.jsx`: estrutura compartilhada das rotas internas, navegação principal e metadados; aceita `heroContent` opcional para trocar o cabeçalho textual padrão por um Hero específico da página.
 - `src/layout/`: seções principais (Hero, tecnologias/Seclogs, competências, projetos, diferenciais, formação e footer).
 - `src/components/HeroSectionTransition.jsx`: controla a transição Hero/Stack e o comportamento do menu desktop associado à rolagem.
 - `src/components/DeferredLayoutSection.jsx`: carregamento diferido das seções usando `IntersectionObserver` e carregamento dinâmico.
@@ -103,6 +104,7 @@ Estrutura identificada no repositório:
 - `src/components/MenuMobile.jsx`: painel de navegação móvel, incluindo controles móveis de som e navegação após a animação de fechamento.
 - `src/components/PortfolioDesktopHeader.jsx`: composição desktop reutilizável do logo, Experience, Som e navbar. `placement="hero"` preserva o posicionamento do Hero; `placement="interior"` adapta a composição ao cabeçalho das rotas internas. Encaminha refs usados pelo GSAP.
 - `src/components/PortfolioNavigation.jsx`: lista horizontal de links magnéticos que recebe itens, destino ativo e handler de navegação.
+- `src/pages/sobre/SobreHero.jsx`: Hero editorial específico da página Sobre, com retrato, apresentação profissional e links para as seções de competências e formação.
 - `src/hooks/usePortfolioNavigation.js`: handler comum para navegação entre rotas e âncoras da Home, incluindo retorno à Home antes de rolar de uma página interna.
 - `src/data/navigation.js`: fonte única dos destinos e rótulos Início, Stack, Projetos, Sobre e Contato.
 - `src/components/OptimizedImage.jsx`: componente de imagem responsiva com metadados, `srcSet`, dimensões reservadas e placeholder opcional.
@@ -212,6 +214,7 @@ Esses recursos são uma base de implementação, não uma declaração de confor
 - A lista de links fica em `src/data/navigation.js`; o link ativo usa a seção atual na Home e a rota atual nas páginas internas.
 - Nos links Início/Stack clicados em páginas internas, a aplicação volta à Home e aguarda a disponibilidade do conteúdo antes de executar a rolagem para a âncora.
 - No mobile, a navegação interna continua usando cabeçalho compacto e `MenuMobile`; os controles de som móveis permanecem no painel mobile.
+- O Hero do Sobre tem um único `h1` próprio e ações para as seções já existentes (`#competencias` e `#formacao`); essas ações usam a API central de rolagem em vez de criar novos destinos ou duplicar conteúdo.
 
 As rotas iniciais já foram declaradas; ainda é necessário:
 - Dar conteúdo final a cada rota, com `<h1>` único e informativo e links reais.
