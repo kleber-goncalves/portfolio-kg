@@ -308,9 +308,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `191037afa46d464a8129fce4d28d39fdd9b339bb`
-- **Data do commit analisado:** 2026-10-23T15:47:06-03:00
-- **Mensagem do commit:** Implement code changes to enhance functionality and improve performance
+- **Commit de código analisado:** `b62d4d84df63c8d7561e6d9064e80e48f9a04f53`
+- **Data do commit analisado:** 2026-10-23T15:51:20-03:00
+- **Mensagem do commit:** feat: add editorial hero for about page
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -427,13 +427,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `b62d4d8` | 2026-10-23 | feat: add editorial hero for about page |
+| `64f21ce` | 2026-10-23 | docs(ai-context): atualizar snapshot automaticamente |
 | `191037a` | 2026-10-23 | Implement code changes to enhance functionality and improve performance |
 | `91dd1eb` | 2026-10-23 | docs(ai-context): atualizar snapshot automaticamente |
 | `a54560f` | 2026-10-23 | docs: update AI context for shared desktop header |
 | `aa198fb` | 2026-10-23 | docs(ai-context): atualizar snapshot automaticamente |
 | `711df25` | 2026-10-23 | fix: preserve anchor navigation from interior header |
 | `1c2b2e3` | 2026-10-23 | docs(ai-context): atualizar snapshot automaticamente |
-| `1d97f5c` | 2026-10-23 | fix: retain optimized image import used by hero |
-| `1cdcd8b` | 2026-10-23 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
