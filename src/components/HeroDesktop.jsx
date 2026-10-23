@@ -5,6 +5,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import Socials from "../components/Socials";
 import DotField from "../components/DotField";
+import OptimizedImage from "./OptimizedImage";
 
 import { ArrowDownRight } from "lucide-react";
 
