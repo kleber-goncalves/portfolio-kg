@@ -1,12 +1,13 @@
 import DeferredLayoutSection from "../../components/DeferredLayoutSection";
 import InteriorPageLayout from "../../layouts/InteriorPageLayout";
+import SobreHero from "./SobreHero";
 
 function Sobre({ experienceMode = "full" }) {
     return (
         <InteriorPageLayout
-            eyebrow="// PERFIL PROFISSIONAL"
             title="Sobre"
             description="Conheça minha formação, competências e diferenciais na construção de aplicações web."
+            heroContent={<SobreHero />}
             showFallbackFooter={false}
             footerContent={<DeferredLayoutSection section="footer" />}
         >
