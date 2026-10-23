@@ -311,9 +311,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `3a26043b4ee563a34ce41834977feb8590af00ce`
-- **Data do commit analisado:** 2026-10-23T15:52:34-03:00
-- **Mensagem do commit:** style: format custom hero slot in interior layout
+- **Commit de código analisado:** `010b6a1f6a2685c37c798aeef6290e9c7a7a60c0`
+- **Data do commit analisado:** 2026-10-23T15:53:03-03:00
+- **Mensagem do commit:** docs: document custom hero on about page
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -430,13 +430,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `010b6a1` | 2026-10-23 | docs: document custom hero on about page |
+| `df3a83c` | 2026-10-23 | docs(ai-context): atualizar snapshot automaticamente |
 | `3a26043` | 2026-10-23 | style: format custom hero slot in interior layout |
 | `b90d61f` | 2026-10-23 | docs(ai-context): atualizar snapshot automaticamente |
 | `a176b7e` | 2026-10-23 | feat: use custom hero on about page |
 | `6ad3e7c` | 2026-10-23 | docs(ai-context): atualizar snapshot automaticamente |
 | `fd91b85` | 2026-10-23 | refactor: allow custom hero in interior page layout |
 | `1e5e805` | 2026-10-23 | docs(ai-context): atualizar snapshot automaticamente |
-| `b62d4d8` | 2026-10-23 | feat: add editorial hero for about page |
-| `64f21ce` | 2026-10-23 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
