@@ -308,9 +308,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `fd91b85f81b6209ce988d7ebae82c3dfd5bcf2e6`
-- **Data do commit analisado:** 2026-10-23T15:51:33-03:00
-- **Mensagem do commit:** refactor: allow custom hero in interior page layout
+- **Commit de código analisado:** `a176b7e8240d4da459d1fb09111f9b3756b64924`
+- **Data do commit analisado:** 2026-10-23T15:51:46-03:00
+- **Mensagem do commit:** feat: use custom hero on about page
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -427,13 +427,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `a176b7e` | 2026-10-23 | feat: use custom hero on about page |
+| `6ad3e7c` | 2026-10-23 | docs(ai-context): atualizar snapshot automaticamente |
 | `fd91b85` | 2026-10-23 | refactor: allow custom hero in interior page layout |
 | `1e5e805` | 2026-10-23 | docs(ai-context): atualizar snapshot automaticamente |
 | `b62d4d8` | 2026-10-23 | feat: add editorial hero for about page |
 | `64f21ce` | 2026-10-23 | docs(ai-context): atualizar snapshot automaticamente |
 | `191037a` | 2026-10-23 | Implement code changes to enhance functionality and improve performance |
 | `91dd1eb` | 2026-10-23 | docs(ai-context): atualizar snapshot automaticamente |
-| `a54560f` | 2026-10-23 | docs: update AI context for shared desktop header |
-| `aa198fb` | 2026-10-23 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
