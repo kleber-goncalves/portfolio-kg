@@ -4,9 +4,11 @@ import { Link, useLocation } from "react-router-dom";
 import MenuMobile from "../components/MenuMobile";
 import PortfolioDesktopHeader from "../components/PortfolioDesktopHeader";
 import { NAVIGATION_ITEMS } from "../data/navigation";
+import usePortfolioNavigation from "../hooks/usePortfolioNavigation";
 
 function InteriorPageLayout({ title, eyebrow, description, children, footerContent = null, showFallbackFooter = true }) {
     const { pathname } = useLocation();
+    const navigatePortfolio = usePortfolioNavigation();
 
     useEffect(() => {
         const previousTitle = document.title;
@@ -33,6 +35,7 @@ function InteriorPageLayout({ title, eyebrow, description, children, footerConte
                         placement="interior"
                         items={NAVIGATION_ITEMS}
                         activeHref={pathname}
+                        onNavigate={navigatePortfolio}
                         logoHref="/"
                     />
                 </div>
