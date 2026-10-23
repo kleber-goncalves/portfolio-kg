@@ -293,9 +293,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `1d97f5caa71af0d1c0d82c365bc61a1506bd8430`
-- **Data do commit analisado:** 2026-10-23T13:55:36-03:00
-- **Mensagem do commit:** fix: retain optimized image import used by hero
+- **Commit de código analisado:** `711df25af94838de71144400bda27e9f4161630e`
+- **Data do commit analisado:** 2026-10-23T13:56:47-03:00
+- **Mensagem do commit:** fix: preserve anchor navigation from interior header
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -412,13 +412,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `711df25` | 2026-10-23 | fix: preserve anchor navigation from interior header |
+| `1c2b2e3` | 2026-10-23 | docs(ai-context): atualizar snapshot automaticamente |
 | `1d97f5c` | 2026-10-23 | fix: retain optimized image import used by hero |
 | `1cdcd8b` | 2026-10-23 | docs(ai-context): atualizar snapshot automaticamente |
 | `136db50` | 2026-10-23 | refactor: share desktop header across interior pages |
 | `3a66e46` | 2026-10-23 | docs(ai-context): atualizar snapshot automaticamente |
 | `c796892` | 2026-10-23 | refactor: reuse full desktop header in hero |
 | `3cc75a6` | 2026-10-23 | docs(ai-context): atualizar snapshot automaticamente |
-| `18d1c95` | 2026-10-23 | refactor: compose reusable desktop portfolio header |
-| `41a0a92` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
