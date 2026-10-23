@@ -293,9 +293,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `c79689280fd6c732d3ef862a8d9773300b16d9fe`
-- **Data do commit analisado:** 2026-10-23T13:54:35-03:00
-- **Mensagem do commit:** refactor: reuse full desktop header in hero
+- **Commit de código analisado:** `136db50d3c38cf510171a14754c1586c34b5e696`
+- **Data do commit analisado:** 2026-10-23T13:54:53-03:00
+- **Mensagem do commit:** refactor: share desktop header across interior pages
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -412,13 +412,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `136db50` | 2026-10-23 | refactor: share desktop header across interior pages |
+| `3a66e46` | 2026-10-23 | docs(ai-context): atualizar snapshot automaticamente |
 | `c796892` | 2026-10-23 | refactor: reuse full desktop header in hero |
 | `3cc75a6` | 2026-10-23 | docs(ai-context): atualizar snapshot automaticamente |
 | `18d1c95` | 2026-10-23 | refactor: compose reusable desktop portfolio header |
 | `41a0a92` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
 | `4923e32` | 2026-10-22 | fix: ajustar estado do menu compartilhado |
 | `712ec76` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
-| `a631b41` | 2026-10-22 | feat: compartilhar navegacao entre as paginas |
-| `d7174ea` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
