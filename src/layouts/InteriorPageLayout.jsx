@@ -6,7 +6,7 @@ import PortfolioDesktopHeader from "../components/PortfolioDesktopHeader";
 import { NAVIGATION_ITEMS } from "../data/navigation";
 import usePortfolioNavigation from "../hooks/usePortfolioNavigation";
 
-function InteriorPageLayout({ title, eyebrow, description, children, footerContent = null, showFallbackFooter = true }) {
+function InteriorPageLayout({ title, eyebrow, description, heroContent = null, children, footerContent = null, showFallbackFooter = true }) {
     const { pathname } = useLocation();
     const navigatePortfolio = usePortfolioNavigation();
 
@@ -57,17 +57,19 @@ function InteriorPageLayout({ title, eyebrow, description, children, footerConte
             </header>
 
             <main id="main-content" tabIndex={-1} className="w-full outline-none">
-                <header className="mx-auto w-full max-w-7xl px-5 pb-10 pt-12 b-md:px-10 b-md:pb-16 b-md:pt-20">
-                    <p className="text-xs uppercase tracking-[0.22em] text-bronze">
-                        {eyebrow}
-                    </p>
-                    <h1 className="mt-4 max-w-5xl font-space text-4xl font-semibold leading-[0.98] tracking-tight text-ivory b-md:mt-6 b-md:text-7xl">
-                        {title}
-                    </h1>
-                    <p className="mt-5 max-w-2xl text-sm leading-6 text-steel b-md:mt-7 b-md:text-base b-md:leading-7">
-                        {description}
-                    </p>
-                </header>
+{heroContent ?? (
+                    <header className="mx-auto w-full max-w-7xl px-5 pb-10 pt-12 b-md:px-10 b-md:pb-16 b-md:pt-20">
+                        <p className="text-xs uppercase tracking-[0.22em] text-bronze">
+                            {eyebrow}
+                        </p>
+                        <h1 className="mt-4 max-w-5xl font-space text-4xl font-semibold leading-[0.98] tracking-tight text-ivory b-md:mt-6 b-md:text-7xl">
+                            {title}
+                        </h1>
+                        <p className="mt-5 max-w-2xl text-sm leading-6 text-steel b-md:mt-7 b-md:text-base b-md:leading-7">
+                            {description}
+                        </p>
+                    </header>
+                )}
 
                 {children}
             </main>
