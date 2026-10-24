@@ -311,9 +311,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `d55728c9736b6398d3c19af10c49e7c5c5e489e3`
-- **Data do commit analisado:** 2026-10-24T00:59:16-03:00
-- **Mensagem do commit:** refactor(ProjetoDesktop): simplificar animações de preview e otimizar movimentação do mouse
+- **Commit de código analisado:** `399e660070f9958ad454977e4796ade5b2226686`
+- **Data do commit analisado:** 2026-10-24T01:12:15-03:00
+- **Mensagem do commit:** docs: preservar comportamento preferido do preview
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -430,13 +430,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `399e660` | 2026-10-24 | docs: preservar comportamento preferido do preview |
+| `0de43ce` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `d55728c` | 2026-10-24 | refactor(ProjetoDesktop): simplificar animações de preview e otimizar movimentação do mouse |
 | `7c52a14` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `380b710` | 2026-10-24 | docs: registrar estabilidade do preview desktop |
 | `8e45794` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `848954a` | 2026-10-24 | fix(projetos): estabilizar preview seguindo o cursor |
 | `f1ba27b` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
-| `e73c2c4` | 2026-10-24 | docs: registrar tilt responsivo à rolagem |
-| `72831fd` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
