@@ -84,7 +84,6 @@ function RouteTransitionPreloader({ transition, onComplete }) {
     if (!transition) return null;
 
     const page = PAGE_COPY[transitionPathname] ?? PAGE_COPY["/"];
-    const reducedMotion = prefersReducedMotion();
 
     return (
         <div
