@@ -17,7 +17,7 @@ import GlobeIcon from "./GlobeIcon";
 
 gsap.registerPlugin(ScrollTrigger);
 
-function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, experienceMode = "full" }) {
+function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, onContentReady, experienceMode = "full" }) {
     useLayoutEffect(() => {
         onReady?.("desktop", { gsap, ScrollTrigger });
     }, [onReady]);
@@ -868,6 +868,8 @@ if (animationCleanup) {
                         sizes="(min-width: 1280px) 970px, (min-width: 1024px) 440px, 420px"
                         loading="eager"
                         fetchPriority="high"
+                        onLoad={() => onContentReady?.("desktop")}
+                        onError={() => onContentReady?.("desktop")}
                         wrapperClassName="h-full w-full"
                         className="
                             object-cover
