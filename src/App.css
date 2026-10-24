@@ -375,6 +375,69 @@ html::-webkit-scrollbar {
 }
 
 
+/* Preloader de navegação entre rotas. */
+.route-preloader {
+    animation: route-preloader-enter 260ms ease-out both;
+    opacity: 1;
+    transition: opacity 300ms ease-out;
+}
+
+.route-preloader__content {
+    animation: route-preloader-content-enter 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+        opacity 220ms ease-out,
+        transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.route-preloader--leaving {
+    opacity: 0;
+}
+
+.route-preloader--leaving .route-preloader__content {
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+.route-preloader__indicator {
+    animation: route-preloader-indeterminate 1.2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+.route-preloader__indicator--ready {
+    animation: none;
+    transform: translateX(200%);
+    transition: transform 280ms ease-out;
+}
+
+@keyframes route-preloader-enter {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes route-preloader-content-enter {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes route-preloader-indeterminate {
+    0% {
+        opacity: 0.25;
+        transform: translateX(-120%);
+    }
+    50% { opacity: 1; }
+    100% {
+        opacity: 0.4;
+        transform: translateX(330%);
+    }
+}
+
 /* Acessibilidade: foco de teclado visível e preferência por movimento reduzido. */
 :where(a, button, input, select, textarea, [tabindex]):focus-visible {
     outline: 2px solid var(--accent-light, #d8c2aa);
