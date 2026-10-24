@@ -3,4 +3,13 @@
     <url>
         <loc>https://kleber-goncalves-dev.vercel.app/</loc>
     </url>
+    <url>
+        <loc>https://kleber-goncalves-dev.vercel.app/projetos</loc>
+    </url>
+    <url>
+        <loc>https://kleber-goncalves-dev.vercel.app/sobre</loc>
+    </url>
+    <url>
+        <loc>https://kleber-goncalves-dev.vercel.app/contato</loc>
+    </url>
 </urlset>
