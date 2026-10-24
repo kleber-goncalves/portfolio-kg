@@ -209,6 +209,15 @@ Implementações observadas:
 
 Esses recursos são uma base de implementação, não uma declaração de conformidade integral com WCAG, nem uma garantia de indexação/ranking.
 
+### SEO por rota e auditoria automatizada
+
+- **Fonte única de metadados:** `src/data/seoRoutes.json` mantém título, descrição, texto alternativo da imagem social e URLs-base para `/`, `/projetos`, `/sobre` e `/contato`.
+- **SEO durante navegação SPA:** `src/hooks/useRouteSeo.js` atualiza título do documento, description, robots, canonical, Open Graph, Twitter Cards e JSON-LD `WebPage`; `src/App.jsx` aciona o hook a partir de `location.pathname`, sem depender de efeitos separados em cada página.
+- **Metadados estáticos por URL:** `scripts/generate-seo-routes.mjs` é executado ao fim de `npm run build`. Ele gera `dist/projetos/index.html`, `dist/sobre/index.html` e `dist/contato/index.html` com título, descrição, canonical, Open Graph/Twitter e JSON-LD específicos. A imagem de preload do Hero é retirada das páginas internas para evitar download desnecessário.
+- **Sitemap:** a fonte `public/sitemap.xml` lista as quatro rotas públicas; o build gera `dist/sitemap.xml` a partir da mesma configuração de SEO.
+- **Escopo e limite atual:** o script gera HTML estático com metadados por rota, mas não pré-renderiza o DOM completo do React. O conteúdo da página continua dependendo da hidratação JavaScript; o auditor deve manter esse ponto como aviso até uma implementação SSG/SSR de conteúdo ser validada.
+- **Auditoria por rota:** `.github/workflows/accessibility-seo.yml` inclui `feat/separacao-paginas`. O script `scripts/audit-accessibility-seo.mjs` valida metadados, canonical, JSON-LD e sitemap nas quatro páginas e executa checagens semânticas/Axe em desktop e mobile. Os botões de paginação anterior, números e próxima página têm `title` descritivo além do nome acessível.
+
 ### Navegação entre páginas e cabeçalhos
 
 - **Implementado na arquitetura atual:** o cabeçalho desktop compartilhado reúne logo, Experience, controles de som e navbar magnética nas páginas internas e no Hero da Home. A navegação horizontal é distinta do painel desktop flutuante acionado durante a rolagem.
@@ -218,11 +227,9 @@ Esses recursos são uma base de implementação, não uma declaração de confor
 - O Hero do Sobre tem um único `h1` próprio e ações para as seções já existentes (`#competencias` e `#formacao`); essas ações usam a API central de rolagem em vez de criar novos destinos ou duplicar conteúdo.
 
 As rotas iniciais já foram declaradas; ainda é necessário:
-- Dar conteúdo final a cada rota, com `<h1>` único e informativo e links reais.
-- Verificar navegação por teclado, foco após mudança de rota, botão voltar/avançar e carregamento direto/reload de cada URL.
-- Atualizar sitemap/canonical/OG com URLs consistentes.
-- Confirmar rewrites/fallbacks da Vercel para deep links.
-- Avaliar prerenderização para SEO por rota; títulos/descrições alterados no cliente não substituem conteúdo renderizado previamente.
+- Verificar manualmente navegação por teclado, leitores de tela, foco após mudança de rota, botão voltar/avançar e carregamento direto/reload de cada URL.
+- Confirmar na Vercel que as rotas estáticas geradas são servidas diretamente e que canonical não conflita com redirecionamentos de barra final.
+- Avaliar SSG/SSR do conteúdo React se a pré-renderização integral se mostrar necessária; metadados estáticos por rota não significam que o conteúdo do corpo foi pré-renderizado.
 
 ## 12. GitHub Actions, scripts e ambiente de desenvolvimento
 
