@@ -1,12 +1,24 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { gsap } from "gsap";
 
 import GlobeIcon from "../../components/GlobeIcon";
+import OptimizedImage from "../../components/OptimizedImage";
 import "../../styles/sobreHeroPortrait.css";
 
-function SobreHero({ experienceMode = "full" }) {
+function SobreHero({ experienceMode = "full", onRouteReady }) {
     const portraitRef = useRef(null);
+    const portraitImageRef = useRef(null);
+    const handlePortraitReady = useCallback(() => {
+        onRouteReady?.("/sobre");
+    }, [onRouteReady]);
     const isReducedExperience = experienceMode === "reduced";
+
+    useEffect(() => {
+        // Imagens em cache podem terminar de carregar antes do primeiro efeito.
+        if (portraitImageRef.current?.complete) {
+            handlePortraitReady();
+        }
+    }, [handlePortraitReady]);
 
     useEffect(() => {
         const portrait = portraitRef.current;
@@ -224,7 +236,19 @@ function SobreHero({ experienceMode = "full" }) {
                             ref={portraitRef}
                             className="sobre-hero-portrait absolute inset-0 overflow-hidden border border-graphite bg-carbon"
                         >
-                            <img src="/euNvEnvt.png" alt="Retrato de Kleber Gonçalves" loading="eager" fetchPriority="high" decoding="async" className="absolute inset-0 h-full w-full object-cover object-top" />
+                            <OptimizedImage
+                                imageRef={portraitImageRef}
+                                src="/euNvEnvt.png"
+                                alt="Retrato de Kleber Gonçalves"
+                                sizes="(min-width: 1280px) 600px, (min-width: 768px) 45vw, 350px"
+                                loading="eager"
+                                fetchPriority="high"
+                                decoding="async"
+                                wrapperClassName="h-full w-full"
+                                className="absolute inset-0 h-full w-full object-cover object-top"
+                                onLoad={handlePortraitReady}
+                                onError={handlePortraitReady}
+                            />
 
                             <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-[24%] bg-gradient-to-t from-obsidian/70 to-transparent" />
 
