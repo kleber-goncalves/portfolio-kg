@@ -1,4 +1,4 @@
-import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Link, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
 
@@ -7,6 +7,7 @@ import SmoothScroll from "./components/SmoothScroll";
 import ButtonReset from "./components/buttonReset";
 import CursorTrail from "./components/CursorTrail";
 import Preloader from "./components/Preloader";
+import RouteTransitionPreloader from "./components/RouteTransitionPreloader";
 import { getExperienceMode } from "./utils/experienceMode";
 import useRouteSeo from "./hooks/useRouteSeo";
 import { scrollToTarget } from "./utils/lenisControl";
@@ -52,6 +53,41 @@ function RouteFallback() {
 function App() {
     const location = useLocation();
     useRouteSeo(location.pathname);
+    const [routeTransition, setRouteTransition] = useState(null);
+    const previousRoutePathname = useRef(location.pathname);
+    const routeTransitionSequence = useRef(0);
+
+    useLayoutEffect(() => {
+        const { pathname } = location;
+
+        if (previousRoutePathname.current === pathname) return;
+
+        previousRoutePathname.current = pathname;
+        routeTransitionSequence.current += 1;
+
+        setRouteTransition({
+            id: routeTransitionSequence.current,
+            pathname,
+            ready: false,
+        });
+    }, [location.pathname]);
+
+    const handleRouteReady = useCallback((pathname) => {
+        setRouteTransition((current) => {
+            if (!current || current.pathname !== pathname || current.ready) {
+                return current;
+            }
+
+            return { ...current, ready: true };
+        });
+    }, []);
+
+    const handleRouteTransitionComplete = useCallback((id) => {
+        setRouteTransition((current) => (
+            current?.id === id ? null : current
+        ));
+    }, []);
+
     const [experienceMode] = useState(() => getExperienceMode() || "full");
     const [homeMenuVisible, setHomeMenuVisible] = useState(false);
     const [routeNavigationStatus, setRouteNavigationStatus] = useState(() => ({
@@ -97,6 +133,10 @@ function App() {
     return (
         <>
             <Preloader />
+            <RouteTransitionPreloader
+                transition={routeTransition}
+                onComplete={handleRouteTransitionComplete}
+            />
             <CursorTrail />
 
             <SmoothScroll>
@@ -121,11 +161,11 @@ function App() {
                         <Routes>
                             <Route
                                 path="/"
-                                element={<Home experienceMode={experienceMode} onMenuVisibilityChange={handleHomeMenuVisibilityChange} />}
+                                element={<Home experienceMode={experienceMode} onMenuVisibilityChange={handleHomeMenuVisibilityChange} onRouteReady={handleRouteReady} />}
                             />
-                            <Route path="/projetos" element={<Projetos />} />
-                            <Route path="/sobre" element={<Sobre experienceMode={experienceMode} />} />
-                            <Route path="/contato" element={<Contato />} />
+                            <Route path="/projetos" element={<Projetos onRouteReady={handleRouteReady} />} />
+                            <Route path="/sobre" element={<Sobre experienceMode={experienceMode} onRouteReady={handleRouteReady} />} />
+                            <Route path="/contato" element={<Contato onRouteReady={handleRouteReady} />} />
                             <Route path="*" element={<Navigate to="/" replace />} />
                         </Routes>
                     </Suspense>
