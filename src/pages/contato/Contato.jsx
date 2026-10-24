@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { ArrowUpRight } from "lucide-react";
 import InteriorPageLayout from "../../layouts/InteriorPageLayout";
 
@@ -16,7 +17,11 @@ const CONTACT_LINKS = [
     },
 ];
 
-function Contato() {
+function Contato({ onRouteReady }) {
+    useEffect(() => {
+        onRouteReady?.("/contato");
+    }, [onRouteReady]);
+
     return (
         <InteriorPageLayout
             title="Vamos conversar."
