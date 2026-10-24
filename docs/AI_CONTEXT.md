@@ -312,9 +312,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `a04cc13b7f72c5eae2cf1400137f82698dceebe9`
-- **Data do commit analisado:** 2026-10-24T18:41:53-03:00
-- **Mensagem do commit:** docs: document shared footer on interior routes
+- **Commit de código analisado:** `a477cccb79f2d877fd28f3efb503b326764465cf`
+- **Data do commit analisado:** 2026-10-24T18:46:36-03:00
+- **Mensagem do commit:** fix: refresh scroll triggers after project filtering
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -431,13 +431,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `a477ccc` | 2026-10-24 | fix: refresh scroll triggers after project filtering |
+| `a77c9fa` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
+| `492ab74` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `a04cc13` | 2026-10-24 | docs: document shared footer on interior routes |
 | `6f040f8` | 2026-10-24 | refactor: centralize shared footer in interior layout |
 | `5ddb5f7` | 2026-10-24 | refactor: standardize footer across interior routes |
 | `fe8c907` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `09b0883` | 2026-10-24 | refactor: use shared interior footer slot |
-| `3e827c1` | 2026-10-24 | fix: render shared footer on interior pages |
-| `3eb5f6b` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
-| `5a3c36a` | 2026-10-24 | refactor: ajustar layout e remover comentários desnecessários nas páginas de projetos e contato |
 
 <!-- END AUTO-GENERATED SECTION -->
