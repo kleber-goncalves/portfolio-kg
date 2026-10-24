@@ -312,9 +312,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `60c4f0375f1fd990e3005f47ba87d1f8010767d9`
-- **Data do commit analisado:** 2026-10-24T18:57:44-03:00
-- **Mensagem do commit:** docs: document numbered project pagination
+- **Commit de código analisado:** `d5ee00303e2cbad20428ccd08f2dde1efedd500b`
+- **Data do commit analisado:** 2026-10-24T19:20:39-03:00
+- **Mensagem do commit:** docs: document pagination hover state reset
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -431,13 +431,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `d5ee003` | 2026-10-24 | docs: document pagination hover state reset |
+| `273fbec` | 2026-10-24 | fix: reset pagination hover state on page change |
+| `764e0cc` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `60c4f03` | 2026-10-24 | docs: document numbered project pagination |
 | `db4a4c0` | 2026-10-24 | feat: add numbered pagination to project catalog |
 | `74253d5` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `ca1d1bd` | 2026-10-24 | docs: document incremental project catalog pagination |
 | `1b23208` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
-| `1e855c2` | 2026-10-24 | feat: load project catalog in batches of ten |
-| `dd6f78a` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
-| `a477ccc` | 2026-10-24 | fix: refresh scroll triggers after project filtering |
 
 <!-- END AUTO-GENERATED SECTION -->
