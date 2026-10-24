@@ -311,9 +311,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `302c9da63a8734ec147b774ae9f1825432913dad`
-- **Data do commit analisado:** 2026-10-23T22:38:56-03:00
-- **Mensagem do commit:** feat(sobre): manter texto sticky até o fim do retrato
+- **Commit de código analisado:** `b3bb1f6831ff4ee53e9872e992575c344908964c`
+- **Data do commit analisado:** 2026-10-23T22:39:16-03:00
+- **Mensagem do commit:** docs(ai-context): registrar texto sticky no hero sobre
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -430,13 +430,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `b3bb1f6` | 2026-10-23 | docs(ai-context): registrar texto sticky no hero sobre |
+| `b9d60e6` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `302c9da` | 2026-10-23 | feat(sobre): manter texto sticky até o fim do retrato |
 | `c103f19` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `514cf60` | 2026-10-23 | Merge branch 'feat/separacao-paginas' of https://github.com/kleber-goncalves/portfolio-kg into feat/separacao-paginas |
 | `5c69834` | 2026-10-23 | style: remover classes desnecessárias no componente SobreHero |
 | `f1bc6a7` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `f180649` | 2026-10-23 | refactor: ajustar layout e estilização do cabeçalho e seção Sobre |
-| `066795c` | 2026-10-23 | docs(ai-context): atualizar snapshot automaticamente |
-| `010b6a1` | 2026-10-23 | docs: document custom hero on about page |
 
 <!-- END AUTO-GENERATED SECTION -->
