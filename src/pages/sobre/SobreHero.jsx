@@ -22,10 +22,12 @@ function SobreHero({ experienceMode = "full" }) {
         const pointer = { x: null, y: null };
         let pointerOverPortrait = false;
         let frameId = null;
-        let shouldUpdateTilt = false;
+        let tiltUpdateMode = null;
 
         const updatePointerEffects = () => {
             frameId = null;
+            const currentTiltUpdateMode = tiltUpdateMode;
+            tiltUpdateMode = null;
 
             if (pointer.x === null || pointer.y === null) return;
 
@@ -71,30 +73,40 @@ function SobreHero({ experienceMode = "full" }) {
                 });
             }
 
-            // O tilt acompanha movimentos reais do cursor. Durante o scroll,
-            // atualizamos o spotlight sem animar novamente os eixos 3D a cada frame.
-            if (shouldUpdateTilt && isInside) {
+            // A inclinação também é recalculada durante o scroll: o cursor pode
+            // ficar parado enquanto o retrato se desloca por baixo dele.
+            if (currentTiltUpdateMode && isInside) {
                 const centerX = rect.width / 2;
                 const centerY = rect.height / 2;
                 const rotateX = (y / centerY - 1) * -1.5;
                 const rotateY = (x / centerX - 1) * 1.5;
-
-                gsap.to(portrait, {
+                const tilt = {
                     rotateX,
                     rotateY,
-                    duration: 0.18,
-                    ease: "power2.out",
                     transformPerspective: 500,
-                    overwrite: true,
-                });
-            }
+                    overwrite: "auto",
+                };
 
-            shouldUpdateTilt = false;
+                if (currentTiltUpdateMode === "smooth") {
+                    gsap.to(portrait, {
+                        ...tilt,
+                        duration: 0.18,
+                        ease: "power2.out",
+                    });
+                } else {
+                    // Durante a rolagem, a inclinação acompanha a nova geometria
+                    // diretamente, sem reiniciar uma animação em cada quadro.
+                    gsap.set(portrait, tilt);
+                }
+            }
         };
 
-        // Agrupa movimentos e eventos de scroll em no máximo uma atualização por frame.
-        const scheduleUpdate = (updateTilt = false) => {
-            shouldUpdateTilt = shouldUpdateTilt || updateTilt;
+        // Agrupa movimento do cursor e scroll em no máximo uma atualização por frame.
+        // Um movimento real preserva o easing; scroll aplica o ângulo já recalculado.
+        const scheduleUpdate = (tiltMode = null) => {
+            if (tiltMode === "smooth" || (tiltMode === "direct" && tiltUpdateMode === null)) {
+                tiltUpdateMode = tiltMode;
+            }
 
             if (frameId !== null) return;
 
@@ -104,11 +116,11 @@ function SobreHero({ experienceMode = "full" }) {
         const handlePointerMove = (event) => {
             pointer.x = event.clientX;
             pointer.y = event.clientY;
-            scheduleUpdate(true);
+            scheduleUpdate("smooth");
         };
 
         const handleScroll = () => {
-            scheduleUpdate(false);
+            scheduleUpdate("direct");
         };
 
         const handlePointerLeaveWindow = () => {
