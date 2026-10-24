@@ -1,7 +1,12 @@
+import { useEffect } from "react";
 import InteriorPageLayout from "../../layouts/InteriorPageLayout";
 import ProjetoCatalogo from "../../components/ProjetoCatalogo";
 
-function Projetos() {
+function Projetos({ onRouteReady }) {
+    useEffect(() => {
+        onRouteReady?.("/projetos");
+    }, [onRouteReady]);
+
     return (
         <InteriorPageLayout
             title="Projetos"
