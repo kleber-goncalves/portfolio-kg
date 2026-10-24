@@ -327,9 +327,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `d0ff32b2e47ca3a8ff46e3c4af3d1b72c0aa008c`
-- **Data do commit analisado:** 2026-10-24T19:53:56-03:00
-- **Mensagem do commit:** docs: record route audit results and accessibility fixes
+- **Commit de código analisado:** `b4c27fa7b29cd08bc15cfd50784123c58db3098d`
+- **Data do commit analisado:** 2026-10-24T20:00:42-03:00
+- **Mensagem do commit:** docs: sync AI context with current SEO and route architecture
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -447,13 +447,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `b4c27fa` | 2026-10-24 | docs: sync AI context with current SEO and route architecture |
+| `ff9e2bc` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `d0ff32b` | 2026-10-24 | docs: record route audit results and accessibility fixes |
 | `4d33d63` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `ec2abcf` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `8b00c46` | 2026-10-24 | a11y: place back-to-top shortcut in a named navigation landmark |
 | `d91fc92` | 2026-10-24 | a11y: increase project catalog text contrast |
 | `b3353f3` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
-| `334b5e6` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
-| `6dd4c1f` | 2026-10-24 | seo: align social image alt with the actual preview image |
 
 <!-- END AUTO-GENERATED SECTION -->
