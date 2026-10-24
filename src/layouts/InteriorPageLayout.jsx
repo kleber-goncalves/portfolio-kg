@@ -3,10 +3,11 @@ import { Link, useLocation } from "react-router-dom";
 
 import MenuMobile from "../components/MenuMobile";
 import PortfolioDesktopHeader from "../components/PortfolioDesktopHeader";
+import DeferredLayoutSection from "../components/DeferredLayoutSection";
 import { NAVIGATION_ITEMS } from "../data/navigation";
 import usePortfolioNavigation from "../hooks/usePortfolioNavigation";
 
-function InteriorPageLayout({ title, description, heroContent = null, children, footerContent = null, showFallbackFooter = true }) {
+function InteriorPageLayout({ title, description, heroContent = null, children, footerContent = null }) {
     const { pathname } = useLocation();
     const navigatePortfolio = usePortfolioNavigation();
 
@@ -58,16 +59,7 @@ function InteriorPageLayout({ title, description, heroContent = null, children, 
                 {children}
             </main>
 
-            {footerContent}
-
-            {showFallbackFooter && (
-                <footer className="mx-auto mt-20 flex w-full b-md:max-w-[1500px] flex-col gap-3 border-t border-graphite px-5 py-6 text-xs text-steel b-md:flex-row b-md:items-center b-md:justify-between b-md:px-10">
-                    <span>© {new Date().getFullYear()} KLEBER DEV</span>
-                    <Link to="/" className="w-fit transition-colors hover:text-champagne">
-                        Voltar para a Home
-                    </Link>
-                </footer>
-            )}
+            {footerContent ?? <DeferredLayoutSection section="footer" />}
         </div>
     );
 }
