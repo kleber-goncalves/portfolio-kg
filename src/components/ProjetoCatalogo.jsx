@@ -1,9 +1,209 @@
 import { useState } from "react";
+import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import { ArrowUpRight } from "lucide-react";
+import { playUiSound } from "../utils/uiSfx";
 
 import { CATEGORIAS_PROJETOS, projetosCatalogo } from "../data/projetosCatalogo";
 import { tecnologias } from "../data/tecnologias";
 import MagneticExternalLinkHover from "./MagneticExternalLinkHover";
+
+
+function CategoriaFilterButton({ categoria, quantidade, ativa, onClick }) {
+    const [isHovered, setIsHovered] = useState(false);
+    const [isFocused, setIsFocused] = useState(false);
+    const isInteractive = isHovered || isFocused;
+
+    const x = useMotionValue(0);
+    const y = useMotionValue(0);
+
+    const springX = useSpring(x, {
+        stiffness: 280,
+        damping: 12,
+        mass: 1.1,
+    });
+
+    const springY = useSpring(y, {
+        stiffness: 280,
+        damping: 12,
+        mass: 1.1,
+    });
+
+    const originX = useMotionValue(0.5);
+    const originY = useMotionValue(0.5);
+    const transformOrigin = useTransform(
+        [originX, originY],
+        ([originXValue, originYValue]) =>
+            `${originXValue * 100}% ${originYValue * 100}%`,
+    );
+
+    const updateFillOrigin = (event) => {
+        const rect = event.currentTarget.getBoundingClientRect();
+        const relativeX = (event.clientX - rect.left) / rect.width;
+        const relativeY = (event.clientY - rect.top) / rect.height;
+
+        originX.set(Math.min(1, Math.max(0, relativeX)));
+        originY.set(Math.min(1, Math.max(0, relativeY)));
+    };
+
+    const handleMouseEnter = (event) => {
+        updateFillOrigin(event);
+        setIsHovered(true);
+    };
+
+    const handleMouseMove = (event) => {
+        const rect = event.currentTarget.getBoundingClientRect();
+        const mouseX = event.clientX - rect.left;
+        const mouseY = event.clientY - rect.top;
+
+        x.set((mouseX - rect.width / 2) * 0.2);
+        y.set((mouseY - rect.height / 2) * 0.2);
+        updateFillOrigin(event);
+    };
+
+    const handleMouseLeave = () => {
+        setIsHovered(false);
+        x.set(0);
+        y.set(0);
+    };
+
+    return (
+        <motion.button
+            type="button"
+            aria-pressed={ativa}
+            aria-label={`${categoria}, ${quantidade} projetos`}
+            data-ui-sfx-hover
+            onPointerDown={() => playUiSound("press")}
+            onClick={(event) => {
+                onClick();
+
+                if (event.detail === 0) {
+                    playUiSound("press");
+                }
+            }}
+            onMouseEnter={handleMouseEnter}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            style={{
+                x: springX,
+                y: springY,
+                borderColor: ativa ? "#A87852" : "#242424",
+            }}
+            className={`
+                relative
+                inline-flex
+                items-center
+                justify-center
+                gap-2
+                overflow-hidden
+                rounded-sm
+                border
+                px-3
+                py-2
+                text-xs
+                font-medium
+                uppercase
+                tracking-[0.12em]
+                focus-visible:outline
+                focus-visible:outline-2
+                focus-visible:outline-offset-2
+                focus-visible:outline-champagne
+                ${ativa ? "bg-bronze/10" : ""}
+            `}
+        >
+            <motion.span
+                aria-hidden="true"
+                className="
+                    pointer-events-none
+                    absolute
+                    inset-[-5px]
+                    z-0
+                    rounded-sm
+                "
+                style={{
+                    backgroundColor: "#A87852",
+                    transformOrigin,
+                }}
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{
+                    scale: isInteractive ? 1 : 0,
+                    opacity: isInteractive ? 1 : 0,
+                }}
+                transition={{
+                    scale: {
+                        type: "spring",
+                        stiffness: 150,
+                        damping: 22,
+                        mass: 0.75,
+                    },
+                    opacity: {
+                        duration: 0.25,
+                        ease: [0.16, 1, 0.3, 1],
+                    },
+                }}
+            />
+
+            <motion.span
+                aria-hidden="true"
+                className="
+                    pointer-events-none
+                    absolute
+                    inset-0
+                    z-[1]
+                    rounded-sm
+                    border
+                "
+                style={{ borderColor: "#A87852" }}
+                animate={{ opacity: isInteractive ? 1 : 0 }}
+                transition={{
+                    duration: 0.2,
+                    ease: [0.16, 1, 0.3, 1],
+                }}
+            />
+
+            <motion.span
+                className="relative z-10 inline-flex items-center gap-2"
+                style={{
+                    color: isInteractive
+                        ? "#0D0D0D"
+                        : ativa
+                            ? "#D8C2AA"
+                            : "#8B8B8B",
+                }}
+                animate={{
+                    y: isInteractive ? -0.5 : 0,
+                    letterSpacing: isInteractive ? "0.14em" : "0.12em",
+                }}
+                transition={{
+                    y: {
+                        type: "spring",
+                        stiffness: 430,
+                        damping: 18,
+                        mass: 0.4,
+                    },
+                    letterSpacing: {
+                        duration: 0.24,
+                        ease: [0.16, 1, 0.3, 1],
+                    },
+                }}
+            >
+                <span>{categoria}</span>
+                <span
+                    style={{
+                        color: isInteractive
+                            ? "#0D0D0D"
+                            : ativa
+                                ? "rgba(196, 154, 120, 0.72)"
+                                : "rgba(139, 139, 139, 0.6)",
+                    }}
+                >
+                    {quantidade.toString().padStart(2, "0")}
+                </span>
+            </motion.span>
+        </motion.button>
+    );
+}
 
 function ProjetoCatalogo() {
     const [categoriaAtiva, setCategoriaAtiva] = useState("Todos");
@@ -22,6 +222,7 @@ function ProjetoCatalogo() {
                     {projetosFiltrados.length} de {projetosCatalogo.length} projetos
                 </p>
 
+
                 <div
                     aria-label="Filtrar projetos por categoria"
                     className="flex flex-wrap gap-2"
@@ -36,37 +237,13 @@ function ProjetoCatalogo() {
                         const ativa = categoriaAtiva === categoria;
 
                         return (
-                            <button
+                            <CategoriaFilterButton
                                 key={categoria}
-                                type="button"
-                                aria-pressed={ativa}
-                                data-ui-sfx-hover
+                                categoria={categoria}
+                                quantidade={quantidade}
+                                ativa={ativa}
                                 onClick={() => setCategoriaAtiva(categoria)}
-                                className={`
-                                    inline-flex
-                                    items-center
-                                    gap-2
-                                    border
-                                    px-3
-                                    py-2
-                                    text-xs
-                                    tracking-wide
-                                    transition-colors
-                                    duration-300
-                                    focus-visible:outline
-                                    focus-visible:outline-2
-                                    focus-visible:outline-offset-2
-                                    focus-visible:outline-champagne
-                                    ${ativa
-                                        ? "border-bronze bg-bronze/10 text-champagne"
-                                        : "border-graphite text-steel hover:border-bronze/60 hover:text-ivory"}
-                                `}
-                            >
-                                <span>{categoria}</span>
-                                <span className={ativa ? "text-champagne/70" : "text-steel/60"}>
-                                    {quantidade.toString().padStart(2, "0")}
-                                </span>
-                            </button>
+                            />
                         );
                     })}
                 </div>
