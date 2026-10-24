@@ -52,6 +52,10 @@ function MagneticExternalLinkHover({
     // ============================================================
 
     Icon,
+
+    // Ativa o estado visual do grupo quando o cursor está sobre a linha
+    // calculada pelo catálogo durante a rolagem, mesmo sem novo pointermove.
+    isGroupHoverActive = false,
 }) {
     // ============================================================
     // MOVIMENTO MAGNÉTICO
@@ -169,6 +173,8 @@ function MagneticExternalLinkHover({
 
                 group-hover/preview:border-[var(--hover-border-color)]
 
+                ${isGroupHoverActive ? "border-[var(--hover-border-color)]" : ""}
+
                 ${className}
             `}
         >
@@ -194,6 +200,8 @@ function MagneticExternalLinkHover({
 
                     group-hover/preview:scale-100
                     group-hover/preview:opacity-100
+
+                    ${isGroupHoverActive ? "scale-100 opacity-100" : ""}
                 "
                 style={{
                     backgroundColor: "var(--accent-color)",
@@ -216,8 +224,8 @@ function MagneticExternalLinkHover({
                     text-[var(--text-color)]
                 "
                 animate={{
-                    y: 0,
-                    letterSpacing: "0.12em",
+                    y: isGroupHoverActive ? -0.5 : 0,
+                    letterSpacing: isGroupHoverActive ? "0.14em" : "0.12em",
                 }}
                 whileHover={{
                     y: -0.5,
@@ -246,6 +254,8 @@ function MagneticExternalLinkHover({
                         duration-300
 
                         group-hover/preview:text-[var(--hover-text-color)]
+
+                        ${isGroupHoverActive ? "text-[var(--hover-text-color)]" : ""}
                     "
                 >
                     {children}
@@ -268,11 +278,13 @@ function MagneticExternalLinkHover({
             duration-300
 
             group-hover/preview:text-[var(--hover-text-color)]
+
+            ${isGroupHoverActive ? "text-[var(--hover-text-color)]" : ""}
         "
                         animate={{
-                            x: 0,
-                            y: 0,
-                            scale: 1,
+                            x: isGroupHoverActive ? 2 : 0,
+                            y: isGroupHoverActive ? -2 : 0,
+                            scale: isGroupHoverActive ? 1.05 : 1,
                         }}
                         whileHover={{
                             x: 2,
