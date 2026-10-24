@@ -184,7 +184,7 @@ function MagneticExternalLinkHover({
 
             <span
                 aria-hidden="true"
-                className="
+                className={`
                     pointer-events-none
                     absolute
                     inset-[-5px]
@@ -202,7 +202,7 @@ function MagneticExternalLinkHover({
                     group-hover/preview:opacity-100
 
                     ${isGroupHoverActive ? "scale-100 opacity-100" : ""}
-                "
+                `}
                 style={{
                     backgroundColor: "var(--accent-color)",
                 }}
@@ -249,14 +249,14 @@ function MagneticExternalLinkHover({
                 ================================================= */}
 
                 <span
-                    className="
+                    className={`
                         transition-colors
                         duration-300
 
                         group-hover/preview:text-[var(--hover-text-color)]
 
                         ${isGroupHoverActive ? "text-[var(--hover-text-color)]" : ""}
-                    "
+                    `}
                 >
                     {children}
                 </span>
@@ -267,7 +267,7 @@ function MagneticExternalLinkHover({
 
                 {Icon && (
                     <motion.span
-                        className="
+                        className={`
             inline-flex
             items-center
             justify-center
@@ -280,7 +280,7 @@ function MagneticExternalLinkHover({
             group-hover/preview:text-[var(--hover-text-color)]
 
             ${isGroupHoverActive ? "text-[var(--hover-text-color)]" : ""}
-        "
+        `}
                         animate={{
                             x: isGroupHoverActive ? 2 : 0,
                             y: isGroupHoverActive ? -2 : 0,
