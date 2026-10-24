@@ -10,22 +10,22 @@
     "/": {
       "title": "Kleber Gonçalves | Desenvolvedor Full Stack",
       "description": "Portfólio de Kleber Gonçalves, desenvolvedor Full Stack com foco em interfaces web, aplicações e APIs. Conheça meus projetos, competências e trajetória em tecnologia.",
-      "socialImageAlt": "Portfólio de Kleber Gonçalves, desenvolvedor Full Stack."
+      "socialImageAlt": "Prévia visual do portfólio de Kleber Gonçalves."
     },
     "/projetos": {
       "title": "Projetos | Kleber Dev",
       "description": "Explore os projetos de Kleber Gonçalves: aplicações web, interfaces, APIs e estudos com foco em desenvolvimento, experiência do usuário e qualidade técnica.",
-      "socialImageAlt": "Catálogo de projetos web de Kleber Gonçalves."
+      "socialImageAlt": "Prévia visual do portfólio de Kleber Gonçalves."
     },
     "/sobre": {
       "title": "Sobre Kleber Gonçalves | Kleber Dev",
       "description": "Conheça a trajetória de Kleber Gonçalves, sua formação em Análise e Desenvolvimento de Sistemas, competências e diferenciais em desenvolvimento web.",
-      "socialImageAlt": "Sobre Kleber Gonçalves e sua trajetória em desenvolvimento web."
+      "socialImageAlt": "Prévia visual do portfólio de Kleber Gonçalves."
     },
     "/contato": {
       "title": "Contato | Kleber Dev",
       "description": "Entre em contato com Kleber Gonçalves para conversar sobre oportunidades, colaboração e projetos de desenvolvimento web. Acesse GitHub e LinkedIn.",
-      "socialImageAlt": "Canais de contato profissional de Kleber Gonçalves."
+      "socialImageAlt": "Prévia visual do portfólio de Kleber Gonçalves."
     }
   }
 }
