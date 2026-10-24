@@ -298,6 +298,38 @@ function ProjetoCatalogo() {
             (projeto) => projeto.categoria === categoriaAtiva,
         );
 
+    // A troca de categoria altera a altura do documento. Recalcula as posições
+    // dos ScrollTriggers depois que o React aplicar a nova lista ao DOM.
+    useEffect(() => {
+        let cancelled = false;
+        let firstFrame = 0;
+        let secondFrame = 0;
+
+        firstFrame = window.requestAnimationFrame(() => {
+            secondFrame = window.requestAnimationFrame(async () => {
+                try {
+                    const { ScrollTrigger } = await import("gsap/ScrollTrigger");
+                    if (cancelled) return;
+
+                    ScrollTrigger.refresh(true);
+                } catch (error) {
+                    if (!cancelled) {
+                        console.error(
+                            "Não foi possível atualizar os ScrollTriggers após filtrar os projetos.",
+                            error,
+                        );
+                    }
+                }
+            });
+        });
+
+        return () => {
+            cancelled = true;
+            window.cancelAnimationFrame(firstFrame);
+            window.cancelAnimationFrame(secondFrame);
+        };
+    }, [categoriaAtiva]);
+
     return (
         <section ref={sectionRef} className="mx-auto w-full b-md:max-w-[1500px] px-5 pb-16 b-md:px-10 b-md:pb-24">
             {/* FILTROS DO CATÁLOGO */}
