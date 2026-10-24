@@ -56,7 +56,8 @@ export default function ButtonReset() {
     };
 
     return (
-        <div
+        <nav
+            aria-label="Atalho para voltar ao topo"
             className={`
                 fixed
                 bottom-1
@@ -111,6 +112,6 @@ export default function ButtonReset() {
                     "
                 />
             </Link>
-        </div>
+        </nav>
     );
 }
