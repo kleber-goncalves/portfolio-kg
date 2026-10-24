@@ -262,7 +262,7 @@ function ProjetoCatalogo() {
                             b-md:py-8
                         "
                     >
-                        <div className="flex w-full flex-col gap-4 b-md:flex-row b-md:items-center b-md:justify-between b-md:gap-8">
+                        <div className="group/preview flex w-full flex-col gap-4 b-md:flex-row b-md:items-center b-md:justify-between b-md:gap-8">
                             <div className="flex min-w-0 flex-1 items-start gap-4 b-md:gap-8">
                                 <span
                                     aria-hidden="true"
