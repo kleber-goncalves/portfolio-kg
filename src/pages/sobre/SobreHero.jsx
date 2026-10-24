@@ -49,7 +49,7 @@ function SobreHero() {
         const elementName = (element) => {
             const id = element.id ? `#${element.id}` : "";
             const className = typeof element.className === "string"
-                ? element.className.trim().replace(/\\s+/g, " ").slice(0, 100)
+                ? element.className.trim().replace(/\s+/g, " ").slice(0, 100)
                 : "";
 
             return `${element.tagName.toLowerCase()}${id}${className ? `.${className.replace(/ /g, ".")}` : ""}`;
