@@ -319,9 +319,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `d91fc92b37abcb76df4c4c50c089c9d719d678d8`
-- **Data do commit analisado:** 2026-10-24T19:48:55-03:00
-- **Mensagem do commit:** a11y: increase project catalog text contrast
+- **Commit de código analisado:** `8b00c46b11a4b4ef2f55e06650befec53b775621`
+- **Data do commit analisado:** 2026-10-24T19:49:01-03:00
+- **Mensagem do commit:** a11y: place back-to-top shortcut in a named navigation landmark
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -439,6 +439,7 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `8b00c46` | 2026-10-24 | a11y: place back-to-top shortcut in a named navigation landmark |
 | `d91fc92` | 2026-10-24 | a11y: increase project catalog text contrast |
 | `b3353f3` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `334b5e6` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
@@ -446,6 +447,5 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 | `c6ee2cc` | 2026-10-24 | seo: describe shared social preview image accurately |
 | `0e11b59` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `ba02679` | 2026-10-24 | fix: validate route language metadata correctly |
-| `00ab5b1` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
