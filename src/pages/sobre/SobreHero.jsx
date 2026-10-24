@@ -1,5 +1,8 @@
 import { useEffect, useRef } from "react";
 
+// Log no carregamento do módulo: confirma se o navegador recebeu esta versão do componente.
+console.warn("[SobreHero sticky] Módulo carregado — diagnóstico temporário ativo.");
+
 function SobreHero() {
     const sectionRef = useRef(null);
     const gridRef = useRef(null);
@@ -7,11 +10,7 @@ function SobreHero() {
     const portraitRef = useRef(null);
 
     useEffect(() => {
-        // Ative o diagnóstico adicionando ?debugSticky=1 à URL da página.
-        if (new URLSearchParams(window.location.search).get("debugSticky") !== "1") {
-            return undefined;
-        }
-
+        // Instrumentação temporária: ativa automaticamente em toda visita à página Sobre.
         const section = sectionRef.current;
         const grid = gridRef.current;
         const text = textRef.current;
@@ -156,12 +155,12 @@ function SobreHero() {
             ].join(" | ");
         };
 
-        console.info("[SobreHero sticky] Diagnóstico ativo:", {
+        console.warn("[SobreHero sticky] Diagnóstico ativo:", {
             pathname: window.location.pathname,
             search: window.location.search,
             readyState: document.readyState,
         });
-        console.log("[SobreHero sticky] Inicial:", formatMetrics(getMetrics()), getMetrics());
+        console.warn("[SobreHero sticky] Inicial:", formatMetrics(getMetrics()), getMetrics());
         console.table(ancestors);
         console.log(
             "[SobreHero sticky] Ancestrais que podem criar contêiner de rolagem:",
@@ -172,7 +171,7 @@ function SobreHero() {
         let lastLoggedMetrics = getMetrics();
 
         const logMetrics = (label, metrics) => {
-            console.log(`[SobreHero sticky] ${label}: ${formatMetrics(metrics)}`, metrics);
+            console.warn(`[SobreHero sticky] ${label}: ${formatMetrics(metrics)}`, metrics);
         };
 
         const handleScroll = () => {
