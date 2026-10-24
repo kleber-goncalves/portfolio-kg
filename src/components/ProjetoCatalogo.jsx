@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import { ArrowUpRight } from "lucide-react";
 import { playUiSound } from "../utils/uiSfx";
@@ -201,6 +201,96 @@ function CategoriaFilterButton({ categoria, quantidade, ativa, onClick }) {
 
 function ProjetoCatalogo() {
     const [categoriaAtiva, setCategoriaAtiva] = useState("Todos");
+    const [projetoSobCursor, setProjetoSobCursor] = useState(null);
+    const sectionRef = useRef(null);
+    const pointerPositionRef = useRef({ x: null, y: null });
+    const projetoSobCursorRef = useRef(null);
+
+    useEffect(() => {
+        const section = sectionRef.current;
+
+        if (!section) return undefined;
+
+        // A atualização por scroll é pensada para mouse/trackpad, sem simular
+        // hover persistente em dispositivos primariamente táteis.
+        const mediaQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
+
+        if (!mediaQuery.matches) return undefined;
+
+        let frameId = null;
+
+        const updateHoveredProject = () => {
+            frameId = null;
+
+            const { x, y } = pointerPositionRef.current;
+            let nextProjectId = null;
+
+            if (x !== null && y !== null) {
+                const projectRows = section.querySelectorAll("[data-project-id]");
+
+                for (const row of projectRows) {
+                    const rect = row.getBoundingClientRect();
+
+                    if (
+                        rect.width > 0 &&
+                        rect.height > 0 &&
+                        x >= rect.left &&
+                        x <= rect.right &&
+                        y >= rect.top &&
+                        y <= rect.bottom
+                    ) {
+                        nextProjectId = row.getAttribute("data-project-id");
+                        break;
+                    }
+                }
+            }
+
+            if (projetoSobCursorRef.current !== nextProjectId) {
+                projetoSobCursorRef.current = nextProjectId;
+                setProjetoSobCursor(nextProjectId);
+            }
+        };
+
+        const scheduleUpdate = () => {
+            if (frameId !== null) return;
+
+            frameId = window.requestAnimationFrame(updateHoveredProject);
+        };
+
+        const handlePointerMove = (event) => {
+            pointerPositionRef.current = {
+                x: event.clientX,
+                y: event.clientY,
+            };
+
+            scheduleUpdate();
+        };
+
+        const handlePointerLeave = () => {
+            pointerPositionRef.current = { x: null, y: null };
+            scheduleUpdate();
+        };
+
+        window.addEventListener("pointermove", handlePointerMove, { passive: true });
+        // Capture permite detectar rolagens iniciadas em contêineres aninhados.
+        window.addEventListener("scroll", scheduleUpdate, { passive: true, capture: true });
+        window.addEventListener("resize", scheduleUpdate, { passive: true });
+        window.addEventListener("pointerleave", handlePointerLeave);
+
+        // Também recalcula depois da troca de categoria, quando as linhas mudam.
+        scheduleUpdate();
+
+        return () => {
+            window.removeEventListener("pointermove", handlePointerMove);
+            window.removeEventListener("scroll", scheduleUpdate, true);
+            window.removeEventListener("resize", scheduleUpdate);
+            window.removeEventListener("pointerleave", handlePointerLeave);
+
+            if (frameId !== null) {
+                window.cancelAnimationFrame(frameId);
+            }
+        };
+    }, [categoriaAtiva]);
 
     const projetosFiltrados = categoriaAtiva === "Todos"
         ? projetosCatalogo
@@ -209,7 +299,7 @@ function ProjetoCatalogo() {
         );
 
     return (
-        <section className="mx-auto w-full max-w-7xl px-5 pb-16 b-md:px-10 b-md:pb-24">
+        <section ref={sectionRef} className="mx-auto w-full max-w-7xl px-5 pb-16 b-md:px-10 b-md:pb-24">
             {/* FILTROS DO CATÁLOGO */}
             <div className="mb-8 border-b border-graphite pb-6">
                 <p className="mb-4 text-xs uppercase tracking-[0.18em] text-steel">
@@ -245,9 +335,14 @@ function ProjetoCatalogo() {
 
             {/* LISTA — MESMA LINGUAGEM VISUAL DO PROJETODESKTOP EM REDUCED */}
             <div className="flex w-full flex-col" aria-live="polite">
-                {projetosFiltrados.map((projeto) => (
+                {projetosFiltrados.map((projeto) => {
+                    const isCursorHovered = projetoSobCursor === projeto.id;
+
+                    return (
                     <article
                         key={projeto.id}
+                        data-project-id={projeto.id}
+                        data-cursor-hover={isCursorHovered ? "true" : "false"}
                         data-ui-sfx-hover
                         className="
                             group
@@ -259,10 +354,11 @@ function ProjetoCatalogo() {
                             transition-colors
                             duration-500
                             hover:border-bronze/50
+                            data-[cursor-hover=true]:border-bronze/50
                             b-md:py-8
                         "
                     >
-                        <div className="group/preview flex w-full flex-col gap-4 b-md:flex-row b-md:items-center b-md:justify-between b-md:gap-8">
+                        <div data-cursor-hover={isCursorHovered ? "true" : "false"} className="group/preview flex w-full flex-col gap-4 b-md:flex-row b-md:items-center b-md:justify-between b-md:gap-8">
                             <div className="flex min-w-0 flex-1 items-start gap-4 b-md:gap-8">
                                 <span
                                     aria-hidden="true"
@@ -278,6 +374,7 @@ function ProjetoCatalogo() {
                                         transition-opacity
                                         duration-500
                                         group-hover:opacity-100
+                                        group-data-[cursor-hover=true]:opacity-100
                                         b-md:w-10
                                     "
                                 >
@@ -297,6 +394,8 @@ function ProjetoCatalogo() {
                                             ease-out
                                             group-hover:translate-x-1
                                             group-hover:text-ivory
+                                            group-data-[cursor-hover=true]:translate-x-1
+                                            group-data-[cursor-hover=true]:text-ivory
                                             b-md:text-2xl
                                             c-lg:text-4xl
                                         "
@@ -314,7 +413,9 @@ function ProjetoCatalogo() {
                                             duration-500
                                             ease-out
                                             group-hover:translate-x-1
+                                            group-data-[cursor-hover=true]:translate-x-1
                                             b-md:group-hover:translate-x-2
+                                            b-md:group-data-[cursor-hover=true]:translate-x-2
                                         "
                                     >
                                         {projeto.descricao}
@@ -346,8 +447,11 @@ function ProjetoCatalogo() {
                                                         duration-500
                                                         ease-out
                                                         group-hover:translate-x-1
+                                                        group-data-[cursor-hover=true]:translate-x-1
+                                                        group-data-[cursor-hover=true]:border-bronze/50
                                                         ${tecnologia?.hoverBorder ?? "group-hover:border-bronze/50"}
                                                         group-hover:text-white
+                                                        group-data-[cursor-hover=true]:text-white
                                                         b-md:px-3
                                                     `}
                                                 >
@@ -381,6 +485,7 @@ function ProjetoCatalogo() {
                                         textColor="#8B8B8B"
                                         hoverTextColor="#0D0D0D"
                                         Icon={ArrowUpRight}
+                                        isGroupHoverActive={isCursorHovered}
                                     >
                                         Preview
                                     </MagneticExternalLinkHover>
@@ -397,6 +502,7 @@ function ProjetoCatalogo() {
                                         textColor="#8B8B8B"
                                         hoverTextColor="#F2F0EC"
                                         Icon={ArrowUpRight}
+                                        isGroupHoverActive={isCursorHovered}
                                     >
                                         GitHub
                                     </MagneticExternalLinkHover>
@@ -404,7 +510,8 @@ function ProjetoCatalogo() {
                             </div>
                         </div>
                     </article>
-                ))}
+                    );
+                })}
             </div>
         </section>
     );
