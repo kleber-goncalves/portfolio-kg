@@ -486,13 +486,13 @@ export const projetosCatalogo = [
         github: "https://github.com/kleber-goncalves/efeito-borda-invertida",
     },
     {
-        id: "gerenciamento-produtos-faculdade",
+        id: "primeiro-projeto-recuperado",
         numero: "48",
-        titulo: "Gerenciamento de Produtos — atividade",
-        descricao: "Repositório acadêmico de estudo, com informações públicas insuficientes para descrever funcionalidades além do tema indicado pelo nome.",
+        titulo: "Primeiro Projeto — versão recuperada",
+        descricao: "Versão recuperada de um projeto antigo, com HTML e CSS; o repositório público contém uma descrição breve.",
         categoria: "Estudos",
-        tecnologias: ["PHP"],
+        tecnologias: ["HTML", "CSS"],
         demo: null,
-        github: "https://github.com/kleber-goncalves/gerenciamento-de-produtos-php_uniube-faculdade",
+        github: "https://github.com/kleber-goncalves/primeiro-projeto",
     },
 ];
