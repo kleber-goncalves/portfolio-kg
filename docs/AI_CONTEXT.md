@@ -312,9 +312,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `2761a680970c47fc317ed4265406f059e02ffa34`
-- **Data do commit analisado:** 2026-10-24T18:24:12-03:00
-- **Mensagem do commit:** docs: document scroll-aware project hover
+- **Commit de código analisado:** `5a3c36a9b250719ff235302752953ee0a5f2e29d`
+- **Data do commit analisado:** 2026-10-24T18:36:30-03:00
+- **Mensagem do commit:** refactor: ajustar layout e remover comentários desnecessários nas páginas de projetos e contato
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -431,13 +431,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `5a3c36a` | 2026-10-24 | refactor: ajustar layout e remover comentários desnecessários nas páginas de projetos e contato |
+| `a70373a` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `2761a68` | 2026-10-24 | docs: document scroll-aware project hover |
 | `afa99b7` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `75226de` | 2026-10-24 | fix: make scroll-driven link hover state deterministic |
 | `a63225f` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `be0957a` | 2026-10-24 | fix: apply scroll-driven group hover classes |
 | `7c04fb5` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
-| `d373a27` | 2026-10-24 | feat: support scroll-driven group hover on project links |
-| `8ffb0f4` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
