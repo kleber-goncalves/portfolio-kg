@@ -312,9 +312,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `db835cea0dfc843f53faaadca42227c6e99256aa`
-- **Data do commit analisado:** 2026-10-24T19:39:52-03:00
-- **Mensagem do commit:** feat: generate route SEO HTML and sitemap during build
+- **Commit de código analisado:** `4ad17c85ab8ccab62d86503522f627decebe8ce3`
+- **Data do commit analisado:** 2026-10-24T19:40:15-03:00
+- **Mensagem do commit:** feat: refine default route SEO metadata
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -328,7 +328,7 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 | Comando | Definição |
 |---|---|
 | `npm run dev` | `vite --host` |
-| `npm run build` | `vite build` |
+| `npm run build` | `vite build && node scripts/generate-seo-routes.mjs` |
 | `npm run lint` | `eslint .` |
 | `npm run preview` | `vite preview` |
 | `npm run test` | `vitest run` |
@@ -432,13 +432,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `4ad17c8` | 2026-10-24 | feat: refine default route SEO metadata |
+| `a2884ee` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `db835ce` | 2026-10-24 | feat: generate route SEO HTML and sitemap during build |
 | `37c153d` | 2026-10-24 | feat: synchronize SEO metadata with active route |
 | `4d5ef2f` | 2026-10-24 | feat: define route-specific SEO metadata |
 | `e1c882b` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `d5ee003` | 2026-10-24 | docs: document pagination hover state reset |
 | `273fbec` | 2026-10-24 | fix: reset pagination hover state on page change |
-| `764e0cc` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
-| `60c4f03` | 2026-10-24 | docs: document numbered project pagination |
 
 <!-- END AUTO-GENERATED SECTION -->
