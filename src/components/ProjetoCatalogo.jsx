@@ -191,7 +191,7 @@ function CategoriaFilterButton({ categoria, quantidade, ativa, onClick }) {
                 <span>{categoria}</span>
                 <span
                     style={{
-                        color: isHighlighted ? "#0D0D0D" : "rgba(139, 139, 139, 0.6)",
+                        color: isHighlighted ? "#0D0D0D" : "#8B8B8B",
                     }}
                 >
                     {quantidade.toString().padStart(2, "0")}
@@ -517,7 +517,7 @@ function ProjetoCatalogo() {
                                             })}
                                         </div>
 
-                                        <p className="mt-1 text-[10px] uppercase tracking-[0.16em] text-steel/50">{projeto.categoria}</p>
+                                        <p className="mt-1 text-[10px] uppercase tracking-[0.16em] text-steel">{projeto.categoria}</p>
                                     </div>
                                 </div>
 
