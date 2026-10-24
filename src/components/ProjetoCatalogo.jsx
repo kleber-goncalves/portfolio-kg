@@ -12,6 +12,7 @@ function CategoriaFilterButton({ categoria, quantidade, ativa, onClick }) {
     const [isHovered, setIsHovered] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
     const isInteractive = isHovered || isFocused;
+    const isHighlighted = ativa || isInteractive;
 
     const x = useMotionValue(0);
     const y = useMotionValue(0);
@@ -128,8 +129,8 @@ function CategoriaFilterButton({ categoria, quantidade, ativa, onClick }) {
                 }}
                 initial={{ scale: 0, opacity: 0 }}
                 animate={{
-                    scale: isInteractive ? 1 : 0,
-                    opacity: isInteractive ? 1 : 0,
+                    scale: isHighlighted ? 1 : 0,
+                    opacity: isHighlighted ? 1 : 0,
                 }}
                 transition={{
                     scale: {
@@ -156,7 +157,7 @@ function CategoriaFilterButton({ categoria, quantidade, ativa, onClick }) {
                     border
                 "
                 style={{ borderColor: "#A87852" }}
-                animate={{ opacity: isInteractive ? 1 : 0 }}
+                animate={{ opacity: isHighlighted ? 1 : 0 }}
                 transition={{
                     duration: 0.2,
                     ease: [0.16, 1, 0.3, 1],
@@ -166,15 +167,11 @@ function CategoriaFilterButton({ categoria, quantidade, ativa, onClick }) {
             <motion.span
                 className="relative z-10 inline-flex items-center gap-2"
                 style={{
-                    color: isInteractive
-                        ? "#0D0D0D"
-                        : ativa
-                            ? "#D8C2AA"
-                            : "#8B8B8B",
+                    color: isHighlighted ? "#0D0D0D" : "#8B8B8B",
                 }}
                 animate={{
                     y: isInteractive ? -0.5 : 0,
-                    letterSpacing: isInteractive ? "0.14em" : "0.12em",
+                    letterSpacing: isHighlighted ? "0.14em" : "0.12em",
                 }}
                 transition={{
                     y: {
@@ -192,11 +189,7 @@ function CategoriaFilterButton({ categoria, quantidade, ativa, onClick }) {
                 <span>{categoria}</span>
                 <span
                     style={{
-                        color: isInteractive
-                            ? "#0D0D0D"
-                            : ativa
-                                ? "rgba(196, 154, 120, 0.72)"
-                                : "rgba(139, 139, 139, 0.6)",
+                        color: isHighlighted ? "#0D0D0D" : "rgba(139, 139, 139, 0.6)",
                     }}
                 >
                     {quantidade.toString().padStart(2, "0")}
