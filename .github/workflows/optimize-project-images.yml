@@ -6,9 +6,12 @@ on:
       - main
       - dev
       - feat/responsividadeFull
+      - feat/separacao-paginas
     paths:
       - "src/assets/projetos/**"
       - "public/euNv.png"
+      - "public/euNvEnvt.png"
+      - "src/pages/sobre/SobreHero.jsx"
       - "src/components/HeroDesktop.jsx"
       - "src/components/HeroMobile.jsx"
       - "scripts/optimize-project-images.mjs"
