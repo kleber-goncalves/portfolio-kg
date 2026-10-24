@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { startSmoothScroll, stopSmoothScroll } from "../utils/lenisControl";
 
 const MIN_VISIBLE_TIME = 420;
@@ -32,28 +32,16 @@ function prefersReducedMotion() {
 }
 
 function RouteTransitionPreloader({ transition, onComplete }) {
-    const [phase, setPhase] = useState("entering");
+    const [phase, setPhase] = useState("visible");
     const startedAtRef = useRef(0);
     const transitionId = transition?.id;
     const transitionPathname = transition?.pathname;
     const transitionReady = transition?.ready;
 
-    useLayoutEffect(() => {
-        if (!transitionId) return undefined;
-
-        startedAtRef.current = performance.now();
-        setPhase("entering");
-
-        const frameId = window.requestAnimationFrame(() => {
-            setPhase("visible");
-        });
-
-        return () => window.cancelAnimationFrame(frameId);
-    }, [transitionId]);
-
     useEffect(() => {
         if (!transitionId) return undefined;
 
+        startedAtRef.current = performance.now();
         const html = document.documentElement;
         const body = document.body;
         const previousHtmlOverflow = html.style.overflow;
@@ -96,11 +84,11 @@ function RouteTransitionPreloader({ transition, onComplete }) {
     if (!transition) return null;
 
     const page = PAGE_COPY[transitionPathname] ?? PAGE_COPY["/"];
-    const isVisible = phase === "visible";
     const reducedMotion = prefersReducedMotion();
 
     return (
         <div
+            key={transitionId}
             role="status"
             aria-live="polite"
             aria-busy={!transitionReady}
@@ -115,11 +103,9 @@ function RouteTransitionPreloader({ transition, onComplete }) {
                 justify-center
                 bg-obsidian
                 px-6
-                transition-opacity
-                duration-300
-                ease-out
+                route-preloader
                 motion-reduce:transition-none
-                ${isVisible ? "opacity-100" : "opacity-0"}
+                ${phase === "leaving" ? "route-preloader--leaving" : ""}
             `}
         >
             <div
@@ -130,11 +116,9 @@ function RouteTransitionPreloader({ transition, onComplete }) {
                     flex-col
                     items-center
                     text-center
-                    transition-transform
-                    duration-500
-                    ease-[cubic-bezier(0.16,1,0.3,1)]
+                    route-preloader__content
                     motion-reduce:transition-none
-                    ${isVisible ? "translate-y-0" : "translate-y-3"}
+                    ${phase === "leaving" ? "route-preloader__content--leaving" : ""}
                 `}
             >
                 <p className="mb-8 self-start text-[9px] uppercase tracking-[0.24em] text-steel sm:text-[10px]">
@@ -160,11 +144,7 @@ function RouteTransitionPreloader({ transition, onComplete }) {
                 >
                     <div
                         aria-hidden="true"
-                        className="h-full w-1/3 bg-gradient-to-r from-bronze via-warm-bronze to-champagne"
-                        style={{
-                            transform: transition.ready ? "translateX(200%)" : "translateX(0)",
-                            transition: reducedMotion ? "none" : "transform 300ms ease-out",
-                        }}
+                        className={`route-preloader__indicator h-full w-1/3 bg-gradient-to-r from-bronze via-warm-bronze to-champagne ${transitionReady ? "route-preloader__indicator--ready" : ""}`}
                     />
                 </div>
 
