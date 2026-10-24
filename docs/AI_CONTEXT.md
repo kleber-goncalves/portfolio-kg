@@ -311,9 +311,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `9057b0d3fc6375f142a444a309e3e94d5c5d0165`
-- **Data do commit analisado:** 2026-10-23T23:13:49-03:00
-- **Mensagem do commit:** debug(sobre): tornar logs sticky sempre visíveis
+- **Commit de código analisado:** `850503ee473b386cdf8dd768d236135da3892efd`
+- **Data do commit analisado:** 2026-10-23T23:22:03-03:00
+- **Mensagem do commit:** debug(sobre): corrigir status e resumir métricas sticky
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -430,13 +430,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `850503e` | 2026-10-23 | debug(sobre): corrigir status e resumir métricas sticky |
+| `c9743ed` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `9057b0d` | 2026-10-23 | debug(sobre): tornar logs sticky sempre visíveis |
 | `4ac3f8f` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `2340e55` | 2026-10-23 | fix(debug): normalizar nomes dos ancestrais do sticky |
 | `e1a9d71` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `8970357` | 2026-10-23 | debug(sobre): registrar métricas do sticky no hero |
 | `0e06385` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
-| `b3bb1f6` | 2026-10-23 | docs(ai-context): registrar texto sticky no hero sobre |
-| `b9d60e6` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
