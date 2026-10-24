@@ -327,9 +327,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `65c677ea95327f0a98cd961aed96c34f37908dbc`
-- **Data do commit analisado:** 2026-10-24T20:23:21-03:00
-- **Mensagem do commit:** feat: integrar preloader às mudanças de rota
+- **Commit de código analisado:** `0f1d4cfa21fdb376cf6354a8cffca92d040f3d06`
+- **Data do commit analisado:** 2026-10-24T20:23:42-03:00
+- **Mensagem do commit:** feat: sinalizar prontidão da página de contato
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -447,13 +447,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `0f1d4cf` | 2026-10-24 | feat: sinalizar prontidão da página de contato |
+| `ae4cbfc` | 2026-10-24 | feat: sinalizar prontidão do catálogo de projetos |
+| `7db98b8` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `65c677e` | 2026-10-24 | feat: integrar preloader às mudanças de rota |
 | `22dfe41` | 2026-10-24 | feat: adicionar preloader para transições entre páginas |
 | `7d5e90f` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `0fc79d1` | 2026-10-24 | Merge branch 'feat/separacao-paginas' of https://github.com/kleber-goncalves/portfolio-kg into feat/separacao-paginas |
 | `d417591` | 2026-10-24 | style: adicionar cursor pointer em botões no ProjetoCatalogo |
-| `69e6367` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
-| `b4c27fa` | 2026-10-24 | docs: sync AI context with current SEO and route architecture |
-| `ff9e2bc` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
