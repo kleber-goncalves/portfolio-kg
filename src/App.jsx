@@ -52,14 +52,13 @@ function RouteFallback() {
 
 function App() {
     const location = useLocation();
-    useRouteSeo(location.pathname);
+    const { pathname } = location;
+    useRouteSeo(pathname);
     const [routeTransition, setRouteTransition] = useState(null);
-    const previousRoutePathname = useRef(location.pathname);
+    const previousRoutePathname = useRef(pathname);
     const routeTransitionSequence = useRef(0);
 
     useLayoutEffect(() => {
-        const { pathname } = location;
-
         if (previousRoutePathname.current === pathname) return;
 
         previousRoutePathname.current = pathname;
@@ -70,7 +69,7 @@ function App() {
             pathname,
             ready: false,
         });
-    }, [location.pathname]);
+    }, [pathname]);
 
     const handleRouteReady = useCallback((pathname) => {
         setRouteTransition((current) => {
@@ -134,6 +133,7 @@ function App() {
         <>
             <Preloader />
             <RouteTransitionPreloader
+                key={routeTransition?.id ?? "idle"}
                 transition={routeTransition}
                 onComplete={handleRouteTransitionComplete}
             />
