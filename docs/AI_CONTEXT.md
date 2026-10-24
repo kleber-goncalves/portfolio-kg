@@ -327,9 +327,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `54f93a59347b096144079e57a8d436e6b5f5ee23`
-- **Data do commit analisado:** 2026-10-24T20:23:49-03:00
-- **Mensagem do commit:** feat: aguardar o conteúdo principal da página sobre
+- **Commit de código analisado:** `0628a3457e5c85fa5eeaca293e2225db90447bf3`
+- **Data do commit analisado:** 2026-10-24T20:24:22-03:00
+- **Mensagem do commit:** feat: propagar prontidão visual do hero por viewport
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -447,13 +447,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `0628a34` | 2026-10-24 | feat: propagar prontidão visual do hero por viewport |
+| `1da0ba8` | 2026-10-24 | feat: aguardar hero e stack antes de encerrar a transição |
+| `d2a54dc` | 2026-10-24 | feat: conectar prontidão do hero ao preloader de rota |
+| `fad130f` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
+| `363842e` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `54f93a5` | 2026-10-24 | feat: aguardar o conteúdo principal da página sobre |
 | `0f1d4cf` | 2026-10-24 | feat: sinalizar prontidão da página de contato |
 | `ae4cbfc` | 2026-10-24 | feat: sinalizar prontidão do catálogo de projetos |
-| `7db98b8` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
-| `65c677e` | 2026-10-24 | feat: integrar preloader às mudanças de rota |
-| `22dfe41` | 2026-10-24 | feat: adicionar preloader para transições entre páginas |
-| `7d5e90f` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
-| `0fc79d1` | 2026-10-24 | Merge branch 'feat/separacao-paginas' of https://github.com/kleber-goncalves/portfolio-kg into feat/separacao-paginas |
 
 <!-- END AUTO-GENERATED SECTION -->
