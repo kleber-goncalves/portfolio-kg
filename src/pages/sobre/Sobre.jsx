@@ -8,7 +8,6 @@ function Sobre({ experienceMode = "full" }) {
             title="Sobre"
             description="Conheça minha formação, competências e diferenciais na construção de aplicações web."
             heroContent={<SobreHero experienceMode={experienceMode} />}
-            footerContent={<DeferredLayoutSection section="footer" />}
         >
             <DeferredLayoutSection
                 section="competencia"
