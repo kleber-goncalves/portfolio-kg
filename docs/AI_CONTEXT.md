@@ -7,7 +7,7 @@
 1. Leia este documento por inteiro antes de editar o código.
 2. Confirme o estado atual na branch e no commit do repositório. A seção automatizada indica a revisão usada pelo processo de sincronização; commits posteriores podem existir.
 3. Trate o código atual como fonte de verdade para o comportamento implementado. Este documento ajuda a entender contexto, mas pode estar desatualizado entre atualizações.
-4. Não confunda funcionalidade **implementada**, problema **observado**, decisão **vigente** e ideia **planejada**. As quatro rotas agora têm uma estrutura inicial; a Home foi preservada e as páginas Sobre e Contato ainda são scaffolds, não versões finais.
+4. Não confunda funcionalidade **implementada**, problema **observado**, decisão **vigente** e ideia **planejada**. As quatro rotas existem. A Home foi preservada; Projetos já tem catálogo, filtros e paginação; Sobre tem Hero próprio e seções de conteúdo; Contato ainda apresenta canais de contato, mas não tem formulário de envio real. Sobre e Contato seguem abertas a refinamento.
 5. Preserve a identidade visual, o uso de JavaScript/JSX e os comportamentos do portfólio. Não introduza TypeScript sem solicitação explícita.
 6. Faça mudanças pequenas e coesas. Antes de refatorar GSAP, ScrollTrigger, Lenis, carregamento diferido ou UI SFX, estude os fluxos atuais e os testes associados.
 7. Não declare testes aprovados sem executar ou consultar as evidências correspondentes. Diferencie testes automatizados em Chromium de validação em dispositivos físicos.
@@ -24,7 +24,7 @@
 - **Propósito:** portfólio pessoal para apresentar a identidade profissional, competências, diferenciais, formação, trajetória, tecnologias e projetos web.
 - **Público principal:** recrutadores, equipes técnicas, clientes potenciais e desenvolvedores que queiram avaliar os trabalhos.
 - **Direção:** experiência visual própria, interações cuidadas, responsividade, acessibilidade, SEO técnico e investigação contínua de desempenho. O site não deve ser tratado como um template genérico.
-- **Forma atual:** aplicação React com `BrowserRouter` e rotas `/`, `/projetos`, `/sobre` e `/contato`. A Home reúne apenas Hero/Stack, a seção de projetos em destaque e o footer. Sobre reúne competências, diferenciais, formação e footer. As páginas dedicadas de Projetos e Contato ainda estão em fase inicial.
+- **Forma atual:** aplicação React com `BrowserRouter` e rotas `/`, `/projetos`, `/sobre` e `/contato`. A Home reúne Hero/Stack, projetos em destaque e footer. Sobre reúne Hero editorial, competências, diferenciais, formação e footer. Projetos já oferece um catálogo independente com filtros e paginação; Contato apresenta canais conhecidos, mas ainda não tem formulário de envio real.
 
 ## 3. Estado atual versus plano futuro
 
@@ -48,7 +48,7 @@
 - **src/pages/sobre/Sobre.jsx** apresenta um Hero editorial próprio por meio de `SobreHero.jsx`, seguido de `DeferredLayoutSection` para competências, diferenciais e formação. O footer legado é carregado ao final; o layout interno não o duplica nesta rota.
 - **src/pages/projetos/Projetos.jsx** usa `InteriorPageLayout` e `ProjetoCatalogo.jsx` para apresentar o catálogo completo da rota `/projetos`. O catálogo de 42 projetos fica em `src/data/projetosCatalogo.js`, com categorias, tecnologias, descrições e links; a interface oferece filtros por categoria e linhas inspiradas no modo Reduced de `ProjetoDesktop`, sem o preview flutuante. A listagem usa paginação numerada: apresenta 10 projetos por página, com botões numéricos, anterior/próxima e indicação de página atual. Os botões controlam explicitamente o hover; a troca de página ou categoria limpa o estado visual anterior, enquanto a página atual mantém apenas o destaque de seleção, evitando que a elevação/borda de hover fique presa no botão antigo. Ao mudar de categoria, volta para a página 1. Ao trocar de página, o catálogo rola até o início da lista e atualiza o `ScrollTrigger`; a contagem apresenta o intervalo visível e o total da categoria. O catálogo captura globalmente a posição do ponteiro em dispositivos com mouse/trackpad e recalcula a linha sob o cursor durante scroll e resize, agrupando atualizações via `requestAnimationFrame`; os estados resultantes ativam os efeitos visuais da linha e a prop opcional `isGroupHoverActive` de `MagneticExternalLinkHover`, preservando a interação magnética individual dos links. A mudança de categoria e cada novo lote visível também acionam a atualização do `ScrollTrigger` para recalcular as posições das animações e do footer. Essa página não reutiliza nem altera `ProjetosTeste2.jsx`: a Home mantém seus seis projetos em destaque e o comportamento atual do preview.
 - **src/pages/contato/Contato.jsx** permanece inicial: apresenta canais já conhecidos, mas ainda não possui formulário de envio real.
-- **src/layouts/InteriorPageLayout.jsx** fornece estrutura comum às páginas internas e atualiza título/descrição do navegador. Em desktop, usa `PortfolioDesktopHeader` com o item ativo definido pela rota; em mobile, mantém o cabeçalho compacto e `MenuMobile`. Aceita a prop opcional `heroContent`: quando fornecida, substitui o cabeçalho genérico de eyebrow/título/descrição, evitando duplicar o `h1`; quando omitida, Projetos e Contato mantêm o cabeçalho padrão. Todas as rotas internas carregam automaticamente o footer completo por `DeferredLayoutSection section="footer"`, evitando rodapés provisórios específicos de rota; a Home mantém seu próprio `DeferredLayoutSection section="footer"`.
+- **src/layouts/InteriorPageLayout.jsx** fornece estrutura comum às páginas internas, sem gerir diretamente os metadados do documento. O SEO global é sincronizado por `src/hooks/useRouteSeo.js`, acionado em `src/App.jsx` pela rota atual. Em desktop, o layout usa `PortfolioDesktopHeader` com o item ativo definido pela rota; em mobile, mantém o cabeçalho compacto e `MenuMobile`. Aceita a prop opcional `heroContent`: quando fornecida, substitui o cabeçalho genérico de eyebrow/título/descrição, evitando duplicar o `h1`; quando omitida, Projetos e Contato mantêm o cabeçalho padrão. Todas as rotas internas carregam automaticamente o footer completo por `DeferredLayoutSection section="footer"`; a Home mantém seu próprio `DeferredLayoutSection section="footer"`.
 - O `BrowserRouter` já existia no `src/main.jsx` e foi mantido. A navegação usa uma lista central em `src/data/navigation.js`; os links para `#hero` e `#stack` são tratados como âncoras da Home, enquanto `/projetos`, `/sobre` e `/contato` são rotas.
 - **Cabeçalho desktop compartilhado:** `src/components/PortfolioDesktopHeader.jsx` compõe o logo via `OptimizedImage`, `ExperienceDropdown`, `SoundControls` e `PortfolioNavigation`. O modo `placement="hero"` conserva o posicionamento absoluto do Hero; o modo `placement="interior"` usa o conjunto nas páginas internas. `logoRef` e `navRef` continuam sendo encaminhados ao logo e à navegação para preservar as animações GSAP de entrada de `HeroDesktop`.
 - **Navegação reutilizável:** `src/components/PortfolioNavigation.jsx` renderiza os itens compartilhados usando `MagneticNavLink`. O estado ativo vem do contexto: seção atual no Hero e rota atual nas páginas internas.
@@ -63,7 +63,7 @@
 - Desenvolver a página Contato e criar o formulário somente depois de definir um destino real de envio, incluindo validação, estados de sucesso/erro e proteção contra spam.
 - Refinar o conteúdo de Sobre, usando as seções legadas de competências, diferenciais e formação. Avaliar separadamente qualquer futura mudança na trajetória/Hero com testes de regressão GSAP/ScrollTrigger.
 - Validar build, lint, testes, navegação por teclado, foco, botão voltar/avançar, carregamento direto/reload das quatro rotas e rewrites da Vercel.
-- Atualizar sitemap/canonical/OG e avaliar prerenderização para SEO por rota; a atualização dinâmica do título/descrição no navegador não substitui prerenderização.
+- Verificar manualmente carregamento direto/reload das quatro rotas, canonical e aliases/rewrites na Vercel. Avaliar futuramente pré-renderização do corpo React (SSG/SSR): o build atual pré-gera metadados por URL, mas não o DOM completo das páginas.
 
 ## 4. Stack tecnológica
 
@@ -92,9 +92,9 @@ Tecnologias principais observadas:
 Estrutura identificada no repositório:
 
 - `src/main.jsx`: inicializa React em `StrictMode` e `BrowserRouter`; inclui mensagem de boas-vindas no console do DevTools.
-- `src/App.jsx`: shell global, Preloader, CursorTrail, SmoothScroll, link para pular ao conteúdo, controles globais de UI SFX e definição das quatro rotas com carregamento sob demanda.
-- `src/pages/`: componentes de rota. `home/Home.jsx` contém Hero/Stack, `DeferredProjects` e footer; `sobre/Sobre.jsx` usa `SobreHero.jsx` antes das seções de competências, diferenciais e formação; `projetos/Projetos.jsx` e `contato/Contato.jsx` ainda são implementações iniciais.
-- `src/layouts/InteriorPageLayout.jsx`: estrutura compartilhada das rotas internas, navegação principal e metadados; aceita `heroContent` opcional para trocar o cabeçalho textual padrão por um Hero específico da página.
+- `src/App.jsx`: shell global, Preloader, CursorTrail, SmoothScroll, link para pular ao conteúdo, controles globais de UI SFX, chamada de `useRouteSeo(location.pathname)` e definição das quatro rotas com carregamento sob demanda. Rotas desconhecidas ainda redirecionam para `/` via `Navigate`, em vez de mostrar uma página 404 dedicada.
+- `src/pages/`: componentes de rota. `home/Home.jsx` contém Hero/Stack, `DeferredProjects` e footer; `sobre/Sobre.jsx` usa `SobreHero.jsx` antes das seções de competências, diferenciais e formação; `projetos/Projetos.jsx` apresenta o catálogo paginado; `contato/Contato.jsx` lista canais de contato, sem formulário de envio real.
+- `src/layouts/InteriorPageLayout.jsx`: estrutura compartilhada das rotas internas e navegação principal; aceita `heroContent` opcional para trocar o cabeçalho textual padrão por um Hero específico. Os metadados pertencem ao hook global `src/hooks/useRouteSeo.js`, usado por `src/App.jsx`.
 - `src/layout/`: seções principais (Hero, tecnologias/Seclogs, competências, projetos, diferenciais, formação e footer).
 - `src/components/HeroSectionTransition.jsx`: controla a transição Hero/Stack e o comportamento do menu desktop associado à rolagem.
 - `src/components/DeferredLayoutSection.jsx`: carregamento diferido das seções usando `IntersectionObserver` e carregamento dinâmico.
@@ -107,6 +107,10 @@ Estrutura identificada no repositório:
 - `src/pages/sobre/SobreHero.jsx`: Hero editorial específico da página Sobre, com retrato, apresentação profissional e links para as seções de competências e formação.
 - `src/hooks/usePortfolioNavigation.js`: handler comum para navegação entre rotas e âncoras da Home, incluindo retorno à Home antes de rolar de uma página interna.
 - `src/data/navigation.js`: fonte única dos destinos e rótulos Início, Stack, Projetos, Sobre e Contato.
+- `src/data/seoRoutes.json`: fonte única dos títulos, descrições e alternativas da imagem social para as quatro rotas; também define a URL pública usada pelo canonical e sitemap.
+- `src/hooks/useRouteSeo.js`: atualiza title, meta description, robots, canonical, Open Graph, Twitter Cards e JSON-LD `WebPage` durante navegação SPA.
+- `scripts/generate-seo-routes.mjs`: parte do build de produção; escreve HTML com metadados específicos em `dist/index.html` e `dist/{projetos,sobre,contato}/index.html`, e gera `dist/sitemap.xml`.
+- `scripts/audit-accessibility-seo.mjs`: confere os metadados estáticos por rota e executa as checagens semânticas/Axe em desktop e mobile.
 - `src/data/projetosCatalogo.js`: catálogo próprio da rota `/projetos`, com 42 registros separados por categoria, tecnologia e links; os filtros e a lista paginada em páginas de 10 projetos, com navegação numérica, são renderizados por `src/components/ProjetoCatalogo.jsx`. O catálogo da página não é a fonte dos destaques da Home.
 - `src/components/OptimizedImage.jsx`: componente de imagem responsiva com metadados, `srcSet`, dimensões reservadas e placeholder opcional.
 - `src/components/ProjetoDesktop.jsx` e `src/components/ProjetoCarouselMobile.jsx`: apresentações de projetos diferentes para a seção de destaque na Home (desktop e mobile). A página dedicada `/projetos` usa separadamente `src/components/ProjetoCatalogo.jsx` com `src/data/projetosCatalogo.js`, para não modificar a apresentação já existente na Home. No `ProjetoDesktop`, preservar a sensação original do preview: o painel segue o cursor com GSAP em `duration: 1.45`, a bolinha calcula sua posição relativa com `getBoundingClientRect()` e se move em `0.35` s; após 120 ms sem movimento, ela volta ao centro. A tentativa de trocar por `gsap.quickTo`, encurtar as transições e recalcular pela escala foi revertida pelo usuário porque ele prefere o comportamento visual anterior. O possível desalinhamento ocasional permanece como problema a investigar; futuras correções devem preservar o ritmo e a sensação da animação, salvo pedido explícito para alterá-los.
@@ -252,7 +256,7 @@ Para testes com Playwright, alguns workflows instalam ferramentas de forma tempo
 Notas importantes:
 - `package.json` oferece `npm test` (execução única), `npm run test:watch` (modo observação) e `npm run test:coverage` (cobertura via V8), além de `dev`, `build`, `lint` e `preview`.
 - `.github/workflows/unit-tests.yml` executa `npm ci`, `npm test`, `npm run lint` e `npm run build` em todo `push` para branches que contenham o workflow e a infraestrutura de testes; `pull_request` é filtrado para destinos `main` e `dev`. Também oferece execução manual via `workflow_dispatch`. A configuração foi propagada para `main` e `dev`; branches antigas sem esses arquivos precisam sincronizar a infraestrutura antes de executar testes em pushes próprios.
-- A suíte unitária atual usa Vitest/jsdom e tem **32 testes em três arquivos**: `src/utils/test/experienceMode.test.js` (9), `src/utils/test/lenisControl.test.js` (12) e `src/utils/test/uiSfxEvents.test.js` (11). Na execução local registrada em 22/10/2026, os 32 testes passaram. O workflow [Unit Tests na `dev`](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/39835048103) também concluiu com sucesso as etapas de teste, ESLint e build no commit de código `13d9186`. Isso confirma aquela execução; futuras alterações devem ser validadas novamente.
+- A suíte unitária usa Vitest/jsdom e tem **32 testes em três arquivos**: `src/utils/test/experienceMode.test.js` (9), `src/utils/test/lenisControl.test.js` (12) e `src/utils/test/uiSfxEvents.test.js` (11). Em 24/10/2026, o workflow [Unit Tests — branch feat/separacao-paginas](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/40140491941) concluiu com sucesso os testes unitários, ESLint e build no commit `d0ff32b`. Esse run valida aquele estado; alterações futuras devem ser verificadas novamente.
 - Os workflows atuais usam Node.js 24.
 - `vite.config.js` declara porta **3000** e `strictPort: true`; a documentação anterior no README menciona a porta padrão 5173. Verificar/corrigir essa inconsistência antes de depender de uma das portas.
 - O fato de um workflow estar verde significa que aquele job passou seus próprios checks. Não substitui testes físicos em aparelho, avaliação manual de acessibilidade ou análise de todos os fluxos.
@@ -285,14 +289,14 @@ Links dos runs usados naquela auditoria:
 Trate estes pontos como itens para verificar, não como autorização para fazer mudanças amplas sem testes:
 
 1. **LCP desktop:** em uma auditoria de laboratório, LCP aproximou-se de 8 s. Investigar priorização da imagem e caminho de renderização do Hero antes de mexer no visual.
-2. **Controles sonoros:** verificar consistência entre texto visível e nome acessível dos botões, com teste dedicado.
+2. **Controles sonoros:** a auditoria automatizada recente passou nas verificações de nomes acessíveis e botões somente com ícone nas quatro rotas; ainda vale testar manualmente teclado/leitor de tela e confirmar que o nome anunciado comunica claramente a ação de cada controle.
 3. **Bundle:** avaliar imports de GSAP/ScrollTrigger e módulos grandes; medir o ganho antes de refatorar.
-4. **SEO por rota:** as rotas iniciais existem, mas precisam de conteúdo definitivo, canonical/OG consistentes, sitemap atualizado e avaliação de prerenderização.
-5. **CI:** acompanhar o resultado real do workflow `Unit Tests` em `push` e `pull_request`, confirmar que teste/lint/build aparecem como etapas e ampliar a cobertura conforme necessário. A configuração do workflow, isoladamente, não prova que uma execução passou.
+4. **SEO por rota:** títulos, descriptions, canonical, Open Graph/Twitter, JSON-LD `WebPage` e sitemap por rota já estão implementados e são verificados pelo workflow. O conteúdo React do corpo ainda não é pré-renderizado. Além disso, o wildcard em `src/App.jsx` redireciona caminhos desconhecidos para `/`; avaliar uma página 404 com comportamento apropriado e testar deep links na Vercel.
+5. **CI:** o workflow `Unit Tests` passou em testes, ESLint e build na execução de 24/10/2026; `Accessibility and SEO Audit` também passou para as quatro rotas, em desktop/mobile, no run 40140155543. Continuar verificando o resultado real para cada mudança; uma configuração de workflow ou um run antigo não prova o estado de commits futuros.
 6. **Testes unitários:** Vitest e jsdom estão configurados; os três arquivos de teste cobrem `experienceMode.js`, `lenisControl.js` e `uiSfxEvents.js`, totalizando 32 casos. A próxima expansão prioritária é criar testes unitários para `uiSfx.js` (estado de áudio, desbloqueio, preferências, volume e limpeza) e `useResponsive.js` (breakpoints, orientação, touch e listeners), orientando o escopo pelo relatório `npm run test:coverage`.
 7. **Segurança de dependências:** avaliar auditoria das dependências e boas práticas de permissões de Actions, sem presumir que exista uma vulnerabilidade concreta.
 8. **Nomes de arquivos:** nomes como `HeroTeste2.jsx` e `ProjetosTeste2.jsx` podem merecer uma renomeação planejada se forem componentes consolidados; atualizar imports e validar build/testes.
-9. **Documentação de porta:** resolver a divergência entre a porta 3000 em `vite.config.js` e 5173 em partes da documentação.
+9. **Documentação de porta:** `vite.config.js` declara a porta 3000 e `strictPort: true`; a documentação anterior/README pode mencionar 5173. Resolver essa divergência antes de depender de uma das portas.
 
 ## 15. Prioridades sugeridas
 
@@ -302,7 +306,8 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 4. Revisar manualmente os repositórios menores no catálogo de Projetos para confirmar descrições, status e links de demonstração quando houver pouca documentação pública. Manter a fonte de dados da página `/projetos` independente dos seis destaques da Home.
 5. Finalizar a página de Contato, definindo serviço/destino real antes do formulário e incluindo validação e proteção contra spam.
 6. Refinar conteúdo e layout de Sobre, validando as seções diferidas e o footer.
-7. Atualizar canonical/OG/sitemap, testar deep links, foco, teclado, Reduced, Lighthouse e Axe; avaliar prerenderização por rota.
+7. Fazer validação manual de teclado, leitor de tela e foco após navegação; confirmar deep links, canonical e os HTMLs gerados nas quatro rotas na Vercel.
+8. Avaliar SSG/SSR do corpo React e uma página 404 para caminhos desconhecidos; os metadados estáticos por rota e o sitemap já estão implementados.
 
 ## 16. Regras para registrar futuras alterações neste contexto
 
@@ -322,9 +327,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `d0ff32b2e47ca3a8ff46e3c4af3d1b72c0aa008c`
-- **Data do commit analisado:** 2026-10-24T19:53:56-03:00
-- **Mensagem do commit:** docs: record route audit results and accessibility fixes
+- **Commit de código analisado:** `b4c27fa7b29cd08bc15cfd50784123c58db3098d`
+- **Data do commit analisado:** 2026-10-24T20:00:42-03:00
+- **Mensagem do commit:** docs: sync AI context with current SEO and route architecture
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -442,13 +447,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `b4c27fa` | 2026-10-24 | docs: sync AI context with current SEO and route architecture |
+| `ff9e2bc` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `d0ff32b` | 2026-10-24 | docs: record route audit results and accessibility fixes |
 | `4d33d63` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `ec2abcf` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `8b00c46` | 2026-10-24 | a11y: place back-to-top shortcut in a named navigation landmark |
 | `d91fc92` | 2026-10-24 | a11y: increase project catalog text contrast |
 | `b3353f3` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
-| `334b5e6` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
-| `6dd4c1f` | 2026-10-24 | seo: align social image alt with the actual preview image |
 
 <!-- END AUTO-GENERATED SECTION -->
