@@ -1,6 +1,8 @@
+import GlobeIcon from "../../components/GlobeIcon";
+
 function SobreHero() {
     return (
-        <section aria-labelledby="sobre-hero-title" className="relative isolate overflow-x-clip border-b border-graphite/80">
+        <section aria-labelledby="sobre-hero-title" className="relative isolate overflow-x-clip">
             <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 right-0 hidden w-[38%] b-md:block" />
 
             <div
@@ -51,10 +53,53 @@ function SobreHero() {
                 </div>
 
                 <div className="relative mx-auto w-full max-w-[350px] pb-5 b-md:max-w-[720px] b-md:pb-0 b-md:justify-self-end">
-                    <div className="relative aspect-[4/5] w-full overflow-hidden border border-graphite bg-carbon">
-                        <img src="/euNvEnvt.png" alt="Retrato de Kleber Gonçalves" loading="eager" fetchPriority="high" decoding="async" className="absolute inset-0 h-full w-full object-cover object-top" />
+                    <div className="relative aspect-[4/5] w-full">
+                        <div className="absolute inset-0 overflow-hidden border border-graphite bg-carbon">
+                            <img src="/euNvEnvt.png" alt="Retrato de Kleber Gonçalves" loading="eager" fetchPriority="high" decoding="async" className="absolute inset-0 h-full w-full object-cover object-top" />
 
-                        <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-[24%] bg-gradient-to-t from-obsidian/70 to-transparent" />
+                            <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-[24%] bg-gradient-to-t from-obsidian/70 to-transparent" />
+                        </div>
+
+                        <div
+                            aria-hidden="true"
+                            className="
+                                pointer-events-none
+                                absolute
+                                left-1/2
+                                top-1/2
+                                z-0
+                                h-px
+                                w-screen
+                                -translate-x-1/2
+                                -translate-y-1/2
+                                bg-graphite/80
+                            "
+                        />
+
+                        <div
+                            aria-hidden="true"
+                            className="
+                                absolute
+                                left-1/2
+                                top-1/2
+                                z-20
+                                ml-0
+                                flex
+                                h-22
+                                w-22
+                                -translate-x-1/2
+                                -translate-y-1/2
+                                items-center
+                                justify-center
+                                overflow-hidden
+                                rounded-full
+                                border
+                                border-graphite
+                                bg-obsidian
+                            "
+                        >
+                            <GlobeIcon />
+                        </div>
                     </div>
                 </div>
             </div>
