@@ -76,7 +76,7 @@ function PortfolioDesktopHeader({
 
     if (isInterior) {
         return (
-            <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-3 px-5 py-6 b-md:px-10">
+            <div className="mx-auto flex w-full items-center justify-between gap-3 px-5 py-10 b-md:px-22">
                 <div className="flex min-w-0 items-center gap-3 b-md:gap-5 c-lg:gap-12">
                     {logo}
                     {controls}
