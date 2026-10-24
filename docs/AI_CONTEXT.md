@@ -329,9 +329,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `a9ada99deed6f1c3c5e1124c9dd189464145f029`
-- **Data do commit analisado:** 2026-10-24T20:26:40-03:00
-- **Mensagem do commit:** docs: registrar preloader de rotas e otimização do retrato Sobre
+- **Commit de código analisado:** `7c7c48adec98a7d23189169323d1032fda0cc446`
+- **Data do commit analisado:** 2026-10-24T20:29:21-03:00
+- **Mensagem do commit:** style: adicionar animações do preloader de rotas
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -449,13 +449,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `7c7c48a` | 2026-10-24 | style: adicionar animações do preloader de rotas |
+| `241c8b5` | 2026-10-24 | fix: animar entrada sem atualização síncrona de estado |
+| `9a342cc` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `a9ada99` | 2026-10-24 | docs: registrar preloader de rotas e otimização do retrato Sobre |
 | `b27d9a9` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `fdaeb55` | 2026-10-24 | fix: estabilizar efeitos do preloader de rota |
 | `4a7f533` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `cd96622` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
-| `33dd02b` | 2026-10-24 | ci: otimizar imagens também na branch de páginas separadas |
-| `b59c8ac` | 2026-10-24 | perf: gerar variantes responsivas do retrato Sobre |
-| `b30efe1` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
