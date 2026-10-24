@@ -149,6 +149,24 @@ if (await fileExists(desktopPortraitPath)) {
     console.log("Imagem pública do HeroDesktop ausente; etapa ignorada.");
 }
 
+// A página Sobre usa um retrato independente do HeroDesktop.
+const aboutPortraitPath = path.join(root, "public", "euNvEnvt.png");
+
+if (await fileExists(aboutPortraitPath)) {
+    await optimizeImage({
+        input: aboutPortraitPath,
+        key: "euNvEnvt.png",
+        baseName: "euNvEnvt",
+        outputDirectory: "hero",
+        publicDirectory: "hero",
+        sizes: "(min-width: 1280px) 600px, (min-width: 768px) 45vw, 350px",
+        fallbackWidth: 640,
+        label: "Sobre page portrait (public/euNvEnvt.png)",
+    });
+} else {
+    console.log("Imagem do Sobre ausente; otimização do retrato ignorada.");
+}
+
 // HeroMobile usa o retrato hospedado no GitHub. Só o baixa quando o componente existe.
 const mobileHeroPath = path.join(root, "src", "components", "HeroMobile.jsx");
 
