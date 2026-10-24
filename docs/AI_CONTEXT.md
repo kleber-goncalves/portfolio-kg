@@ -312,9 +312,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `11a173cf75790213a555ad3bfdc03bc8f81585ea`
-- **Data do commit analisado:** 2026-10-24T17:37:21-03:00
-- **Mensagem do commit:** feat(tecnologias): adicionar suporte para a tecnologia JavaScript
+- **Commit de código analisado:** `c33132e8ab92c3aee956c9f3cf4ffeefc2b1de8e`
+- **Data do commit analisado:** 2026-10-24T17:44:42-03:00
+- **Mensagem do commit:** style: align project category filters with magnetic links
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -431,13 +431,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `c33132e` | 2026-10-24 | style: align project category filters with magnetic links |
+| `40d8d30` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `11a173c` | 2026-10-24 | feat(tecnologias): adicionar suporte para a tecnologia JavaScript |
 | `57b8fd7` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `05c3583` | 2026-10-24 | feat(projetos): remover projetos de estudos do catálogo |
 | `86019a4` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `d39b668` | 2026-10-24 | docs: registrar catálogo independente de projetos |
 | `706d8ab` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
-| `fcbc4a3` | 2026-10-24 | feat(projetos): montar página com catálogo completo |
-| `0d562c2` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
