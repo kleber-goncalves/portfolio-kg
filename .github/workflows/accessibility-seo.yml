@@ -6,6 +6,7 @@ on:
       - main
       - dev
       - feat/responsividadeFull
+      - feat/separacao-paginas
     paths:
       - "src/**"
       - "public/**"
@@ -14,6 +15,8 @@ on:
       - "package-lock.json"
       - "vite.config.js"
       - "scripts/audit-accessibility-seo.mjs"
+      - "scripts/generate-seo-routes.mjs"
+      - "src/data/seoRoutes.json"
       - "lighthouserc-accessibility-seo*.json"
       - ".github/workflows/accessibility-seo.yml"
   workflow_dispatch:
