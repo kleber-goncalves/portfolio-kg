@@ -2,12 +2,12 @@ import DeferredLayoutSection from "../../components/DeferredLayoutSection";
 import InteriorPageLayout from "../../layouts/InteriorPageLayout";
 import SobreHero from "./SobreHero";
 
-function Sobre({ experienceMode = "full" }) {
+function Sobre({ experienceMode = "full", onRouteReady }) {
     return (
         <InteriorPageLayout
             title="Sobre"
             description="Conheça minha formação, competências e diferenciais na construção de aplicações web."
-            heroContent={<SobreHero experienceMode={experienceMode} />}
+            heroContent={<SobreHero experienceMode={experienceMode} onRouteReady={onRouteReady} />}
         >
             <DeferredLayoutSection
                 section="competencia"
