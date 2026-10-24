@@ -18,46 +18,104 @@ function SobreHero({ experienceMode = "full" }) {
 
         if (!mediaQuery.matches) return undefined;
 
-        const handleMouseEnter = () => {
-            portrait.style.setProperty("--spotlight-opacity", "1");
-            portrait.style.setProperty("--border-glow-opacity", "1");
+        // Guarda a posição do cursor na janela, mesmo quando ele fica parado.
+        const pointer = { x: null, y: null };
+        let pointerOverPortrait = false;
+        let frameId = null;
+        let shouldUpdateTilt = false;
 
-            gsap.to(portrait, {
-                y: -3,
-                duration: 0.35,
-                ease: "power2.out",
-                overwrite: true,
-            });
-        };
+        const updatePointerEffects = () => {
+            frameId = null;
 
-        const handleMouseMove = (event) => {
+            if (pointer.x === null || pointer.y === null) return;
+
             const rect = portrait.getBoundingClientRect();
 
             if (!rect.width || !rect.height) return;
 
-            const x = event.clientX - rect.left;
-            const y = event.clientY - rect.top;
+            // O rect muda durante a rolagem; por isso recalculamos a posição
+            // relativa do cursor sempre que o documento se move.
+            const x = pointer.x - rect.left;
+            const y = pointer.y - rect.top;
+            const isInside = (
+                pointer.x >= rect.left &&
+                pointer.x <= rect.right &&
+                pointer.y >= rect.top &&
+                pointer.y <= rect.bottom
+            );
 
             portrait.style.setProperty("--mouse-x", `${(x / rect.width) * 100}%`);
             portrait.style.setProperty("--mouse-y", `${(y / rect.height) * 100}%`);
+            portrait.style.setProperty("--spotlight-opacity", isInside ? "1" : "0");
+            portrait.style.setProperty("--border-glow-opacity", isInside ? "1" : "0");
 
-            // Inclinação 3D sutil, igual à intensidade editorial do Card1.
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            const rotateX = ((y - centerY) / centerY) * -1.5;
-            const rotateY = ((x - centerX) / centerX) * 1.5;
+            if (isInside && !pointerOverPortrait) {
+                pointerOverPortrait = true;
 
-            gsap.to(portrait, {
-                rotateX,
-                rotateY,
-                duration: 0.18,
-                ease: "power2.out",
-                transformPerspective: 500,
-                overwrite: true,
-            });
+                gsap.to(portrait, {
+                    y: -3,
+                    duration: 0.35,
+                    ease: "power2.out",
+                    overwrite: true,
+                });
+            } else if (!isInside && pointerOverPortrait) {
+                pointerOverPortrait = false;
+
+                gsap.to(portrait, {
+                    y: 0,
+                    rotateX: 0,
+                    rotateY: 0,
+                    duration: 0.5,
+                    ease: "power3.out",
+                    overwrite: true,
+                });
+            }
+
+            // O tilt acompanha movimentos reais do cursor. Durante o scroll,
+            // atualizamos o spotlight sem animar novamente os eixos 3D a cada frame.
+            if (shouldUpdateTilt && isInside) {
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = (y / centerY - 1) * -1.5;
+                const rotateY = (x / centerX - 1) * 1.5;
+
+                gsap.to(portrait, {
+                    rotateX,
+                    rotateY,
+                    duration: 0.18,
+                    ease: "power2.out",
+                    transformPerspective: 500,
+                    overwrite: true,
+                });
+            }
+
+            shouldUpdateTilt = false;
         };
 
-        const handleMouseLeave = () => {
+        // Agrupa movimentos e eventos de scroll em no máximo uma atualização por frame.
+        const scheduleUpdate = (updateTilt = false) => {
+            shouldUpdateTilt = shouldUpdateTilt || updateTilt;
+
+            if (frameId !== null) return;
+
+            frameId = window.requestAnimationFrame(updatePointerEffects);
+        };
+
+        const handlePointerMove = (event) => {
+            pointer.x = event.clientX;
+            pointer.y = event.clientY;
+            scheduleUpdate(true);
+        };
+
+        const handleScroll = () => {
+            scheduleUpdate(false);
+        };
+
+        const handlePointerLeaveWindow = () => {
+            pointer.x = null;
+            pointer.y = null;
+            pointerOverPortrait = false;
+
             portrait.style.setProperty("--spotlight-opacity", "0");
             portrait.style.setProperty("--border-glow-opacity", "0");
 
@@ -65,20 +123,24 @@ function SobreHero({ experienceMode = "full" }) {
                 y: 0,
                 rotateX: 0,
                 rotateY: 0,
-                duration: 0.5,
-                ease: "power3.out",
+                duration: 0.35,
+                ease: "power2.out",
                 overwrite: true,
             });
         };
 
-        portrait.addEventListener("mouseenter", handleMouseEnter);
-        portrait.addEventListener("mousemove", handleMouseMove);
-        portrait.addEventListener("mouseleave", handleMouseLeave);
+        window.addEventListener("pointermove", handlePointerMove, { passive: true });
+        window.addEventListener("scroll", handleScroll, { passive: true });
+        window.addEventListener("pointerleave", handlePointerLeaveWindow);
 
         return () => {
-            portrait.removeEventListener("mouseenter", handleMouseEnter);
-            portrait.removeEventListener("mousemove", handleMouseMove);
-            portrait.removeEventListener("mouseleave", handleMouseLeave);
+            window.removeEventListener("pointermove", handlePointerMove);
+            window.removeEventListener("scroll", handleScroll);
+            window.removeEventListener("pointerleave", handlePointerLeaveWindow);
+
+            if (frameId !== null) {
+                window.cancelAnimationFrame(frameId);
+            }
 
             gsap.killTweensOf(portrait);
             gsap.set(portrait, {
