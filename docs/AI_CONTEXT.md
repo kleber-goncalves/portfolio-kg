@@ -327,9 +327,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `b59c8ac7fe979e67db3ef05be4f3e9ccddeb7d61`
-- **Data do commit analisado:** 2026-10-24T20:25:19-03:00
-- **Mensagem do commit:** perf: gerar variantes responsivas do retrato Sobre
+- **Commit de código analisado:** `33dd02ba600308fcc355746b0d2ef65b8b4770c5`
+- **Data do commit analisado:** 2026-10-24T20:25:26-03:00
+- **Mensagem do commit:** ci: otimizar imagens também na branch de páginas separadas
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -447,6 +447,7 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `33dd02b` | 2026-10-24 | ci: otimizar imagens também na branch de páginas separadas |
 | `b59c8ac` | 2026-10-24 | perf: gerar variantes responsivas do retrato Sobre |
 | `b30efe1` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `f70b598` | 2026-10-24 | perf: usar OptimizedImage no retrato da página Sobre |
@@ -454,6 +455,5 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 | `0f3fe1d` | 2026-10-24 | feat: sinalizar carregamento do retrato no hero desktop |
 | `3223570` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `0628a34` | 2026-10-24 | feat: propagar prontidão visual do hero por viewport |
-| `1da0ba8` | 2026-10-24 | feat: aguardar hero e stack antes de encerrar a transição |
 
 <!-- END AUTO-GENERATED SECTION -->
