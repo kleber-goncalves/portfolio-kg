@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
-import { ArrowDown, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { playUiSound } from "../utils/uiSfx";
 
 import { CATEGORIAS_PROJETOS, projetosCatalogo } from "../data/projetosCatalogo";
 import { tecnologias } from "../data/tecnologias";
 import MagneticExternalLinkHover from "./MagneticExternalLinkHover";
+import { scrollToTarget } from "../utils/lenisControl";
 
 const PROJECTS_PAGE_SIZE = 10;
 
@@ -202,9 +203,10 @@ function CategoriaFilterButton({ categoria, quantidade, ativa, onClick }) {
 
 function ProjetoCatalogo() {
     const [categoriaAtiva, setCategoriaAtiva] = useState("Todos");
-    const [visibleProjectsCount, setVisibleProjectsCount] = useState(PROJECTS_PAGE_SIZE);
+    const [currentPage, setCurrentPage] = useState(1);
     const [projetoSobCursor, setProjetoSobCursor] = useState(null);
     const sectionRef = useRef(null);
+    const projectsListRef = useRef(null);
     const pointerPositionRef = useRef({ x: null, y: null });
     const projetoSobCursorRef = useRef(null);
 
@@ -279,7 +281,7 @@ function ProjetoCatalogo() {
         window.addEventListener("resize", scheduleUpdate, { passive: true });
         window.addEventListener("pointerleave", handlePointerLeave);
 
-        // Recalcula quando o filtro ou o lote de projetos visíveis muda.
+        // Recalcula quando o filtro ou a página renderizada muda.
         scheduleUpdate();
 
         return () => {
@@ -292,18 +294,40 @@ function ProjetoCatalogo() {
                 window.cancelAnimationFrame(frameId);
             }
         };
-    }, [categoriaAtiva, visibleProjectsCount]);
+    }, [categoriaAtiva, currentPage]);
 
     const projetosFiltrados = categoriaAtiva === "Todos"
         ? projetosCatalogo
         : projetosCatalogo.filter(
             (projeto) => projeto.categoria === categoriaAtiva,
         );
-    const projetosVisiveis = projetosFiltrados.slice(0, visibleProjectsCount);
+    const totalPages = Math.ceil(projetosFiltrados.length / PROJECTS_PAGE_SIZE);
+    const primeiroIndiceVisivel = (currentPage - 1) * PROJECTS_PAGE_SIZE;
+    const projetosVisiveis = projetosFiltrados.slice(
+        primeiroIndiceVisivel,
+        primeiroIndiceVisivel + PROJECTS_PAGE_SIZE,
+    );
+    const primeiroProjetoVisivel = projetosVisiveis.length > 0
+        ? primeiroIndiceVisivel + 1
+        : 0;
+    const ultimoProjetoVisivel = Math.min(
+        currentPage * PROJECTS_PAGE_SIZE,
+        projetosFiltrados.length,
+    );
 
-    // O filtro e o carregamento incremental alteram a altura do documento.
-    // Recalcula as posições
-    // dos ScrollTriggers depois que o React aplicar a nova lista ao DOM.
+    const handlePageChange = (page) => {
+        if (page < 1 || page > totalPages) return;
+
+        setCurrentPage(page);
+        scrollToTarget(projectsListRef.current, {
+            duration: 0.75,
+            offset: -24,
+            block: "start",
+        });
+    };
+
+    // A troca de categoria ou página altera a altura do documento. Recalcula
+    // as posições dos ScrollTriggers depois que o React atualizar a lista.
     useEffect(() => {
         let cancelled = false;
         let firstFrame = 0;
@@ -319,7 +343,7 @@ function ProjetoCatalogo() {
                 } catch (error) {
                     if (!cancelled) {
                         console.error(
-                            "Não foi possível atualizar os ScrollTriggers após atualizar a lista de projetos.",
+                            "Não foi possível atualizar os ScrollTriggers após mudar a página de projetos.",
                             error,
                         );
                     }
@@ -332,14 +356,14 @@ function ProjetoCatalogo() {
             window.cancelAnimationFrame(firstFrame);
             window.cancelAnimationFrame(secondFrame);
         };
-    }, [categoriaAtiva, visibleProjectsCount]);
+    }, [categoriaAtiva, currentPage]);
 
     return (
         <section ref={sectionRef} className="mx-auto w-full b-md:max-w-[1500px] px-5 pb-16 b-md:px-10 b-md:pb-24">
             {/* FILTROS DO CATÁLOGO */}
             <div className="mb-8 border-b border-graphite pb-6">
                 <p className="mb-4 text-xs uppercase tracking-[0.18em] text-steel">
-                    {projetosVisiveis.length} de {projetosFiltrados.length} projetos
+                    {primeiroProjetoVisivel}–{ultimoProjetoVisivel} de {projetosFiltrados.length} projetos
                 </p>
 
                 <div aria-label="Filtrar projetos por categoria" className="flex flex-wrap gap-2" role="group">
@@ -353,10 +377,8 @@ function ProjetoCatalogo() {
                             quantidade={quantidade}
                             ativa={ativa}
                             onClick={() => {
-                                if (categoriaAtiva !== categoria) {
-                                    setCategoriaAtiva(categoria);
-                                    setVisibleProjectsCount(PROJECTS_PAGE_SIZE);
-                                }
+                                setCategoriaAtiva(categoria);
+                                setCurrentPage(1);
                             }}
                         />;
                     })}
@@ -364,7 +386,7 @@ function ProjetoCatalogo() {
             </div>
 
             {/* LISTA — MESMA LINGUAGEM VISUAL DO PROJETODESKTOP EM REDUCED */}
-            <div className="flex w-full flex-col" aria-live="polite">
+            <div ref={projectsListRef} className="flex w-full flex-col scroll-mt-6" aria-live="polite">
                 {projetosVisiveis.map((projeto) => {
                     const isCursorHovered = projetoSobCursor === projeto.id;
 
@@ -515,64 +537,113 @@ function ProjetoCatalogo() {
                 })}
             </div>
 
-            {projetosVisiveis.length < projetosFiltrados.length && (
-                <div className="flex justify-center pt-10">
+            {totalPages > 1 && (
+                <nav
+                    aria-label="Paginação de projetos"
+                    className="flex flex-wrap items-center justify-center gap-2 pt-10"
+                >
                     <motion.button
                         type="button"
-                        data-ui-sfx-hover
+                        aria-label="Página anterior"
+                        disabled={currentPage === 1}
+                        onClick={() => handlePageChange(currentPage - 1)}
                         onPointerDown={() => playUiSound("press")}
-                        onClick={(event) => {
-                            setVisibleProjectsCount((currentCount) =>
-                                Math.min(
-                                    currentCount + PROJECTS_PAGE_SIZE,
-                                    projetosFiltrados.length,
-                                ),
-                            );
-
-                            if (event.detail === 0) {
-                                playUiSound("press");
-                            }
-                        }}
-                        whileHover={{ y: -2, borderColor: "#A87852" }}
-                        whileTap={{ scale: 0.98 }}
-                        transition={{
-                            type: "spring",
-                            stiffness: 320,
-                            damping: 22,
-                        }}
+                        whileHover={currentPage > 1 ? { y: -2, borderColor: "#A87852" } : undefined}
+                        whileTap={currentPage > 1 ? { scale: 0.96 } : undefined}
                         className="
                             inline-flex
+                            h-11
+                            w-11
                             items-center
                             justify-center
-                            gap-3
                             rounded-sm
                             border
                             border-graphite
-                            bg-transparent
-                            px-5
-                            py-4
-                            text-xs
-                            font-medium
-                            uppercase
-                            tracking-[0.14em]
-                            text-ivory/75
+                            text-steel
                             transition-colors
                             hover:text-ivory
+                            disabled:cursor-not-allowed
+                            disabled:opacity-30
                             focus-visible:outline
                             focus-visible:outline-2
                             focus-visible:outline-offset-4
                             focus-visible:outline-champagne
                         "
                     >
-                        <span>
-                            Carregar mais {Math.min(
-                                PROJECTS_PAGE_SIZE,
-                                projetosFiltrados.length - projetosVisiveis.length,
-                            )} projetos
-                        </span>
-                        <ArrowDown aria-hidden="true" className="h-4 w-4 text-bronze" />
+                        <ChevronLeft aria-hidden="true" className="h-4 w-4" />
                     </motion.button>
-                </div>
+
+                    {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => {
+                        const isActive = page === currentPage;
+
+                        return (
+                            <motion.button
+                                key={page}
+                                type="button"
+                                aria-label={`Página ${page}`}
+                                aria-current={isActive ? "page" : undefined}
+                                onClick={() => handlePageChange(page)}
+                                onPointerDown={() => playUiSound("press")}
+                                whileHover={!isActive ? { y: -2, borderColor: "#A87852" } : undefined}
+                                whileTap={{ scale: 0.96 }}
+                                className={`
+                                    inline-flex
+                                    h-11
+                                    min-w-11
+                                    items-center
+                                    justify-center
+                                    rounded-sm
+                                    border
+                                    px-3
+                                    text-xs
+                                    font-medium
+                                    transition-colors
+                                    focus-visible:outline
+                                    focus-visible:outline-2
+                                    focus-visible:outline-offset-4
+                                    focus-visible:outline-champagne
+                                    ${isActive
+                                        ? "border-bronze bg-bronze text-obsidian"
+                                        : "border-graphite bg-transparent text-steel hover:text-ivory"
+                                    }
+                                `}
+                            >
+                                {page}
+                            </motion.button>
+                        );
+                    })}
+
+                    <motion.button
+                        type="button"
+                        aria-label="Próxima página"
+                        disabled={currentPage === totalPages}
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        onPointerDown={() => playUiSound("press")}
+                        whileHover={currentPage < totalPages ? { y: -2, borderColor: "#A87852" } : undefined}
+                        whileTap={currentPage < totalPages ? { scale: 0.96 } : undefined}
+                        className="
+                            inline-flex
+                            h-11
+                            w-11
+                            items-center
+                            justify-center
+                            rounded-sm
+                            border
+                            border-graphite
+                            text-steel
+                            transition-colors
+                            hover:text-ivory
+                            disabled:cursor-not-allowed
+                            disabled:opacity-30
+                            focus-visible:outline
+                            focus-visible:outline-2
+                            focus-visible:outline-offset-4
+                            focus-visible:outline-champagne
+                        "
+                    >
+                        <ChevronRight aria-hidden="true" className="h-4 w-4" />
+                    </motion.button>
+                </nav>
             )}
         </section>
     );
