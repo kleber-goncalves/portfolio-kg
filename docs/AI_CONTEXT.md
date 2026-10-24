@@ -311,9 +311,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `1d939b1214b39ec86af82f37cdd67576ce546724`
-- **Data do commit analisado:** 2026-10-24T16:27:39-03:00
-- **Mensagem do commit:** fix(projetos): incluir repositório recuperado no catálogo
+- **Commit de código analisado:** `7a2f15b6bf477ba8e835ffffeea4bbadce4ac963`
+- **Data do commit analisado:** 2026-10-24T16:27:59-03:00
+- **Mensagem do commit:** feat(projetos): criar lista filtrável do catálogo
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -430,13 +430,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `7a2f15b` | 2026-10-24 | feat(projetos): criar lista filtrável do catálogo |
+| `8a3c8d1` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `1d939b1` | 2026-10-24 | fix(projetos): incluir repositório recuperado no catálogo |
 | `9ecde1c` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `e679b98` | 2026-10-24 | feat(projetos): criar catálogo central de projetos |
 | `2f3ee76` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `399e660` | 2026-10-24 | docs: preservar comportamento preferido do preview |
 | `0de43ce` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
-| `d55728c` | 2026-10-24 | refactor(ProjetoDesktop): simplificar animações de preview e otimizar movimentação do mouse |
-| `7c52a14` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
