@@ -2,7 +2,7 @@ import GlobeIcon from "../../components/GlobeIcon";
 
 function SobreHero() {
     return (
-        <section aria-labelledby="sobre-hero-title" className="relative isolate overflow-x-clip">
+        <section aria-labelledby="sobre-hero-title" className="relative isolate overflow-x-clip border-b border-graphite/80">
             <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 right-0 hidden w-[38%] b-md:block" />
 
             <div
@@ -59,47 +59,31 @@ function SobreHero() {
 
                             <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-[24%] bg-gradient-to-t from-obsidian/70 to-transparent" />
                         </div>
+                    </div>
 
-                        <div
-                            aria-hidden="true"
-                            className="
-                                pointer-events-none
-                                absolute
-                                left-1/2
-                                top-1/2
-                                z-0
-                                h-px
-                                w-screen
-                                -translate-x-1/2
-                                -translate-y-1/2
-                                bg-graphite/80
-                            "
-                        />
-
-                        <div
-                            aria-hidden="true"
-                            className="
-                                absolute
-                                left-1/2
-                                top-1/2
-                                z-20
-                                ml-0
-                                flex
-                                h-22
-                                w-22
-                                -translate-x-1/2
-                                -translate-y-1/2
-                                items-center
-                                justify-center
-                                overflow-hidden
-                                rounded-full
-                                border
-                                border-graphite
-                                bg-obsidian
-                            "
-                        >
-                            <GlobeIcon />
-                        </div>
+                    <div
+                        aria-hidden="true"
+                        className="
+                            absolute
+                            left-1/2
+                            -bottom-[5.75rem]
+                            b-md:-bottom-[6.75rem]
+                            c-lg:-bottom-[7.75rem]
+                            z-20
+                            flex
+                            h-22
+                            w-22
+                            -translate-x-1/2
+                            items-center
+                            justify-center
+                            overflow-hidden
+                            rounded-full
+                            border
+                            border-graphite
+                            bg-obsidian
+                        "
+                    >
+                        <GlobeIcon />
                     </div>
                 </div>
             </div>
