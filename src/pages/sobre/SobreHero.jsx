@@ -1,4 +1,3 @@
-
 import { useEffect, useRef } from "react";
 
 function SobreHero() {
@@ -8,13 +7,10 @@ function SobreHero() {
     const portraitRef = useRef(null);
 
     useEffect(() => {
-        // Diagnóstico temporário: os logs são exibidos sempre enquanto esta instrumentação estiver presente.
-        // Isso confirma também que a versão/rota carregou este componente.
-        console.info("[SobreHero sticky] Instrumentação carregada", {
-            pathname: window.location.pathname,
-            search: window.location.search,
-            readyState: document.readyState,
-        });
+        // Ative o diagnóstico adicionando ?debugSticky=1 à URL da página.
+        if (new URLSearchParams(window.location.search).get("debugSticky") !== "1") {
+            return undefined;
+        }
 
         const section = sectionRef.current;
         const grid = gridRef.current;
@@ -22,7 +18,7 @@ function SobreHero() {
         const portrait = portraitRef.current;
 
         if (!section || !grid || !text || !portrait) {
-            console.warn("[SobreHero sticky] Não foi possível encontrar todos os elementos para diagnóstico.", {
+            console.warn("[SobreHero sticky] Elementos não encontrados.", {
                 sectionFound: Boolean(section),
                 gridFound: Boolean(grid),
                 textFound: Boolean(text),
@@ -82,11 +78,14 @@ function SobreHero() {
         const getMetrics = () => {
             const textStyles = window.getComputedStyle(text);
             const gridStyles = window.getComputedStyle(grid);
-            const portraitStyles = window.getComputedStyle(portrait);
             const sectionStyles = window.getComputedStyle(section);
             const textRect = rectOf(text);
             const portraitRect = rectOf(portrait);
-            const stickyTop = Number.parseFloat(textStyles.top) || 0;
+            const stickyTop = Number.parseFloat(textStyles.top);
+            const gapToStickyTop = Number.isFinite(stickyTop)
+                ? textRect.top - stickyTop
+                : null;
+            const gapToPortraitBottom = portraitRect.bottom - textRect.bottom;
 
             let state = "antes-do-topo-sticky";
 
@@ -94,10 +93,14 @@ function SobreHero() {
                 state = "breakpoint-b-md-inativo";
             } else if (textStyles.position !== "sticky") {
                 state = "position-sticky-nao-aplicado";
-            } else if (portraitRect.bottom <= textRect.bottom + 2) {
-                state = "limite-inferior-do-retrato-proximo";
-            } else if (textRect.top <= stickyTop + 2) {
-                state = "texto-no-topo-sticky-ou-em-percurso";
+            } else if (gapToPortraitBottom <= 2) {
+                state = "limite-inferior-do-retrato";
+            } else if (Number.isFinite(gapToStickyTop) && Math.abs(gapToStickyTop) <= 3) {
+                state = "texto-preso-no-topo";
+            } else if (Number.isFinite(gapToStickyTop) && gapToStickyTop > 3) {
+                state = "texto-ainda-antes-do-topo";
+            } else {
+                state = "texto-passou-do-topo-sem-ficar-preso";
             }
 
             return {
@@ -115,8 +118,6 @@ function SobreHero() {
                     gridDisplay: gridStyles.display,
                     gridTemplateColumns: gridStyles.gridTemplateColumns,
                     gridAlignItems: gridStyles.alignItems,
-                    portraitOverflowX: portraitStyles.overflowX,
-                    portraitOverflowY: portraitStyles.overflowY,
                     sectionOverflowX: sectionStyles.overflowX,
                     sectionOverflowY: sectionStyles.overflowY,
                 },
@@ -125,7 +126,10 @@ function SobreHero() {
                     grid: rectOf(grid),
                     text: textRect,
                     portrait: portraitRect,
-                    distanceTextToPortraitBottom: Math.round(portraitRect.bottom - textRect.bottom),
+                    gapToStickyTop: Number.isFinite(gapToStickyTop)
+                        ? Math.round(gapToStickyTop)
+                        : null,
+                    gapToPortraitBottom: Math.round(gapToPortraitBottom),
                 },
             };
         };
@@ -137,14 +141,39 @@ function SobreHero() {
             return canCreateScrollContainer(overflowX) || canCreateScrollContainer(overflowY);
         });
 
-        console.groupCollapsed("[SobreHero sticky] Diagnóstico inicial");
-        console.log("Métricas iniciais:", getMetrics());
-        console.log("Estilos dos ancestrais do texto:", ancestors);
-        console.log("Possíveis ancestrais que criam contêiner de rolagem:", scrollContainerCandidates);
-        console.groupEnd();
+        const formatMetrics = (metrics) => {
+            const { geometry, styles } = metrics;
+
+            return [
+                `y=${metrics.scrollY}`,
+                `state=${metrics.state}`,
+                `textTop=${geometry.text.top}`,
+                `stickyTop=${styles.textTop}`,
+                `gapToStickyTop=${geometry.gapToStickyTop}`,
+                `portraitBottom=${geometry.portrait.bottom}`,
+                `textBottom=${geometry.text.bottom}`,
+                `gapToPortraitBottom=${geometry.gapToPortraitBottom}`,
+            ].join(" | ");
+        };
+
+        console.info("[SobreHero sticky] Diagnóstico ativo:", {
+            pathname: window.location.pathname,
+            search: window.location.search,
+            readyState: document.readyState,
+        });
+        console.log("[SobreHero sticky] Inicial:", formatMetrics(getMetrics()), getMetrics());
+        console.table(ancestors);
+        console.log(
+            "[SobreHero sticky] Ancestrais que podem criar contêiner de rolagem:",
+            scrollContainerCandidates,
+        );
 
         let animationFrame = 0;
-        let lastMetrics = getMetrics();
+        let lastLoggedMetrics = getMetrics();
+
+        const logMetrics = (label, metrics) => {
+            console.log(`[SobreHero sticky] ${label}: ${formatMetrics(metrics)}`, metrics);
+        };
 
         const handleScroll = () => {
             if (animationFrame) return;
@@ -153,31 +182,31 @@ function SobreHero() {
                 animationFrame = 0;
 
                 const metrics = getMetrics();
-                const scrollDelta = Math.abs(metrics.scrollY - lastMetrics.scrollY);
-                const textTopDelta = Math.abs(
-                    metrics.geometry.text.top - lastMetrics.geometry.text.top,
-                );
-                const stateChanged = metrics.state !== lastMetrics.state;
+                const stateChanged = metrics.state !== lastLoggedMetrics.state;
+                const scrollDistance = Math.abs(metrics.scrollY - lastLoggedMetrics.scrollY);
 
-                // Registra transições de estado e amostras espaçadas para evitar dezenas de logs por segundo.
-                if (stateChanged || scrollDelta >= 120 || textTopDelta >= 24) {
-                    console.log("[SobreHero sticky] Rolagem:", metrics);
-                    lastMetrics = metrics;
+                // Uma amostra a cada 80 px, além de toda mudança de estado.
+                if (stateChanged || scrollDistance >= 80) {
+                    logMetrics("Rolagem", metrics);
+                    lastLoggedMetrics = metrics;
                 }
             });
         };
 
         const handleResize = () => {
-            lastMetrics = getMetrics();
-            console.log("[SobreHero sticky] Redimensionamento:", lastMetrics);
+            const metrics = getMetrics();
+            logMetrics("Redimensionamento", metrics);
+            lastLoggedMetrics = metrics;
         };
 
         window.addEventListener("scroll", handleScroll, { passive: true });
         window.addEventListener("resize", handleResize);
+        desktopBreakpoint.addEventListener("change", handleResize);
 
         return () => {
             window.removeEventListener("scroll", handleScroll);
             window.removeEventListener("resize", handleResize);
+            desktopBreakpoint.removeEventListener("change", handleResize);
 
             if (animationFrame) {
                 window.cancelAnimationFrame(animationFrame);
@@ -198,7 +227,7 @@ function SobreHero() {
                     w-full
                     b-md:max-w-[1500px]
                     grid-cols-1
-                    
+
                     gap-12
                     px-5
                     py-12
@@ -216,7 +245,6 @@ function SobreHero() {
                     <h1
                         id="sobre-hero-title"
                         className="
-                            
                             max-w-[11ch]
                             font-space
                             text-5xl
