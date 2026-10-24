@@ -312,16 +312,16 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `d5ee00303e2cbad20428ccd08f2dde1efedd500b`
-- **Data do commit analisado:** 2026-10-24T19:20:39-03:00
-- **Mensagem do commit:** docs: document pagination hover state reset
+- **Commit de código analisado:** `db835cea0dfc843f53faaadca42227c6e99256aa`
+- **Data do commit analisado:** 2026-10-24T19:39:52-03:00
+- **Mensagem do commit:** feat: generate route SEO HTML and sitemap during build
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
 - **Dependências de runtime:** 15
 - **Dependências de desenvolvimento:** 12
 - **Workflows encontrados:** 17
-- **Scripts de automação encontrados:** 18
+- **Scripts de automação encontrados:** 19
 
 ### Scripts npm
 
@@ -398,6 +398,7 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 - `scripts/analyze-js-runtime-coverage.mjs`
 - `scripts/audit-accessibility-seo.mjs`
 - `scripts/check-reduced-mode-scroll.mjs`
+- `scripts/generate-seo-routes.mjs`
 - `scripts/lhci-set-experience-mode.cjs`
 - `scripts/measure-desktop-scroll-performance.mjs`
 - `scripts/optimize-project-images.mjs`
@@ -431,13 +432,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `db835ce` | 2026-10-24 | feat: generate route SEO HTML and sitemap during build |
+| `37c153d` | 2026-10-24 | feat: synchronize SEO metadata with active route |
+| `4d5ef2f` | 2026-10-24 | feat: define route-specific SEO metadata |
+| `e1c882b` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `d5ee003` | 2026-10-24 | docs: document pagination hover state reset |
 | `273fbec` | 2026-10-24 | fix: reset pagination hover state on page change |
 | `764e0cc` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `60c4f03` | 2026-10-24 | docs: document numbered project pagination |
-| `db4a4c0` | 2026-10-24 | feat: add numbered pagination to project catalog |
-| `74253d5` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
-| `ca1d1bd` | 2026-10-24 | docs: document incremental project catalog pagination |
-| `1b23208` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
