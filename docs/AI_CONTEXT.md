@@ -312,9 +312,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `5d50a621c14a923f43087764e50c97d7a46e22c9`
-- **Data do commit analisado:** 2026-10-24T19:42:04-03:00
-- **Mensagem do commit:** a11y: add descriptive titles to pagination controls
+- **Commit de código analisado:** `e3a41731b0768476fdb9229668c2ac81fe32d0c6`
+- **Data do commit analisado:** 2026-10-24T19:42:57-03:00
+- **Mensagem do commit:** perf: avoid preloading home hero image on internal routes
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -432,13 +432,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `e3a4173` | 2026-10-24 | perf: avoid preloading home hero image on internal routes |
+| `691b5b6` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
+| `569ddd0` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `5d50a62` | 2026-10-24 | a11y: add descriptive titles to pagination controls |
 | `c7798f8` | 2026-10-24 | ci: run accessibility and SEO audits on route separation branch |
 | `8f40f6d` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `b7468dd` | 2026-10-24 | test: audit SEO and accessibility across all routes |
 | `4cb90ad` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
-| `9f391c3` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
-| `4335bf9` | 2026-10-24 | fix: remove unused SEO generator parameter |
-| `208f666` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
