@@ -170,6 +170,42 @@ async function auditStaticRoutes(config, sitemapText) {
                 actual: findMeta("name", "twitter:description") || "ausente",
             },
             {
+                id: "og-image",
+                passed: findMeta("property", "og:image") === new URL(config.socialImagePath, config.siteUrl).href,
+                expected: new URL(config.socialImagePath, config.siteUrl).href,
+                actual: findMeta("property", "og:image") || "ausente",
+            },
+            {
+                id: "twitter-image",
+                passed: findMeta("name", "twitter:image") === new URL(config.socialImagePath, config.siteUrl).href,
+                expected: new URL(config.socialImagePath, config.siteUrl).href,
+                actual: findMeta("name", "twitter:image") || "ausente",
+            },
+            {
+                id: "social-image-alt",
+                passed: Boolean(findMeta("property", "og:image:alt").trim() && findMeta("name", "twitter:image:alt").trim()),
+                expected: "og:image:alt e twitter:image:alt não vazios",
+                actual: [findMeta("property", "og:image:alt"), findMeta("name", "twitter:image:alt")].filter(Boolean).join(" | ") || "ausente",
+            },
+            {
+                id: "robots",
+                passed: findMeta("name", "robots") === "index,follow",
+                expected: "index,follow",
+                actual: findMeta("name", "robots") || "ausente",
+            },
+            {
+                id: "language",
+                passed: (html.match(/<html\\b[^>]*>/i)?.[0] ?? "").includes('lang="pt-BR"'),
+                expected: 'lang="pt-BR"',
+                actual: (html.match(/<html\\b[^>]*>/i)?.[0] ?? "tag html ausente"),
+            },
+            {
+                id: "viewport",
+                passed: Boolean(findMeta("name", "viewport")),
+                expected: "meta viewport presente",
+                actual: findMeta("name", "viewport") || "ausente",
+            },
+            {
                 id: "webpage-jsonld",
                 passed: webPageSchema?.["@type"] === "WebPage" && webPageSchema.url === canonicalUrl && webPageSchema.name === page.title,
                 expected: "WebPage JSON-LD para " + canonicalUrl,
