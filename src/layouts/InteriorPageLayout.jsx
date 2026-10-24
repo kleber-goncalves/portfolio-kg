@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import MenuMobile from "../components/MenuMobile";
@@ -11,22 +10,6 @@ function InteriorPageLayout({ title, description, heroContent = null, children }
     const { pathname } = useLocation();
     const navigatePortfolio = usePortfolioNavigation();
 
-    useEffect(() => {
-        const previousTitle = document.title;
-        const descriptionMeta = document.querySelector('meta[name="description"]');
-        const previousDescription = descriptionMeta?.getAttribute("content") ?? null;
-
-        document.title = `${title} | KLEBER DEV`;
-        descriptionMeta?.setAttribute("content", description);
-
-        return () => {
-            document.title = previousTitle;
-
-            if (descriptionMeta && previousDescription !== null) {
-                descriptionMeta.setAttribute("content", previousDescription);
-            }
-        };
-    }, [title, description]);
 
     return (
         <div className="min-h-screen w-full bg-obsidian text-ivory">
