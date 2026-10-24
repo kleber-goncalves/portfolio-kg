@@ -88,8 +88,114 @@ function auditSeo(html, robotsText, sitemapText) {
     addSeo(hasSitemap ? "pass" : "error", "sitemap-xml", hasSitemap ? "sitemap.xml lista a URL de produção." : "sitemap.xml está ausente ou não lista " + PUBLIC_URL + ".");
 
     addSeo(validStructuredData ? "pass" : "error", "json-ld-structured-data", validStructuredData ? "JSON-LD válido com entidades Person e WebSite aponta para o domínio de produção." : "JSON-LD ausente ou inválido; é necessário definir Person e WebSite com a URL pública correta.");
-    addSeo(rootInner.trim() ? "pass" : "warning", "static-html-content", rootInner.trim() ? "O HTML inicial contém conteúdo na raiz React." : "A raiz React é vazia no HTML inicial; o conteúdo depende de JavaScript. Considere prerender/SSR para fortalecer indexação e prévias sociais.");
+    addSeo(rootInner.trim() ? "pass" : "warning", "static-html-content", rootInner.trim() ? "O HTML inicial contém conteúdo na raiz React." : "O HTML estático traz os metadados da rota, mas o conteúdo React depende de JavaScript; avalie pré-renderização do conteúdo para fortalecer a indexação.");
 
+    summarizeSeo();
+}
+
+
+async function auditStaticRoutes(config, sitemapText) {
+    for (const [route, page] of Object.entries(config.routes)) {
+        const relativePath = route === "/" ? "index.html" : path.join(route.slice(1), "index.html");
+        const filePath = path.join(DIST, relativePath);
+        const canonicalUrl = new URL(route, config.siteUrl).href;
+        const exists = await accessExists(filePath);
+
+        if (!exists) {
+            addSeo("error", "route-html:" + route, "HTML estático ausente para a rota " + route + " (" + relativePath + ").");
+            continue;
+        }
+
+        const html = await fs.readFile(filePath, "utf8");
+        const title = html.match(/<title\b[^>]*>([\s\S]*?)<\/title>/i)?.[1]?.trim() ?? "";
+        const metas = (html.match(/<meta\b[^>]*>/gi) ?? []).map((tag) => attributes(tag));
+        const links = (html.match(/<link\b[^>]*>/gi) ?? []).map((tag) => attributes(tag));
+        const findMeta = (attribute, key) => metas.find((item) => (item[attribute] ?? "").toLowerCase() === key.toLowerCase())?.content ?? "";
+        const canonical = links.find((item) => (item.rel ?? "").toLowerCase().split(/\s+/).includes("canonical"))?.href ?? "";
+        const routeJsonLd = html.match(/<script\b(?=[^>]*\bid=["']route-seo-jsonld["'])[^>]*>([\s\S]*?)<\/script>/i)?.[1] ?? "";
+        let webPageSchema = null;
+        try {
+            webPageSchema = routeJsonLd ? JSON.parse(routeJsonLd) : null;
+        } catch {
+            webPageSchema = null;
+        }
+
+        const routeChecks = [
+            {
+                id: "title",
+                passed: title === page.title,
+                expected: page.title,
+                actual: title || "ausente",
+            },
+            {
+                id: "description",
+                passed: findMeta("name", "description") === page.description && page.description.length >= 50,
+                expected: page.description,
+                actual: findMeta("name", "description") || "ausente",
+            },
+            {
+                id: "canonical",
+                passed: canonical === canonicalUrl,
+                expected: canonicalUrl,
+                actual: canonical || "ausente",
+            },
+            {
+                id: "og-title",
+                passed: findMeta("property", "og:title") === page.title,
+                expected: page.title,
+                actual: findMeta("property", "og:title") || "ausente",
+            },
+            {
+                id: "og-description",
+                passed: findMeta("property", "og:description") === page.description,
+                expected: page.description,
+                actual: findMeta("property", "og:description") || "ausente",
+            },
+            {
+                id: "og-url",
+                passed: findMeta("property", "og:url") === canonicalUrl,
+                expected: canonicalUrl,
+                actual: findMeta("property", "og:url") || "ausente",
+            },
+            {
+                id: "twitter-title",
+                passed: findMeta("name", "twitter:title") === page.title,
+                expected: page.title,
+                actual: findMeta("name", "twitter:title") || "ausente",
+            },
+            {
+                id: "twitter-description",
+                passed: findMeta("name", "twitter:description") === page.description,
+                expected: page.description,
+                actual: findMeta("name", "twitter:description") || "ausente",
+            },
+            {
+                id: "webpage-jsonld",
+                passed: webPageSchema?.["@type"] === "WebPage" && webPageSchema.url === canonicalUrl && webPageSchema.name === page.title,
+                expected: "WebPage JSON-LD para " + canonicalUrl,
+                actual: webPageSchema?.["@type"] ? webPageSchema["@type"] + " (" + (webPageSchema.url ?? "sem URL") + ")" : "ausente/inválido",
+            },
+            {
+                id: "sitemap",
+                passed: sitemapText.includes("<loc>" + canonicalUrl + "</loc>"),
+                expected: canonicalUrl + " no sitemap",
+                actual: sitemapText.includes("<loc>" + canonicalUrl + "</loc>") ? "presente" : "ausente",
+            },
+        ];
+
+        for (const check of routeChecks) {
+            addSeo(
+                check.passed ? "pass" : "error",
+                "route:" + route + ":" + check.id,
+                check.passed
+                    ? route + ": " + check.id + " está correto."
+                    : route + ": " + check.id + " inválido. Esperado: " + check.expected + "; encontrado: " + check.actual + ".",
+            );
+        }
+    }
+}
+
+function summarizeSeo() {
     seo.summary = seo.checks.reduce(
         (sum, check) => {
             sum[check.level] += 1;
@@ -245,7 +351,9 @@ async function auditViewport(browser, setup) {
     const page = await context.newPage();
     page.setDefaultTimeout(15000);
     try {
-        await page.goto(BASE_URL, { waitUntil: "domcontentloaded", timeout: 45000 });
+        const routePath = setup.pathname ?? "/";
+        const routeLabel = setup.label + " — " + routePath;
+        await page.goto(new URL(routePath, BASE_URL).href, { waitUntil: "domcontentloaded", timeout: 45000 });
         await page
             .locator("h1")
             .first()
@@ -254,8 +362,8 @@ async function auditViewport(browser, setup) {
         await page.waitForTimeout(1100);
         await loadDeferredSections(page);
         await stabilizeVisualState(page);
-        await auditSemantics(page, setup.label);
-        await scan(page, setup.label + " — página inteira");
+        await auditSemantics(page, routeLabel);
+        await scan(page, routeLabel + " — página inteira");
 
         if (setup.isMobile) {
             await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
@@ -279,21 +387,21 @@ async function auditViewport(browser, setup) {
         if (opened) {
             await page.waitForTimeout(900);
             await stabilizeVisualState(page);
-            await scan(page, setup.label + " — menu aberto");
+            await scan(page, routeLabel + " — menu aberto");
             await page.keyboard.press("Escape");
             await page.waitForTimeout(850);
             const openButton = page.getByRole("button", { name: /abrir menu/i }).first();
             const expanded = await openButton.getAttribute("aria-expanded").catch(() => null);
             const failed = expanded === "true";
             accessibility.interactions.push({
-                viewport: setup.label,
+                viewport: routeLabel,
                 id: "escape-closes-menu",
                 level: failed ? "error" : "pass",
                 message: failed ? "O botão de menu continua marcado como expandido depois de Escape." : "Escape fechou o menu (aria-expanded não ficou true).",
             });
         } else {
             accessibility.interactions.push({
-                viewport: setup.label,
+                viewport: routeLabel,
                 id: "menu-trigger",
                 level: "warning",
                 message: "Nenhum botão visível com nome 'Abrir menu' neste viewport.",
@@ -301,7 +409,7 @@ async function auditViewport(browser, setup) {
         }
     } catch (error) {
         accessibility.interactions.push({
-            viewport: setup.label,
+            viewport: routeLabel,
             id: "audit-execution",
             level: "error",
             message: String(error?.stack ?? error),
@@ -315,24 +423,39 @@ async function auditViewport(browser, setup) {
 async function main() {
     await fs.mkdir(REPORT_DIR, { recursive: true });
     const html = await fs.readFile(path.join(DIST, "index.html"), "utf8");
+    const routeConfig = JSON.parse(await fs.readFile(path.join(ROOT, "src", "data", "seoRoutes.json"), "utf8"));
     const robotsText = await fs.readFile(path.join(DIST, "robots.txt"), "utf8").catch(() => "");
     const sitemapText = await fs.readFile(path.join(DIST, "sitemap.xml"), "utf8").catch(() => "");
     auditSeo(html, robotsText, sitemapText);
+    await auditStaticRoutes(routeConfig, sitemapText);
+    summarizeSeo();
+
     for (const check of seo.checks) {
-        console.log("[seo][" + check.level.toUpperCase() + "] " + check.id + ": " + check.message);
+        console.log("[seo][" + check.level.toUpperCase() + "][" + (check.id.startsWith("route:") ? check.id.split(":")[1] : "/") + "] " + check.id + ": " + check.message);
     }
 
     const browser = await chromium.launch({ headless: true });
-    try {
-        await auditViewport(browser, { label: "Desktop 1440×900", width: 1440, height: 900 });
-        await auditViewport(browser, {
+    const viewports = [
+        { label: "Desktop 1440×900", width: 1440, height: 900 },
+        {
             label: "Mobile 390×844",
             width: 390,
             height: 844,
             isMobile: true,
             hasTouch: true,
             deviceScaleFactor: 1,
-        });
+        },
+    ];
+
+    try {
+        for (const routePath of Object.keys(routeConfig.routes)) {
+            for (const viewport of viewports) {
+                await auditViewport(browser, {
+                    ...viewport,
+                    pathname: routePath,
+                });
+            }
+        }
     } finally {
         await browser.close();
     }
