@@ -311,9 +311,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `fb2493e3c6168f9e4058b1567d38edf65a2a6ec1`
-- **Data do commit analisado:** 2026-10-23T23:51:13-03:00
-- **Mensagem do commit:** feat(sobre): integrar globo na linha central do retrato
+- **Commit de código analisado:** `f7514de0429e9e6baf16cf317ce2944490d66ffd`
+- **Data do commit analisado:** 2026-10-23T23:55:32-03:00
+- **Mensagem do commit:** fix(sobre): alinhar globo à borda inferior da seção
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -430,13 +430,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `f7514de` | 2026-10-23 | fix(sobre): alinhar globo à borda inferior da seção |
+| `68d9f36` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `fb2493e` | 2026-10-23 | feat(sobre): integrar globo na linha central do retrato |
 | `fc03cd2` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `6dff09a` | 2026-10-23 | chore(sobre): remover logs temporários de diagnóstico sticky |
 | `7e711d0` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `d3c7e4a` | 2026-10-23 | docs(ai-context): registrar causa do sticky no root |
 | `69f84c9` | 2026-10-23 | fix(layout): preservar sticky evitando overflow vertical no root |
-| `a72d3d6` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
-| `f6ae599` | 2026-10-23 | debug(sobre): exibir diagnostico sticky automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
