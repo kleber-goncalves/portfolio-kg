@@ -98,6 +98,7 @@ function CategoriaFilterButton({ categoria, quantidade, ativa, onClick }) {
                 gap-2
                 overflow-hidden
                 rounded-sm
+                cursor-pointer
                 border
                 px-3
                 py-2
