@@ -311,9 +311,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `78b1ad968902b666aca68c2d98be1b114d195937`
-- **Data do commit analisado:** 2026-10-24T00:36:13-03:00
-- **Mensagem do commit:** docs: registrar spotlight responsivo à rolagem
+- **Commit de código analisado:** `a91a4fd85cfda2340a8f5ef8eb58e371962ce9c8`
+- **Data do commit analisado:** 2026-10-24T00:38:39-03:00
+- **Mensagem do commit:** fix(sobre): acompanhar tilt do cursor durante scroll
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -430,13 +430,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `a91a4fd` | 2026-10-24 | fix(sobre): acompanhar tilt do cursor durante scroll |
+| `7174f0e` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `78b1ad9` | 2026-10-24 | docs: registrar spotlight responsivo à rolagem |
 | `759243a` | 2026-10-24 | fix(sobre): atualizar spotlight durante rolagem |
 | `c8d2c43` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `5a08ba5` | 2026-10-24 | docs: registrar efeitos de mouse no SobreHero |
 | `aea5692` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `ab97aa0` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
-| `52790d8` | 2026-10-24 | style(sobre): adicionar spotlight e glow ao retrato |
-| `4282771` | 2026-10-24 | fix(sobre): encaminhar modo de experiência ao hero |
 
 <!-- END AUTO-GENERATED SECTION -->
