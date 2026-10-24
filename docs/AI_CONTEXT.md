@@ -311,9 +311,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `d3c7e4a150450cffdf2b55c27e5315d429b6a3cc`
-- **Data do commit analisado:** 2026-10-23T23:34:05-03:00
-- **Mensagem do commit:** docs(ai-context): registrar causa do sticky no root
+- **Commit de código analisado:** `6dff09a797fe8823193e402f0a173bbb0cd2a0c7`
+- **Data do commit analisado:** 2026-10-23T23:37:44-03:00
+- **Mensagem do commit:** chore(sobre): remover logs temporários de diagnóstico sticky
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -430,13 +430,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `6dff09a` | 2026-10-23 | chore(sobre): remover logs temporários de diagnóstico sticky |
+| `7e711d0` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `d3c7e4a` | 2026-10-23 | docs(ai-context): registrar causa do sticky no root |
 | `69f84c9` | 2026-10-23 | fix(layout): preservar sticky evitando overflow vertical no root |
 | `a72d3d6` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `f6ae599` | 2026-10-23 | debug(sobre): exibir diagnostico sticky automaticamente |
 | `ca82f7b` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `850503e` | 2026-10-23 | debug(sobre): corrigir status e resumir métricas sticky |
-| `c9743ed` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
-| `9057b0d` | 2026-10-23 | debug(sobre): tornar logs sticky sempre visíveis |
 
 <!-- END AUTO-GENERATED SECTION -->
