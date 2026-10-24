@@ -195,9 +195,9 @@ async function auditStaticRoutes(config, sitemapText) {
             },
             {
                 id: "language",
-                passed: (html.match(/<html\\b[^>]*>/i)?.[0] ?? "").includes('lang="pt-BR"'),
+                passed: (attributes(html.match(/<html\b[^>]*>/i)?.[0] ?? "").lang ?? "") === config.language,
                 expected: 'lang="pt-BR"',
-                actual: (html.match(/<html\\b[^>]*>/i)?.[0] ?? "tag html ausente"),
+                actual: (attributes(html.match(/<html\b[^>]*>/i)?.[0] ?? "").lang ?? "tag html ausente"),
             },
             {
                 id: "viewport",
