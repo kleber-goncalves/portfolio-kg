@@ -319,9 +319,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `ba02679ba08763d091e31a83379d6cc21c0ad114`
-- **Data do commit analisado:** 2026-10-24T19:46:18-03:00
-- **Mensagem do commit:** fix: validate route language metadata correctly
+- **Commit de código analisado:** `c6ee2cca7dcb3efa9591466220139fd2977fdde1`
+- **Data do commit analisado:** 2026-10-24T19:47:37-03:00
+- **Mensagem do commit:** seo: describe shared social preview image accurately
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -439,13 +439,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `c6ee2cc` | 2026-10-24 | seo: describe shared social preview image accurately |
+| `0e11b59` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `ba02679` | 2026-10-24 | fix: validate route language metadata correctly |
 | `00ab5b1` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `24024d9` | 2026-10-24 | test: verify social image and document metadata on every route |
 | `10e77f1` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `19541e1` | 2026-10-24 | docs: document route SEO, prerendered metadata and route audits |
 | `1f70d7e` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
-| `e3a4173` | 2026-10-24 | perf: avoid preloading home hero image on internal routes |
-| `691b5b6` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
