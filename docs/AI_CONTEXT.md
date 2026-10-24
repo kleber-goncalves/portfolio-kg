@@ -312,9 +312,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `2a8e73d1ac7b595ca69d240c56d8a93111d99de0`
-- **Data do commit analisado:** 2026-10-24T18:13:20-03:00
-- **Mensagem do commit:** fix: connect project row hover to action links
+- **Commit de código analisado:** `60652dc63b94db4c3ef1a1588332d21a4a9d83f0`
+- **Data do commit analisado:** 2026-10-24T18:21:25-03:00
+- **Mensagem do commit:** feat: track project hover while scrolling
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -431,13 +431,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `60652dc` | 2026-10-24 | feat: track project hover while scrolling |
+| `77aed1c` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `2a8e73d` | 2026-10-24 | fix: connect project row hover to action links |
 | `4e09047` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `9b0e5a6` | 2026-10-24 | style: keep active category filter in hover colors |
 | `9f13444` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `1f1c4ea` | 2026-10-24 | style: adicionar cursor pointer ao botão de filtro de categoria |
 | `ac76cf6` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
-| `c33132e` | 2026-10-24 | style: align project category filters with magnetic links |
-| `40d8d30` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
