@@ -311,9 +311,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `e73c2c4495005a7b00b30bdb2753ab835e0f7b04`
-- **Data do commit analisado:** 2026-10-24T00:38:54-03:00
-- **Mensagem do commit:** docs: registrar tilt responsivo à rolagem
+- **Commit de código analisado:** `848954ac016cf947d4a5dfeb942f4bf700b9587a`
+- **Data do commit analisado:** 2026-10-24T00:51:51-03:00
+- **Mensagem do commit:** fix(projetos): estabilizar preview seguindo o cursor
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -430,13 +430,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `848954a` | 2026-10-24 | fix(projetos): estabilizar preview seguindo o cursor |
+| `f1ba27b` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `e73c2c4` | 2026-10-24 | docs: registrar tilt responsivo à rolagem |
 | `72831fd` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `a91a4fd` | 2026-10-24 | fix(sobre): acompanhar tilt do cursor durante scroll |
 | `7174f0e` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `78b1ad9` | 2026-10-24 | docs: registrar spotlight responsivo à rolagem |
 | `759243a` | 2026-10-24 | fix(sobre): atualizar spotlight durante rolagem |
-| `c8d2c43` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
-| `5a08ba5` | 2026-10-24 | docs: registrar efeitos de mouse no SobreHero |
 
 <!-- END AUTO-GENERATED SECTION -->
