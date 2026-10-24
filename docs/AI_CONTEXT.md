@@ -312,9 +312,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `26f20c89c61d0b499b8472a02096a218d23994a7`
-- **Data do commit analisado:** 2026-10-24T19:40:31-03:00
-- **Mensagem do commit:** refactor: centralize route SEO outside interior layout
+- **Commit de código analisado:** `942c4becdb720ffe655934025ebf34aacc076662`
+- **Data do commit analisado:** 2026-10-24T19:40:37-03:00
+- **Mensagem do commit:** seo: include all portfolio routes in sitemap
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -432,6 +432,7 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `942c4be` | 2026-10-24 | seo: include all portfolio routes in sitemap |
 | `26f20c8` | 2026-10-24 | refactor: centralize route SEO outside interior layout |
 | `e6c7eba` | 2026-10-24 | feat: apply centralized SEO metadata to every route |
 | `864b0b2` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
@@ -439,6 +440,5 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 | `4ad17c8` | 2026-10-24 | feat: refine default route SEO metadata |
 | `a2884ee` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `db835ce` | 2026-10-24 | feat: generate route SEO HTML and sitemap during build |
-| `37c153d` | 2026-10-24 | feat: synchronize SEO metadata with active route |
 
 <!-- END AUTO-GENERATED SECTION -->
