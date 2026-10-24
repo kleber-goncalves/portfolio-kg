@@ -312,9 +312,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `4ad17c85ab8ccab62d86503522f627decebe8ce3`
-- **Data do commit analisado:** 2026-10-24T19:40:15-03:00
-- **Mensagem do commit:** feat: refine default route SEO metadata
+- **Commit de código analisado:** `26f20c89c61d0b499b8472a02096a218d23994a7`
+- **Data do commit analisado:** 2026-10-24T19:40:31-03:00
+- **Mensagem do commit:** refactor: centralize route SEO outside interior layout
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -432,13 +432,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `26f20c8` | 2026-10-24 | refactor: centralize route SEO outside interior layout |
+| `e6c7eba` | 2026-10-24 | feat: apply centralized SEO metadata to every route |
+| `864b0b2` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
+| `4aab7a0` | 2026-10-24 | build: generate route-specific SEO HTML and sitemap |
 | `4ad17c8` | 2026-10-24 | feat: refine default route SEO metadata |
 | `a2884ee` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `db835ce` | 2026-10-24 | feat: generate route SEO HTML and sitemap during build |
 | `37c153d` | 2026-10-24 | feat: synchronize SEO metadata with active route |
-| `4d5ef2f` | 2026-10-24 | feat: define route-specific SEO metadata |
-| `e1c882b` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
-| `d5ee003` | 2026-10-24 | docs: document pagination hover state reset |
-| `273fbec` | 2026-10-24 | fix: reset pagination hover state on page change |
 
 <!-- END AUTO-GENERATED SECTION -->
