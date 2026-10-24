@@ -548,6 +548,7 @@ function ProjetoCatalogo() {
                     <motion.button
                         type="button"
                         aria-label="Página anterior"
+                        title="Ir para a página anterior"
                         disabled={currentPage === 1}
                         onClick={() => handlePageChange(currentPage - 1)}
                         onPointerDown={() => playUiSound("press")}
@@ -595,6 +596,7 @@ function ProjetoCatalogo() {
                                 key={page}
                                 type="button"
                                 aria-label={`Página ${page}`}
+                                title={`Ir para a página ${page}`}
                                 aria-current={isActive ? "page" : undefined}
                                 onClick={() => handlePageChange(page)}
                                 onPointerDown={() => playUiSound("press")}
@@ -641,6 +643,7 @@ function ProjetoCatalogo() {
                     <motion.button
                         type="button"
                         aria-label="Próxima página"
+                        title="Ir para a próxima página"
                         disabled={currentPage === totalPages}
                         onClick={() => handlePageChange(currentPage + 1)}
                         onPointerDown={() => playUiSound("press")}
