@@ -8,11 +8,13 @@ function SobreHero() {
     const portraitRef = useRef(null);
 
     useEffect(() => {
-        // Habilite os logs abrindo a página com ?debugSticky=1.
-        // Assim, a instrumentação não polui o console normal do portfólio.
-        if (new URLSearchParams(window.location.search).get("debugSticky") !== "1") {
-            return undefined;
-        }
+        // Diagnóstico temporário: os logs são exibidos sempre enquanto esta instrumentação estiver presente.
+        // Isso confirma também que a versão/rota carregou este componente.
+        console.info("[SobreHero sticky] Instrumentação carregada", {
+            pathname: window.location.pathname,
+            search: window.location.search,
+            readyState: document.readyState,
+        });
 
         const section = sectionRef.current;
         const grid = gridRef.current;
@@ -135,7 +137,7 @@ function SobreHero() {
             return canCreateScrollContainer(overflowX) || canCreateScrollContainer(overflowY);
         });
 
-        console.groupCollapsed("[SobreHero sticky] Diagnóstico inicial — ?debugSticky=1");
+        console.groupCollapsed("[SobreHero sticky] Diagnóstico inicial");
         console.log("Métricas iniciais:", getMetrics());
         console.log("Estilos dos ancestrais do texto:", ancestors);
         console.log("Possíveis ancestrais que criam contêiner de rolagem:", scrollContainerCandidates);
