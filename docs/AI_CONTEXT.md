@@ -311,9 +311,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `52790d85165e08d5b47e2587c82d2dfe633156f8`
-- **Data do commit analisado:** 2026-10-24T00:29:20-03:00
-- **Mensagem do commit:** style(sobre): adicionar spotlight e glow ao retrato
+- **Commit de código analisado:** `5a08ba54ea41b6e74fd3543e515008299db14db1`
+- **Data do commit analisado:** 2026-10-24T00:29:42-03:00
+- **Mensagem do commit:** docs: registrar efeitos de mouse no SobreHero
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -430,13 +430,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `5a08ba5` | 2026-10-24 | docs: registrar efeitos de mouse no SobreHero |
+| `aea5692` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
+| `ab97aa0` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `52790d8` | 2026-10-24 | style(sobre): adicionar spotlight e glow ao retrato |
 | `4282771` | 2026-10-24 | fix(sobre): encaminhar modo de experiência ao hero |
 | `1207b55` | 2026-10-24 | feat(sobre): adicionar efeitos de mouse ao retrato |
 | `ef2e125` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `62b996a` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
-| `78c8222` | 2026-10-23 | docs: registrar posicionamento da linha e do globo no Sobre |
-| `f7514de` | 2026-10-23 | fix(sobre): alinhar globo à borda inferior da seção |
-| `68d9f36` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
