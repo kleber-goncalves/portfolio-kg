@@ -312,9 +312,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `b7468ddad45c63e2c1147ef5ba56f99bc03a701d`
-- **Data do commit analisado:** 2026-10-24T19:41:47-03:00
-- **Mensagem do commit:** test: audit SEO and accessibility across all routes
+- **Commit de código analisado:** `c7798f80aa4199b23e9dc6898a71eba6738662bd`
+- **Data do commit analisado:** 2026-10-24T19:41:58-03:00
+- **Mensagem do commit:** ci: run accessibility and SEO audits on route separation branch
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -432,13 +432,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `c7798f8` | 2026-10-24 | ci: run accessibility and SEO audits on route separation branch |
+| `8f40f6d` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `b7468dd` | 2026-10-24 | test: audit SEO and accessibility across all routes |
 | `4cb90ad` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `9f391c3` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `4335bf9` | 2026-10-24 | fix: remove unused SEO generator parameter |
 | `208f666` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `942c4be` | 2026-10-24 | seo: include all portfolio routes in sitemap |
-| `26f20c8` | 2026-10-24 | refactor: centralize route SEO outside interior layout |
-| `e6c7eba` | 2026-10-24 | feat: apply centralized SEO metadata to every route |
 
 <!-- END AUTO-GENERATED SECTION -->
