@@ -34,9 +34,12 @@ function prefersReducedMotion() {
 function RouteTransitionPreloader({ transition, onComplete }) {
     const [phase, setPhase] = useState("entering");
     const startedAtRef = useRef(0);
+    const transitionId = transition?.id;
+    const transitionPathname = transition?.pathname;
+    const transitionReady = transition?.ready;
 
     useLayoutEffect(() => {
-        if (!transition) return undefined;
+        if (!transitionId) return undefined;
 
         startedAtRef.current = performance.now();
         setPhase("entering");
@@ -46,10 +49,10 @@ function RouteTransitionPreloader({ transition, onComplete }) {
         });
 
         return () => window.cancelAnimationFrame(frameId);
-    }, [transition?.id]);
+    }, [transitionId]);
 
     useEffect(() => {
-        if (!transition) return undefined;
+        if (!transitionId) return undefined;
 
         const html = document.documentElement;
         const body = document.body;
@@ -65,10 +68,10 @@ function RouteTransitionPreloader({ transition, onComplete }) {
             body.style.overflow = previousBodyOverflow;
             startSmoothScroll();
         };
-    }, [transition?.id]);
+    }, [transitionId]);
 
     useEffect(() => {
-        if (!transition?.ready) return undefined;
+        if (!transitionReady) return undefined;
 
         const minimumTime = prefersReducedMotion() ? 80 : MIN_VISIBLE_TIME;
         const elapsed = performance.now() - startedAtRef.current;
@@ -77,22 +80,22 @@ function RouteTransitionPreloader({ transition, onComplete }) {
         }, Math.max(0, minimumTime - elapsed));
 
         return () => window.clearTimeout(timeoutId);
-    }, [transition?.id, transition?.ready]);
+    }, [transitionId, transitionReady]);
 
     useEffect(() => {
-        if (!transition || phase !== "leaving") return undefined;
+        if (!transitionId || phase !== "leaving") return undefined;
 
         const timeoutId = window.setTimeout(
-            () => onComplete(transition.id),
+            () => onComplete(transitionId),
             prefersReducedMotion() ? 0 : EXIT_DURATION,
         );
 
         return () => window.clearTimeout(timeoutId);
-    }, [transition?.id, phase, onComplete]);
+    }, [transitionId, phase, onComplete]);
 
     if (!transition) return null;
 
-    const page = PAGE_COPY[transition.pathname] ?? PAGE_COPY["/"];
+    const page = PAGE_COPY[transitionPathname] ?? PAGE_COPY["/"];
     const isVisible = phase === "visible";
     const reducedMotion = prefersReducedMotion();
 
@@ -100,7 +103,7 @@ function RouteTransitionPreloader({ transition, onComplete }) {
         <div
             role="status"
             aria-live="polite"
-            aria-busy={!transition.ready}
+            aria-busy={!transitionReady}
             aria-label={`Carregando página: ${page.title}`}
             className={`
                 fixed
@@ -147,7 +150,7 @@ function RouteTransitionPreloader({ transition, onComplete }) {
                 </h2>
 
                 <p className="mt-4 text-xs leading-6 text-steel sm:text-sm">
-                    {transition.ready ? "Finalizando a transição" : page.status}
+                    {transitionReady ? "Finalizando a transição" : page.status}
                 </p>
 
                 <div
