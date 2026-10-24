@@ -4,7 +4,7 @@ import Socials from "../components/Socials";
 import MenuMobile from "../components/MenuMobile";
 import OptimizedImage from "./OptimizedImage";
 
-function HeroMobile({ items, onReady, isCompactLandscape = false, isTablet = false }) {
+function HeroMobile({ items, onReady, onContentReady, isCompactLandscape = false, isTablet = false }) {
     const useFullLogo = isCompactLandscape || isTablet;
     useLayoutEffect(() => {
         onReady?.("mobile");
@@ -60,6 +60,8 @@ function HeroMobile({ items, onReady, isCompactLandscape = false, isTablet = fal
                             sizes="216px"
                             loading="eager"
                             fetchPriority="high"
+                            onLoad={() => onContentReady?.("mobile")}
+                            onError={() => onContentReady?.("mobile")}
                             wrapperClassName="h-full w-full rounded-xl"
                             className="rounded-xl object-cover"
                         />
