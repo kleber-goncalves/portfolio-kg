@@ -570,6 +570,7 @@ function ProjetoCatalogo() {
                             h-11
                             w-11
                             items-center
+                            cursor-pointer
                             justify-center
                             rounded-sm
                             border
@@ -620,6 +621,7 @@ function ProjetoCatalogo() {
                                     items-center
                                     justify-center
                                     rounded-sm
+                                    cursor-pointer
                                     border
                                     px-3
                                     text-xs
@@ -671,6 +673,7 @@ function ProjetoCatalogo() {
                             border-graphite
                             text-steel
                             transition-colors
+                            cursor-pointer
                             hover:text-ivory
                             disabled:cursor-not-allowed
                             disabled:opacity-30
