@@ -204,6 +204,7 @@ function CategoriaFilterButton({ categoria, quantidade, ativa, onClick }) {
 function ProjetoCatalogo() {
     const [categoriaAtiva, setCategoriaAtiva] = useState("Todos");
     const [currentPage, setCurrentPage] = useState(1);
+    const [hoveredPaginationControl, setHoveredPaginationControl] = useState(null);
     const [projetoSobCursor, setProjetoSobCursor] = useState(null);
     const sectionRef = useRef(null);
     const projectsListRef = useRef(null);
@@ -318,6 +319,7 @@ function ProjetoCatalogo() {
     const handlePageChange = (page) => {
         if (page < 1 || page > totalPages) return;
 
+        setHoveredPaginationControl(null);
         setCurrentPage(page);
         scrollToTarget(projectsListRef.current, {
             duration: 0.75,
@@ -379,6 +381,7 @@ function ProjetoCatalogo() {
                             onClick={() => {
                                 setCategoriaAtiva(categoria);
                                 setCurrentPage(1);
+                                setHoveredPaginationControl(null);
                             }}
                         />;
                     })}
@@ -548,7 +551,18 @@ function ProjetoCatalogo() {
                         disabled={currentPage === 1}
                         onClick={() => handlePageChange(currentPage - 1)}
                         onPointerDown={() => playUiSound("press")}
-                        whileHover={currentPage > 1 ? { y: -2, borderColor: "#A87852" } : undefined}
+                        onHoverStart={() => {
+                            if (currentPage > 1) setHoveredPaginationControl("previous");
+                        }}
+                        onHoverEnd={() => setHoveredPaginationControl((current) => (
+                            current === "previous" ? null : current
+                        ))}
+                        animate={{
+                            y: hoveredPaginationControl === "previous" && currentPage > 1 ? -2 : 0,
+                            borderColor: hoveredPaginationControl === "previous" && currentPage > 1
+                                ? "#A87852"
+                                : "#242424",
+                        }}
                         whileTap={currentPage > 1 ? { scale: 0.96 } : undefined}
                         className="
                             inline-flex
@@ -584,7 +598,18 @@ function ProjetoCatalogo() {
                                 aria-current={isActive ? "page" : undefined}
                                 onClick={() => handlePageChange(page)}
                                 onPointerDown={() => playUiSound("press")}
-                                whileHover={!isActive ? { y: -2, borderColor: "#A87852" } : undefined}
+                                onHoverStart={() => {
+                                    if (!isActive) setHoveredPaginationControl(page);
+                                }}
+                                onHoverEnd={() => setHoveredPaginationControl((current) => (
+                                    current === page ? null : current
+                                ))}
+                                animate={{
+                                    y: !isActive && hoveredPaginationControl === page ? -2 : 0,
+                                    borderColor: isActive || hoveredPaginationControl === page
+                                        ? "#A87852"
+                                        : "#242424",
+                                }}
                                 whileTap={{ scale: 0.96 }}
                                 className={`
                                     inline-flex
@@ -619,7 +644,18 @@ function ProjetoCatalogo() {
                         disabled={currentPage === totalPages}
                         onClick={() => handlePageChange(currentPage + 1)}
                         onPointerDown={() => playUiSound("press")}
-                        whileHover={currentPage < totalPages ? { y: -2, borderColor: "#A87852" } : undefined}
+                        onHoverStart={() => {
+                            if (currentPage < totalPages) setHoveredPaginationControl("next");
+                        }}
+                        onHoverEnd={() => setHoveredPaginationControl((current) => (
+                            current === "next" ? null : current
+                        ))}
+                        animate={{
+                            y: hoveredPaginationControl === "next" && currentPage < totalPages ? -2 : 0,
+                            borderColor: hoveredPaginationControl === "next" && currentPage < totalPages
+                                ? "#A87852"
+                                : "#242424",
+                        }}
                         whileTap={currentPage < totalPages ? { scale: 0.96 } : undefined}
                         className="
                             inline-flex
