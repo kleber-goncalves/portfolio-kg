@@ -299,36 +299,19 @@ function ProjetoCatalogo() {
         );
 
     return (
-        <section ref={sectionRef} className="mx-auto w-full max-w-7xl px-5 pb-16 b-md:px-10 b-md:pb-24">
+        <section ref={sectionRef} className="mx-auto w-full b-md:max-w-[1500px] px-5 pb-16 b-md:px-10 b-md:pb-24">
             {/* FILTROS DO CATÁLOGO */}
             <div className="mb-8 border-b border-graphite pb-6">
                 <p className="mb-4 text-xs uppercase tracking-[0.18em] text-steel">
                     {projetosFiltrados.length} de {projetosCatalogo.length} projetos
                 </p>
 
-
-                <div
-                    aria-label="Filtrar projetos por categoria"
-                    className="flex flex-wrap gap-2"
-                    role="group"
-                >
+                <div aria-label="Filtrar projetos por categoria" className="flex flex-wrap gap-2" role="group">
                     {CATEGORIAS_PROJETOS.map((categoria) => {
-                        const quantidade = categoria === "Todos"
-                            ? projetosCatalogo.length
-                            : projetosCatalogo.filter(
-                                (projeto) => projeto.categoria === categoria,
-                            ).length;
+                        const quantidade = categoria === "Todos" ? projetosCatalogo.length : projetosCatalogo.filter((projeto) => projeto.categoria === categoria).length;
                         const ativa = categoriaAtiva === categoria;
 
-                        return (
-                            <CategoriaFilterButton
-                                key={categoria}
-                                categoria={categoria}
-                                quantidade={quantidade}
-                                ativa={ativa}
-                                onClick={() => setCategoriaAtiva(categoria)}
-                            />
-                        );
+                        return <CategoriaFilterButton key={categoria} categoria={categoria} quantidade={quantidade} ativa={ativa} onClick={() => setCategoriaAtiva(categoria)} />;
                     })}
                 </div>
             </div>
@@ -339,12 +322,12 @@ function ProjetoCatalogo() {
                     const isCursorHovered = projetoSobCursor === projeto.id;
 
                     return (
-                    <article
-                        key={projeto.id}
-                        data-project-id={projeto.id}
-                        data-cursor-hover={isCursorHovered ? "true" : "false"}
-                        data-ui-sfx-hover
-                        className="
+                        <article
+                            key={projeto.id}
+                            data-project-id={projeto.id}
+                            data-cursor-hover={isCursorHovered ? "true" : "false"}
+                            data-ui-sfx-hover
+                            className="
                             group
                             relative
                             w-full
@@ -357,12 +340,12 @@ function ProjetoCatalogo() {
                             data-[cursor-hover=true]:border-bronze/50
                             b-md:py-8
                         "
-                    >
-                        <div data-cursor-hover={isCursorHovered ? "true" : "false"} className="group/preview flex w-full flex-col gap-4 b-md:flex-row b-md:items-center b-md:justify-between b-md:gap-8">
-                            <div className="flex min-w-0 flex-1 items-start gap-4 b-md:gap-8">
-                                <span
-                                    aria-hidden="true"
-                                    className="
+                        >
+                            <div data-cursor-hover={isCursorHovered ? "true" : "false"} className="group/preview flex w-full flex-col gap-4 b-md:flex-row b-md:items-center b-md:justify-between b-md:gap-8">
+                                <div className="flex min-w-0 flex-1 items-start gap-4 b-md:gap-8">
+                                    <span
+                                        aria-hidden="true"
+                                        className="
                                         w-7
                                         shrink-0
                                         pt-1
@@ -377,13 +360,13 @@ function ProjetoCatalogo() {
                                         group-data-[cursor-hover=true]:opacity-100
                                         b-md:w-10
                                     "
-                                >
-                                    {projeto.numero}
-                                </span>
+                                    >
+                                        {projeto.numero}
+                                    </span>
 
-                                <div className="flex min-w-0 flex-col gap-2">
-                                    <h2
-                                        className="
+                                    <div className="flex min-w-0 flex-col gap-2">
+                                        <h2
+                                            className="
                                             font-space
                                             text-xl
                                             font-semibold
@@ -399,12 +382,12 @@ function ProjetoCatalogo() {
                                             b-md:text-2xl
                                             c-lg:text-4xl
                                         "
-                                    >
-                                        {projeto.titulo}
-                                    </h2>
+                                        >
+                                            {projeto.titulo}
+                                        </h2>
 
-                                    <p
-                                        className="
+                                        <p
+                                            className="
                                             max-w-3xl
                                             text-sm
                                             leading-6
@@ -417,19 +400,19 @@ function ProjetoCatalogo() {
                                             b-md:group-hover:translate-x-2
                                             b-md:group-data-[cursor-hover=true]:translate-x-2
                                         "
-                                    >
-                                        {projeto.descricao}
-                                    </p>
+                                        >
+                                            {projeto.descricao}
+                                        </p>
 
-                                    <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1">
-                                        {projeto.tecnologias.map((nomeTecnologia) => {
-                                            const tecnologia = tecnologias[nomeTecnologia];
-                                            const Icone = tecnologia?.icone;
+                                        <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1">
+                                            {projeto.tecnologias.map((nomeTecnologia) => {
+                                                const tecnologia = tecnologias[nomeTecnologia];
+                                                const Icone = tecnologia?.icone;
 
-                                            return (
-                                                <span
-                                                    key={nomeTecnologia}
-                                                    className={`
+                                                return (
+                                                    <span
+                                                        key={nomeTecnologia}
+                                                        className={`
                                                         inline-flex
                                                         h-fit
                                                         w-fit
@@ -454,62 +437,33 @@ function ProjetoCatalogo() {
                                                         group-data-[cursor-hover=true]:text-white
                                                         b-md:px-3
                                                     `}
-                                                >
-                                                    {Icone && (
-                                                        <Icone
-                                                            aria-hidden="true"
-                                                            className={`h-4 w-4 ${tecnologia.icon}`}
-                                                        />
-                                                    )}
-                                                    {tecnologia?.nome ?? nomeTecnologia}
-                                                </span>
-                                            );
-                                        })}
-                                    </div>
+                                                    >
+                                                        {Icone && <Icone aria-hidden="true" className={`h-4 w-4 ${tecnologia.icon}`} />}
+                                                        {tecnologia?.nome ?? nomeTecnologia}
+                                                    </span>
+                                                );
+                                            })}
+                                        </div>
 
-                                    <p className="mt-1 text-[10px] uppercase tracking-[0.16em] text-steel/50">
-                                        {projeto.categoria}
-                                    </p>
+                                        <p className="mt-1 text-[10px] uppercase tracking-[0.16em] text-steel/50">{projeto.categoria}</p>
+                                    </div>
+                                </div>
+
+                                <div className="ml-11 flex shrink-0 flex-wrap items-center gap-2 b-md:ml-0 b-md:gap-3">
+                                    {projeto.demo && (
+                                        <MagneticExternalLinkHover href={projeto.demo} px="px-3" py="py-2" accent="#A87852" borderColor="#242424" hoverBorderColor="#A87852" textColor="#8B8B8B" hoverTextColor="#0D0D0D" Icon={ArrowUpRight} isGroupHoverActive={isCursorHovered}>
+                                            Preview
+                                        </MagneticExternalLinkHover>
+                                    )}
+
+                                    {projeto.github && (
+                                        <MagneticExternalLinkHover href={projeto.github} px="px-3" py="py-2" accent="transparent" borderColor="#242424" hoverBorderColor="#F2F0EC" textColor="#8B8B8B" hoverTextColor="#F2F0EC" Icon={ArrowUpRight} isGroupHoverActive={isCursorHovered}>
+                                            GitHub
+                                        </MagneticExternalLinkHover>
+                                    )}
                                 </div>
                             </div>
-
-                            <div className="ml-11 flex shrink-0 flex-wrap items-center gap-2 b-md:ml-0 b-md:gap-3">
-                                {projeto.demo && (
-                                    <MagneticExternalLinkHover
-                                        href={projeto.demo}
-                                        px="px-3"
-                                        py="py-2"
-                                        accent="#A87852"
-                                        borderColor="#242424"
-                                        hoverBorderColor="#A87852"
-                                        textColor="#8B8B8B"
-                                        hoverTextColor="#0D0D0D"
-                                        Icon={ArrowUpRight}
-                                        isGroupHoverActive={isCursorHovered}
-                                    >
-                                        Preview
-                                    </MagneticExternalLinkHover>
-                                )}
-
-                                {projeto.github && (
-                                    <MagneticExternalLinkHover
-                                        href={projeto.github}
-                                        px="px-3"
-                                        py="py-2"
-                                        accent="transparent"
-                                        borderColor="#242424"
-                                        hoverBorderColor="#F2F0EC"
-                                        textColor="#8B8B8B"
-                                        hoverTextColor="#F2F0EC"
-                                        Icon={ArrowUpRight}
-                                        isGroupHoverActive={isCursorHovered}
-                                    >
-                                        GitHub
-                                    </MagneticExternalLinkHover>
-                                )}
-                            </div>
-                        </div>
-                    </article>
+                        </article>
                     );
                 })}
             </div>

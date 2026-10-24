@@ -19,7 +19,6 @@ const CONTACT_LINKS = [
 function Contato() {
     return (
         <InteriorPageLayout
-            eyebrow="// CONEXÃO"
             title="Vamos conversar."
             description="Um espaço para conversar sobre projetos, oportunidades e desenvolvimento de soluções web."
         >
