@@ -146,6 +146,7 @@ function MagneticExternalLinkHover({
                 "--hover-text-color": hoverTextColor,
 
                 "--accent-color": accent,
+                borderColor: isGroupHoverActive ? hoverBorderColor : undefined,
             }}
             className={`
                 relative
@@ -173,8 +174,6 @@ function MagneticExternalLinkHover({
 
                 group-hover/preview:border-[var(--hover-border-color)]
 
-                ${isGroupHoverActive ? "border-[var(--hover-border-color)]" : ""}
-
                 ${className}
             `}
         >
@@ -200,11 +199,11 @@ function MagneticExternalLinkHover({
 
                     group-hover/preview:scale-100
                     group-hover/preview:opacity-100
-
-                    ${isGroupHoverActive ? "scale-100 opacity-100" : ""}
                 `}
                 style={{
                     backgroundColor: "var(--accent-color)",
+                    scale: isGroupHoverActive ? 1 : undefined,
+                    opacity: isGroupHoverActive ? 1 : undefined,
                 }}
             />
 
@@ -254,9 +253,10 @@ function MagneticExternalLinkHover({
                         duration-300
 
                         group-hover/preview:text-[var(--hover-text-color)]
-
-                        ${isGroupHoverActive ? "text-[var(--hover-text-color)]" : ""}
                     `}
+                    style={{
+                        color: isGroupHoverActive ? "var(--hover-text-color)" : undefined,
+                    }}
                 >
                     {children}
                 </span>
@@ -278,9 +278,10 @@ function MagneticExternalLinkHover({
             duration-300
 
             group-hover/preview:text-[var(--hover-text-color)]
-
-            ${isGroupHoverActive ? "text-[var(--hover-text-color)]" : ""}
         `}
+                        style={{
+                            color: isGroupHoverActive ? "var(--hover-text-color)" : undefined,
+                        }}
                         animate={{
                             x: isGroupHoverActive ? 2 : 0,
                             y: isGroupHoverActive ? -2 : 0,
