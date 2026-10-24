@@ -311,9 +311,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `78c82222cda6ad576dd10b4f0049599329a333ca`
-- **Data do commit analisado:** 2026-10-23T23:55:36-03:00
-- **Mensagem do commit:** docs: registrar posicionamento da linha e do globo no Sobre
+- **Commit de código analisado:** `1207b55dbe87ee14586b93f6611e149383d9afba`
+- **Data do commit analisado:** 2026-10-24T00:29:15-03:00
+- **Mensagem do commit:** feat(sobre): adicionar efeitos de mouse ao retrato
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -430,13 +430,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `1207b55` | 2026-10-24 | feat(sobre): adicionar efeitos de mouse ao retrato |
+| `ef2e125` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
+| `62b996a` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `78c8222` | 2026-10-23 | docs: registrar posicionamento da linha e do globo no Sobre |
 | `f7514de` | 2026-10-23 | fix(sobre): alinhar globo à borda inferior da seção |
 | `68d9f36` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `fb2493e` | 2026-10-23 | feat(sobre): integrar globo na linha central do retrato |
 | `fc03cd2` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
-| `6dff09a` | 2026-10-23 | chore(sobre): remover logs temporários de diagnóstico sticky |
-| `7e711d0` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
-| `d3c7e4a` | 2026-10-23 | docs(ai-context): registrar causa do sticky no root |
 
 <!-- END AUTO-GENERATED SECTION -->
