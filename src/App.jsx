@@ -8,6 +8,7 @@ import ButtonReset from "./components/buttonReset";
 import CursorTrail from "./components/CursorTrail";
 import Preloader from "./components/Preloader";
 import { getExperienceMode } from "./utils/experienceMode";
+import useRouteSeo from "./hooks/useRouteSeo";
 import { scrollToTarget } from "./utils/lenisControl";
 import { attachUiSfxHoverListeners } from "./utils/uiSfx";
 import { NAVIGATION_ITEMS } from "./data/navigation";
@@ -50,6 +51,7 @@ function RouteFallback() {
 
 function App() {
     const location = useLocation();
+    useRouteSeo(location.pathname);
     const [experienceMode] = useState(() => getExperienceMode() || "full");
     const [homeMenuVisible, setHomeMenuVisible] = useState(false);
     const [routeNavigationStatus, setRouteNavigationStatus] = useState(() => ({
