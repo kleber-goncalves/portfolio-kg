@@ -65,7 +65,7 @@ function updateCanonical(html, canonicalUrl) {
     return html.replace(pattern, setAttribute(match[0], "href", canonicalUrl));
 }
 
-function buildPageJsonLd(page, route, canonicalUrl, config) {
+function buildPageJsonLd(page, canonicalUrl, config) {
     return JSON.stringify({
         "@context": "https://schema.org",
         "@type": "WebPage",
@@ -119,7 +119,7 @@ function createRouteHtml(baseHtml, route, page, config) {
     }
 
     html = updateCanonical(html, canonicalUrl);
-    html = updateRouteJsonLd(html, buildPageJsonLd(page, route, canonicalUrl, config));
+    html = updateRouteJsonLd(html, buildPageJsonLd(page, canonicalUrl, config));
 
     return html;
 }
