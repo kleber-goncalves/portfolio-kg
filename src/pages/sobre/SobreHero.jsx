@@ -12,7 +12,7 @@ function SobreHero() {
                     w-full
                     b-md:max-w-[1500px]
                     grid-cols-1
-                    items-center
+                    
                     gap-12
                     px-5
                     py-12
@@ -30,7 +30,7 @@ function SobreHero() {
                     <h1
                         id="sobre-hero-title"
                         className="
-                            mt-6
+                            
                             max-w-[11ch]
                             font-space
                             text-5xl
