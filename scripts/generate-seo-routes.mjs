@@ -94,6 +94,12 @@ function createRouteHtml(baseHtml, route, page, config) {
     const imageAlt = page.socialImageAlt || page.title;
     let html = baseHtml;
 
+    // O preload do retrato do Hero é útil na Home, mas não deve ser baixado
+    // desnecessariamente nas páginas internas.
+    if (route !== "/") {
+        html = html.replace(/<link\b(?=[^>]*\brel=["']preload["'])(?=[^>]*\bas=["']image["'])[^>]*>/i, "");
+    }
+
     html = html.replace(/<title\b[^>]*>[\s\S]*?<\/title>/i, `<title>${escapeHtml(page.title)}</title>`);
     html = updateMeta(html, "name", "description", page.description);
     html = updateMeta(html, "name", "robots", "index,follow");
