@@ -327,9 +327,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `0628a3457e5c85fa5eeaca293e2225db90447bf3`
-- **Data do commit analisado:** 2026-10-24T20:24:22-03:00
-- **Mensagem do commit:** feat: propagar prontidão visual do hero por viewport
+- **Commit de código analisado:** `aa1f347d65cd15bdf1512e9e2c00465284544c75`
+- **Data do commit analisado:** 2026-10-24T20:24:48-03:00
+- **Mensagem do commit:** feat: sinalizar carregamento do retrato no hero mobile
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -447,13 +447,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `aa1f347` | 2026-10-24 | feat: sinalizar carregamento do retrato no hero mobile |
+| `0f3fe1d` | 2026-10-24 | feat: sinalizar carregamento do retrato no hero desktop |
+| `3223570` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `0628a34` | 2026-10-24 | feat: propagar prontidão visual do hero por viewport |
 | `1da0ba8` | 2026-10-24 | feat: aguardar hero e stack antes de encerrar a transição |
 | `d2a54dc` | 2026-10-24 | feat: conectar prontidão do hero ao preloader de rota |
 | `fad130f` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `363842e` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
-| `54f93a5` | 2026-10-24 | feat: aguardar o conteúdo principal da página sobre |
-| `0f1d4cf` | 2026-10-24 | feat: sinalizar prontidão da página de contato |
-| `ae4cbfc` | 2026-10-24 | feat: sinalizar prontidão do catálogo de projetos |
 
 <!-- END AUTO-GENERATED SECTION -->
