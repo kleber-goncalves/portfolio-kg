@@ -12,13 +12,14 @@ import { playUiSound } from "../utils/uiSfx";
 
 gsap.registerPlugin(ScrollTrigger);
 
-function HeroSectionTransition({ experienceMode = "full", onMenuVisibilityChange }) {
+function HeroSectionTransition({ experienceMode = "full", onMenuVisibilityChange, onRouteReady }) {
     const navigate = useNavigate();
     const location = useLocation();
     const { isMobileLayout, isCompactLandscape, isTablet } = useResponsive();
     const requiredHeroLayout = isMobileLayout ? "mobile" : "desktop";
     const requiredStackLayout = isMobileLayout ? "mobile" : "desktop";
     const [readyHeroLayout, setReadyHeroLayout] = useState(null);
+    const [readyHeroContentLayout, setReadyHeroContentLayout] = useState(null);
     const [readyStackLayout, setReadyStackLayout] = useState(null);
 
     const sectionRef = useRef(null);
@@ -71,6 +72,33 @@ function HeroSectionTransition({ experienceMode = "full", onMenuVisibilityChange
     useEffect(() => () => {
         onMenuVisibilityChange?.(false);
     }, [onMenuVisibilityChange]);
+
+    // O preloader de rota só termina quando o layout do Hero e sua imagem
+    // principal estão prontos. No desktop Full, o Stack também é necessário
+    // para que o pin e os ScrollTriggers tenham medidas válidas.
+    useEffect(() => {
+        if (readyHeroLayout !== requiredHeroLayout) return;
+        if (readyHeroContentLayout !== requiredHeroLayout) return;
+
+        const waitsForPinnedStack = (
+            experienceMode === "full" &&
+            !isMobileLayout &&
+            readyStackLayout !== requiredStackLayout
+        );
+
+        if (waitsForPinnedStack) return;
+
+        onRouteReady?.("/");
+    }, [
+        onRouteReady,
+        readyHeroLayout,
+        readyHeroContentLayout,
+        requiredHeroLayout,
+        experienceMode,
+        isMobileLayout,
+        readyStackLayout,
+        requiredStackLayout,
+    ]);
 
     // Links de âncora vindos das páginas internas aguardam os layouts lazy e o pin.
     useEffect(() => {
@@ -686,7 +714,7 @@ function HeroSectionTransition({ experienceMode = "full", onMenuVisibilityChange
             ================================================== */}
 
             <div ref={heroRef} className={heroWrapperClass}>
-                <Hero isMobileLayout={isMobileLayout} isCompactLandscape={isCompactLandscape} isTablet={isTablet} dotFieldFrozen={dotFieldFrozen} onNavigate={handleHeroNavigation} onReady={setReadyHeroLayout} experienceMode={experienceMode} />
+                <Hero isMobileLayout={isMobileLayout} isCompactLandscape={isCompactLandscape} isTablet={isTablet} dotFieldFrozen={dotFieldFrozen} onNavigate={handleHeroNavigation} onReady={setReadyHeroLayout} onContentReady={setReadyHeroContentLayout} experienceMode={experienceMode} />
                 {isFullExperience === false && (
                     <div
                         className="
