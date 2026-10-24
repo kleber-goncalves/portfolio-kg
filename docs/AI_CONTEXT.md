@@ -312,9 +312,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `d39b6681cdcc40997decf2287cbd7b0d022db05e`
-- **Data do commit analisado:** 2026-10-24T16:28:46-03:00
-- **Mensagem do commit:** docs: registrar catálogo independente de projetos
+- **Commit de código analisado:** `05c3583eedc9401ffd38b5ddd81998070638e840`
+- **Data do commit analisado:** 2026-10-24T17:19:24-03:00
+- **Mensagem do commit:** feat(projetos): remover projetos de estudos do catálogo
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -431,13 +431,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `05c3583` | 2026-10-24 | feat(projetos): remover projetos de estudos do catálogo |
+| `86019a4` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `d39b668` | 2026-10-24 | docs: registrar catálogo independente de projetos |
 | `706d8ab` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `fcbc4a3` | 2026-10-24 | feat(projetos): montar página com catálogo completo |
 | `0d562c2` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `7a2f15b` | 2026-10-24 | feat(projetos): criar lista filtrável do catálogo |
 | `8a3c8d1` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
-| `1d939b1` | 2026-10-24 | fix(projetos): incluir repositório recuperado no catálogo |
-| `9ecde1c` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
