@@ -311,9 +311,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `897035783dd4bd256d42afdf836c0207a3e8e4e8`
-- **Data do commit analisado:** 2026-10-23T22:51:57-03:00
-- **Mensagem do commit:** debug(sobre): registrar métricas do sticky no hero
+- **Commit de código analisado:** `2340e55679326f7258703679537a6600c7dd8877`
+- **Data do commit analisado:** 2026-10-23T22:52:16-03:00
+- **Mensagem do commit:** fix(debug): normalizar nomes dos ancestrais do sticky
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -430,13 +430,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `2340e55` | 2026-10-23 | fix(debug): normalizar nomes dos ancestrais do sticky |
+| `e1a9d71` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `8970357` | 2026-10-23 | debug(sobre): registrar métricas do sticky no hero |
 | `0e06385` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `b3bb1f6` | 2026-10-23 | docs(ai-context): registrar texto sticky no hero sobre |
 | `b9d60e6` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `302c9da` | 2026-10-23 | feat(sobre): manter texto sticky até o fim do retrato |
 | `c103f19` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
-| `514cf60` | 2026-10-23 | Merge branch 'feat/separacao-paginas' of https://github.com/kleber-goncalves/portfolio-kg into feat/separacao-paginas |
-| `5c69834` | 2026-10-23 | style: remover classes desnecessárias no componente SobreHero |
 
 <!-- END AUTO-GENERATED SECTION -->
