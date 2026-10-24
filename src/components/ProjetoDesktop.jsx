@@ -216,30 +216,6 @@ function ProjetoDesktop({ projetos, experienceMode = "full", onReady }) {
         });
 
         // ========================================================
-        // MOVIMENTO DO PREVIEW — ANIMAÇÕES REUTILIZÁVEIS
-        // ========================================================
-
-        // quickTo evita criar um tween de 1,45 s a cada movimento do mouse.
-        // A resposta curta reduz a distância entre o cursor e o painel.
-        const movePreviewX = gsap.quickTo(preview, "x", {
-            duration: 0.16,
-            ease: "power3.out",
-        });
-
-        const movePreviewY = gsap.quickTo(preview, "y", {
-            duration: 0.16,
-            ease: "power3.out",
-        });
-
-        // Interrompe o destino anterior, mas mantém quickTo reutilizável.
-        const setPreviewPosition = (x, y) => {
-            movePreviewX.tween.pause();
-            movePreviewY.tween.pause();
-
-            gsap.set(preview, { x, y });
-        };
-
-        // ========================================================
         // POSIÇÃO GLOBAL DO MOUSE
         // ========================================================
 
@@ -277,11 +253,6 @@ function ProjetoDesktop({ projetos, experienceMode = "full", onReady }) {
 
         const hidePreview = () => {
             clearTimeout(buttonIdleTimeoutRef.current);
-
-            // O painel não deve continuar viajando para um destino antigo
-            // enquanto está escondido.
-            movePreviewX.tween.pause();
-            movePreviewY.tween.pause();
 
             // ================================================
             // BOTÃO
@@ -323,42 +294,37 @@ function ProjetoDesktop({ projetos, experienceMode = "full", onReady }) {
         // ========================================================
 
         const handleMouseMove = (event) => {
-            mousePositionRef.current.x = event.clientX;
-            mousePositionRef.current.y = event.clientY;
+            // ================================================
+            // MOVE PREVIEW
+            // ================================================
 
-            // O painel acompanha o cursor com um tween reutilizável e curto.
-            movePreviewX(event.clientX);
-            movePreviewY(event.clientY);
+            gsap.to(preview, {
+                x: event.clientX,
+
+                y: event.clientY,
+
+                duration: 1.45,
+
+                ease: "power3.out",
+
+                overwrite: "auto",
+            });
 
             // ================================================
-            // GEOMETRIA VISUAL DO PREVIEW
+            // RETÂNGULO DO PREVIEW
             // ================================================
 
             const previewRect = preview.getBoundingClientRect();
 
-            // O preview pode estar oculto abaixo do breakpoint c-lg.
-            if (!previewRect.width || !previewRect.height) return;
+            const buttonRect = previewButton.getBoundingClientRect();
 
-            // offsetWidth/Height não mudam durante a animação de escala.
-            const previewWidth = preview.offsetWidth;
-            const previewHeight = preview.offsetHeight;
-            const buttonWidth = previewButton.offsetWidth;
-            const buttonHeight = previewButton.offsetHeight;
+            // ================================================
+            // MOUSE RELATIVO AO PREVIEW
+            // ================================================
 
-            const scaleValue = Number(gsap.getProperty(preview, "scale"));
-            const previewScale = Number.isFinite(scaleValue) ? scaleValue : 1;
-            const previewCenterX = previewRect.left + previewRect.width / 2;
-            const previewCenterY = previewRect.top + previewRect.height / 2;
+            const relativeX = event.clientX - previewRect.left;
 
-            // Ao abrir o preview, mantém o botão centralizado durante a parte
-            // inicial da escala para evitar coordenadas instáveis perto de zero.
-            const relativeX = previewScale < 0.75
-                ? previewWidth / 2
-                : (event.clientX - previewCenterX) / previewScale + previewWidth / 2;
-
-            const relativeY = previewScale < 0.75
-                ? previewHeight / 2
-                : (event.clientY - previewCenterY) / previewScale + previewHeight / 2;
+            const relativeY = event.clientY - previewRect.top;
 
             // ================================================
             // ÁREA SEGURA
@@ -366,10 +332,13 @@ function ProjetoDesktop({ projetos, experienceMode = "full", onReady }) {
 
             const padding = 24;
 
-            const minX = padding + buttonWidth / 2;
-            const maxX = previewWidth - padding - buttonWidth / 2;
-            const minY = padding + buttonHeight / 2.2;
-            const maxY = previewHeight - padding - buttonHeight / 2.2;
+            const minX = padding + buttonRect.width / 2;
+
+            const maxX = previewRect.width - padding - buttonRect.width / 2;
+
+            const minY = padding + buttonRect.height / 2.2;
+
+            const maxY = previewRect.height - padding - buttonRect.height / 2.2;
 
             // ================================================
             // LIMITA O BOTÃO
@@ -385,9 +354,13 @@ function ProjetoDesktop({ projetos, experienceMode = "full", onReady }) {
 
             gsap.to(previewButton, {
                 x: buttonX,
+
                 y: buttonY,
-                duration: 0.12,
+
+                duration: 0.35,
+
                 ease: "power3.out",
+
                 overwrite: "auto",
             });
 
@@ -419,18 +392,15 @@ function ProjetoDesktop({ projetos, experienceMode = "full", onReady }) {
             // POSIÇÃO ATUAL DO PREVIEW
             // ================================================
 
-            // Usa as coordenadas do próprio mouseenter; a referência global
-            // pode ainda conter o evento anterior por causa da propagação.
-            mousePositionRef.current.x = event.clientX;
-            mousePositionRef.current.y = event.clientY;
-            setPreviewPosition(event.clientX, event.clientY);
+            gsap.set(preview, {
+                x: mousePositionRef.current.x,
+
+                y: mousePositionRef.current.y,
+            });
 
             // ================================================
             // RESET DO BOTÃO
             // ================================================
-
-            // Elimina tweens anteriores para não sobrescrever este reset.
-            gsap.killTweensOf(previewButton);
 
             gsap.set(previewButton, {
                 x: preview.offsetWidth / 2,
@@ -515,10 +485,11 @@ function ProjetoDesktop({ projetos, experienceMode = "full", onReady }) {
                 // VOLTOU PARA VIEWPORT
                 // ============================================
 
-                setPreviewPosition(
-                    mousePositionRef.current.x,
-                    mousePositionRef.current.y,
-                );
+                gsap.set(preview, {
+                    x: mousePositionRef.current.x,
+
+                    y: mousePositionRef.current.y,
+                });
             },
             {
                 threshold: 0.1,
@@ -1027,16 +998,7 @@ function ProjetoDesktop({ projetos, experienceMode = "full", onReady }) {
                                         shrink-0
                                     "
                             >
-                                <OptimizedImage
-                                    src={projeto.preview || projeto.imagens?.[0]}
-                                    alt={`Captura de tela do projeto ${projeto.titulo}`}
-                                    width={560}
-                                    height={360}
-                                    loading="lazy"
-                                    fetchPriority="low"
-                                    wrapperClassName="h-full w-full"
-                                    className="object-cover"
-                                />
+                                <OptimizedImage src={projeto.preview || projeto.imagens?.[0]} alt={`Captura de tela do projeto ${projeto.titulo}`} width={560} height={360} loading="lazy" fetchPriority="low" wrapperClassName="h-full w-full" className="object-cover" />
                             </div>
                         ))}
                     </div>
