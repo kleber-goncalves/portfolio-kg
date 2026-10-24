@@ -7,7 +7,7 @@ import DeferredLayoutSection from "../components/DeferredLayoutSection";
 import { NAVIGATION_ITEMS } from "../data/navigation";
 import usePortfolioNavigation from "../hooks/usePortfolioNavigation";
 
-function InteriorPageLayout({ title, description, heroContent = null, children, footerContent = null }) {
+function InteriorPageLayout({ title, description, heroContent = null, children }) {
     const { pathname } = useLocation();
     const navigatePortfolio = usePortfolioNavigation();
 
@@ -59,7 +59,7 @@ function InteriorPageLayout({ title, description, heroContent = null, children, 
                 {children}
             </main>
 
-            {footerContent ?? <DeferredLayoutSection section="footer" />}
+            <DeferredLayoutSection section="footer" />
         </div>
     );
 }
