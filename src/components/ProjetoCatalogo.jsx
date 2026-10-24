@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowDown, ArrowUpRight } from "lucide-react";
 import { playUiSound } from "../utils/uiSfx";
 
 import { CATEGORIAS_PROJETOS, projetosCatalogo } from "../data/projetosCatalogo";
 import { tecnologias } from "../data/tecnologias";
 import MagneticExternalLinkHover from "./MagneticExternalLinkHover";
 
+const PROJECTS_PAGE_SIZE = 10;
 
 function CategoriaFilterButton({ categoria, quantidade, ativa, onClick }) {
     const [isHovered, setIsHovered] = useState(false);
@@ -201,6 +202,7 @@ function CategoriaFilterButton({ categoria, quantidade, ativa, onClick }) {
 
 function ProjetoCatalogo() {
     const [categoriaAtiva, setCategoriaAtiva] = useState("Todos");
+    const [visibleProjectsCount, setVisibleProjectsCount] = useState(PROJECTS_PAGE_SIZE);
     const [projetoSobCursor, setProjetoSobCursor] = useState(null);
     const sectionRef = useRef(null);
     const pointerPositionRef = useRef({ x: null, y: null });
@@ -277,7 +279,7 @@ function ProjetoCatalogo() {
         window.addEventListener("resize", scheduleUpdate, { passive: true });
         window.addEventListener("pointerleave", handlePointerLeave);
 
-        // Também recalcula depois da troca de categoria, quando as linhas mudam.
+        // Recalcula quando o filtro ou o lote de projetos visíveis muda.
         scheduleUpdate();
 
         return () => {
@@ -290,15 +292,17 @@ function ProjetoCatalogo() {
                 window.cancelAnimationFrame(frameId);
             }
         };
-    }, [categoriaAtiva]);
+    }, [categoriaAtiva, visibleProjectsCount]);
 
     const projetosFiltrados = categoriaAtiva === "Todos"
         ? projetosCatalogo
         : projetosCatalogo.filter(
             (projeto) => projeto.categoria === categoriaAtiva,
         );
+    const projetosVisiveis = projetosFiltrados.slice(0, visibleProjectsCount);
 
-    // A troca de categoria altera a altura do documento. Recalcula as posições
+    // O filtro e o carregamento incremental alteram a altura do documento.
+    // Recalcula as posições
     // dos ScrollTriggers depois que o React aplicar a nova lista ao DOM.
     useEffect(() => {
         let cancelled = false;
@@ -315,7 +319,7 @@ function ProjetoCatalogo() {
                 } catch (error) {
                     if (!cancelled) {
                         console.error(
-                            "Não foi possível atualizar os ScrollTriggers após filtrar os projetos.",
+                            "Não foi possível atualizar os ScrollTriggers após atualizar a lista de projetos.",
                             error,
                         );
                     }
@@ -328,14 +332,14 @@ function ProjetoCatalogo() {
             window.cancelAnimationFrame(firstFrame);
             window.cancelAnimationFrame(secondFrame);
         };
-    }, [categoriaAtiva]);
+    }, [categoriaAtiva, visibleProjectsCount]);
 
     return (
         <section ref={sectionRef} className="mx-auto w-full b-md:max-w-[1500px] px-5 pb-16 b-md:px-10 b-md:pb-24">
             {/* FILTROS DO CATÁLOGO */}
             <div className="mb-8 border-b border-graphite pb-6">
                 <p className="mb-4 text-xs uppercase tracking-[0.18em] text-steel">
-                    {projetosFiltrados.length} de {projetosCatalogo.length} projetos
+                    {projetosVisiveis.length} de {projetosFiltrados.length} projetos
                 </p>
 
                 <div aria-label="Filtrar projetos por categoria" className="flex flex-wrap gap-2" role="group">
@@ -343,14 +347,25 @@ function ProjetoCatalogo() {
                         const quantidade = categoria === "Todos" ? projetosCatalogo.length : projetosCatalogo.filter((projeto) => projeto.categoria === categoria).length;
                         const ativa = categoriaAtiva === categoria;
 
-                        return <CategoriaFilterButton key={categoria} categoria={categoria} quantidade={quantidade} ativa={ativa} onClick={() => setCategoriaAtiva(categoria)} />;
+                        return <CategoriaFilterButton
+                            key={categoria}
+                            categoria={categoria}
+                            quantidade={quantidade}
+                            ativa={ativa}
+                            onClick={() => {
+                                if (categoriaAtiva !== categoria) {
+                                    setCategoriaAtiva(categoria);
+                                    setVisibleProjectsCount(PROJECTS_PAGE_SIZE);
+                                }
+                            }}
+                        />;
                     })}
                 </div>
             </div>
 
             {/* LISTA — MESMA LINGUAGEM VISUAL DO PROJETODESKTOP EM REDUCED */}
             <div className="flex w-full flex-col" aria-live="polite">
-                {projetosFiltrados.map((projeto) => {
+                {projetosVisiveis.map((projeto) => {
                     const isCursorHovered = projetoSobCursor === projeto.id;
 
                     return (
@@ -499,6 +514,66 @@ function ProjetoCatalogo() {
                     );
                 })}
             </div>
+
+            {projetosVisiveis.length < projetosFiltrados.length && (
+                <div className="flex justify-center pt-10">
+                    <motion.button
+                        type="button"
+                        data-ui-sfx-hover
+                        onPointerDown={() => playUiSound("press")}
+                        onClick={(event) => {
+                            setVisibleProjectsCount((currentCount) =>
+                                Math.min(
+                                    currentCount + PROJECTS_PAGE_SIZE,
+                                    projetosFiltrados.length,
+                                ),
+                            );
+
+                            if (event.detail === 0) {
+                                playUiSound("press");
+                            }
+                        }}
+                        whileHover={{ y: -2, borderColor: "#A87852" }}
+                        whileTap={{ scale: 0.98 }}
+                        transition={{
+                            type: "spring",
+                            stiffness: 320,
+                            damping: 22,
+                        }}
+                        className="
+                            inline-flex
+                            items-center
+                            justify-center
+                            gap-3
+                            rounded-sm
+                            border
+                            border-graphite
+                            bg-transparent
+                            px-5
+                            py-4
+                            text-xs
+                            font-medium
+                            uppercase
+                            tracking-[0.14em]
+                            text-ivory/75
+                            transition-colors
+                            hover:text-ivory
+                            focus-visible:outline
+                            focus-visible:outline-2
+                            focus-visible:outline-offset-4
+                            focus-visible:outline-champagne
+                        "
+                    >
+                        <span>
+                            Carregar mais {Math.min(
+                                PROJECTS_PAGE_SIZE,
+                                projetosFiltrados.length - projetosVisiveis.length,
+                            )} projetos
+                        </span>
+                        <ArrowDown aria-hidden="true" className="h-4 w-4 text-bronze" />
+                    </motion.button>
+                </div>
+            )}
         </section>
     );
 }
