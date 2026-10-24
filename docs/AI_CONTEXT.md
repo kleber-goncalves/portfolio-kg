@@ -327,9 +327,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `33dd02ba600308fcc355746b0d2ef65b8b4770c5`
-- **Data do commit analisado:** 2026-10-24T20:25:26-03:00
-- **Mensagem do commit:** ci: otimizar imagens também na branch de páginas separadas
+- **Commit de código analisado:** `fdaeb55ff270eabbf8e69a0baecc971c151ff0df`
+- **Data do commit analisado:** 2026-10-24T20:26:03-03:00
+- **Mensagem do commit:** fix: estabilizar efeitos do preloader de rota
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -447,13 +447,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `fdaeb55` | 2026-10-24 | fix: estabilizar efeitos do preloader de rota |
+| `4a7f533` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
+| `cd96622` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `33dd02b` | 2026-10-24 | ci: otimizar imagens também na branch de páginas separadas |
 | `b59c8ac` | 2026-10-24 | perf: gerar variantes responsivas do retrato Sobre |
 | `b30efe1` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `f70b598` | 2026-10-24 | perf: usar OptimizedImage no retrato da página Sobre |
 | `aa1f347` | 2026-10-24 | feat: sinalizar carregamento do retrato no hero mobile |
-| `0f3fe1d` | 2026-10-24 | feat: sinalizar carregamento do retrato no hero desktop |
-| `3223570` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
-| `0628a34` | 2026-10-24 | feat: propagar prontidão visual do hero por viewport |
 
 <!-- END AUTO-GENERATED SECTION -->
