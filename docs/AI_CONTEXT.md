@@ -108,7 +108,7 @@ Estrutura identificada no repositório:
 - `src/hooks/usePortfolioNavigation.js`: handler comum para navegação entre rotas e âncoras da Home, incluindo retorno à Home antes de rolar de uma página interna.
 - `src/data/navigation.js`: fonte única dos destinos e rótulos Início, Stack, Projetos, Sobre e Contato.
 - `src/components/OptimizedImage.jsx`: componente de imagem responsiva com metadados, `srcSet`, dimensões reservadas e placeholder opcional.
-- `src/components/ProjetoDesktop.jsx` e `src/components/ProjetoCarouselMobile.jsx`: apresentações de projetos diferentes para desktop e mobile.
+- `src/components/ProjetoDesktop.jsx` e `src/components/ProjetoCarouselMobile.jsx`: apresentações de projetos diferentes para desktop e mobile. O preview flutuante desktop acompanha o cursor com `gsap.quickTo` e uma transição curta; as posições anteriores são pausadas ao entrar em outro projeto, e o cálculo da bolinha considera a escala do painel para evitar saltos durante a abertura.
 - `src/components/Socials.jsx`: painel de redes sociais.
 - `src/components/SoundControls.jsx`, `SoundToggle.jsx` e `SoundVolumeSliderMobile.jsx`: controles de áudio.
 - `src/hooks/useResponsive.js`: centraliza a lógica de viewport, dispositivos touch, tablet e paisagem compacta.
