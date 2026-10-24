@@ -322,9 +322,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `8b00c46b11a4b4ef2f55e06650befec53b775621`
-- **Data do commit analisado:** 2026-10-24T19:49:01-03:00
-- **Mensagem do commit:** a11y: place back-to-top shortcut in a named navigation landmark
+- **Commit de código analisado:** `d0ff32b2e47ca3a8ff46e3c4af3d1b72c0aa008c`
+- **Data do commit analisado:** 2026-10-24T19:53:56-03:00
+- **Mensagem do commit:** docs: record route audit results and accessibility fixes
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -442,13 +442,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `d0ff32b` | 2026-10-24 | docs: record route audit results and accessibility fixes |
+| `4d33d63` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
+| `ec2abcf` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `8b00c46` | 2026-10-24 | a11y: place back-to-top shortcut in a named navigation landmark |
 | `d91fc92` | 2026-10-24 | a11y: increase project catalog text contrast |
 | `b3353f3` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `334b5e6` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `6dd4c1f` | 2026-10-24 | seo: align social image alt with the actual preview image |
-| `c6ee2cc` | 2026-10-24 | seo: describe shared social preview image accurately |
-| `0e11b59` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
-| `ba02679` | 2026-10-24 | fix: validate route language metadata correctly |
 
 <!-- END AUTO-GENERATED SECTION -->
