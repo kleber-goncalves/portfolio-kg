@@ -7,7 +7,7 @@ function Sobre({ experienceMode = "full" }) {
         <InteriorPageLayout
             title="Sobre"
             description="Conheça minha formação, competências e diferenciais na construção de aplicações web."
-            heroContent={<SobreHero />}
+            heroContent={<SobreHero experienceMode={experienceMode} />}
             showFallbackFooter={false}
             footerContent={<DeferredLayoutSection section="footer" />}
         >
