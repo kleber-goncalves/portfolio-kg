@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { startSmoothScroll, stopSmoothScroll } from "../utils/lenisControl";
 
-const MIN_VISIBLE_TIME = 420;
+// Um pouco mais de tempo para perceber a transição sem impor uma espera longa.
+const MIN_VISIBLE_TIME = 600;
 const EXIT_DURATION = 320;
 
 const PAGE_COPY = {
