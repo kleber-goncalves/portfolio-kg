@@ -376,8 +376,8 @@ html::-webkit-scrollbar {
 
 
 /* Preloader de navegação entre rotas. */
+/* A camada cobre a rota imediatamente; apenas o conteúdo anima na entrada. */
 .route-preloader {
-    animation: route-preloader-enter 260ms ease-out both;
     opacity: 1;
     transition: opacity 300ms ease-out;
 }
@@ -408,11 +408,6 @@ html::-webkit-scrollbar {
     animation: none;
     transform: translateX(200%);
     transition: transform 280ms ease-out;
-}
-
-@keyframes route-preloader-enter {
-    from { opacity: 0; }
-    to { opacity: 1; }
 }
 
 @keyframes route-preloader-content-enter {
