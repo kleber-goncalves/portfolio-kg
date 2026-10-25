@@ -9,22 +9,18 @@ const PAGE_COPY = {
     "/": {
         title: "Início",
         status: "Preparando a página inicial",
-        section: "KLEBER DEV / NAVEGAÇÃO",
     },
     "/projetos": {
         title: "Projetos",
         status: "Preparando o catálogo",
-        section: "KLEBER DEV / NAVEGAÇÃO",
     },
     "/sobre": {
         title: "Sobre",
         status: "Preparando minha trajetória",
-        section: "KLEBER DEV / NAVEGAÇÃO",
     },
     "/contato": {
         title: "Contato",
         status: "Preparando os canais de contato",
-        section: "KLEBER DEV / NAVEGAÇÃO",
     },
 };
 
@@ -121,36 +117,13 @@ function RouteTransitionPreloader({ transition, onComplete }) {
                     ${phase === "leaving" ? "route-preloader__content--leaving" : ""}
                 `}
             >
-                <p className="mb-8 self-start text-[9px] uppercase tracking-[0.24em] text-steel sm:text-[10px]">
-                    {page.section}
-                </p>
 
-                <p className="font-space text-[11px] uppercase tracking-[0.32em] text-bronze">
-                    Carregando página
-                </p>
 
                 <h2 className="mt-4 font-bebas text-6xl tracking-[0.06em] text-ivory sm:text-7xl md:text-8xl">
                     {page.title}
                 </h2>
 
-                <p className="mt-4 text-xs leading-6 text-steel sm:text-sm">
-                    {transitionReady ? "Finalizando a transição" : page.status}
-                </p>
 
-                <div
-                    role="progressbar"
-                    aria-label={`Carregamento do conteúdo de ${page.title}`}
-                    className="mt-10 h-px w-full max-w-[260px] overflow-hidden bg-graphite"
-                >
-                    <div
-                        aria-hidden="true"
-                        className={`route-preloader__indicator h-full w-1/3 bg-gradient-to-r from-bronze via-warm-bronze to-champagne ${transitionReady ? "route-preloader__indicator--ready" : ""}`}
-                    />
-                </div>
-
-                <p className="mt-5 text-[9px] uppercase tracking-[0.22em] text-steel">
-                    Kleber Gonçalves · Desenvolvedor Full Stack
-                </p>
             </div>
         </div>
     );
