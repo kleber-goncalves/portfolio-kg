@@ -330,9 +330,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `e36084370a8b1f21ecaf88372babadd26f6d5b02`
-- **Data do commit analisado:** 2026-10-24T20:34:18-03:00
-- **Mensagem do commit:** docs: registrar resultado da auditoria de imagens
+- **Commit de código analisado:** `c80d8cfd9af478cc1e2f5226c433388f59ffd935`
+- **Data do commit analisado:** 2026-10-24T21:36:43-03:00
+- **Mensagem do commit:** perf: aumentar tempo minimo do preloader de rotas
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -450,13 +450,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `c80d8cf` | 2026-10-24 | perf: aumentar tempo minimo do preloader de rotas |
+| `89ee590` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `e360843` | 2026-10-24 | docs: registrar resultado da auditoria de imagens |
 | `9decca0` | 2026-10-24 | chore(images): generate responsive WebP variants [skip ci] |
 | `dcfbdf2` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `6918ba8` | 2026-10-24 | fix: remover variável não utilizada do preloader |
 | `8241267` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 | `17d6a30` | 2026-10-24 | fix: reiniciar preloader em cada navegação |
-| `667500a` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
-| `7c7c48a` | 2026-10-24 | style: adicionar animações do preloader de rotas |
 
 <!-- END AUTO-GENERATED SECTION -->
