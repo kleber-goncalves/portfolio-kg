@@ -26,6 +26,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, onCon
     // ============================================================
 
     const heroRef = useRef(null);
+    const pendingRouteEntranceRef = useRef(false);
 
     const heroTitleRef = useRef(null);
     const heroTextRef = useRef(null);
@@ -213,10 +214,16 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, onCon
     useLayoutEffect(() => {
         const hero = heroRef.current;
 
-        // Wait until RouteTransitionPreloader starts fading out, then enter in sync.
-        if (!hero || isRouteTransitioning) {
+        // Start as soon as the preloader fades; only direct loads need scroll-restoration settling.
+        if (isRouteTransitioning) {
+            pendingRouteEntranceRef.current = true;
             return;
         }
+
+        if (!hero) return;
+
+        const isRouteEntrance = pendingRouteEntranceRef.current;
+        pendingRouteEntranceRef.current = false;
 
         const ctx = gsap.context(() => {
             const title = heroTitleRef.current;
@@ -345,7 +352,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, onCon
                             y: 0,
                             duration: 0.75,
                         },
-                        0.05,
+                        0.03,
                     );
                 }
 
@@ -361,7 +368,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, onCon
                             y: 0,
                             duration: 0.8,
                         },
-                        0.12,
+                        0.07,
                     );
                 }
 
@@ -379,7 +386,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, onCon
                             duration: 1.2,
                             ease: "power3.out",
                         },
-                        0.15,
+                        0.08,
                     );
                 }
 
@@ -396,7 +403,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, onCon
                             duration: 0.95,
                             ease: "power3.out",
                         },
-                        0.35,
+                        0.13,
                     );
                 }
 
@@ -413,7 +420,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, onCon
                             duration: 0.85,
                             ease: "power3.out",
                         },
-                        0.42,
+                        0.18,
                     );
                 }
 
@@ -430,7 +437,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, onCon
                             duration: 0.95,
                             ease: "power3.out",
                         },
-                        0.5,
+                        0.21,
                     );
                 }
 
@@ -446,7 +453,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, onCon
                             y: 0,
                             duration: 0.75,
                         },
-                        0.68,
+                        0.26,
                     );
                 }
 
@@ -537,7 +544,11 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, onCon
             // PRIMEIRO FRAME
             // ========================================================
 
-            frameId = requestAnimationFrame(waitForScrollRestoration);
+            if (isRouteEntrance) {
+                animationCleanup = initializeEntry();
+            } else {
+                frameId = requestAnimationFrame(waitForScrollRestoration);
+            }
 
             // ========================================================
             // CLEANUP

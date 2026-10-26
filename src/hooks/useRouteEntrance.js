@@ -62,7 +62,7 @@ function useRouteEntrance(containerRef, entranceKey = 0, isRouteTransitioning = 
                     y: 0,
                     duration: 0.75,
                     stagger: 0.07,
-                }, 0.05);
+                }, 0.03);
             }
 
             if (targets.visual.length) {
@@ -71,7 +71,7 @@ function useRouteEntrance(containerRef, entranceKey = 0, isRouteTransitioning = 
                     y: 0,
                     scale: 1,
                     duration: 1.2,
-                }, 0.15);
+                }, 0.06);
             }
 
             if (targets.title.length) {
@@ -79,7 +79,7 @@ function useRouteEntrance(containerRef, entranceKey = 0, isRouteTransitioning = 
                     opacity: 1,
                     y: 0,
                     duration: 0.95,
-                }, 0.35);
+                }, 0.11);
             }
 
             if (targets.description.length) {
@@ -87,7 +87,7 @@ function useRouteEntrance(containerRef, entranceKey = 0, isRouteTransitioning = 
                     opacity: 1,
                     y: 0,
                     duration: 0.85,
-                }, 0.48);
+                }, 0.17);
             }
 
             if (targets.content.length) {
@@ -96,7 +96,7 @@ function useRouteEntrance(containerRef, entranceKey = 0, isRouteTransitioning = 
                     y: 0,
                     duration: 0.8,
                     stagger: 0.1,
-                }, 0.55);
+                }, 0.22);
             }
 
             if (targets.item.length) {
@@ -105,7 +105,7 @@ function useRouteEntrance(containerRef, entranceKey = 0, isRouteTransitioning = 
                     y: 0,
                     duration: 0.75,
                     stagger: 0.1,
-                }, 0.72);
+                }, 0.27);
             }
         }, container);
 
