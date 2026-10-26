@@ -355,10 +355,8 @@ function ProjetoCatalogo({ experienceMode = "full" }) {
 
         setHoveredPaginationControl(null);
         setCurrentPage(page);
-        scrollToTarget(projectsListRef.current, {
+        scrollToTarget(0, {
             duration: 0.75,
-            offset: -24,
-            block: "start",
         });
     };
 
