@@ -333,9 +333,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `c6a0a1ef1df589a04e090cee81d07eca0409ad46`
-- **Data do commit analisado:** 2026-10-26T14:19:38-03:00
-- **Mensagem do commit:** feat(projetos): animar entrada dos itens da lista
+- **Commit de código analisado:** `d6f71ba1691382f5ed33fd1ca4fb101f01acb60f`
+- **Data do commit analisado:** 2026-10-26T14:44:26-03:00
+- **Mensagem do commit:** fix(projetos): reiniciar animação ao trocar categoria
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -453,13 +453,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `d6f71ba` | 2026-10-26 | fix(projetos): reiniciar animação ao trocar categoria |
+| `ad7c99c` | 2026-10-26 | docs(ai-context): atualizar snapshot automaticamente |
 | `c6a0a1e` | 2026-10-26 | feat(projetos): animar entrada dos itens da lista |
 | `d24d5db` | 2026-10-26 | docs(ai-context): atualizar snapshot automaticamente |
 | `3efd30c` | 2026-10-26 | style(nav): melhorar legibilidade do navbar desktop |
 | `eb984e7` | 2026-10-26 | docs(ai-context): atualizar snapshot automaticamente |
 | `45357ba` | 2026-10-26 | style: padronizar dimensoes dos controles |
 | `33489a9` | 2026-10-25 | docs(ai-context): atualizar snapshot automaticamente |
-| `8fc3162` | 2026-10-24 | refactor: remover seção desnecessária do preloader e item de navegação "Stack" |
-| `d77e53f` | 2026-10-25 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
