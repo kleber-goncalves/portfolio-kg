@@ -105,6 +105,7 @@ Estrutura identificada no repositório:
 - `src/components/HeroDesktop.jsx` e `src/components/HeroMobile.jsx`: composições do Hero por contexto de viewport.
 - `src/components/MenuDesktop.jsx`: painel flutuante desktop, separado do cabeçalho horizontal da página; sua visibilidade é coordenada pelo `App.jsx` com base no estado da Home ou da navegação da rota interna.
 - `src/components/MenuMobile.jsx`: painel de navegação móvel, incluindo controles móveis de som e navegação após a animação de fechamento.
+- `src/components/buttonReset.jsx`: botão global de retorno ao topo, visível após 400 px de rolagem tanto no mobile quanto no desktop; usa `scrollToTarget(0)` para respeitar o Lenis quando ativo, sincroniza a visibilidade inicial após restauração de scroll e mantém feedback sonoro/visual durante a rolagem.
 - `src/components/PortfolioDesktopHeader.jsx`: composição desktop reutilizável do logo, Experience, Som e navbar. `placement="hero"` preserva o posicionamento do Hero; `placement="interior"` adapta a composição ao cabeçalho das rotas internas. Encaminha refs usados pelo GSAP.
 - `src/components/PortfolioNavigation.jsx`: lista horizontal de links magnéticos que recebe itens, destino ativo e handler de navegação.
 - `src/pages/sobre/SobreHero.jsx`: Hero editorial específico da página Sobre, com retrato, apresentação profissional e links para as seções de competências e formação. O retrato `/euNvEnvt.png` usa `OptimizedImage` e sinaliza prontidão quando carrega ou falha, evitando prender a transição indefinidamente.

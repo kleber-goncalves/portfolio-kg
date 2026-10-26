@@ -1,57 +1,49 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronUp } from "lucide-react";
 import { Link } from "react-router-dom";
+
 import { playUiSound } from "../utils/uiSfx";
+import { scrollToTarget } from "../utils/lenisControl";
 
 export default function ButtonReset() {
-    const [isVisible, setIsVisible] = useState(false);
-     const [isScrolling, setIsScrolling] = useState(false);
+    const [isVisible, setIsVisible] = useState(
+        () => typeof window !== "undefined" && window.scrollY > 400,
+    );
+    const [isScrolling, setIsScrolling] = useState(false);
+    const scrollTimeoutRef = useRef(null);
 
-     const scrollTimeoutRef = useRef(null);
+    useEffect(() => {
+        const syncInitialVisibility = () => {
+            setIsVisible(window.scrollY > 400);
+        };
 
-     // =========================================
-     // CONTROLA VISIBILIDADE E ESTADO DO SCROLL
-     // =========================================
+        const handleScroll = () => {
+            setIsVisible(window.scrollY > 400);
+            setIsScrolling(true);
 
-     useEffect(() => {
-         const handleScroll = () => {
-             // Mostra o botão depois de 400px
-             setIsVisible(window.scrollY > 400);
+            window.clearTimeout(scrollTimeoutRef.current);
+            scrollTimeoutRef.current = window.setTimeout(() => {
+                setIsScrolling(false);
+            }, 150);
+        };
 
-             // Usuário está rolando
-             setIsScrolling(true);
+        // Sincroniza caso o navegador restaure a página em uma posição rolada.
+        syncInitialVisibility();
 
-             // Limpa o timer anterior
-             clearTimeout(scrollTimeoutRef.current);
+        window.addEventListener("scroll", handleScroll, { passive: true });
 
-             // Considera que parou depois de 150ms
-             scrollTimeoutRef.current = setTimeout(() => {
-                 setIsScrolling(false);
-             }, 150);
-         };
-
-         window.addEventListener("scroll", handleScroll, {
-             passive: true,
-         });
-
-         return () => {
-             window.removeEventListener("scroll", handleScroll);
-             clearTimeout(scrollTimeoutRef.current);
-         };
-     }, []);
-
-
-    // =========================================
-    // VOLTAR AO TOPO
-    // =========================================
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+            window.clearTimeout(scrollTimeoutRef.current);
+        };
+    }, []);
 
     const handleBackToTop = (event) => {
         event.preventDefault();
         playUiSound("back");
 
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth",
+        scrollToTarget(0, {
+            duration: 0.75,
         });
     };
 
@@ -63,7 +55,8 @@ export default function ButtonReset() {
                 bottom-1
                 right-5
                 z-50
-                b-md:hidden
+                b-md:bottom-6
+                b-md:right-8
                 transition-[opacity,transform]
                 duration-300
                 ease-out
