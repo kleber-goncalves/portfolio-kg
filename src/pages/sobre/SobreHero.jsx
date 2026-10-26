@@ -194,7 +194,8 @@ function SobreHero({ experienceMode = "full", onRouteReady }) {
 
                     gap-12
                     px-5
-                    py-12
+                    pt-10
+                    pb-12
 
                     b-md:grid-cols-[minmax(0,1.08fr)_minmax(280px,0.92fr)]
                     b-md:gap-12
@@ -212,9 +213,9 @@ function SobreHero({ experienceMode = "full", onRouteReady }) {
                             max-w-[11ch]
                             font-space
                             text-5xl
-                            font-medium
-                            leading-[0.94]
-                            tracking-[-0.06em]
+                            font-semibold
+                            leading-[0.9]
+                            tracking-tight
                             text-ivory
 
                             b-md:text-6xl
@@ -224,7 +225,7 @@ function SobreHero({ experienceMode = "full", onRouteReady }) {
                     >
                         Da interface
                         <br />
-                        ao <span className="text-bronze">sistema.</span>
+                        ao sistema.
                     </h1>
 
                     <p className="mt-6 max-w-xl text-sm leading-7 text-steel b-md:text-base b-md:leading-8">Desenvolvo aplicações web pensando não só na interface, mas também em como APIs, dados, desempenho e organização do código se conectam.</p>
@@ -232,36 +233,15 @@ function SobreHero({ experienceMode = "full", onRouteReady }) {
 
                 <div className="relative mx-auto w-full max-w-[350px] pb-5 b-md:max-w-[720px] b-md:pb-0 b-md:justify-self-end">
                     <div className="relative aspect-[4/5] w-full">
-                        <div
-                            ref={portraitRef}
-                            className="sobre-hero-portrait absolute inset-0 overflow-hidden border border-graphite bg-carbon"
-                        >
-                            <OptimizedImage
-                                imageRef={portraitImageRef}
-                                src="/euNvEnvt.png"
-                                alt="Retrato de Kleber Gonçalves"
-                                sizes="(min-width: 1280px) 600px, (min-width: 768px) 45vw, 350px"
-                                loading="eager"
-                                fetchPriority="high"
-                                decoding="async"
-                                wrapperClassName="h-full w-full"
-                                className="absolute inset-0 h-full w-full object-cover object-top"
-                                onLoad={handlePortraitReady}
-                                onError={handlePortraitReady}
-                            />
+                        <div ref={portraitRef} className="sobre-hero-portrait absolute inset-0 overflow-hidden border border-graphite bg-carbon">
+                            <OptimizedImage imageRef={portraitImageRef} src="/euNvEnvt.png" alt="Retrato de Kleber Gonçalves" sizes="(min-width: 1280px) 600px, (min-width: 768px) 45vw, 350px" loading="eager" fetchPriority="high" decoding="async" wrapperClassName="h-full w-full" className="absolute inset-0 h-full w-full object-cover object-top" onLoad={handlePortraitReady} onError={handlePortraitReady} />
 
                             <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-[24%] bg-gradient-to-t from-obsidian/70 to-transparent" />
 
                             {!isReducedExperience && (
                                 <>
-                                    <span
-                                        aria-hidden="true"
-                                        className="sobre-hero-portrait__spotlight pointer-events-none absolute inset-0"
-                                    />
-                                    <span
-                                        aria-hidden="true"
-                                        className="sobre-hero-portrait__glow pointer-events-none absolute inset-0"
-                                    />
+                                    <span aria-hidden="true" className="sobre-hero-portrait__spotlight pointer-events-none absolute inset-0" />
+                                    <span aria-hidden="true" className="sobre-hero-portrait__glow pointer-events-none absolute inset-0" />
                                 </>
                             )}
                         </div>
@@ -274,11 +254,13 @@ function SobreHero({ experienceMode = "full", onRouteReady }) {
                             left-1/2
                             -bottom-[5.75rem]
                             b-md:-bottom-[6.75rem]
-                            c-lg:-bottom-[7.75rem]
+                            c-lg:-bottom-[8.88rem]
                             z-20
                             flex
                             h-22
+                            c-lg:h-32
                             w-22
+                            c-lg:w-32
                             -translate-x-1/2
                             items-center
                             justify-center
