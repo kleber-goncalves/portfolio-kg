@@ -337,9 +337,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `60c463d2387a6a7cf77cdc98bb64aeb4fc359e92`
-- **Data do commit analisado:** 2026-10-26T16:40:09-03:00
-- **Mensagem do commit:** docs(ai-context): registrar fallback e refinamentos visuais
+- **Commit de código analisado:** `a3195d020db7f23c0ac4bac66dd20ecb28a4d2f7`
+- **Data do commit analisado:** 2026-10-26T16:58:12-03:00
+- **Mensagem do commit:** feat(animation): add coordinated entrance to all pages
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -457,13 +457,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `a3195d0` | 2026-10-26 | feat(animation): add coordinated entrance to all pages |
+| `0520df2` | 2026-10-26 | docs(ai-context): atualizar snapshot automaticamente |
 | `60c463d` | 2026-10-26 | docs(ai-context): registrar fallback e refinamentos visuais |
 | `36bc9f4` | 2026-10-26 | docs(ai-context): atualizar snapshot automaticamente |
 | `ac52a86` | 2026-10-26 | refactor(layouts): ajustar espaçamento e estilo no InteriorPageLayout e SobreHero |
 | `7c4507b` | 2026-10-26 | docs(ai-context): atualizar snapshot automaticamente |
 | `67e8340` | 2026-10-26 | fix(navigation): enable back-to-top button on desktop |
 | `daa865b` | 2026-10-26 | docs(ai-context): atualizar snapshot automaticamente |
-| `8566ecf` | 2026-10-26 | fix(RouteFallback): remover texto de carregamento da página |
-| `0788f2a` | 2026-10-26 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
