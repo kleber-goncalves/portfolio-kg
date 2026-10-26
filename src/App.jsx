@@ -99,6 +99,8 @@ function App() {
     }));
     const [menuHasBeenShown, setMenuHasBeenShown] = useState(false);
     const isHomePath = location.pathname === "/";
+    const isRouteTransitioning = Boolean(routeTransition)
+        || previousRoutePathname.current !== pathname;
     const routeNavigationVisible = routeNavigationStatus.pathname === location.pathname
         ? routeNavigationStatus.visible
         : true;
@@ -165,11 +167,11 @@ function App() {
                         <Routes>
                             <Route
                                 path="/"
-                                element={<Home experienceMode={experienceMode} entranceKey={routeEntranceKey} onMenuVisibilityChange={handleHomeMenuVisibilityChange} onRouteReady={handleRouteReady} />}
+                                element={<Home experienceMode={experienceMode} entranceKey={routeEntranceKey} isRouteTransitioning={isRouteTransitioning} onMenuVisibilityChange={handleHomeMenuVisibilityChange} onRouteReady={handleRouteReady} />}
                             />
-                            <Route path="/projetos" element={<Projetos experienceMode={experienceMode} entranceKey={routeEntranceKey} onRouteReady={handleRouteReady} />} />
-                            <Route path="/sobre" element={<Sobre experienceMode={experienceMode} entranceKey={routeEntranceKey} onRouteReady={handleRouteReady} />} />
-                            <Route path="/contato" element={<Contato entranceKey={routeEntranceKey} onRouteReady={handleRouteReady} />} />
+                            <Route path="/projetos" element={<Projetos experienceMode={experienceMode} entranceKey={routeEntranceKey} isRouteTransitioning={isRouteTransitioning} onRouteReady={handleRouteReady} />} />
+                            <Route path="/sobre" element={<Sobre experienceMode={experienceMode} entranceKey={routeEntranceKey} isRouteTransitioning={isRouteTransitioning} onRouteReady={handleRouteReady} />} />
+                            <Route path="/contato" element={<Contato entranceKey={routeEntranceKey} isRouteTransitioning={isRouteTransitioning} onRouteReady={handleRouteReady} />} />
                             <Route path="*" element={<Navigate to="/" replace />} />
                         </Routes>
                     </Suspense>

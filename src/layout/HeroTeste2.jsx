@@ -4,7 +4,7 @@ import { NAVIGATION_ITEMS } from "../data/navigation";
 const HeroMobile = lazy(() => import("../components/HeroMobile"));
 const HeroDesktop = lazy(() => import("../components/HeroDesktop"));
 
-function Hero({ isMobileLayout, isCompactLandscape = false, isTablet = false, dotFieldFrozen = false, onNavigate, onReady, onContentReady, experienceMode = "full", entranceKey = 0 }) {
+function Hero({ isMobileLayout, isCompactLandscape = false, isTablet = false, dotFieldFrozen = false, onNavigate, onReady, onContentReady, experienceMode = "full", entranceKey = 0, isRouteTransitioning = false }) {
 
     return (
         <section id="hero" className="relative">
@@ -16,7 +16,7 @@ function Hero({ isMobileLayout, isCompactLandscape = false, isTablet = false, do
                 </div>
             ) : (
                 <Suspense fallback={<div aria-hidden="true" className="h-screen w-full" />}>
-                    <HeroDesktop items={NAVIGATION_ITEMS} dotFieldFrozen={dotFieldFrozen} onNavigate={onNavigate} onReady={onReady} onContentReady={onContentReady} experienceMode={experienceMode} entranceKey={entranceKey} />
+                    <HeroDesktop items={NAVIGATION_ITEMS} dotFieldFrozen={dotFieldFrozen} onNavigate={onNavigate} onReady={onReady} onContentReady={onContentReady} experienceMode={experienceMode} entranceKey={entranceKey} isRouteTransitioning={isRouteTransitioning} />
                 </Suspense>
             )}
         </section>

@@ -17,7 +17,7 @@ const CONTACT_LINKS = [
     },
 ];
 
-function Contato({ entranceKey = 0, onRouteReady }) {
+function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }) {
     useEffect(() => {
         onRouteReady?.("/contato");
     }, [onRouteReady]);
@@ -27,6 +27,7 @@ function Contato({ entranceKey = 0, onRouteReady }) {
             title="Vamos conversar."
             description="Um espaço para conversar sobre projetos, oportunidades e desenvolvimento de soluções web."
             entranceKey={entranceKey}
+            isRouteTransitioning={isRouteTransitioning}
         >
             <section className="mx-auto w-full max-w-7xl px-5 pb-10 b-md:px-10 b-md:pb-16">
                 <div className="max-w-3xl border border-graphite bg-carbon/40 p-5 b-md:p-8">

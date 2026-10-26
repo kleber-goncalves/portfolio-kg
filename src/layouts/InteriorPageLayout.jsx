@@ -8,11 +8,11 @@ import { NAVIGATION_ITEMS } from "../data/navigation";
 import usePortfolioNavigation from "../hooks/usePortfolioNavigation";
 import useRouteEntrance from "../hooks/useRouteEntrance";
 
-function InteriorPageLayout({ title, description, heroContent = null, children, entranceKey = 0 }) {
+function InteriorPageLayout({ title, description, heroContent = null, children, entranceKey = 0, isRouteTransitioning = false }) {
     const { pathname } = useLocation();
     const navigatePortfolio = usePortfolioNavigation();
     const pageRef = useRef(null);
-    useRouteEntrance(pageRef, entranceKey);
+    useRouteEntrance(pageRef, entranceKey, isRouteTransitioning);
 
 
     return (

@@ -17,7 +17,7 @@ import GlobeIcon from "./GlobeIcon";
 
 gsap.registerPlugin(ScrollTrigger);
 
-function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, onContentReady, experienceMode = "full", entranceKey = 0 }) {
+function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, onContentReady, experienceMode = "full", entranceKey = 0, isRouteTransitioning = false }) {
     useLayoutEffect(() => {
         onReady?.("desktop", { gsap, ScrollTrigger });
     }, [onReady]);
@@ -213,7 +213,9 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, onCon
     useLayoutEffect(() => {
         const hero = heroRef.current;
 
-        if (!hero) {
+        // Do not start the entry animation underneath RouteTransitionPreloader.
+        // entranceKey changes only after the overlay finishes exiting.
+        if (!hero || isRouteTransitioning) {
             return;
         }
 
@@ -556,7 +558,7 @@ if (animationCleanup) {
         return () => {
             ctx.revert();
         };
-    }, [entranceKey]);
+    }, [entranceKey, isRouteTransitioning]);
 
     // ============================================================
     // ANIMAÇÃO DE SAÍDA — SOMENTE REDUCED

@@ -10,11 +10,15 @@ const ENTRANCE_SELECTORS = {
     item: '[data-route-entrance="item"]',
 };
 
-function useRouteEntrance(containerRef, entranceKey = 0) {
+function useRouteEntrance(containerRef, entranceKey = 0, isRouteTransitioning = false) {
     const previousEntranceKeyRef = useRef(entranceKey);
 
     useLayoutEffect(() => {
         const container = containerRef.current;
+
+        // Deixa a página no estado natural enquanto o preloader cobre a rota.
+        // A entranceKey só muda após a saída do overlay, disparando a entrada uma vez.
+        if (isRouteTransitioning) return undefined;
 
         if (!container || window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
             previousEntranceKeyRef.current = entranceKey;
@@ -158,7 +162,7 @@ function useRouteEntrance(containerRef, entranceKey = 0) {
 
             context?.revert();
         };
-    }, [containerRef, entranceKey]);
+    }, [containerRef, entranceKey, isRouteTransitioning]);
 }
 
 export default useRouteEntrance;
