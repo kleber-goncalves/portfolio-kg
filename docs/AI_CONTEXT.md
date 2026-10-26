@@ -337,9 +337,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `7effc62bbd76e096bc5a1256ca4b1267d18b917e`
-- **Data do commit analisado:** 2026-10-26T17:10:33-03:00
-- **Mensagem do commit:** fix(animation): track route transition without render ref
+- **Commit de código analisado:** `a8737a1f4c1aa0d85e6ae50398759960fb1d82bb`
+- **Data do commit analisado:** 2026-10-26T17:24:39-03:00
+- **Mensagem do commit:** fix(animation): sync route entrance with preloader exit
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -457,13 +457,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `a8737a1` | 2026-10-26 | fix(animation): sync route entrance with preloader exit |
+| `9f88a94` | 2026-10-26 | docs(ai-context): atualizar snapshot automaticamente |
 | `7effc62` | 2026-10-26 | fix(animation): track route transition without render ref |
 | `158a5ef` | 2026-10-26 | docs(ai-context): atualizar snapshot automaticamente |
 | `a7e1cad` | 2026-10-26 | fix(animation): start route entrance after preloader |
 | `f2f552c` | 2026-10-26 | docs(ai-context): atualizar snapshot automaticamente |
 | `a3195d0` | 2026-10-26 | feat(animation): add coordinated entrance to all pages |
 | `0520df2` | 2026-10-26 | docs(ai-context): atualizar snapshot automaticamente |
-| `60c463d` | 2026-10-26 | docs(ai-context): registrar fallback e refinamentos visuais |
-| `36bc9f4` | 2026-10-26 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
