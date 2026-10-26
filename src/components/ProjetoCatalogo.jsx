@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
+import { motion, useInView, useMotionValue, useSpring, useTransform } from "motion/react";
 import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { playUiSound } from "../utils/uiSfx";
 
@@ -202,6 +202,38 @@ function CategoriaFilterButton({ categoria, quantidade, ativa, onClick }) {
     );
 }
 
+
+function ProjectViewportReveal({ projectId, animate, children }) {
+    const viewportRef = useRef(null);
+    const isInView = useInView(viewportRef, {
+        once: true,
+        amount: 0.15,
+        initial: !animate,
+    });
+
+    return (
+        <div
+            ref={viewportRef}
+            data-project-id={projectId}
+            className="w-full"
+        >
+            <motion.div
+                initial={animate ? { scale: 0 } : false}
+                animate={animate ? { scale: isInView ? 1 : 0 } : undefined}
+                transition={
+                    animate
+                        ? { duration: 0.65, ease: [0.22, 1, 0.36, 1] }
+                        : undefined
+                }
+                style={animate ? { transformOrigin: "center center" } : undefined}
+                className="w-full"
+            >
+                {children}
+            </motion.div>
+        </div>
+    );
+}
+
 function ProjetoCatalogo({ experienceMode = "full" }) {
     const [categoriaAtiva, setCategoriaAtiva] = useState("Todos");
     const [currentPage, setCurrentPage] = useState(1);
@@ -396,18 +428,12 @@ function ProjetoCatalogo({ experienceMode = "full" }) {
                     const isCursorHovered = projetoSobCursor === projeto.id;
 
                     return (
-                        <motion.article
-                            key={projeto.id}
-                            initial={animateProjectsOnScroll ? { scale: 0 } : false}
-                            whileInView={animateProjectsOnScroll ? { scale: 1 } : undefined}
-                            viewport={animateProjectsOnScroll ? { once: true, amount: 0.15 } : undefined}
-                            transition={
-                                animateProjectsOnScroll
-                                    ? { duration: 0.65, ease: [0.22, 1, 0.36, 1] }
-                                    : undefined
-                            }
-                            style={animateProjectsOnScroll ? { transformOrigin: "center center" } : undefined}
-                            data-project-id={projeto.id}
+                        <ProjectViewportReveal
+                            key={`${categoriaAtiva}:${projeto.id}`}
+                            projectId={projeto.id}
+                            animate={animateProjectsOnScroll}
+                        >
+                        <article
                             data-cursor-hover={isCursorHovered ? "true" : "false"}
                             data-ui-sfx-hover
                             className="
@@ -546,7 +572,8 @@ function ProjetoCatalogo({ experienceMode = "full" }) {
                                     )}
                                 </div>
                             </div>
-                        </motion.article>
+                        </article>
+                        </ProjectViewportReveal>
                     );
                 })}
             </div>
