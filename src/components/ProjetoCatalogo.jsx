@@ -11,10 +11,10 @@ import useResponsive from "../hooks/useResponsive";
 
 const PROJECTS_PAGE_SIZE = 10;
 
-function CategoriaFilterButton({ categoria, quantidade, ativa, onClick }) {
+function CategoriaFilterButton({ categoria, quantidade, ativa, onClick, isMobileLayout }) {
     const [isHovered, setIsHovered] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
-    const isInteractive = isHovered || isFocused;
+    const isInteractive = (!isMobileLayout && isHovered) || isFocused;
     const isHighlighted = ativa || isInteractive;
 
     const x = useMotionValue(0);
@@ -50,11 +50,15 @@ function CategoriaFilterButton({ categoria, quantidade, ativa, onClick }) {
     };
 
     const handleMouseEnter = (event) => {
+        if (isMobileLayout) return;
+
         updateFillOrigin(event);
         setIsHovered(true);
     };
 
     const handleMouseMove = (event) => {
+        if (isMobileLayout) return;
+
         const rect = event.currentTarget.getBoundingClientRect();
         const mouseX = event.clientX - rect.left;
         const mouseY = event.clientY - rect.top;
@@ -90,8 +94,8 @@ function CategoriaFilterButton({ categoria, quantidade, ativa, onClick }) {
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             style={{
-                x: springX,
-                y: springY,
+                x: isMobileLayout ? 0 : springX,
+                y: isMobileLayout ? 0 : springY,
                 borderColor: ativa ? "#A87852" : "#242424",
             }}
             className={`
@@ -129,7 +133,7 @@ function CategoriaFilterButton({ categoria, quantidade, ativa, onClick }) {
                 "
                 style={{
                     backgroundColor: "#A87852",
-                    transformOrigin,
+                    transformOrigin: isMobileLayout ? "50% 50%" : transformOrigin,
                 }}
                 initial={{ scale: 0, opacity: 0 }}
                 animate={{
@@ -523,6 +527,7 @@ function ProjetoCatalogo({ experienceMode = "full" }) {
                             categoria={categoria}
                             quantidade={quantidade}
                             ativa={ativa}
+                            isMobileLayout={isMobileLayout}
                             onClick={() => {
                                 pageChangeSequenceRef.current += 1;
                                 setCategoriaAtiva(categoria);
