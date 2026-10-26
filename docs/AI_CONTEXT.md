@@ -333,9 +333,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `331a4419c8e525c0d1dc853671d08bfb04a07f06`
-- **Data do commit analisado:** 2026-10-26T15:29:55-03:00
-- **Mensagem do commit:** feat(projetos): animação de entrada mobile com ScrollTrigger
+- **Commit de código analisado:** `aaf11c91450f9b7fb9ed1a94cf7115fd56032ad5`
+- **Data do commit analisado:** 2026-10-26T15:57:47-03:00
+- **Mensagem do commit:** fix(projetos): desativar efeitos magnéticos dos filtros mobile
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -453,13 +453,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `aaf11c9` | 2026-10-26 | fix(projetos): desativar efeitos magnéticos dos filtros mobile |
+| `24604ab` | 2026-10-26 | docs(ai-context): atualizar snapshot automaticamente |
 | `331a441` | 2026-10-26 | feat(projetos): animação de entrada mobile com ScrollTrigger |
 | `ab097c7` | 2026-10-26 | docs(ai-context): atualizar snapshot automaticamente |
 | `12562ad` | 2026-10-26 | fix(projetos): aguardar rolagem antes de atualizar lista |
 | `1d17172` | 2026-10-26 | docs(ai-context): atualizar snapshot automaticamente |
 | `be96666` | 2026-10-26 | fix(projetos): voltar ao topo ao trocar pagina |
 | `b6feb63` | 2026-10-26 | docs(ai-context): atualizar snapshot automaticamente |
-| `d6f71ba` | 2026-10-26 | fix(projetos): reiniciar animação ao trocar categoria |
-| `ad7c99c` | 2026-10-26 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
