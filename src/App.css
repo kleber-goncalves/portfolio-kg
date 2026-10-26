@@ -92,6 +92,11 @@ html::-webkit-scrollbar {
     --accent-hover: #c49a78;
     --accent-light: #d8c2aa;
 
+    /* Escala dimensional compartilhada para controles interativos. */
+    --control-height-compact: 2rem;
+    --control-height-standard: 2.25rem;
+    --control-height-touch: 2.75rem;
+
     /* Tipografia */
     --font-bebas: "Bebas Neue", sans-serif;
     --font-dm: "DM Mono", monospace;
@@ -431,6 +436,24 @@ html::-webkit-scrollbar {
         opacity: 0.4;
         transform: translateX(330%);
     }
+}
+
+/* Escala de dimensões: altura consistente sem uniformizar larguras por texto. */
+.control-size-compact {
+    height: var(--control-height-compact);
+}
+
+.control-size-standard {
+    height: var(--control-height-standard);
+}
+
+.control-size-touch {
+    min-height: var(--control-height-touch);
+}
+
+.control-size-icon {
+    width: var(--control-height-touch);
+    height: var(--control-height-touch);
 }
 
 /* Acessibilidade: foco de teclado visível e preferência por movimento reduzido. */

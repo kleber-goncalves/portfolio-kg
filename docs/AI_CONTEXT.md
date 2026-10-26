@@ -150,6 +150,8 @@ A paleta e os tokens observados em `src/App.css` incluem:
 
 Tipografias carregadas em `index.html`: **DM Mono**, **Space Grotesk** e **Bebas Neue**.
 
+Escala dimensional compartilhada dos controles: `control-size-compact` = 32 px de altura para o cabeçalho desktop; `control-size-standard` = 36 px para links de ação e filtros; `control-size-touch` = altura mínima de 44 px para alvos touch; `control-size-icon` = 44 × 44 px para controles icon-only. Padronizar alturas e padding entre controles equivalentes, sem forçar larguras iguais quando o texto difere.
+
 Princípios de implementação:
 - Manter a identidade escura, tipografia e acentos bronze/champagne coerentes.
 - Não substituir o design por uma aparência genérica de SaaS, dashboard, neon ou glassmorphism sem uma decisão explícita.

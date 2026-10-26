@@ -31,8 +31,8 @@ function MagneticExternalLinkHover({
     // ESPAÇAMENTO
     // ============================================================
 
-    px = "px-5",
-    py = "py-3",
+    px = "px-3",
+    py = "py-2",
 
     // ============================================================
     // CLASSES EXTRAS
@@ -150,6 +150,7 @@ function MagneticExternalLinkHover({
             }}
             className={`
                 relative
+                control-size-standard
                 inline-flex
                 items-center
                 justify-center

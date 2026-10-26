@@ -179,7 +179,7 @@ function ProjetoCard({
                                         ? "Retomar alternância das imagens"
                                         : "Pausar alternância das imagens"
                                 }
-                                className="rounded-full bg-black/70 px-3 py-1 text-xs text-white backdrop-blur-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                                className="control-size-touch inline-flex items-center justify-center rounded-full bg-black/70 px-3 py-1 text-xs text-white backdrop-blur-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                             >
                                 {pausado ? "▶ Continuar" : "Ⅱ Pausar"}
                             </button>
@@ -198,10 +198,7 @@ function ProjetoCard({
                                     event.stopPropagation();
                                     mudarImagem(index);
                                 }}
-                                className={[
-                                    "flex h-6 items-center justify-center rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white",
-                                    index === indiceImagemAtual ? "w-8" : "w-6",
-                                ].join(" ")}
+                                className="control-size-touch inline-flex w-11 items-center justify-center rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                                 aria-label={"Mostrar imagem " + (index + 1)}
                                 title={"Mostrar imagem " + (index + 1)}
                             >
@@ -267,7 +264,7 @@ function ProjetoCard({
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={(event) => event.stopPropagation()}
-                            className="rounded-full bg-white px-4 py-3 text-sm font-medium text-black transition-transform duration-300 hover:scale-105"
+                            className="control-size-touch inline-flex items-center justify-center rounded-full bg-white px-4 text-sm font-medium text-black transition-transform duration-300 hover:scale-105"
                         >
                             Demo ↗
                         </a>
@@ -279,7 +276,7 @@ function ProjetoCard({
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={(event) => event.stopPropagation()}
-                            className="rounded-full border border-white/20 px-6 py-2.5 text-sm font-medium text-white transition-colors duration-300 hover:bg-white/10"
+                            className="control-size-touch inline-flex items-center justify-center rounded-full border border-white/20 px-4 text-sm font-medium text-white transition-colors duration-300 hover:bg-white/10"
                         >
                             GitHub ↗
                         </a>

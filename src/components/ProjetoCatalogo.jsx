@@ -95,6 +95,7 @@ function CategoriaFilterButton({ categoria, quantidade, ativa, onClick }) {
             }}
             className={`
                 relative
+                control-size-standard
                 inline-flex
                 items-center
                 justify-center
@@ -567,8 +568,7 @@ function ProjetoCatalogo() {
                         whileTap={currentPage > 1 ? { scale: 0.96 } : undefined}
                         className="
                             inline-flex
-                            h-11
-                            w-11
+                            control-size-icon
                             items-center
                             cursor-pointer
                             justify-center
@@ -616,7 +616,7 @@ function ProjetoCatalogo() {
                                 whileTap={{ scale: 0.96 }}
                                 className={`
                                     inline-flex
-                                    h-11
+                                    control-size-touch
                                     min-w-11
                                     items-center
                                     justify-center
@@ -664,8 +664,7 @@ function ProjetoCatalogo() {
                         whileTap={currentPage < totalPages ? { scale: 0.96 } : undefined}
                         className="
                             inline-flex
-                            h-11
-                            w-11
+                            control-size-icon
                             items-center
                             justify-center
                             rounded-sm

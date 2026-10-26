@@ -236,8 +236,7 @@ function MenuMobile({ items = [] }) {
                     aria-expanded={isOpen}
                     className="
                         flex
-                        h-11
-                        w-11
+                        control-size-icon
                         items-center
                         justify-center
                         rounded-xl
@@ -321,8 +320,7 @@ function MenuMobile({ items = [] }) {
                                 title="Fechar menu"
                                 className="
                                     flex
-                                    h-11
-                                    w-11
+                                    control-size-icon
                                     items-center
                                     justify-center
                                     rounded-full
