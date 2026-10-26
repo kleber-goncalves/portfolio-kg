@@ -56,6 +56,7 @@ function App() {
     useRouteSeo(pathname);
     const [routeTransition, setRouteTransition] = useState(null);
     const [routeEntranceKey, setRouteEntranceKey] = useState(0);
+    const [lastRenderedRoutePathname, setLastRenderedRoutePathname] = useState(pathname);
     const previousRoutePathname = useRef(pathname);
     const routeTransitionSequence = useRef(0);
 
@@ -63,6 +64,7 @@ function App() {
         if (previousRoutePathname.current === pathname) return;
 
         previousRoutePathname.current = pathname;
+        setLastRenderedRoutePathname(pathname);
         routeTransitionSequence.current += 1;
 
         setRouteTransition({
@@ -100,7 +102,7 @@ function App() {
     const [menuHasBeenShown, setMenuHasBeenShown] = useState(false);
     const isHomePath = location.pathname === "/";
     const isRouteTransitioning = Boolean(routeTransition)
-        || previousRoutePathname.current !== pathname;
+        || lastRenderedRoutePathname !== pathname;
     const routeNavigationVisible = routeNavigationStatus.pathname === location.pathname
         ? routeNavigationStatus.visible
         : true;
