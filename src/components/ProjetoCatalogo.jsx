@@ -7,6 +7,7 @@ import { CATEGORIAS_PROJETOS, projetosCatalogo } from "../data/projetosCatalogo"
 import { tecnologias } from "../data/tecnologias";
 import MagneticExternalLinkHover from "./MagneticExternalLinkHover";
 import { scrollToTarget } from "../utils/lenisControl";
+import useResponsive from "../hooks/useResponsive";
 
 const PROJECTS_PAGE_SIZE = 10;
 
@@ -203,29 +204,37 @@ function CategoriaFilterButton({ categoria, quantidade, ativa, onClick }) {
 }
 
 
-function ProjectViewportReveal({ projectId, animate, children }) {
+function ProjectViewportReveal({ projectId, animate, isMobileLayout, children }) {
     const viewportRef = useRef(null);
     const isInView = useInView(viewportRef, {
         once: true,
         amount: 0.15,
         initial: !animate,
     });
+    const useScaleReveal = animate && !isMobileLayout;
+    const useScrollReveal = animate && isMobileLayout;
 
     return (
         <div
             ref={viewportRef}
             data-project-id={projectId}
+            data-project-scroll-reveal
             className="w-full"
+            style={
+                useScrollReveal
+                    ? { opacity: 0, transform: "translateY(75px)" }
+                    : undefined
+            }
         >
             <motion.div
-                initial={animate ? { scale: 0 } : false}
-                animate={animate ? { scale: isInView ? 1 : 0 } : undefined}
+                initial={useScaleReveal ? { scale: 0 } : false}
+                animate={useScaleReveal ? { scale: isInView ? 1 : 0 } : undefined}
                 transition={
-                    animate
+                    useScaleReveal
                         ? { duration: 0.65, ease: [0.22, 1, 0.36, 1] }
                         : undefined
                 }
-                style={animate ? { transformOrigin: "center center" } : undefined}
+                style={useScaleReveal ? { transformOrigin: "center center" } : undefined}
                 className="w-full"
             >
                 {children}
@@ -244,6 +253,7 @@ function ProjetoCatalogo({ experienceMode = "full" }) {
     const pointerPositionRef = useRef({ x: null, y: null });
     const projetoSobCursorRef = useRef(null);
     const animateProjectsOnScroll = experienceMode !== "reduced";
+    const { isMobileLayout } = useResponsive();
 
     useEffect(() => {
         const section = sectionRef.current;
@@ -330,6 +340,95 @@ function ProjetoCatalogo({ experienceMode = "full" }) {
             }
         };
     }, [categoriaAtiva, currentPage]);
+
+    // No mobile, replica a entrada dos cards de Competências com GSAP/ScrollTrigger.
+    // O desktop mantém a animação de escala em ProjectViewportReveal.
+    useEffect(() => {
+        if (!animateProjectsOnScroll || !isMobileLayout) return undefined;
+
+        const section = sectionRef.current;
+        if (!section) return undefined;
+
+        let cancelled = false;
+        let context;
+        let animatedCards = [];
+
+        const initializeMobileReveal = async () => {
+            try {
+                const [gsapModule, scrollTriggerModule] = await Promise.all([
+                    import("gsap"),
+                    import("gsap/ScrollTrigger"),
+                ]);
+
+                if (cancelled) return;
+
+                const gsap = gsapModule.default ?? gsapModule.gsap;
+                const { ScrollTrigger } = scrollTriggerModule;
+
+                gsap.registerPlugin(ScrollTrigger);
+
+                animatedCards = Array.from(
+                    section.querySelectorAll("[data-project-scroll-reveal]"),
+                );
+
+                context = gsap.context(() => {
+                    animatedCards.forEach((card) => {
+                        gsap.set(card, {
+                            opacity: 0,
+                            y: 75,
+                        });
+
+                        const cardTimeline = gsap.timeline({
+                            scrollTrigger: {
+                                trigger: card,
+                                start: "top 95%",
+                                end: "top 55%",
+                                scrub: 1,
+                                markers: false,
+                            },
+                        });
+
+                        cardTimeline.to(card, {
+                            opacity: 1,
+                            y: 0,
+                            duration: 1,
+                            ease: "none",
+                        });
+                    });
+                }, section);
+
+                ScrollTrigger.refresh();
+            } catch (error) {
+                if (!cancelled) {
+                    context?.revert();
+                    section.querySelectorAll("[data-project-scroll-reveal]").forEach((card) => {
+                        card.style.removeProperty("opacity");
+                        card.style.removeProperty("transform");
+                    });
+
+                    console.error(
+                        "Não foi possível inicializar a animação mobile dos projetos.",
+                        error,
+                    );
+                }
+            }
+        };
+
+        void initializeMobileReveal();
+
+        return () => {
+            cancelled = true;
+            context?.revert();
+
+            // Ao mudar de breakpoint, restaura os itens ainda montados.
+            animatedCards.forEach((card) => {
+                if (!card.isConnected) return;
+
+                card.style.removeProperty("opacity");
+                card.style.removeProperty("transform");
+            });
+        };
+    }, [categoriaAtiva, currentPage, isMobileLayout, animateProjectsOnScroll]);
 
     const projetosFiltrados = categoriaAtiva === "Todos"
         ? projetosCatalogo
@@ -445,6 +544,7 @@ function ProjetoCatalogo({ experienceMode = "full" }) {
                             key={`${categoriaAtiva}:${projeto.id}`}
                             projectId={projeto.id}
                             animate={animateProjectsOnScroll}
+                            isMobileLayout={isMobileLayout}
                         >
                         <article
                             data-cursor-hover={isCursorHovered ? "true" : "false"}
