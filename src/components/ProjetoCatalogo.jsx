@@ -350,14 +350,28 @@ function ProjetoCatalogo({ experienceMode = "full" }) {
         projetosFiltrados.length,
     );
 
+    const pageChangeSequenceRef = useRef(0);
+
     const handlePageChange = (page) => {
         if (page < 1 || page > totalPages) return;
 
         setHoveredPaginationControl(null);
-        setCurrentPage(page);
-        scrollToTarget(0, {
+
+        const sequence = pageChangeSequenceRef.current + 1;
+        pageChangeSequenceRef.current = sequence;
+
+        const scrollStarted = scrollToTarget(0, {
             duration: 0.75,
+            onComplete: () => {
+                // Ignora callbacks de rolagens anteriores se outro controle foi acionado.
+                if (pageChangeSequenceRef.current !== sequence) return;
+                setCurrentPage(page);
+            },
         });
+
+        if (!scrollStarted) {
+            setCurrentPage(page);
+        }
     };
 
     // A troca de categoria ou página altera a altura do documento. Recalcula
@@ -411,6 +425,7 @@ function ProjetoCatalogo({ experienceMode = "full" }) {
                             quantidade={quantidade}
                             ativa={ativa}
                             onClick={() => {
+                                pageChangeSequenceRef.current += 1;
                                 setCategoriaAtiva(categoria);
                                 setCurrentPage(1);
                                 setHoveredPaginationControl(null);
