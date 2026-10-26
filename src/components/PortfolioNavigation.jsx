@@ -18,7 +18,7 @@ function PortfolioNavigation({
                     key={item.href}
                     href={item.href}
                     onNavigate={onNavigate}
-                    className="font-space text-[9px] uppercase tracking-[0.12em] c-lg:text-[10px]"
+                    className="font-space text-[11px] uppercase tracking-[0.12em] c-lg:text-[12px]"
                     isActive={activeHref === item.href}
                 >
                     {item.label}

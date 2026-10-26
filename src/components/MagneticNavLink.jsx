@@ -195,7 +195,7 @@ function MagneticLink({
                 rounded-sm
                 control-size-compact
                 py-1
-                px-3
+                px-2
                 focus-visible:outline
                 focus-visible:outline-2
                 focus-visible:outline-offset-2
