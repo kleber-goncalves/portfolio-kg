@@ -202,7 +202,7 @@ function CategoriaFilterButton({ categoria, quantidade, ativa, onClick }) {
     );
 }
 
-function ProjetoCatalogo() {
+function ProjetoCatalogo({ experienceMode = "full" }) {
     const [categoriaAtiva, setCategoriaAtiva] = useState("Todos");
     const [currentPage, setCurrentPage] = useState(1);
     const [hoveredPaginationControl, setHoveredPaginationControl] = useState(null);
@@ -211,6 +211,7 @@ function ProjetoCatalogo() {
     const projectsListRef = useRef(null);
     const pointerPositionRef = useRef({ x: null, y: null });
     const projetoSobCursorRef = useRef(null);
+    const animateProjectsOnScroll = experienceMode !== "reduced";
 
     useEffect(() => {
         const section = sectionRef.current;
@@ -395,8 +396,17 @@ function ProjetoCatalogo() {
                     const isCursorHovered = projetoSobCursor === projeto.id;
 
                     return (
-                        <article
+                        <motion.article
                             key={projeto.id}
+                            initial={animateProjectsOnScroll ? { scale: 0 } : false}
+                            whileInView={animateProjectsOnScroll ? { scale: 1 } : undefined}
+                            viewport={animateProjectsOnScroll ? { once: true, amount: 0.15 } : undefined}
+                            transition={
+                                animateProjectsOnScroll
+                                    ? { duration: 0.65, ease: [0.22, 1, 0.36, 1] }
+                                    : undefined
+                            }
+                            style={animateProjectsOnScroll ? { transformOrigin: "center center" } : undefined}
                             data-project-id={projeto.id}
                             data-cursor-hover={isCursorHovered ? "true" : "false"}
                             data-ui-sfx-hover
@@ -536,7 +546,7 @@ function ProjetoCatalogo() {
                                     )}
                                 </div>
                             </div>
-                        </article>
+                        </motion.article>
                     );
                 })}
             </div>

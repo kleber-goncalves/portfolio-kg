@@ -163,7 +163,7 @@ function App() {
                                 path="/"
                                 element={<Home experienceMode={experienceMode} onMenuVisibilityChange={handleHomeMenuVisibilityChange} onRouteReady={handleRouteReady} />}
                             />
-                            <Route path="/projetos" element={<Projetos onRouteReady={handleRouteReady} />} />
+                            <Route path="/projetos" element={<Projetos experienceMode={experienceMode} onRouteReady={handleRouteReady} />} />
                             <Route path="/sobre" element={<Sobre experienceMode={experienceMode} onRouteReady={handleRouteReady} />} />
                             <Route path="/contato" element={<Contato onRouteReady={handleRouteReady} />} />
                             <Route path="*" element={<Navigate to="/" replace />} />

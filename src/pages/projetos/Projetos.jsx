@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import InteriorPageLayout from "../../layouts/InteriorPageLayout";
 import ProjetoCatalogo from "../../components/ProjetoCatalogo";
 
-function Projetos({ onRouteReady }) {
+function Projetos({ experienceMode = "full", onRouteReady }) {
     useEffect(() => {
         onRouteReady?.("/projetos");
     }, [onRouteReady]);
@@ -13,7 +13,7 @@ function Projetos({ onRouteReady }) {
             description="Explore projetos web, aplicações, APIs e estudos organizados por área. Cada item reúne uma descrição, tecnologias e os links disponíveis para demonstração ou código."
             
         >
-            <ProjetoCatalogo />
+            <ProjetoCatalogo experienceMode={experienceMode} />
         </InteriorPageLayout>
     );
 }
