@@ -135,23 +135,27 @@ function CategoriaFilterButton({ categoria, quantidade, ativa, onClick, isMobile
                     backgroundColor: "#A87852",
                     transformOrigin: isMobileLayout ? "50% 50%" : transformOrigin,
                 }}
-                initial={{ scale: 0, opacity: 0 }}
+                initial={isMobileLayout ? false : { scale: 0, opacity: 0 }}
                 animate={{
                     scale: isHighlighted ? 1 : 0,
                     opacity: isHighlighted ? 1 : 0,
                 }}
-                transition={{
-                    scale: {
-                        type: "spring",
-                        stiffness: 150,
-                        damping: 22,
-                        mass: 0.75,
-                    },
-                    opacity: {
-                        duration: 0.25,
-                        ease: [0.16, 1, 0.3, 1],
-                    },
-                }}
+                transition={
+                    isMobileLayout
+                        ? { duration: 0 }
+                        : {
+                            scale: {
+                                type: "spring",
+                                stiffness: 150,
+                                damping: 22,
+                                mass: 0.75,
+                            },
+                            opacity: {
+                                duration: 0.25,
+                                ease: [0.16, 1, 0.3, 1],
+                            },
+                        }
+                }
             />
 
             <motion.span
@@ -166,10 +170,14 @@ function CategoriaFilterButton({ categoria, quantidade, ativa, onClick, isMobile
                 "
                 style={{ borderColor: "#A87852" }}
                 animate={{ opacity: isHighlighted ? 1 : 0 }}
-                transition={{
-                    duration: 0.2,
-                    ease: [0.16, 1, 0.3, 1],
-                }}
+                transition={
+                    isMobileLayout
+                        ? { duration: 0 }
+                        : {
+                            duration: 0.2,
+                            ease: [0.16, 1, 0.3, 1],
+                        }
+                }
             />
 
             <motion.span
