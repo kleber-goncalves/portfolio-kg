@@ -45,7 +45,7 @@ function RouteFallback() {
             aria-label="Carregando página"
             className="min-h-[50vh] bg-obsidian px-5 py-24 text-sm text-steel"
         >
-            Carregando página...
+            
         </div>
     );
 }
