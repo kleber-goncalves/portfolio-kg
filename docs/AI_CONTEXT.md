@@ -333,9 +333,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `6354c3c3354e38e1c38cd2dc21fd6848effa22da`
-- **Data do commit analisado:** 2026-10-26T16:03:38-03:00
-- **Mensagem do commit:** fix(projetos): remover transições do filtro mobile
+- **Commit de código analisado:** `8566ecfcb887bcf538c31ddb39ffe82343ae6160`
+- **Data do commit analisado:** 2026-10-26T16:09:33-03:00
+- **Mensagem do commit:** fix(RouteFallback): remover texto de carregamento da página
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -453,13 +453,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `8566ecf` | 2026-10-26 | fix(RouteFallback): remover texto de carregamento da página |
+| `0788f2a` | 2026-10-26 | docs(ai-context): atualizar snapshot automaticamente |
 | `6354c3c` | 2026-10-26 | fix(projetos): remover transições do filtro mobile |
 | `98ec19a` | 2026-10-26 | docs(ai-context): atualizar snapshot automaticamente |
 | `aaf11c9` | 2026-10-26 | fix(projetos): desativar efeitos magnéticos dos filtros mobile |
 | `24604ab` | 2026-10-26 | docs(ai-context): atualizar snapshot automaticamente |
 | `331a441` | 2026-10-26 | feat(projetos): animação de entrada mobile com ScrollTrigger |
 | `ab097c7` | 2026-10-26 | docs(ai-context): atualizar snapshot automaticamente |
-| `12562ad` | 2026-10-26 | fix(projetos): aguardar rolagem antes de atualizar lista |
-| `1d17172` | 2026-10-26 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
