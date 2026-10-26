@@ -16,8 +16,8 @@ function useRouteEntrance(containerRef, entranceKey = 0, isRouteTransitioning = 
     useLayoutEffect(() => {
         const container = containerRef.current;
 
-        // Deixa a página no estado natural enquanto o preloader cobre a rota.
-        // A entranceKey só muda após a saída do overlay, disparando a entrada uma vez.
+        // Deixa a página no estado natural enquanto o preloader ainda está visível.
+        // A entranceKey muda no começo da saída do overlay, sincronizando as animações.
         if (isRouteTransitioning) return undefined;
 
         if (!container || window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {

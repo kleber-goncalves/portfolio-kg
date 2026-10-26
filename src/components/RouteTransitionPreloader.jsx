@@ -28,7 +28,7 @@ function prefersReducedMotion() {
     return window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
 }
 
-function RouteTransitionPreloader({ transition, onComplete }) {
+function RouteTransitionPreloader({ transition, onExitStart, onComplete }) {
     const [phase, setPhase] = useState("visible");
     const startedAtRef = useRef(0);
     const transitionId = transition?.id;
@@ -61,11 +61,12 @@ function RouteTransitionPreloader({ transition, onComplete }) {
         const minimumTime = prefersReducedMotion() ? 80 : MIN_VISIBLE_TIME;
         const elapsed = performance.now() - startedAtRef.current;
         const timeoutId = window.setTimeout(() => {
+            onExitStart?.(transitionId);
             setPhase("leaving");
         }, Math.max(0, minimumTime - elapsed));
 
         return () => window.clearTimeout(timeoutId);
-    }, [transitionId, transitionReady]);
+    }, [transitionId, transitionReady, onExitStart]);
 
     useEffect(() => {
         if (!transitionId || phase !== "leaving") return undefined;

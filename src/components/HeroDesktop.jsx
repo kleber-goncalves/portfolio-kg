@@ -213,8 +213,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, onCon
     useLayoutEffect(() => {
         const hero = heroRef.current;
 
-        // Do not start the entry animation underneath RouteTransitionPreloader.
-        // entranceKey changes only after the overlay finishes exiting.
+        // Wait until RouteTransitionPreloader starts fading out, then enter in sync.
         if (!hero || isRouteTransitioning) {
             return;
         }

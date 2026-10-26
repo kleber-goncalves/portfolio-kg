@@ -59,6 +59,7 @@ function App() {
     const [lastRenderedRoutePathname, setLastRenderedRoutePathname] = useState(pathname);
     const previousRoutePathname = useRef(pathname);
     const routeTransitionSequence = useRef(0);
+    const routeEntranceStartedRef = useRef(null);
 
     useLayoutEffect(() => {
         if (previousRoutePathname.current === pathname) return;
@@ -71,6 +72,7 @@ function App() {
             id: routeTransitionSequence.current,
             pathname,
             ready: false,
+            entranceStarted: false,
         });
     }, [pathname]);
 
@@ -84,13 +86,25 @@ function App() {
         });
     }, []);
 
+    const handleRouteTransitionExitStart = useCallback((id) => {
+        if (routeTransitionSequence.current !== id) return;
+        if (routeEntranceStartedRef.current === id) return;
+
+        routeEntranceStartedRef.current = id;
+        setRouteTransition((current) => (
+            current?.id === id
+                ? { ...current, entranceStarted: true }
+                : current
+        ));
+        setRouteEntranceKey((current) => current + 1);
+    }, []);
+
     const handleRouteTransitionComplete = useCallback((id) => {
         if (routeTransitionSequence.current !== id) return;
 
         setRouteTransition((current) => (
             current?.id === id ? null : current
         ));
-        setRouteEntranceKey((current) => current + 1);
     }, []);
 
     const [experienceMode] = useState(() => getExperienceMode() || "full");
@@ -101,8 +115,9 @@ function App() {
     }));
     const [menuHasBeenShown, setMenuHasBeenShown] = useState(false);
     const isHomePath = location.pathname === "/";
-    const isRouteTransitioning = Boolean(routeTransition)
-        || lastRenderedRoutePathname !== pathname;
+    const isRouteTransitioning = (
+        Boolean(routeTransition) && !routeTransition.entranceStarted
+    ) || lastRenderedRoutePathname !== pathname;
     const routeNavigationVisible = routeNavigationStatus.pathname === location.pathname
         ? routeNavigationStatus.visible
         : true;
@@ -143,6 +158,7 @@ function App() {
             <RouteTransitionPreloader
                 key={routeTransition?.id ?? "idle"}
                 transition={routeTransition}
+                onExitStart={handleRouteTransitionExitStart}
                 onComplete={handleRouteTransitionComplete}
             />
             <CursorTrail />
