@@ -332,9 +332,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `8fc31623e22116e74aef8baa48126a0ffeaf3921`
-- **Data do commit analisado:** 2026-10-24T22:37:08-03:00
-- **Mensagem do commit:** refactor: remover seção desnecessária do preloader e item de navegação "Stack"
+- **Commit de código analisado:** `45357ba6f634e059db1e42d47ea02834c53bcdb7`
+- **Data do commit analisado:** 2026-10-26T13:29:03-03:00
+- **Mensagem do commit:** style: padronizar dimensoes dos controles
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -452,13 +452,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `45357ba` | 2026-10-26 | style: padronizar dimensoes dos controles |
+| `33489a9` | 2026-10-25 | docs(ai-context): atualizar snapshot automaticamente |
 | `8fc3162` | 2026-10-24 | refactor: remover seção desnecessária do preloader e item de navegação "Stack" |
 | `d77e53f` | 2026-10-25 | docs(ai-context): atualizar snapshot automaticamente |
 | `2a0b51b` | 2026-10-24 | docs: registrar correção do preloader de rotas |
 | `7c90353` | 2026-10-25 | docs(ai-context): atualizar snapshot automaticamente |
 | `3663f3a` | 2026-10-24 | fix: evitar flash da rota antes do preloader |
 | `986360c` | 2026-10-25 | docs(ai-context): atualizar snapshot automaticamente |
-| `c80d8cf` | 2026-10-24 | perf: aumentar tempo minimo do preloader de rotas |
-| `89ee590` | 2026-10-24 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
