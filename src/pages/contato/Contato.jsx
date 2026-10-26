@@ -17,7 +17,7 @@ const CONTACT_LINKS = [
     },
 ];
 
-function Contato({ onRouteReady }) {
+function Contato({ entranceKey = 0, onRouteReady }) {
     useEffect(() => {
         onRouteReady?.("/contato");
     }, [onRouteReady]);
@@ -26,13 +26,14 @@ function Contato({ onRouteReady }) {
         <InteriorPageLayout
             title="Vamos conversar."
             description="Um espaço para conversar sobre projetos, oportunidades e desenvolvimento de soluções web."
+            entranceKey={entranceKey}
         >
             <section className="mx-auto w-full max-w-7xl px-5 pb-10 b-md:px-10 b-md:pb-16">
                 <div className="max-w-3xl border border-graphite bg-carbon/40 p-5 b-md:p-8">
-                    <h2 className="font-space text-xl font-medium text-ivory b-md:text-2xl">
+                    <h2 data-route-entrance="content" className="font-space text-xl font-medium text-ivory b-md:text-2xl">
                         Canais de contato
                     </h2>
-                    <p className="mt-3 text-sm leading-6 text-steel">
+                    <p data-route-entrance="content" className="mt-3 text-sm leading-6 text-steel">
                         O formulário será implementado quando definirmos um destino real
                         para o envio e as proteções necessárias. Por enquanto, não existe
                         envio de formulário nesta página, evitando simular uma confirmação
@@ -46,6 +47,7 @@ function Contato({ onRouteReady }) {
                                 href={href}
                                 target="_blank"
                                 rel="noreferrer"
+                                data-route-entrance="item"
                                 className="group flex items-center justify-between gap-4 border border-graphite p-4 transition-colors hover:border-bronze"
                             >
                                 <span className="flex items-center gap-3">

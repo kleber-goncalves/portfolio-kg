@@ -55,6 +55,7 @@ function App() {
     const { pathname } = location;
     useRouteSeo(pathname);
     const [routeTransition, setRouteTransition] = useState(null);
+    const [routeEntranceKey, setRouteEntranceKey] = useState(0);
     const previousRoutePathname = useRef(pathname);
     const routeTransitionSequence = useRef(0);
 
@@ -82,9 +83,12 @@ function App() {
     }, []);
 
     const handleRouteTransitionComplete = useCallback((id) => {
+        if (routeTransitionSequence.current !== id) return;
+
         setRouteTransition((current) => (
             current?.id === id ? null : current
         ));
+        setRouteEntranceKey((current) => current + 1);
     }, []);
 
     const [experienceMode] = useState(() => getExperienceMode() || "full");
@@ -161,11 +165,11 @@ function App() {
                         <Routes>
                             <Route
                                 path="/"
-                                element={<Home experienceMode={experienceMode} onMenuVisibilityChange={handleHomeMenuVisibilityChange} onRouteReady={handleRouteReady} />}
+                                element={<Home experienceMode={experienceMode} entranceKey={routeEntranceKey} onMenuVisibilityChange={handleHomeMenuVisibilityChange} onRouteReady={handleRouteReady} />}
                             />
-                            <Route path="/projetos" element={<Projetos experienceMode={experienceMode} onRouteReady={handleRouteReady} />} />
-                            <Route path="/sobre" element={<Sobre experienceMode={experienceMode} onRouteReady={handleRouteReady} />} />
-                            <Route path="/contato" element={<Contato onRouteReady={handleRouteReady} />} />
+                            <Route path="/projetos" element={<Projetos experienceMode={experienceMode} entranceKey={routeEntranceKey} onRouteReady={handleRouteReady} />} />
+                            <Route path="/sobre" element={<Sobre experienceMode={experienceMode} entranceKey={routeEntranceKey} onRouteReady={handleRouteReady} />} />
+                            <Route path="/contato" element={<Contato entranceKey={routeEntranceKey} onRouteReady={handleRouteReady} />} />
                             <Route path="*" element={<Navigate to="/" replace />} />
                         </Routes>
                     </Suspense>

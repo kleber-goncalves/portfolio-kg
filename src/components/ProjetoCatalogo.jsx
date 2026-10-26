@@ -520,7 +520,7 @@ function ProjetoCatalogo({ experienceMode = "full" }) {
     return (
         <section ref={sectionRef} className="mx-auto w-full b-md:max-w-[1500px] px-5 pb-16 b-md:px-10 b-md:pb-24">
             {/* FILTROS DO CATÁLOGO */}
-            <div className="mb-8 border-b border-graphite pb-6">
+            <div data-route-entrance="content" className="mb-8 border-b border-graphite pb-6">
                 <p className="mb-4 text-xs uppercase tracking-[0.18em] text-steel">
                     {primeiroProjetoVisivel}–{ultimoProjetoVisivel} de {projetosFiltrados.length} projetos
                 </p>

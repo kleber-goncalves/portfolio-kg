@@ -209,6 +209,7 @@ function SobreHero({ experienceMode = "full", onRouteReady }) {
                 <div className="relative z-10 max-w-2xl b-md:sticky b-md:top-24 b-md:self-start">
                     <h1
                         id="sobre-hero-title"
+                        data-route-entrance="title"
                         className="
                             max-w-[11ch]
                             font-space
@@ -228,10 +229,10 @@ function SobreHero({ experienceMode = "full", onRouteReady }) {
                         ao sistema.
                     </h1>
 
-                    <p className="mt-6 max-w-xl text-sm leading-7 text-steel b-md:text-base b-md:leading-8">Desenvolvo aplicações web pensando não só na interface, mas também em como APIs, dados, desempenho e organização do código se conectam.</p>
+                    <p data-route-entrance="description" className="mt-6 max-w-xl text-sm leading-7 text-steel b-md:text-base b-md:leading-8">Desenvolvo aplicações web pensando não só na interface, mas também em como APIs, dados, desempenho e organização do código se conectam.</p>
                 </div>
 
-                <div className="relative mx-auto w-full max-w-[350px] pb-5 b-md:max-w-[720px] b-md:pb-0 b-md:justify-self-end">
+                <div data-route-entrance="visual" className="relative mx-auto w-full max-w-[350px] pb-5 b-md:max-w-[720px] b-md:pb-0 b-md:justify-self-end">
                     <div className="relative aspect-[4/5] w-full">
                         <div ref={portraitRef} className="sobre-hero-portrait absolute inset-0 overflow-hidden border border-graphite bg-carbon">
                             <OptimizedImage imageRef={portraitImageRef} src="/euNvEnvt.png" alt="Retrato de Kleber Gonçalves" sizes="(min-width: 1280px) 600px, (min-width: 768px) 45vw, 350px" loading="eager" fetchPriority="high" decoding="async" wrapperClassName="h-full w-full" className="absolute inset-0 h-full w-full object-cover object-top" onLoad={handlePortraitReady} onError={handlePortraitReady} />

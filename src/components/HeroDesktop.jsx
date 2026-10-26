@@ -17,7 +17,7 @@ import GlobeIcon from "./GlobeIcon";
 
 gsap.registerPlugin(ScrollTrigger);
 
-function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, onContentReady, experienceMode = "full" }) {
+function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, onContentReady, experienceMode = "full", entranceKey = 0 }) {
     useLayoutEffect(() => {
         onReady?.("desktop", { gsap, ScrollTrigger });
     }, [onReady]);
@@ -556,7 +556,7 @@ if (animationCleanup) {
         return () => {
             ctx.revert();
         };
-    }, []);
+    }, [entranceKey]);
 
     // ============================================================
     // ANIMAÇÃO DE SAÍDA — SOMENTE REDUCED

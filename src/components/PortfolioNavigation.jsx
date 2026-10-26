@@ -11,6 +11,7 @@ function PortfolioNavigation({
         <nav
             ref={navRef}
             aria-label="Navegação principal"
+            data-route-entrance="header"
             className={className}
         >
             {items.map((item) => (
