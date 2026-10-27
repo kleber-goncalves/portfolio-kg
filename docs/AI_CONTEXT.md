@@ -340,9 +340,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `38cbc9f6d6c138c1c91925650c646cd3ee62f37f`
-- **Data do commit analisado:** 2026-10-27T16:16:33-03:00
-- **Mensagem do commit:** docs(ai-context): corrigir contexto de catálogo e navbar
+- **Commit de código analisado:** `68bb7e1fd75da43c57aa0671e5e918d91d5b3a93`
+- **Data do commit analisado:** 2026-10-27T16:27:29-03:00
+- **Mensagem do commit:** feat(contact): add Basin contact form and setup guide
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -460,13 +460,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `68bb7e1` | 2026-10-27 | feat(contact): add Basin contact form and setup guide |
+| `d3cd320` | 2026-10-27 | docs(ai-context): atualizar snapshot automaticamente |
 | `38cbc9f` | 2026-10-27 | docs(ai-context): corrigir contexto de catálogo e navbar |
 | `e8fdda5` | 2026-10-27 | docs(ai-context): atualizar snapshot automaticamente |
 | `0d739ac` | 2026-10-27 | style(SoundControls): aprimorar estilo do painel de volume com sombra e borda |
 | `9dc237f` | 2026-10-27 | docs(ai-context): atualizar snapshot automaticamente |
 | `7214042` | 2026-10-27 | fix(navigation): keep desktop dropdowns above page content |
 | `38e4c2f` | 2026-10-27 | docs(ai-context): atualizar snapshot automaticamente |
-| `ca52e63` | 2026-10-27 | feat(projetosCatalogo): remover projeto "Meu Primeiro Projeto" do catálogo |
-| `72f1bd3` | 2026-10-27 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
