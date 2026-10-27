@@ -522,7 +522,7 @@ html::-webkit-scrollbar {
     animation:
         site-preloader-symbol-appear 260ms cubic-bezier(0.16, 1, 0.3, 1) 40ms both,
         site-preloader-symbol-align 460ms cubic-bezier(0.16, 1, 0.3, 1) 320ms both,
-        site-preloader-symbol-dismiss 180ms ease-out 1430ms both;
+        site-preloader-symbol-dismiss 180ms ease-out 1430ms forwards;
 }
 
 .site-preloader__brand-stage--animate .site-preloader__wordmark {
