@@ -160,8 +160,8 @@ function SoundControls({ className = "" }) {
                         style={{ transformOrigin: "top right" }}
                         className="
                             absolute -right-9 rounded-sm top-full z-[80] mt-3 w-56
-                            border border-graphite bg-carbon/95 p-4
-                            shadow-[0_18px_50px_rgba(0,0,0,0.42)]
+                            border border-graphite bg-carbon p-4
+                            shadow-2xl shadow-black
                         "
                     >
                         <div className="mb-4 flex items-center justify-between gap-3">
