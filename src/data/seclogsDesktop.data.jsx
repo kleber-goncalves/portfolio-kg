@@ -138,6 +138,7 @@ const flowingItems = [
         text: "Front-end",
         logos: stackLogos,
     },
+    
 
     {
         text: "Back-end / Dados",
