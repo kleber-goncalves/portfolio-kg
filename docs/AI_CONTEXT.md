@@ -68,6 +68,7 @@
 - Refinar o conteúdo de Sobre, usando as seções legadas de competências, diferenciais e formação. Avaliar separadamente qualquer futura mudança na trajetória/Hero com testes de regressão GSAP/ScrollTrigger.
 - Validar build, lint, testes, navegação por teclado, foco, botão voltar/avançar, carregamento direto/reload das quatro rotas e rewrites da Vercel.
 - Validar o `RouteTransitionPreloader` nas quatro rotas em desktop/mobile, incluindo retorno do navegador, links internos para `#hero`/`#stack`, preferência por movimento reduzido e falha no carregamento das imagens essenciais.
+- Validar visualmente o Preloader principal em reload e primeiro acesso (desktop/mobile), incluindo saída em cortina, barra de progresso, ausência de bloqueio de scroll após encerramento e comportamento com `prefers-reduced-motion`.
 - Verificar manualmente carregamento direto/reload das quatro rotas, canonical e aliases/rewrites na Vercel. Avaliar futuramente pré-renderização do corpo React (SSG/SSR): o build atual pré-gera metadados por URL, mas não o DOM completo das páginas.
 
 ## 4. Stack tecnológica
@@ -103,6 +104,7 @@ Estrutura identificada no repositório:
 - `src/layout/`: seções principais (Hero, tecnologias/Seclogs, competências, projetos, diferenciais, formação e footer).
 - `src/components/HeroSectionTransition.jsx`: controla a transição Hero/Stack e o comportamento do menu desktop associado à rolagem; informa a prontidão da Home após o layout correto, o retrato principal e, no desktop Full, o Stack necessário para medir o pin.
 - `src/components/RouteTransitionPreloader.jsx`: preloader de navegação com título e mensagem específica para Início, Projetos, Sobre e Contato. Só encerra após o sinal de prontidão da rota e um tempo mínimo de 600 ms (80 ms em movimento reduzido); bloqueia temporariamente a rolagem e anima a saída. Em `src/App.css`, a camada externa fica opaca desde a montagem para não revelar a rota de destino antes do preloader; a entrada animada fica restrita ao conteúdo interno.
+- **Preloader principal (`src/components/Preloader.jsx`, carregamento inicial/reload — atualizado em 27/10/2026):** é independente do `RouteTransitionPreloader`. A entrada revela a logo por máscara, apresenta nome e profissão em sequência e faz o bloco de progresso surgir suavemente; a lista de etapas foi removida da interface para priorizar a identidade visual. O progresso continua baseado em quatro etapas de preparação, com mensagem dinâmica e barra bronze/champagne. Ao finalizar, a camada desliza para cima como uma cortina, revelando a página já preparada; o componente só é desmontado após os 760 ms da saída. A preferência `prefers-reduced-motion` pula a saída animada e a espera visual mínima. O preloader continua aguardando logo, retrato essencial, fontes e dois frames de layout antes de encerrar.
 - `src/components/DeferredLayoutSection.jsx`: carregamento diferido das seções usando `IntersectionObserver` e carregamento dinâmico.
 - `src/components/DeferredProjects.jsx`: carregamento diferido da seção de projetos.
 - `src/components/HeroDesktop.jsx` e `src/components/HeroMobile.jsx`: composições do Hero por contexto de viewport.

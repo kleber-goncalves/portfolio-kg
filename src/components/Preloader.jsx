@@ -3,6 +3,7 @@ import imageMetadata from "../generated/imageMetadata.json";
 
 const TOTAL_STEPS = 4;
 const MIN_DISPLAY_TIME = 800;
+const EXIT_DURATION = 760;
 
 function loadImage(src, srcSet, sizes) {
     return new Promise((resolve) => {
@@ -25,23 +26,22 @@ function loadImage(src, srcSet, sizes) {
     });
 }
 
+function prefersReducedMotion() {
+    return window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ?? false;
+}
+
 function Preloader() {
     const [progress, setProgress] = useState(0);
     const [currentLabel, setCurrentLabel] = useState("Iniciando carregamento");
-    const [completedItems, setCompletedItems] = useState([]);
+    const [phase, setPhase] = useState("visible");
     const [visible, setVisible] = useState(true);
 
     useEffect(() => {
         let cancelled = false;
         const startedAt = performance.now();
 
-        const completeStep = (label, success = true) => {
+        const completeStep = () => {
             if (cancelled) return;
-
-            setCompletedItems((items) => [
-                ...items,
-                { label, success },
-            ]);
             setProgress((value) => Math.min(value + 1, TOTAL_STEPS));
         };
 
@@ -50,34 +50,28 @@ function Preloader() {
 
         const prepareSite = async () => {
             setCurrentLabel("Carregando sua identidade visual");
-            const logoLoaded = await loadImage("/logo.svg");
-            completeStep(
-                logoLoaded ? "Logo carregada" : "Logo indisponível",
-                logoLoaded,
-            );
+            await loadImage("/logo.svg");
+            completeStep();
 
             if (cancelled) return;
 
             setCurrentLabel("Carregando seu retrato");
             const portraitMetadata = imageMetadata["kleber-goncalves.png"];
-            const portraitLoaded = await loadImage(
+            await loadImage(
                 portraitMetadata?.src ?? "https://github.com/kleber-goncalves.png",
                 portraitMetadata?.srcSet,
                 portraitMetadata?.sizes,
             );
-            completeStep(
-                portraitLoaded ? "Retrato carregado" : "Retrato indisponível",
-                portraitLoaded,
-            );
+            completeStep();
 
             if (cancelled) return;
 
             setCurrentLabel("Preparando a tipografia");
             try {
                 await document.fonts.ready;
-                completeStep("Tipografia preparada");
+                completeStep();
             } catch {
-                completeStep("Tipografia indisponível", false);
+                completeStep();
             }
 
             if (cancelled) return;
@@ -88,24 +82,32 @@ function Preloader() {
                     requestAnimationFrame(resolve);
                 });
             });
-            completeStep("Interface pronta");
+            completeStep();
 
             if (cancelled) return;
 
-            // Mantém o preloader visível por pelo menos 800 ms no total,
-            // sem acrescentar uma espera obrigatória depois que tudo está pronto.
             setCurrentLabel("Tudo pronto para começar");
 
+            // Respeita a preferência por movimento reduzido e evita uma espera
+            // visual adicional nessa configuração.
+            const reducedMotion = prefersReducedMotion();
+            const minimumTime = reducedMotion ? 0 : MIN_DISPLAY_TIME;
             const elapsed = performance.now() - startedAt;
-            const remainingTime = Math.max(0, MIN_DISPLAY_TIME - elapsed);
+            const remainingTime = Math.max(0, minimumTime - elapsed);
 
             if (remainingTime > 0) {
                 await wait(remainingTime);
             }
 
+            if (cancelled) return;
+
+            if (!reducedMotion) {
+                // A camada continua montada enquanto a cortina revela o Hero.
+                setPhase("leaving");
+                await wait(EXIT_DURATION);
+            }
+
             if (!cancelled) {
-                // Libera a rolagem antes de esconder o Preloader.
-                // O componente continua montado mesmo quando retorna null.
                 document.body.style.overflow = previousOverflow;
                 setVisible(false);
             }
@@ -130,30 +132,37 @@ function Preloader() {
         <div
             role="status"
             aria-live="polite"
-            aria-label={`Carregamento do site: ${percentage}%`}
-            className="fixed inset-0 z-[9999] flex min-h-screen items-center justify-center bg-obsidian px-6 transition-opacity duration-500"
+            aria-busy={percentage < 100}
+            aria-label={"Carregamento do site: " + percentage + "%"}
+            className={
+                "site-preloader fixed inset-0 z-[9999] flex min-h-screen items-center justify-center overflow-hidden bg-obsidian px-6 " +
+                (phase === "leaving" ? "site-preloader--leaving" : "")
+            }
         >
-            <div className="flex w-full max-w-xs flex-col items-center text-center">
+            <div className="site-preloader__content flex w-full max-w-xs flex-col items-center text-center">
                 <img
                     src="/logo.svg"
                     alt="Logo Kleber Dev"
                     width="112"
                     height="112"
                     fetchPriority="high"
-                    className="mb-6 h-24 w-24 object-contain sm:h-28 sm:w-28"
+                    className="site-preloader__logo mb-6 h-24 w-24 object-contain sm:h-28 sm:w-28"
                 />
 
-                <p className="font-bebas text-2xl tracking-[0.18em] text-ivory sm:text-3xl">
+                <p className="site-preloader__name font-bebas text-2xl tracking-[0.18em] text-ivory sm:text-3xl">
                     KLEBER GONÇALVES
                 </p>
 
-                <p className="mt-2 text-[10px] uppercase tracking-[0.28em] text-steel">
+                <p className="site-preloader__role mt-2 text-[10px] uppercase tracking-[0.28em] text-steel">
                     Desenvolvedor Full Stack
                 </p>
 
-                <div className="mt-12 w-full">
+                <div className="site-preloader__progress mt-12 w-full">
                     <div className="mb-3 flex items-center justify-between gap-4">
-                        <span className="text-left text-[11px] text-steel">
+                        <span
+                            key={currentLabel}
+                            className="site-preloader__status min-w-0 text-left text-[11px] text-steel"
+                        >
                             {currentLabel}
                         </span>
                         <span className="shrink-0 font-bebas text-sm tracking-wider text-champagne">
@@ -162,7 +171,7 @@ function Preloader() {
                     </div>
 
                     <div
-                        className="h-[3px] w-full overflow-hidden bg-graphite"
+                        className="site-preloader__track h-[3px] w-full overflow-hidden bg-graphite"
                         role="progressbar"
                         aria-label="Progresso do carregamento"
                         aria-valuemin={0}
@@ -170,31 +179,10 @@ function Preloader() {
                         aria-valuenow={percentage}
                     >
                         <div
-                            className="h-full bg-gradient-to-r from-bronze to-champagne transition-[width] duration-300 ease-out"
-                            style={{ width: `${percentage}%` }}
+                            className="site-preloader__bar h-full bg-gradient-to-r from-bronze to-champagne"
+                            style={{ width: percentage + "%" }}
                         />
                     </div>
-
-                    <ul className="mt-5 flex flex-col gap-2 text-left">
-                        {completedItems.map((item, index) => (
-                            <li
-                                key={`${item.label}-${index}`}
-                                className="flex items-center gap-2 text-[10px] tracking-wide text-steel"
-                            >
-                                <span
-                                    aria-hidden="true"
-                                    className={item.success ? "text-champagne" : "text-steel"}
-                                >
-                                    {item.success ? "✓" : "–"}
-                                </span>
-                                {item.label}
-                            </li>
-                        ))}
-                    </ul>
-
-                    <p className="mt-5 text-[9px] uppercase tracking-[0.18em] text-steel">
-                        {progress} de {TOTAL_STEPS} etapas concluídas
-                    </p>
                 </div>
             </div>
         </div>
