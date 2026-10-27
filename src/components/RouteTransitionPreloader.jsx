@@ -119,12 +119,25 @@ function RouteTransitionPreloader({ transition, onExitStart, onComplete }) {
                 `}
             >
 
-
-                <h2 className="mt-4 font-bebas text-6xl tracking-[0.06em] text-ivory sm:text-7xl md:text-8xl">
+                <h2 className="route-preloader__title mt-4 font-bebas text-6xl tracking-[0.06em] text-ivory sm:text-7xl md:text-8xl">
                     {page.title}
                 </h2>
 
+                <p className="route-preloader__status mt-3 max-w-sm text-[11px] uppercase tracking-[0.22em] text-steel sm:text-xs">
+                    {page.status}
+                </p>
 
+                <div
+                    aria-hidden="true"
+                    className="route-preloader__indicator-track mt-9 h-[2px] w-32 overflow-hidden bg-graphite"
+                >
+                    <span
+                        className={
+                            "route-preloader__indicator" +
+                            (transitionReady ? " route-preloader__indicator--ready" : "")
+                        }
+                    />
+                </div>
             </div>
         </div>
     );
