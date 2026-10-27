@@ -339,9 +339,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `d3ab51df88b8b740d2c26a0eff4c52d234e219b6`
-- **Data do commit analisado:** 2026-10-27T14:05:54-03:00
-- **Mensagem do commit:** docs(ai-context): refresh current tests and CI evidence
+- **Commit de código analisado:** `e80a418c28f137d6177a8a5f731eed17778674f4`
+- **Data do commit analisado:** 2026-10-27T14:30:28-03:00
+- **Mensagem do commit:** feat(preloader): add refined entrance and curtain exit
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -459,13 +459,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `e80a418` | 2026-10-27 | feat(preloader): add refined entrance and curtain exit |
+| `d2c0b5c` | 2026-10-27 | docs(ai-context): atualizar snapshot automaticamente |
 | `d3ab51d` | 2026-10-27 | docs(ai-context): refresh current tests and CI evidence |
 | `7b7ad17` | 2026-10-26 | docs(ai-context): atualizar snapshot automaticamente |
 | `93dd189` | 2026-10-26 | fix(animation): bring page entrance into preloader fade |
 | `dce4dee` | 2026-10-26 | docs(ai-context): atualizar snapshot automaticamente |
 | `a8737a1` | 2026-10-26 | fix(animation): sync route entrance with preloader exit |
 | `9f88a94` | 2026-10-26 | docs(ai-context): atualizar snapshot automaticamente |
-| `7effc62` | 2026-10-26 | fix(animation): track route transition without render ref |
-| `158a5ef` | 2026-10-26 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
