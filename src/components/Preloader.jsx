@@ -32,6 +32,7 @@ function prefersReducedMotion() {
 
 function Preloader() {
     const [progress, setProgress] = useState(0);
+    const [logoReady, setLogoReady] = useState(false);
     const [currentLabel, setCurrentLabel] = useState("Iniciando carregamento");
     const [phase, setPhase] = useState("visible");
     const [visible, setVisible] = useState(true);
@@ -39,6 +40,7 @@ function Preloader() {
     useEffect(() => {
         let cancelled = false;
         const startedAt = performance.now();
+        let visualStartedAt = startedAt;
 
         const completeStep = () => {
             if (cancelled) return;
@@ -51,9 +53,13 @@ function Preloader() {
         const prepareSite = async () => {
             setCurrentLabel("Carregando sua identidade visual");
             await loadImage("/logo-completa-bra.svg");
-            completeStep();
 
             if (cancelled) return;
+
+            // A sequência começa após o asset estar pronto, não durante a rede.
+            visualStartedAt = performance.now();
+            setLogoReady(true);
+            completeStep();
 
             setCurrentLabel("Carregando seu retrato");
             const portraitMetadata = imageMetadata["kleber-goncalves.png"];
@@ -92,7 +98,7 @@ function Preloader() {
             // Em movimento reduzido, não força a espera nem a animação de saída.
             const reducedMotion = prefersReducedMotion();
             const minimumTime = reducedMotion ? 0 : MIN_DISPLAY_TIME;
-            const elapsed = performance.now() - startedAt;
+            const elapsed = performance.now() - (reducedMotion ? startedAt : visualStartedAt);
             const remainingTime = Math.max(0, minimumTime - elapsed);
 
             if (remainingTime > 0) {
@@ -139,7 +145,12 @@ function Preloader() {
             }
         >
             <div className="site-preloader__content flex w-full max-w-xs flex-col items-center text-center">
-                <div className="site-preloader__brand-stage" aria-label="Identidade KLEBER DEV">
+                <div
+                    className={
+                        "site-preloader__brand-stage" +
+                        (logoReady ? " site-preloader__brand-stage--animate" : "")
+                    }
+                >
                     <img
                         src="/logo-completa-bra.svg"
                         alt="KLEBER DEV"
