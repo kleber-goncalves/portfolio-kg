@@ -339,9 +339,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `12eca2adcda2849c8774717906dee701d89f2aab`
-- **Data do commit analisado:** 2026-10-27T15:29:50-03:00
-- **Mensagem do commit:** feat(route-preloader): refine title status and loading line
+- **Commit de código analisado:** `515b7d61dac08628d7b3cf168a0b6ea34b4504a8`
+- **Data do commit analisado:** 2026-10-27T15:45:00-03:00
+- **Mensagem do commit:** feat(project-catalog): show GitHub repository creation years
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -459,13 +459,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `515b7d6` | 2026-10-27 | feat(project-catalog): show GitHub repository creation years |
+| `19a9c5a` | 2026-10-27 | docs(ai-context): atualizar snapshot automaticamente |
 | `12eca2a` | 2026-10-27 | feat(route-preloader): refine title status and loading line |
 | `d520b45` | 2026-10-27 | docs(ai-context): atualizar snapshot automaticamente |
 | `774eb41` | 2026-10-27 | fix(preloader): preserve symbol reveal before dismissal |
 | `ebd6607` | 2026-10-27 | docs(ai-context): atualizar snapshot automaticamente |
 | `c731ae3` | 2026-10-27 | feat(preloader): center symbol before wordmark reveal |
 | `4b76559` | 2026-10-27 | docs(ai-context): atualizar snapshot automaticamente |
-| `9c74a13` | 2026-10-27 | fix(preloader): start brand sequence after logo loads |
-| `5e63bc9` | 2026-10-27 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
