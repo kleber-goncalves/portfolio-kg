@@ -680,7 +680,16 @@ function ProjetoCatalogo({ experienceMode = "full" }) {
                                             })}
                                         </div>
 
-                                        <p className="mt-1 text-[10px] uppercase tracking-[0.16em] text-steel">{projeto.categoria}</p>
+                                        <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] uppercase tracking-[0.16em] text-steel">
+                                            <span>{projeto.categoria}</span>
+                                            <span
+                                                className="inline-flex items-center gap-1.5"
+                                                title="Ano de criação do repositório no GitHub"
+                                            >
+                                                <span aria-hidden="true" className="h-1 w-1 rounded-full bg-bronze/70" />
+                                                GitHub · {projeto.anoCriacaoRepositorio}
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
 

@@ -16,6 +16,7 @@ export const projetosCatalogo = [
         tecnologias: ["React", "Javascript", "Tailwind", "API"],
         demo: "https://hauy-conecta.vercel.app/",
         github: "https://github.com/kleber-goncalves/helpe-center",
+        anoCriacaoRepositorio: 2026,
     },
     {
         id: "techshed",
@@ -26,6 +27,7 @@ export const projetosCatalogo = [
         tecnologias: ["Next.js", "React", "Javascript", "Tailwind"],
         demo: "https://techshed-green.vercel.app/",
         github: "https://github.com/kleber-goncalves/techshed",
+        anoCriacaoRepositorio: 2026,
     },
     {
         id: "my-sales",
@@ -36,6 +38,7 @@ export const projetosCatalogo = [
         tecnologias: ["Node.js", "TypeScript", "API", "PostgreSQL", "Redis"],
         demo: null,
         github: "https://github.com/kleber-goncalves/my_sales",
+        anoCriacaoRepositorio: 2026,
     },
     {
         id: "community-library",
@@ -46,6 +49,7 @@ export const projetosCatalogo = [
         tecnologias: ["Node.js", "Javascript", "API", "SQL"],
         demo: null,
         github: "https://github.com/kleber-goncalves/community_library",
+        anoCriacaoRepositorio: 2026,
     },
     {
         id: "autono",
@@ -56,6 +60,7 @@ export const projetosCatalogo = [
         tecnologias: ["React", "Node.js", "Tailwind", "GSAP", "Supabase"],
         demo: "https://autono-kg.vercel.app/",
         github: "https://github.com/kleber-goncalves/autono",
+        anoCriacaoRepositorio: 2025,
     },
     {
         id: "gta-vi",
@@ -66,6 +71,7 @@ export const projetosCatalogo = [
         tecnologias: ["HTML", "CSS", "Javascript", "GSAP"],
         demo: "https://gtavi-kg.vercel.app/",
         github: "https://github.com/kleber-goncalves/GTA-VI",
+        anoCriacaoRepositorio: 2026,
     },
     {
         id: "iphone-17-pro",
@@ -76,6 +82,7 @@ export const projetosCatalogo = [
         tecnologias: ["React", "Javascript", "Tailwind"],
         demo: "https://iphone-17-pro-kg.vercel.app/",
         github: "https://github.com/kleber-goncalves/iphone-17-PRO-MAX",
+        anoCriacaoRepositorio: 2025,
     },
     {
         id: "dashboard-vendas",
@@ -86,6 +93,7 @@ export const projetosCatalogo = [
         tecnologias: ["React", "TypeScript"],
         demo: "https://dashboard-de-vendas-psi.vercel.app/",
         github: "https://github.com/kleber-goncalves/dashboard-de-vendas",
+        anoCriacaoRepositorio: 2025,
     },
     {
         id: "dnc-arquitetura",
@@ -96,6 +104,7 @@ export const projetosCatalogo = [
         tecnologias: ["React", "Javascript", "API"],
         demo: "https://dnc-arq-kleber.vercel.app/",
         github: "https://github.com/kleber-goncalves/dnc-arq-kleber",
+        anoCriacaoRepositorio: 2025,
     },
     {
         id: "flutter-gymapp",
@@ -106,6 +115,7 @@ export const projetosCatalogo = [
         tecnologias: ["Flutter", "Dart", "Firebase", "Supabase"],
         demo: null,
         github: "https://github.com/kleber-goncalves/flutter_gymapp",
+        anoCriacaoRepositorio: 2025,
     },
     {
         id: "sorteio-curso-ti-2",
@@ -116,6 +126,7 @@ export const projetosCatalogo = [
         tecnologias: ["HTML", "CSS", "Javascript"],
         demo: "https://sorteio-curso-ti-2.vercel.app/",
         github: "https://github.com/kleber-goncalves/sorteio-curso-ti-2",
+        anoCriacaoRepositorio: 2026,
     },
     {
         id: "sorteio-curso-ti",
@@ -126,6 +137,7 @@ export const projetosCatalogo = [
         tecnologias: ["HTML", "CSS", "Javascript"],
         demo: "https://sorteio-curso-ti.vercel.app/",
         github: "https://github.com/kleber-goncalves/sorteio-curso-ti",
+        anoCriacaoRepositorio: 2026,
     },
     {
         id: "site-com-animacoes",
@@ -136,6 +148,7 @@ export const projetosCatalogo = [
         tecnologias: ["HTML", "CSS", "Javascript"],
         demo: "https://site-com-animacoes-pink.vercel.app/",
         github: "https://github.com/kleber-goncalves/site-com-animacoes",
+        anoCriacaoRepositorio: 2025,
     },
     {
         id: "cafena",
@@ -146,6 +159,7 @@ export const projetosCatalogo = [
         tecnologias: ["HTML", "CSS"],
         demo: "https://coffe-page-kl.vercel.app/",
         github: "https://github.com/kleber-goncalves/coffe-page",
+        anoCriacaoRepositorio: 2025,
     },
     {
         id: "portfolio-simples-dnc",
@@ -156,6 +170,7 @@ export const projetosCatalogo = [
         tecnologias: ["HTML", "CSS", "Javascript"],
         demo: "https://portiforlio-simples.netlify.app/",
         github: "https://github.com/kleber-goncalves/M3-Portifolio-simples-DNC",
+        anoCriacaoRepositorio: 2025,
     },
     {
         id: "lista-tarefa-ts",
@@ -166,6 +181,7 @@ export const projetosCatalogo = [
         tecnologias: ["HTML", "CSS", "TypeScript"],
         demo: "https://lista-de-tarefa-typescript.vercel.app/",
         github: "https://github.com/kleber-goncalves/lista-de-tarefa-typescript",
+        anoCriacaoRepositorio: 2025,
     },
     {
         id: "lista-tarefa-js",
@@ -176,6 +192,7 @@ export const projetosCatalogo = [
         tecnologias: ["HTML", "CSS", "Javascript"],
         demo: "https://lista-de-tarefa-kleber.vercel.app/",
         github: "https://github.com/kleber-goncalves/lista-de-tarefa",
+        anoCriacaoRepositorio: 2025,
     },
     {
         id: "piano-dom",
@@ -186,6 +203,7 @@ export const projetosCatalogo = [
         tecnologias: ["HTML", "CSS", "Javascript"],
         demo: "https://piano-kleber.netlify.app/",
         github: "https://github.com/kleber-goncalves/piano-dom",
+        anoCriacaoRepositorio: 2025,
     },
     {
         id: "meu-primeiro-projeto",
@@ -196,6 +214,7 @@ export const projetosCatalogo = [
         tecnologias: ["HTML", "CSS"],
         demo: "https://kleber-goncalves.github.io/meu-primeiro-projeto/",
         github: "https://github.com/kleber-goncalves/meu-primeiro-projeto",
+        anoCriacaoRepositorio: 2024,
     },
     {
         id: "mario-bros-site",
@@ -206,6 +225,7 @@ export const projetosCatalogo = [
         tecnologias: ["HTML", "CSS", "Javascript"],
         demo: null,
         github: "https://github.com/kleber-goncalves/PROJETO---SITE-DO-MARIO-BROS",
+        anoCriacaoRepositorio: 2024,
     },
     {
         id: "jogo-forca",
@@ -216,6 +236,7 @@ export const projetosCatalogo = [
         tecnologias: ["HTML", "CSS", "Javascript"],
         demo: "https://kleber-goncalves.github.io/JOGO-DA-FORCA/",
         github: "https://github.com/kleber-goncalves/JOGO-DA-FORCA",
+        anoCriacaoRepositorio: 2024,
     },
     {
         id: "jogo-forca-v2",
@@ -226,6 +247,7 @@ export const projetosCatalogo = [
         tecnologias: ["HTML", "CSS", "Javascript"],
         demo: null,
         github: "https://github.com/kleber-goncalves/projeto-jogo-da-forca-v-2",
+        anoCriacaoRepositorio: 2024,
     },
     {
         id: "landing-dnc",
@@ -236,6 +258,7 @@ export const projetosCatalogo = [
         tecnologias: ["HTML", "CSS"],
         demo: "https://kleber-goncalves.github.io/Landing-Page-dnc/",
         github: "https://github.com/kleber-goncalves/Landing-Page-dnc",
+        anoCriacaoRepositorio: 2024,
     },
     {
         id: "landing-gestao-projetos",
@@ -246,6 +269,7 @@ export const projetosCatalogo = [
         tecnologias: ["HTML", "CSS"],
         demo: null,
         github: "https://github.com/kleber-goncalves/Landing-Page-Gestao-de-projetos-dnc",
+        anoCriacaoRepositorio: 2025,
     },
     {
         id: "rid-desafio01",
@@ -256,6 +280,7 @@ export const projetosCatalogo = [
         tecnologias: ["HTML", "CSS", "Javascript"],
         demo: "https://lance-pange-dnc.netlify.app/",
         github: "https://github.com/kleber-goncalves/RID196047_Desafio01",
+        anoCriacaoRepositorio: 2024,
     },
     {
         id: "rid-desafio02",
@@ -266,6 +291,7 @@ export const projetosCatalogo = [
         tecnologias: ["HTML", "CSS"],
         demo: null,
         github: "https://github.com/kleber-goncalves/RID196047_Desafio02",
+        anoCriacaoRepositorio: 2025,
     },
     {
         id: "rid-desafio03",
@@ -276,6 +302,7 @@ export const projetosCatalogo = [
         tecnologias: ["Javascript"],
         demo: null,
         github: "https://github.com/kleber-goncalves/RID196047_Desafio03",
+        anoCriacaoRepositorio: 2025,
     },
     {
         id: "rid-desafio04",
@@ -286,6 +313,7 @@ export const projetosCatalogo = [
         tecnologias: ["React", "TypeScript"],
         demo: "https://portifolio-gilt-delta-36.vercel.app/",
         github: "https://github.com/kleber-goncalves/RID196047_Desafio04",
+        anoCriacaoRepositorio: 2025,
     },
     {
         id: "api-gerenciamento-tarefas",
@@ -296,6 +324,7 @@ export const projetosCatalogo = [
         tecnologias: ["React", "Node.js", "Javascript", "API", "SQL"],
         demo: null,
         github: "https://github.com/kleber-goncalves/api-gerenciamento-tarefas",
+        anoCriacaoRepositorio: 2024,
     },
     {
         id: "student-grade-manager",
@@ -306,6 +335,7 @@ export const projetosCatalogo = [
         tecnologias: ["Node.js", "Javascript", "API"],
         demo: null,
         github: "https://github.com/kleber-goncalves/student_grande_manager",
+        anoCriacaoRepositorio: 2025,
     },
     {
         id: "gerenciador-arquivos-node",
@@ -316,6 +346,7 @@ export const projetosCatalogo = [
         tecnologias: ["Node.js", "Javascript"],
         demo: null,
         github: "https://github.com/kleber-goncalves/Gerenciador-de-Arquivos-Node",
+        anoCriacaoRepositorio: 2025,
     },
     {
         id: "dates-difference-calculator",
@@ -326,6 +357,7 @@ export const projetosCatalogo = [
         tecnologias: ["Node.js", "Javascript"],
         demo: null,
         github: "https://github.com/kleber-goncalves/dates-diference-calculator",
+        anoCriacaoRepositorio: 2025,
     },
     {
         id: "introducao-typescript-backend",
@@ -336,6 +368,7 @@ export const projetosCatalogo = [
         tecnologias: ["Node.js", "TypeScript", "API"],
         demo: null,
         github: "https://github.com/kleber-goncalves/Introducao-TypeScript-Back-End-DNC",
+        anoCriacaoRepositorio: 2026,
     },
     {
         id: "php-gerenciamento-produtos",
@@ -346,6 +379,7 @@ export const projetosCatalogo = [
         tecnologias: ["PHP", "SQL"],
         demo: null,
         github: "https://github.com/kleber-goncalves/gerenciamento-de-produtos-php_uniube-faculdade",
+        anoCriacaoRepositorio: 2025,
     },
     {
         id: "sql-db-treinamento",
@@ -356,6 +390,7 @@ export const projetosCatalogo = [
         tecnologias: ["SQL"],
         demo: null,
         github: "https://github.com/kleber-goncalves/db-treinamento",
+        anoCriacaoRepositorio: 2026,
     },
     {
         id: "sql-server-management-studio",
@@ -366,6 +401,7 @@ export const projetosCatalogo = [
         tecnologias: ["SQL"],
         demo: null,
         github: "https://github.com/kleber-goncalves/SQL-Server-Management-Studio-22",
+        anoCriacaoRepositorio: 2026,
     },
     {
         id: "cisco-packet-tracer",
@@ -376,6 +412,7 @@ export const projetosCatalogo = [
         tecnologias: ["Redes"],
         demo: null,
         github: "https://github.com/kleber-goncalves/cisco-packet-tracer-faculdade",
+        anoCriacaoRepositorio: 2026,
     },
     {
         id: "caminhos-stem",
@@ -386,6 +423,7 @@ export const projetosCatalogo = [
         tecnologias: ["Python", "Dados", "Jupyter Notebook"],
         demo: null,
         github: "https://github.com/kleber-goncalves/Caminhos-Para-STEM",
+        anoCriacaoRepositorio: 2026,
     },
     {
         id: "site-aws-dnc",
@@ -396,6 +434,7 @@ export const projetosCatalogo = [
         tecnologias: ["HTML", "AWS"],
         demo: null,
         github: "https://github.com/kleber-goncalves/site-aws-dnc",
+        anoCriacaoRepositorio: 2026,
     },
     {
         id: "dates-curriculo-avancado",
@@ -406,6 +445,7 @@ export const projetosCatalogo = [
         tecnologias: ["HTML", "CSS"],
         demo: null,
         github: "https://github.com/kleber-goncalves/M-2-CURRICULO-AVANCADO-DNC",
+        anoCriacaoRepositorio: 2025,
     },
     {
         id: "wallaby-tutorial",
@@ -416,6 +456,7 @@ export const projetosCatalogo = [
         tecnologias: ["Javascript"],
         demo: null,
         github: "https://github.com/kleber-goncalves/wallaby-tutorial",
+        anoCriacaoRepositorio: 2025,
     },
     {
         id: "m-javascript-quokka",
@@ -426,5 +467,6 @@ export const projetosCatalogo = [
         tecnologias: ["Javascript"],
         demo: null,
         github: "https://github.com/kleber-goncalves/m-javascript-quokka",
+        anoCriacaoRepositorio: 2025,
     },
 ];
