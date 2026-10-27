@@ -3,8 +3,6 @@ import {
     AlertCircle,
     ArrowUpRight,
     CheckCircle2,
-    Github,
-    Linkedin,
     Send,
 } from "lucide-react";
 import InteriorPageLayout from "../../layouts/InteriorPageLayout";
@@ -19,13 +17,13 @@ const CONTACT_LINKS = [
         label: "GitHub",
         description: "Repositórios, projetos e código",
         href: "https://github.com/kleber-goncalves",
-        Icon: Github,
+        mark: "GH",
     },
     {
         label: "LinkedIn",
         description: "Perfil profissional e networking",
         href: "https://www.linkedin.com/in/kleber-goncalve-s/",
-        Icon: Linkedin,
+        mark: "in",
     },
 ];
 
@@ -250,7 +248,7 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
                             </p>
 
                             <div className="mt-6 space-y-3">
-                                {CONTACT_LINKS.map(({ label, description, href, Icon }) => (
+                                {CONTACT_LINKS.map(({ label, description, href, mark }) => (
                                     <a
                                         key={label}
                                         href={href}
@@ -260,7 +258,7 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
                                         className="group flex items-center gap-4 border border-graphite p-4 transition-colors duration-300 hover:border-bronze focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne"
                                     >
                                         <span className="flex h-10 w-10 shrink-0 items-center justify-center border border-graphite text-bronze transition-colors duration-300 group-hover:border-bronze">
-                                            <Icon aria-hidden="true" className="h-4 w-4" />
+                                            <span className="font-space text-xs font-semibold">{mark}</span>
                                         </span>
                                         <span className="min-w-0 flex-1">
                                             <span className="block font-space text-sm text-ivory">
