@@ -339,9 +339,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `ca52e63ffd4d08bfce23dd812bf76c2cd20a6689`
-- **Data do commit analisado:** 2026-10-27T15:57:44-03:00
-- **Mensagem do commit:** feat(projetosCatalogo): remover projeto "Meu Primeiro Projeto" do catálogo
+- **Commit de código analisado:** `7214042f3b8aaf33c58013c9ed98509155832fd3`
+- **Data do commit analisado:** 2026-10-27T16:01:06-03:00
+- **Mensagem do commit:** fix(navigation): keep desktop dropdowns above page content
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -459,13 +459,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `7214042` | 2026-10-27 | fix(navigation): keep desktop dropdowns above page content |
+| `38e4c2f` | 2026-10-27 | docs(ai-context): atualizar snapshot automaticamente |
 | `ca52e63` | 2026-10-27 | feat(projetosCatalogo): remover projeto "Meu Primeiro Projeto" do catálogo |
 | `72f1bd3` | 2026-10-27 | docs(ai-context): atualizar snapshot automaticamente |
 | `515b7d6` | 2026-10-27 | feat(project-catalog): show GitHub repository creation years |
 | `19a9c5a` | 2026-10-27 | docs(ai-context): atualizar snapshot automaticamente |
 | `12eca2a` | 2026-10-27 | feat(route-preloader): refine title status and loading line |
 | `d520b45` | 2026-10-27 | docs(ai-context): atualizar snapshot automaticamente |
-| `774eb41` | 2026-10-27 | fix(preloader): preserve symbol reveal before dismissal |
-| `ebd6607` | 2026-10-27 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
