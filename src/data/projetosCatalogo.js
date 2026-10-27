@@ -206,17 +206,6 @@ export const projetosCatalogo = [
         anoCriacaoRepositorio: 2025,
     },
     {
-        id: "meu-primeiro-projeto",
-        numero: "19",
-        titulo: "Meu Primeiro Projeto",
-        descricao: "Primeiro site pessoal, desenvolvido com HTML e CSS puros e publicado pelo GitHub Pages.",
-        categoria: "Front-end",
-        tecnologias: ["HTML", "CSS"],
-        demo: "https://kleber-goncalves.github.io/meu-primeiro-projeto/",
-        github: "https://github.com/kleber-goncalves/meu-primeiro-projeto",
-        anoCriacaoRepositorio: 2024,
-    },
-    {
         id: "mario-bros-site",
         numero: "20",
         titulo: "Site do filme Mario Bros",
