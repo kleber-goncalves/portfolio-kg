@@ -54,6 +54,11 @@ function useRouteEntrance(containerRef, entranceKey = 0, isRouteTransitioning = 
             timeline = gsap.timeline({
                 paused: true,
                 defaults: { ease: "power3.out" },
+                onComplete: () => {
+                    // As transforms servem apenas à entrada; limpá-los evita
+                    // manter contextos de empilhamento depois da animação.
+                    gsap.set(allTargets, { clearProps: "transform" });
+                },
             });
 
             if (targets.header.length) {

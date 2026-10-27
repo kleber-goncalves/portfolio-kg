@@ -17,7 +17,7 @@ function InteriorPageLayout({ title, description, heroContent = null, children, 
 
     return (
         <div ref={pageRef} className="min-h-screen w-full bg-obsidian text-ivory">
-            <header data-route-navigation className="w-full">
+            <header data-route-navigation className="relative z-50 w-full">
                 <div className="hidden b-md:block">
                     <PortfolioDesktopHeader placement="interior" items={NAVIGATION_ITEMS} activeHref={pathname} onNavigate={navigatePortfolio} logoHref="/" />
                 </div>
