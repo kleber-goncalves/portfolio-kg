@@ -337,9 +337,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `93dd1890d2153656705a298d982f6e76ba5b87cf`
-- **Data do commit analisado:** 2026-10-26T17:27:50-03:00
-- **Mensagem do commit:** fix(animation): bring page entrance into preloader fade
+- **Commit de código analisado:** `d3ab51df88b8b740d2c26a0eff4c52d234e219b6`
+- **Data do commit analisado:** 2026-10-27T14:05:54-03:00
+- **Mensagem do commit:** docs(ai-context): refresh current tests and CI evidence
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -457,13 +457,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `d3ab51d` | 2026-10-27 | docs(ai-context): refresh current tests and CI evidence |
+| `7b7ad17` | 2026-10-26 | docs(ai-context): atualizar snapshot automaticamente |
 | `93dd189` | 2026-10-26 | fix(animation): bring page entrance into preloader fade |
 | `dce4dee` | 2026-10-26 | docs(ai-context): atualizar snapshot automaticamente |
 | `a8737a1` | 2026-10-26 | fix(animation): sync route entrance with preloader exit |
 | `9f88a94` | 2026-10-26 | docs(ai-context): atualizar snapshot automaticamente |
 | `7effc62` | 2026-10-26 | fix(animation): track route transition without render ref |
 | `158a5ef` | 2026-10-26 | docs(ai-context): atualizar snapshot automaticamente |
-| `a7e1cad` | 2026-10-26 | fix(animation): start route entrance after preloader |
-| `f2f552c` | 2026-10-26 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
