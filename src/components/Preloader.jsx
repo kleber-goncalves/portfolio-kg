@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import imageMetadata from "../generated/imageMetadata.json";
 
 const TOTAL_STEPS = 4;
-const MIN_DISPLAY_TIME = 800;
+const MIN_DISPLAY_TIME = 2200;
 const EXIT_DURATION = 760;
 
 function loadImage(src, srcSet, sizes) {
@@ -50,7 +50,7 @@ function Preloader() {
 
         const prepareSite = async () => {
             setCurrentLabel("Carregando sua identidade visual");
-            await loadImage("/logo.svg");
+            await loadImage("/logo-completa-bra.svg");
             completeStep();
 
             if (cancelled) return;
@@ -88,8 +88,8 @@ function Preloader() {
 
             setCurrentLabel("Tudo pronto para começar");
 
-            // Respeita a preferência por movimento reduzido e evita uma espera
-            // visual adicional nessa configuração.
+            // Mantém a sequência visual completa antes de iniciar a saída.
+            // Em movimento reduzido, não força a espera nem a animação de saída.
             const reducedMotion = prefersReducedMotion();
             const minimumTime = reducedMotion ? 0 : MIN_DISPLAY_TIME;
             const elapsed = performance.now() - startedAt;
@@ -102,7 +102,6 @@ function Preloader() {
             if (cancelled) return;
 
             if (!reducedMotion) {
-                // A camada continua montada enquanto a cortina revela o Hero.
                 setPhase("leaving");
                 await wait(EXIT_DURATION);
             }
@@ -140,16 +139,18 @@ function Preloader() {
             }
         >
             <div className="site-preloader__content flex w-full max-w-xs flex-col items-center text-center">
-                <img
-                    src="/logo.svg"
-                    alt="Logo Kleber Dev"
-                    width="112"
-                    height="112"
-                    fetchPriority="high"
-                    className="site-preloader__logo mb-6 h-24 w-24 object-contain sm:h-28 sm:w-28"
-                />
+                <div className="site-preloader__brand-stage" aria-label="Identidade KLEBER DEV">
+                    <img
+                        src="/logo-completa-bra.svg"
+                        alt="KLEBER DEV"
+                        width="1024"
+                        height="300"
+                        fetchPriority="high"
+                        className="site-preloader__wordmark"
+                    />
+                </div>
 
-                <p className="site-preloader__name font-bebas text-2xl tracking-[0.18em] text-ivory sm:text-3xl">
+                <p className="site-preloader__name mt-6 font-bebas text-2xl tracking-[0.18em] text-ivory sm:text-3xl">
                     KLEBER GONÇALVES
                 </p>
 
