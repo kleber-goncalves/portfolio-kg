@@ -456,7 +456,7 @@ html::-webkit-scrollbar {
     height: var(--control-height-touch);
 }
 
-/* Preloader principal: wordmark horizontal, símbolo central e saída em cortina. */
+/* Preloader principal: símbolo central, wordmark revelada e saída em cortina. */
 .site-preloader {
     transform: translateY(0);
     transition: transform 760ms cubic-bezier(0.76, 0, 0.24, 1);
@@ -471,8 +471,8 @@ html::-webkit-scrollbar {
         transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* A wordmark é revelada inteira antes de a janela recolher pela direita.
-   A imagem interna não muda de escala: o símbolo permanece nítido e centrado. */
+/* A área mantém a wordmark centralizada. O símbolo começa no centro e
+   desloca-se para a esquerda antes de a marca completa ser revelada. */
 .site-preloader__brand-stage {
     position: relative;
     flex: none;
@@ -481,17 +481,11 @@ html::-webkit-scrollbar {
     max-width: none;
     height: min(24vw, 94px);
     overflow: hidden;
-    clip-path: inset(0 100% 0 0);
-    will-change: clip-path, width;
+    will-change: width;
 }
 
-.site-preloader__brand-stage--animate {
-    animation:
-        site-preloader-brand-reveal 650ms cubic-bezier(0.16, 1, 0.3, 1) 80ms both,
-        site-preloader-brand-collapse 420ms cubic-bezier(0.76, 0, 0.24, 1) 850ms both;
-}
-
-.site-preloader__wordmark {
+.site-preloader__wordmark,
+.site-preloader__symbol-image {
     position: absolute;
     top: 0;
     left: 0;
@@ -501,6 +495,38 @@ html::-webkit-scrollbar {
     height: 100%;
     object-fit: fill;
     flex: none;
+}
+
+.site-preloader__wordmark {
+    clip-path: inset(0 100% 0 0);
+}
+
+.site-preloader__symbol {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 50%;
+    width: 30%;
+    height: 100%;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateX(-50%);
+    will-change: left, transform, opacity;
+}
+
+.site-preloader__brand-stage--animate {
+    animation: site-preloader-brand-collapse 420ms cubic-bezier(0.76, 0, 0.24, 1) 1640ms both;
+}
+
+.site-preloader__brand-stage--animate .site-preloader__symbol {
+    animation:
+        site-preloader-symbol-appear 260ms cubic-bezier(0.16, 1, 0.3, 1) 40ms both,
+        site-preloader-symbol-align 460ms cubic-bezier(0.16, 1, 0.3, 1) 320ms both,
+        site-preloader-symbol-dismiss 180ms ease-out 1430ms both;
+}
+
+.site-preloader__brand-stage--animate .site-preloader__wordmark {
+    animation: site-preloader-brand-reveal 650ms cubic-bezier(0.16, 1, 0.3, 1) 820ms both;
 }
 
 .site-preloader--leaving {
@@ -515,19 +541,19 @@ html::-webkit-scrollbar {
 .site-preloader__name {
     opacity: 0;
     transform: translateY(12px);
-    animation: site-preloader-name-enter 420ms cubic-bezier(0.16, 1, 0.3, 1) 1270ms both;
+    animation: site-preloader-name-enter 420ms cubic-bezier(0.16, 1, 0.3, 1) 2060ms both;
 }
 
 .site-preloader__role {
     opacity: 0;
     transform: translateY(8px);
-    animation: site-preloader-role-enter 350ms cubic-bezier(0.16, 1, 0.3, 1) 1500ms both;
+    animation: site-preloader-role-enter 350ms cubic-bezier(0.16, 1, 0.3, 1) 2290ms both;
 }
 
 .site-preloader__progress {
     opacity: 0;
     transform: translateY(10px);
-    animation: site-preloader-progress-enter 420ms cubic-bezier(0.16, 1, 0.3, 1) 1610ms both;
+    animation: site-preloader-progress-enter 420ms cubic-bezier(0.16, 1, 0.3, 1) 2400ms both;
 }
 
 .site-preloader__status {
@@ -550,6 +576,28 @@ html::-webkit-scrollbar {
     animation: site-preloader-bar-sheen 1.6s ease-in-out infinite;
 }
 
+@keyframes site-preloader-symbol-appear {
+    from {
+        opacity: 0;
+        filter: blur(4px);
+    }
+    to {
+        opacity: 1;
+        filter: blur(0);
+    }
+}
+
+@keyframes site-preloader-symbol-align {
+    from {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    to {
+        left: 0;
+        transform: translateX(0);
+    }
+}
+
 @keyframes site-preloader-brand-reveal {
     from { clip-path: inset(0 100% 0 0); }
     to { clip-path: inset(0); }
@@ -558,6 +606,11 @@ html::-webkit-scrollbar {
 @keyframes site-preloader-brand-collapse {
     from { width: min(82vw, 320px); }
     to { width: min(24.6vw, 96px); }
+}
+
+@keyframes site-preloader-symbol-dismiss {
+    from { opacity: 1; }
+    to { opacity: 0; }
 }
 
 @keyframes site-preloader-name-enter {
@@ -618,10 +671,18 @@ html::-webkit-scrollbar {
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .site-preloader__brand-stage,
     .site-preloader__brand-stage--animate {
         width: min(82vw, 320px) !important;
+        animation: none !important;
+    }
+
+    .site-preloader__wordmark {
         clip-path: none !important;
+        animation: none !important;
+    }
+
+    .site-preloader__symbol {
+        display: none !important;
         animation: none !important;
     }
 

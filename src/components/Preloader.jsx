@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import imageMetadata from "../generated/imageMetadata.json";
 
 const TOTAL_STEPS = 4;
-const MIN_DISPLAY_TIME = 2200;
+const MIN_DISPLAY_TIME = 3000;
 const EXIT_DURATION = 760;
 
 function loadImage(src, srcSet, sizes) {
@@ -151,6 +151,17 @@ function Preloader() {
                         (logoReady ? " site-preloader__brand-stage--animate" : "")
                     }
                 >
+                    <div className="site-preloader__symbol" aria-hidden="true">
+                        <img
+                            src="/logo-completa-bra.svg"
+                            alt=""
+                            width="1024"
+                            height="300"
+                            fetchPriority="high"
+                            className="site-preloader__symbol-image"
+                        />
+                    </div>
+
                     <img
                         src="/logo-completa-bra.svg"
                         alt="KLEBER DEV"
