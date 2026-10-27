@@ -339,9 +339,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `9c74a13e5558e3b679eee0a63a113286c9a75b96`
-- **Data do commit analisado:** 2026-10-27T14:53:36-03:00
-- **Mensagem do commit:** fix(preloader): start brand sequence after logo loads
+- **Commit de código analisado:** `c731ae31f4db4c5f485dbefe462e713e22cb95a8`
+- **Data do commit analisado:** 2026-10-27T15:06:50-03:00
+- **Mensagem do commit:** feat(preloader): center symbol before wordmark reveal
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -459,13 +459,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `c731ae3` | 2026-10-27 | feat(preloader): center symbol before wordmark reveal |
+| `4b76559` | 2026-10-27 | docs(ai-context): atualizar snapshot automaticamente |
 | `9c74a13` | 2026-10-27 | fix(preloader): start brand sequence after logo loads |
 | `5e63bc9` | 2026-10-27 | docs(ai-context): atualizar snapshot automaticamente |
 | `027631c` | 2026-10-27 | feat(preloader): sequence wordmark reveal and mark transition |
 | `3430c98` | 2026-10-27 | docs(ai-context): atualizar snapshot automaticamente |
 | `e80a418` | 2026-10-27 | feat(preloader): add refined entrance and curtain exit |
 | `d2c0b5c` | 2026-10-27 | docs(ai-context): atualizar snapshot automaticamente |
-| `d3ab51d` | 2026-10-27 | docs(ai-context): refresh current tests and CI evidence |
-| `7b7ad17` | 2026-10-26 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
