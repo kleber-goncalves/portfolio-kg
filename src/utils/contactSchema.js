@@ -29,6 +29,20 @@ export function validateContactForm(values) {
     return contactSchema.safeParse(values);
 }
 
+/**
+ * Valida um campo individual usando as mesmas regras do schema completo.
+ * Retorna a primeira mensagem de erro, ou null quando o valor é válido.
+ */
+export function validateContactField(fieldName, value) {
+    if (!Object.hasOwn(contactSchema.shape, fieldName)) return null;
+
+    const result = contactSchema.shape[fieldName].safeParse(value);
+
+    if (result.success) return null;
+
+    return result.error.issues[0]?.message ?? "Confira este campo.";
+}
+
 export function getContactFieldErrors(error) {
     if (!Array.isArray(error?.issues)) return {};
 
