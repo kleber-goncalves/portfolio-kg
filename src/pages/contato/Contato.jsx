@@ -124,7 +124,7 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
                         >
                             <input
                                 type="hidden"
-                                name="source"
+                                name="origem"
                                 value="KLEBER DEV — página de contato"
                             />
 
@@ -134,7 +134,7 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
                                 </label>
                                 <input
                                     id="contact-name"
-                                    name="name"
+                                    name="nome"
                                     type="text"
                                     autoComplete="name"
                                     minLength={2}
@@ -169,7 +169,7 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
                                 </label>
                                 <input
                                     id="contact-subject"
-                                    name="subject"
+                                    name="assunto"
                                     type="text"
                                     minLength={3}
                                     maxLength={120}
@@ -186,7 +186,7 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
                                 </label>
                                 <textarea
                                     id="contact-message"
-                                    name="message"
+                                    name="mensagem"
                                     rows={6}
                                     minLength={10}
                                     maxLength={4000}

@@ -47,3 +47,16 @@ Na consulta de 27/10/2026, o plano Free listava um endpoint, 50 envios por mês 
 4. Teste erros de rede, campos obrigatórios e o estado de envio para garantir que a interface não indique sucesso sem resposta positiva do endpoint.
 
 Até que o endpoint seja configurado, a página mostra o formulário, mantém o botão desabilitado e oferece GitHub e LinkedIn como canais alternativos. A implementação não simula um envio bem-sucedido.
+
+
+## 7. Nomes dos campos enviados à notificação
+
+O formulário envia estes nomes de campo ao Basin:
+
+- `nome`: nome do visitante.
+- `email`: e-mail do visitante. Mantenha exatamente esse nome para preservar a compatibilidade com recursos Basin que identificam o endereço do remetente.
+- `assunto`: assunto informado pelo visitante.
+- `mensagem`: conteúdo da mensagem.
+- `origem`: campo oculto que identifica a página de contato do KLEBER DEV.
+
+Os rótulos visíveis da interface continuam em português e não mudam com esta alteração; os nomes acima são as chaves enviadas ao Basin e aparecem nos dados da submissão/notificação. Como o campo `subject` passa a se chamar `assunto`, atualize o campo **Subject** em Emails → Notification para usar `[KLEBER DEV] {{assunto}}` (ou o prefixo que preferir). O merge tag `{{subject}}` deixará de corresponder ao campo renomeado.
