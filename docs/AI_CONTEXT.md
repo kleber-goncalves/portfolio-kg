@@ -340,9 +340,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `8eefc897000cf5124bb3f01c6a6be2735b8b71a4`
-- **Data do commit analisado:** 2026-10-27T17:25:13-03:00
-- **Mensagem do commit:** feat(seclogs): adicionar espaço em branco para melhor legibilidade
+- **Commit de código analisado:** `99b36b81a09760eb5da541c85000aa42d9497961`
+- **Data do commit analisado:** 2026-10-28T15:46:01-03:00
+- **Mensagem do commit:** feat(contact): enviar campos Basin com nomes em português
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -460,13 +460,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `99b36b8` | 2026-10-28 | feat(contact): enviar campos Basin com nomes em português |
+| `02e9066` | 2026-10-27 | docs(ai-context): atualizar snapshot automaticamente |
 | `8eefc89` | 2026-10-27 | feat(seclogs): adicionar espaço em branco para melhor legibilidade |
 | `5f48201` | 2026-10-27 | docs(ai-context): atualizar snapshot automaticamente |
 | `b433a08` | 2026-10-27 | fix(contact): use text marks for social links |
 | `5326811` | 2026-10-27 | docs(ai-context): atualizar snapshot automaticamente |
 | `68bb7e1` | 2026-10-27 | feat(contact): add Basin contact form and setup guide |
 | `d3cd320` | 2026-10-27 | docs(ai-context): atualizar snapshot automaticamente |
-| `38cbc9f` | 2026-10-27 | docs(ai-context): corrigir contexto de catálogo e navbar |
-| `e8fdda5` | 2026-10-27 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
