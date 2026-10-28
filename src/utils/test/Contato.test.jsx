@@ -26,6 +26,26 @@ function setField(name, value) {
     field.value = value;
 }
 
+async function changeField(name, value) {
+    const field = container.querySelector(`[name="${name}"]`);
+    if (!field) throw new Error(`Campo não encontrado: ${name}`);
+
+    const valueSetter = Object.getOwnPropertyDescriptor(
+        Object.getPrototypeOf(field),
+        "value",
+    )?.set;
+
+    if (valueSetter) {
+        valueSetter.call(field, value);
+    } else {
+        field.value = value;
+    }
+
+    await act(async () => {
+        field.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+}
+
 async function blurField(name) {
     const field = container.querySelector(`[name="${name}"]`);
     if (!field) throw new Error(`Campo não encontrado: ${name}`);
@@ -86,6 +106,33 @@ afterEach(async () => {
 });
 
 describe("Contato", () => {
+    it("começa habilitado, desabilita enquanto o formulário está inválido e reabilita quando todos os campos são válidos", async () => {
+        const submitButton = container.querySelector('button[type="submit"]');
+
+        expect(submitButton.disabled).toBe(false);
+
+        await changeField("nome", "K");
+        expect(submitButton.disabled).toBe(true);
+        expect(submitButton.textContent).toContain("Complete os campos obrigatórios");
+        expect(container.textContent).toContain(
+            "Preencha todos os campos corretamente para habilitar o envio.",
+        );
+
+        await changeField("nome", "Kleber Gonçalves");
+        await changeField("email", "kleber@example.com");
+        await changeField("assunto", "Oportunidade");
+        await changeField("mensagem", "Mensagem válida para testar o envio.");
+
+        expect(submitButton.disabled).toBe(false);
+        expect(submitButton.textContent).toContain("Enviar mensagem");
+
+        await changeField("email", "email-invalido");
+        expect(submitButton.disabled).toBe(true);
+
+        await changeField("email", "kleber@example.com");
+        expect(submitButton.disabled).toBe(false);
+    });
+
     it("preserva a validação nativa do navegador nos campos", () => {
         expect(container.querySelector('[name="nome"]').required).toBe(true);
         expect(container.querySelector('[name="nome"]').minLength).toBe(2);
