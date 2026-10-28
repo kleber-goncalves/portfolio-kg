@@ -6,8 +6,16 @@ import {
     Send,
 } from "lucide-react";
 import InteriorPageLayout from "../../layouts/InteriorPageLayout";
-import { getContactFieldErrors, validateContactForm } from "../../utils/contactSchema.js";
-import { getBasinFormEndpoint, isValidBasinFormEndpoint, submitContactForm } from "../../utils/contactSubmission.js";
+import {
+    getContactFieldErrors,
+    validateContactField,
+    validateContactForm,
+} from "../../utils/contactSchema.js";
+import {
+    getBasinFormEndpoint,
+    isValidBasinFormEndpoint,
+    submitContactForm,
+} from "../../utils/contactSubmission.js";
 
 const CONTACT_LINKS = [
     {
@@ -36,6 +44,7 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submissionStatus, setSubmissionStatus] = useState(null);
     const [fieldErrors, setFieldErrors] = useState({});
+    const [touchedFields, setTouchedFields] = useState({});
     const basinEndpoint = getBasinFormEndpoint();
     const isBasinFormConfigured = isValidBasinFormEndpoint(basinEndpoint);
 
@@ -43,16 +52,44 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
         onRouteReady?.("/contato");
     }, [onRouteReady]);
 
-    const handleFieldChange = (event) => {
-        const fieldName = event.currentTarget.name;
-
-        if (!fieldErrors[fieldName]) return;
+    const updateFieldError = (fieldName, value) => {
+        const errorMessage = validateContactField(fieldName, value);
 
         setFieldErrors((currentErrors) => {
             const nextErrors = { ...currentErrors };
-            delete nextErrors[fieldName];
+
+            if (errorMessage) {
+                nextErrors[fieldName] = errorMessage;
+            } else {
+                delete nextErrors[fieldName];
+            }
+
             return nextErrors;
         });
+    };
+
+    const handleFieldChange = (event) => {
+        const { name: fieldName, value } = event.currentTarget;
+
+        // Depois do primeiro blur (ou de uma tentativa de envio), mantenha
+        // o erro atualizado enquanto a pessoa corrige o campo.
+        if (touchedFields[fieldName] || fieldErrors[fieldName]) {
+            updateFieldError(fieldName, value);
+        }
+
+        if (submissionStatus?.type === "error") {
+            setSubmissionStatus(null);
+        }
+    };
+
+    const handleFieldBlur = (event) => {
+        const { name: fieldName, value } = event.currentTarget;
+
+        setTouchedFields((currentFields) => ({
+            ...currentFields,
+            [fieldName]: true,
+        }));
+        updateFieldError(fieldName, value);
     };
 
     const handleSubmit = async (event) => {
@@ -95,6 +132,7 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
 
             form.reset();
             setFieldErrors({});
+            setTouchedFields({});
             setSubmissionStatus({
                 type: "success",
                 message: "Mensagem enviada com sucesso. Obrigado pelo contato!",
@@ -173,6 +211,7 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
                                     aria-invalid={fieldErrors.nome ? "true" : undefined}
                                     aria-describedby={fieldErrors.nome ? "contact-name-error" : undefined}
                                     onChange={handleFieldChange}
+                                    onBlur={handleFieldBlur}
                                     className={FIELD_CLASS_NAME}
                                 />
                                 {fieldErrors.nome && (
@@ -198,6 +237,7 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
                                     aria-invalid={fieldErrors.email ? "true" : undefined}
                                     aria-describedby={fieldErrors.email ? "contact-email-error" : undefined}
                                     onChange={handleFieldChange}
+                                    onBlur={handleFieldBlur}
                                     className={FIELD_CLASS_NAME}
                                 />
                                 {fieldErrors.email && (
@@ -223,6 +263,7 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
                                     aria-invalid={fieldErrors.assunto ? "true" : undefined}
                                     aria-describedby={fieldErrors.assunto ? "contact-subject-error" : undefined}
                                     onChange={handleFieldChange}
+                                    onBlur={handleFieldBlur}
                                     className={FIELD_CLASS_NAME}
                                 />
                                 {fieldErrors.assunto && (
@@ -248,6 +289,7 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
                                     aria-invalid={fieldErrors.mensagem ? "true" : undefined}
                                     aria-describedby={fieldErrors.mensagem ? "contact-message-error contact-message-hint" : "contact-message-hint"}
                                     onChange={handleFieldChange}
+                                    onBlur={handleFieldBlur}
                                     className={FIELD_CLASS_NAME + " resize-y"}
                                 />
                                 {fieldErrors.mensagem && (
