@@ -343,9 +343,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `458f38a37b2855793f97db31d8dbc0d8c6a6d1d0`
-- **Data do commit analisado:** 2026-10-28T15:57:33-03:00
-- **Mensagem do commit:** Add zod library as a dependency in package.json
+- **Commit de código analisado:** `21e279c232ca3c4116ee776e887b52981cb8a026`
+- **Data do commit analisado:** 2026-10-28T16:04:16-03:00
+- **Mensagem do commit:** feat(contact): add Zod validation and Basin tests
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -464,13 +464,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `21e279c` | 2026-10-28 | feat(contact): add Zod validation and Basin tests |
+| `76cbf6f` | 2026-10-28 | docs(ai-context): atualizar snapshot automaticamente |
 | `458f38a` | 2026-10-28 | Add zod library as a dependency in package.json |
 | `6106a2d` | 2026-10-28 | docs(ai-context): atualizar snapshot automaticamente |
 | `99b36b8` | 2026-10-28 | feat(contact): enviar campos Basin com nomes em português |
 | `02e9066` | 2026-10-27 | docs(ai-context): atualizar snapshot automaticamente |
 | `8eefc89` | 2026-10-27 | feat(seclogs): adicionar espaço em branco para melhor legibilidade |
 | `5f48201` | 2026-10-27 | docs(ai-context): atualizar snapshot automaticamente |
-| `b433a08` | 2026-10-27 | fix(contact): use text marks for social links |
-| `5326811` | 2026-10-27 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
