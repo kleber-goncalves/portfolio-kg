@@ -25,14 +25,14 @@ afterEach(() => {
 
 describe("contactSubmission", () => {
     it("lê e remove espaços externos da variável de ambiente", () => {
-        vi.stubEnv("VITE_BASIN_FORM_ENDPOINT", \` \${VALID_ENDPOINT} \`);
+        vi.stubEnv("VITE_BASIN_FORM_ENDPOINT", ` ${VALID_ENDPOINT} `);
 
         expect(getBasinFormEndpoint()).toBe(VALID_ENDPOINT);
     });
 
     it("aceita apenas endpoints HTTPS válidos do Basin", () => {
         expect(isValidBasinFormEndpoint(VALID_ENDPOINT)).toBe(true);
-        expect(isValidBasinFormEndpoint(\`\${VALID_ENDPOINT}/\`)).toBe(true);
+        expect(isValidBasinFormEndpoint(`${VALID_ENDPOINT}/`)).toBe(true);
         expect(isValidBasinFormEndpoint("http://usebasin.com/f/testForm_123")).toBe(false);
         expect(isValidBasinFormEndpoint("https://example.com/f/testForm_123")).toBe(false);
         expect(isValidBasinFormEndpoint("")).toBe(false);

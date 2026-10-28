@@ -48,7 +48,7 @@ describe("contactSchema", () => {
         ["nome", "x".repeat(101), "O nome deve ter até 100 caracteres."],
         ["email", "", "Informe seu e-mail."],
         ["email", "endereco-invalido", "Informe um e-mail válido."],
-        ["email", \`\${"a".repeat(245)}@example.com\`, "O e-mail deve ter até 254 caracteres."],
+        ["email", `${"a".repeat(245)}@example.com`, "O e-mail deve ter até 254 caracteres."],
         ["assunto", "ab", "O assunto deve ter pelo menos 3 caracteres."],
         ["assunto", "x".repeat(121), "O assunto deve ter até 120 caracteres."],
         ["mensagem", "curto", "A mensagem deve ter pelo menos 10 caracteres."],
