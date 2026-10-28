@@ -40,11 +40,24 @@ const FIELD_CLASS_NAME = [
     "disabled:cursor-not-allowed disabled:opacity-60",
 ].join(" ");
 
+function getContactFormValues(form) {
+    const formData = new FormData(form);
+
+    return {
+        nome: formData.get("nome"),
+        email: formData.get("email"),
+        assunto: formData.get("assunto"),
+        mensagem: formData.get("mensagem"),
+    };
+}
+
 function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submissionStatus, setSubmissionStatus] = useState(null);
     const [fieldErrors, setFieldErrors] = useState({});
     const [touchedFields, setTouchedFields] = useState({});
+    const [hasInteractedWithForm, setHasInteractedWithForm] = useState(false);
+    const [isFormValid, setIsFormValid] = useState(false);
     const basinEndpoint = getBasinFormEndpoint();
     const isBasinFormConfigured = isValidBasinFormEndpoint(basinEndpoint);
 
@@ -68,8 +81,19 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
         });
     };
 
+    const updateFormValidity = (form) => {
+        if (!form) return;
+
+        const validation = validateContactForm(getContactFormValues(form));
+
+        setHasInteractedWithForm(true);
+        setIsFormValid(validation.success);
+    };
+
     const handleFieldChange = (event) => {
-        const { name: fieldName, value } = event.currentTarget;
+        const { name: fieldName, value, form } = event.currentTarget;
+
+        updateFormValidity(form);
 
         // Depois do primeiro blur (ou de uma tentativa de envio), mantenha
         // o erro atualizado enquanto a pessoa corrige o campo.
@@ -90,6 +114,7 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
             [fieldName]: true,
         }));
         updateFieldError(fieldName, value);
+        updateFormValidity(event.currentTarget.form);
     };
 
     const handleSubmit = async (event) => {
@@ -99,12 +124,10 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
 
         const form = event.currentTarget;
         const formData = new FormData(form);
-        const validation = validateContactForm({
-            nome: formData.get("nome"),
-            email: formData.get("email"),
-            assunto: formData.get("assunto"),
-            mensagem: formData.get("mensagem"),
-        });
+        const validation = validateContactForm(getContactFormValues(form));
+
+        setHasInteractedWithForm(true);
+        setIsFormValid(validation.success);
 
         if (!validation.success) {
             setFieldErrors(getContactFieldErrors(validation.error));
@@ -133,6 +156,8 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
             form.reset();
             setFieldErrors({});
             setTouchedFields({});
+            setHasInteractedWithForm(false);
+            setIsFormValid(false);
             setSubmissionStatus({
                 type: "success",
                 message: "Mensagem enviada com sucesso. Obrigado pelo contato!",
@@ -304,12 +329,28 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
 
                             <button
                                 type="submit"
-                                disabled={!isBasinFormConfigured || isSubmitting}
+                                disabled={
+                                    !isBasinFormConfigured
+                                    || isSubmitting
+                                    || (hasInteractedWithForm && !isFormValid)
+                                }
                                 className="group flex w-full items-center justify-center gap-3 border border-bronze bg-bronze px-5 py-4 font-space text-[11px] font-medium uppercase tracking-[0.16em] text-obsidian transition-colors duration-300 hover:bg-transparent hover:text-bronze focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne focus-visible:ring-offset-2 focus-visible:ring-offset-obsidian disabled:cursor-not-allowed disabled:border-graphite disabled:bg-graphite disabled:text-steel disabled:hover:bg-graphite disabled:hover:text-steel"
                             >
-                                {isSubmitting ? "Enviando mensagem" : isBasinFormConfigured ? "Enviar mensagem" : "Formulário em configuração"}
+                                {isSubmitting
+                                    ? "Enviando mensagem"
+                                    : !isBasinFormConfigured
+                                        ? "Formulário em configuração"
+                                        : hasInteractedWithForm && !isFormValid
+                                            ? "Complete os campos obrigatórios"
+                                            : "Enviar mensagem"}
                                 <Send aria-hidden="true" className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                             </button>
+
+                            {isBasinFormConfigured && hasInteractedWithForm && !isFormValid && !isSubmitting && (
+                                <p role="status" aria-live="polite" className="-mt-3 text-xs leading-5 text-steel">
+                                    Preencha todos os campos corretamente para habilitar o envio.
+                                </p>
+                            )}
 
                             {submissionStatus && (
                                 <p
