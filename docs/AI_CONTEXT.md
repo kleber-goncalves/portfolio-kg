@@ -343,9 +343,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `4921c25f8014f753e9e8ac76e968fa56ce58098e`
-- **Data do commit analisado:** 2026-10-28T16:23:55-03:00
-- **Mensagem do commit:** docs(ai-context): document field-level Zod behavior
+- **Commit de código analisado:** `d2c3a82b05b50ee5e44e91cc2341b5a87056dc12`
+- **Data do commit analisado:** 2026-10-28T16:58:40-03:00
+- **Mensagem do commit:** feat(contact): disable submit until form is valid
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -464,13 +464,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `d2c3a82` | 2026-10-28 | feat(contact): disable submit until form is valid |
+| `3a6c0b6` | 2026-10-28 | docs(ai-context): atualizar snapshot automaticamente |
 | `4921c25` | 2026-10-28 | docs(ai-context): document field-level Zod behavior |
 | `eae0d84` | 2026-10-28 | docs(ai-context): atualizar snapshot automaticamente |
 | `b565d5c` | 2026-10-28 | docs(ai-context): atualizar snapshot automaticamente |
 | `043ef9c` | 2026-10-28 | docs(contact): document field-level Zod validation |
 | `4af1f1b` | 2026-10-28 | docs(ai-context): atualizar snapshot automaticamente |
 | `4872b75` | 2026-10-28 | test(contact): cover blur validation flow |
-| `e9e257c` | 2026-10-28 | test(contact): cover individual Zod validation |
-| `a7e9152` | 2026-10-28 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
