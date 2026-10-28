@@ -340,13 +340,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `99b36b81a09760eb5da541c85000aa42d9497961`
-- **Data do commit analisado:** 2026-10-28T15:46:01-03:00
-- **Mensagem do commit:** feat(contact): enviar campos Basin com nomes em português
+- **Commit de código analisado:** `458f38a37b2855793f97db31d8dbc0d8c6a6d1d0`
+- **Data do commit analisado:** 2026-10-28T15:57:33-03:00
+- **Mensagem do commit:** Add zod library as a dependency in package.json
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
-- **Dependências de runtime:** 15
+- **Dependências de runtime:** 16
 - **Dependências de desenvolvimento:** 12
 - **Workflows encontrados:** 17
 - **Scripts de automação encontrados:** 19
@@ -382,6 +382,7 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 | `tailwindcss` | `^4.3.3` |
 | `thesvg` | `^3.3.1` |
 | `uisfx` | `^0.4.0` |
+| `zod` | `^4.6.7` |
 
 ### Dependências de desenvolvimento
 
@@ -460,13 +461,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `458f38a` | 2026-10-28 | Add zod library as a dependency in package.json |
+| `6106a2d` | 2026-10-28 | docs(ai-context): atualizar snapshot automaticamente |
 | `99b36b8` | 2026-10-28 | feat(contact): enviar campos Basin com nomes em português |
 | `02e9066` | 2026-10-27 | docs(ai-context): atualizar snapshot automaticamente |
 | `8eefc89` | 2026-10-27 | feat(seclogs): adicionar espaço em branco para melhor legibilidade |
 | `5f48201` | 2026-10-27 | docs(ai-context): atualizar snapshot automaticamente |
 | `b433a08` | 2026-10-27 | fix(contact): use text marks for social links |
 | `5326811` | 2026-10-27 | docs(ai-context): atualizar snapshot automaticamente |
-| `68bb7e1` | 2026-10-27 | feat(contact): add Basin contact form and setup guide |
-| `d3cd320` | 2026-10-27 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
