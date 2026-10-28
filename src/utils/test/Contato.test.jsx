@@ -26,6 +26,15 @@ function setField(name, value) {
     field.value = value;
 }
 
+async function blurField(name) {
+    const field = container.querySelector(`[name="${name}"]`);
+    if (!field) throw new Error(`Campo não encontrado: ${name}`);
+
+    await act(async () => {
+        field.dispatchEvent(new FocusEvent("focusout", { bubbles: true }));
+    });
+}
+
 function fillValidForm() {
     setField("nome", "Kleber Gonçalves");
     setField("email", "kleber@example.com");
@@ -88,6 +97,26 @@ describe("Contato", () => {
         expect(container.querySelector('[name="assunto"]').maxLength).toBe(120);
         expect(container.querySelector('[name="mensagem"]').minLength).toBe(10);
         expect(container.querySelector('[name="mensagem"]').maxLength).toBe(4000);
+    });
+
+    it("valida o campo ao perder o foco e limpa o erro quando corrigido", async () => {
+        setField("nome", "K");
+
+        await blurField("nome");
+
+        const nameField = container.querySelector('[name="nome"]');
+        expect(nameField.getAttribute("aria-invalid")).toBe("true");
+        expect(container.textContent).toContain(
+            "Informe um nome com pelo menos 2 caracteres.",
+        );
+
+        setField("nome", "Kleber Gonçalves");
+        await blurField("nome");
+
+        expect(nameField.getAttribute("aria-invalid")).toBeNull();
+        expect(container.textContent).not.toContain(
+            "Informe um nome com pelo menos 2 caracteres.",
+        );
     });
 
     it("não envia dados inválidos e anuncia o erro do campo", async () => {
