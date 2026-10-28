@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
     contactSchema,
     getContactFieldErrors,
+    validateContactField,
     validateContactForm,
 } from "../contactSchema.js";
 
@@ -65,6 +66,23 @@ describe("contactSchema", () => {
                 issue.path[0] === field && issue.message === expectedMessage
             ))).toBe(true);
         }
+    });
+
+    it("valida individualmente um campo usando as regras do schema", () => {
+        expect(validateContactField("nome", "K")).toBe(
+            "Informe um nome com pelo menos 2 caracteres.",
+        );
+        expect(validateContactField("email", "  kleber@example.com  ")).toBeNull();
+        expect(validateContactField("assunto", "ab")).toBe(
+            "O assunto deve ter pelo menos 3 caracteres.",
+        );
+        expect(validateContactField("mensagem", "curto")).toBe(
+            "A mensagem deve ter pelo menos 10 caracteres.",
+        );
+    });
+
+    it("ignora nomes de campo que não fazem parte do schema", () => {
+        expect(validateContactField("campoInexistente", "qualquer valor")).toBeNull();
     });
 
     it("transforma os problemas de validação em mensagens associadas aos campos", () => {
