@@ -6,11 +6,8 @@ import {
     Send,
 } from "lucide-react";
 import InteriorPageLayout from "../../layouts/InteriorPageLayout";
-
-const BASIN_FORM_ENDPOINT = (import.meta.env.VITE_BASIN_FORM_ENDPOINT ?? "").trim();
-const IS_BASIN_FORM_CONFIGURED = /^https:\/\/usebasin\.com\/f\/[A-Za-z0-9_-]+\/?$/.test(
-    BASIN_FORM_ENDPOINT,
-);
+import { getContactFieldErrors, validateContactForm } from "../../utils/contactSchema.js";
+import { getBasinFormEndpoint, isValidBasinFormEndpoint, submitContactForm } from "../../utils/contactSubmission.js";
 
 const CONTACT_LINKS = [
     {
@@ -38,35 +35,66 @@ const FIELD_CLASS_NAME = [
 function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submissionStatus, setSubmissionStatus] = useState(null);
+    const [fieldErrors, setFieldErrors] = useState({});
+    const basinEndpoint = getBasinFormEndpoint();
+    const isBasinFormConfigured = isValidBasinFormEndpoint(basinEndpoint);
 
     useEffect(() => {
         onRouteReady?.("/contato");
     }, [onRouteReady]);
 
+    const handleFieldChange = (event) => {
+        const fieldName = event.currentTarget.name;
+
+        if (!fieldErrors[fieldName]) return;
+
+        setFieldErrors((currentErrors) => {
+            const nextErrors = { ...currentErrors };
+            delete nextErrors[fieldName];
+            return nextErrors;
+        });
+    };
+
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        if (!IS_BASIN_FORM_CONFIGURED || isSubmitting) return;
+        if (!isBasinFormConfigured || isSubmitting) return;
 
         const form = event.currentTarget;
+        const formData = new FormData(form);
+        const validation = validateContactForm({
+            nome: formData.get("nome"),
+            email: formData.get("email"),
+            assunto: formData.get("assunto"),
+            mensagem: formData.get("mensagem"),
+        });
+
+        if (!validation.success) {
+            setFieldErrors(getContactFieldErrors(validation.error));
+            setSubmissionStatus(null);
+
+            const firstInvalidField = validation.error.issues[0]?.path[0];
+            if (typeof firstInvalidField === "string") {
+                form.elements.namedItem(firstInvalidField)?.focus();
+            }
+
+            return;
+        }
+
+        setFieldErrors({});
         setIsSubmitting(true);
         setSubmissionStatus({ type: "pending", message: "Enviando sua mensagem..." });
 
-        try {
-            const response = await fetch(BASIN_FORM_ENDPOINT, {
-                method: "POST",
-                headers: {
-                    Accept: "application/json",
-                },
-                body: new FormData(form),
-            });
-            const payload = await response.json().catch(() => null);
+        // Usa os valores normalizados pelo Zod, mantendo o campo oculto "origem".
+        Object.entries(validation.data).forEach(([name, value]) => {
+            formData.set(name, value);
+        });
 
-            if (!response.ok || payload?.success === false) {
-                throw new Error("Basin did not accept the submission.");
-            }
+        try {
+            await submitContactForm(basinEndpoint, formData);
 
             form.reset();
+            setFieldErrors({});
             setSubmissionStatus({
                 type: "success",
                 message: "Mensagem enviada com sucesso. Obrigado pelo contato!",
@@ -103,7 +131,7 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
                             </p>
                         </div>
 
-                        {!IS_BASIN_FORM_CONFIGURED && (
+                        {!isBasinFormConfigured && (
                             <div
                                 role="status"
                                 className="mb-6 flex items-start gap-3 border border-bronze/40 bg-obsidian/70 p-4"
@@ -116,7 +144,7 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
                         )}
 
                         <form
-                            action={IS_BASIN_FORM_CONFIGURED ? BASIN_FORM_ENDPOINT : undefined}
+                            action={isBasinFormConfigured ? basinEndpoint : undefined}
                             method="POST"
                             onSubmit={handleSubmit}
                             aria-busy={isSubmitting}
@@ -142,8 +170,16 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
                                     required
                                     disabled={isSubmitting}
                                     placeholder="Como podemos chamar você?"
+                                    aria-invalid={fieldErrors.nome ? "true" : undefined}
+                                    aria-describedby={fieldErrors.nome ? "contact-name-error" : undefined}
+                                    onChange={handleFieldChange}
                                     className={FIELD_CLASS_NAME}
                                 />
+                                {fieldErrors.nome && (
+                                    <p id="contact-name-error" className="mt-2 text-xs leading-5 text-red-300" aria-live="polite">
+                                        {fieldErrors.nome}
+                                    </p>
+                                )}
                             </div>
 
                             <div>
@@ -159,8 +195,16 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
                                     required
                                     disabled={isSubmitting}
                                     placeholder="voce@exemplo.com"
+                                    aria-invalid={fieldErrors.email ? "true" : undefined}
+                                    aria-describedby={fieldErrors.email ? "contact-email-error" : undefined}
+                                    onChange={handleFieldChange}
                                     className={FIELD_CLASS_NAME}
                                 />
+                                {fieldErrors.email && (
+                                    <p id="contact-email-error" className="mt-2 text-xs leading-5 text-red-300" aria-live="polite">
+                                        {fieldErrors.email}
+                                    </p>
+                                )}
                             </div>
 
                             <div>
@@ -176,8 +220,16 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
                                     required
                                     disabled={isSubmitting}
                                     placeholder="Ex.: Oportunidade profissional"
+                                    aria-invalid={fieldErrors.assunto ? "true" : undefined}
+                                    aria-describedby={fieldErrors.assunto ? "contact-subject-error" : undefined}
+                                    onChange={handleFieldChange}
                                     className={FIELD_CLASS_NAME}
                                 />
+                                {fieldErrors.assunto && (
+                                    <p id="contact-subject-error" className="mt-2 text-xs leading-5 text-red-300" aria-live="polite">
+                                        {fieldErrors.assunto}
+                                    </p>
+                                )}
                             </div>
 
                             <div>
@@ -193,19 +245,27 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
                                     required
                                     disabled={isSubmitting}
                                     placeholder="Conte um pouco sobre o motivo do contato..."
+                                    aria-invalid={fieldErrors.mensagem ? "true" : undefined}
+                                    aria-describedby={fieldErrors.mensagem ? "contact-message-error contact-message-hint" : "contact-message-hint"}
+                                    onChange={handleFieldChange}
                                     className={FIELD_CLASS_NAME + " resize-y"}
                                 />
-                                <p className="mt-2 text-[10px] leading-4 text-steel">
+                                {fieldErrors.mensagem && (
+                                    <p id="contact-message-error" className="mt-2 text-xs leading-5 text-red-300" aria-live="polite">
+                                        {fieldErrors.mensagem}
+                                    </p>
+                                )}
+                                <p id="contact-message-hint" className="mt-2 text-[10px] leading-4 text-steel">
                                     Não envie senhas ou informações pessoais sensíveis.
                                 </p>
                             </div>
 
                             <button
                                 type="submit"
-                                disabled={!IS_BASIN_FORM_CONFIGURED || isSubmitting}
+                                disabled={!isBasinFormConfigured || isSubmitting}
                                 className="group flex w-full items-center justify-center gap-3 border border-bronze bg-bronze px-5 py-4 font-space text-[11px] font-medium uppercase tracking-[0.16em] text-obsidian transition-colors duration-300 hover:bg-transparent hover:text-bronze focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne focus-visible:ring-offset-2 focus-visible:ring-offset-obsidian disabled:cursor-not-allowed disabled:border-graphite disabled:bg-graphite disabled:text-steel disabled:hover:bg-graphite disabled:hover:text-steel"
                             >
-                                {isSubmitting ? "Enviando mensagem" : IS_BASIN_FORM_CONFIGURED ? "Enviar mensagem" : "Formulário em configuração"}
+                                {isSubmitting ? "Enviando mensagem" : isBasinFormConfigured ? "Enviar mensagem" : "Formulário em configuração"}
                                 <Send aria-hidden="true" className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                             </button>
 

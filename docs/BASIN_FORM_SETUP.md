@@ -60,3 +60,12 @@ O formulário envia estes nomes de campo ao Basin:
 - `origem`: campo oculto que identifica a página de contato do KLEBER DEV.
 
 Os rótulos visíveis da interface continuam em português e não mudam com esta alteração; os nomes acima são as chaves enviadas ao Basin e aparecem nos dados da submissão/notificação. Como o campo `subject` passa a se chamar `assunto`, atualize o campo **Subject** em Emails → Notification para usar `[KLEBER DEV] {{assunto}}` (ou o prefixo que preferir). O merge tag `{{subject}}` deixará de corresponder ao campo renomeado.
+
+
+## 8. Validação do formulário e testes automatizados
+
+A interface preserva a validação nativa do navegador (`required`, `type="email"`, `minLength` e `maxLength`) e acrescenta o Zod em `src/utils/contactSchema.js`. As regras permanecem alinhadas com os atributos HTML: nome de 2 a 100 caracteres, e-mail até 254 caracteres, assunto de 3 a 120 caracteres e mensagem de 10 a 4.000 caracteres. O Zod remove espaços externos antes de validar, e os valores normalizados são enviados ao Basin.
+
+A camada HTTP está isolada em `src/utils/contactSubmission.js`, facilitando testar o endpoint, método POST, cabeçalho `Accept: application/json`, respostas HTTP, rejeição explícita do Basin e falhas de rede. Os testes de utilitários e do componente ficam em `src/utils/test/` e podem ser executados com `npm test`.
+
+A validação no front-end melhora a experiência, a consistência e a manutenção do código, mas não é uma barreira de segurança no servidor: requisições manuais podem ignorá-la. O Basin continua responsável pelo recebimento e pelas proteções disponíveis no próprio serviço. Os testes automatizados usam respostas simuladas e não substituem um envio real ao Basin, nem confirmam a entrega da notificação por e-mail.
