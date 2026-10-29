@@ -182,17 +182,7 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
             <section className="mx-auto w-full max-w-7xl px-5 pb-16 b-md:px-10 b-md:pb-24">
                 <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1.35fr)_minmax(280px,0.65fr)]">
                     <div className="border border-graphite bg-carbon/40 p-5 b-md:p-8">
-                        <div data-route-entrance="content" className="mb-8">
-                            <p className="font-space text-[10px] uppercase tracking-[0.2em] text-bronze">
-                                Contato direto
-                            </p>
-                            <h2 className="mt-3 font-space text-2xl font-medium tracking-tight text-ivory b-md:text-3xl">
-                                Envie uma mensagem
-                            </h2>
-                            <p className="mt-3 max-w-xl text-sm leading-6 text-steel">
-                                Preencha os campos abaixo. Sua mensagem será encaminhada para o e-mail configurado no formulário.
-                            </p>
-                        </div>
+                        
 
                         {!isBasinFormConfigured && (
                             <div
