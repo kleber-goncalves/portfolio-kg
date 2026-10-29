@@ -343,9 +343,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `afb497d881117527c160f5a239885a3ed5ce92a6`
-- **Data do commit analisado:** 2026-10-29T15:22:31-03:00
-- **Mensagem do commit:** Merge branch 'feat/separacao-paginas' of https://github.com/kleber-goncalves/portfolio-kg into feat/separacao-paginas
+- **Commit de código analisado:** `395c62dae7950e887b68bdffd06af551d947b025`
+- **Data do commit analisado:** 2026-10-29T15:26:49-03:00
+- **Mensagem do commit:** feat(contact): aplicar layout de campos com divisórias
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -464,13 +464,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `395c62d` | 2026-10-29 | feat(contact): aplicar layout de campos com divisórias |
+| `0887138` | 2026-10-29 | docs(ai-context): atualizar snapshot automaticamente |
 | `afb497d` | 2026-10-29 | Merge branch 'feat/separacao-paginas' of https://github.com/kleber-goncalves/portfolio-kg into feat/separacao-paginas |
 | `3b770d5` | 2026-10-29 | remove informational text from contact section |
 | `fa043ea` | 2026-10-29 | docs(ai-context): atualizar snapshot automaticamente |
 | `5e15dd2` | 2026-10-29 | remove informational text from contact form |
 | `c49dc71` | 2026-10-29 | docs(ai-context): atualizar snapshot automaticamente |
 | `6216ed6` | 2026-10-29 | docs(contact): ajustar descrição de teste Zod |
-| `c6d8b83` | 2026-10-29 | docs(ai-context): atualizar snapshot automaticamente |
-| `2ca990d` | 2026-10-29 | docs(contact): documentar schema e testes Zod |
 
 <!-- END AUTO-GENERATED SECTION -->
