@@ -343,9 +343,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `6fe461aad221973ad39b9f233e81a97fd7ffe8be`
-- **Data do commit analisado:** 2026-10-29T15:11:29-03:00
-- **Mensagem do commit:** docs(contact): documentar fluxo Basin e Zod
+- **Commit de código analisado:** `2ca990d6556ca33d734c045147e2720c91876674`
+- **Data do commit analisado:** 2026-10-29T15:11:52-03:00
+- **Mensagem do commit:** docs(contact): documentar schema e testes Zod
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -464,13 +464,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `2ca990d` | 2026-10-29 | docs(contact): documentar schema e testes Zod |
+| `d2efe01` | 2026-10-29 | docs(ai-context): atualizar snapshot automaticamente |
 | `6fe461a` | 2026-10-29 | docs(contact): documentar fluxo Basin e Zod |
 | `aec3673` | 2026-10-29 | docs(ai-context): atualizar snapshot automaticamente |
 | `b4ef2db` | 2026-10-29 | docs(ai-context): atualizar estado do Basin e testes |
 | `91b6a64` | 2026-10-29 | docs(ai-context): atualizar snapshot automaticamente |
 | `3612246` | 2026-10-29 | feat(contact): add accessible send button animation |
 | `bcfa382` | 2026-10-29 | docs(ai-context): atualizar snapshot automaticamente |
-| `7d677e4` | 2026-10-29 | feat(contact): add animated send button |
-| `60d5372` | 2026-10-28 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
