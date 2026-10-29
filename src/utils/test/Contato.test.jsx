@@ -110,6 +110,11 @@ describe("Contato", () => {
         const submitButton = container.querySelector('button[type="submit"]');
 
         expect(submitButton.disabled).toBe(false);
+        expect(submitButton.classList.contains("contact-send-button")).toBe(true);
+        expect(submitButton.querySelector(".contact-send-button__icon-wrapper")).not.toBeNull();
+        expect(submitButton.querySelector(".contact-send-button__icon")).not.toBeNull();
+        expect(submitButton.querySelector(".contact-send-button__label")?.textContent)
+            .toContain("Enviar mensagem");
 
         await changeField("nome", "K");
         expect(submitButton.disabled).toBe(true);
