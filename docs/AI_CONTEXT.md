@@ -343,9 +343,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `9855a8b45856ba787bea4865dea76561dc126f09`
-- **Data do commit analisado:** 2026-10-28T16:59:09-03:00
-- **Mensagem do commit:** docs(contact): explain submit button validation feedback
+- **Commit de código analisado:** `7d677e44124cdf43f041b951780c3e2c68e8f8ec`
+- **Data do commit analisado:** 2026-10-29T14:39:31-03:00
+- **Mensagem do commit:** feat(contact): add animated send button
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -464,13 +464,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `7d677e4` | 2026-10-29 | feat(contact): add animated send button |
+| `60d5372` | 2026-10-28 | docs(ai-context): atualizar snapshot automaticamente |
+| `3a84526` | 2026-10-28 | docs(ai-context): atualizar snapshot automaticamente |
 | `9855a8b` | 2026-10-28 | docs(contact): explain submit button validation feedback |
 | `c6bf8f3` | 2026-10-28 | docs(ai-context): describe contact submit feedback |
 | `dd5b169` | 2026-10-28 | test(contact): cover submit button validity feedback |
 | `778ceef` | 2026-10-28 | docs(ai-context): atualizar snapshot automaticamente |
 | `d2c3a82` | 2026-10-28 | feat(contact): disable submit until form is valid |
-| `3a6c0b6` | 2026-10-28 | docs(ai-context): atualizar snapshot automaticamente |
-| `4921c25` | 2026-10-28 | docs(ai-context): document field-level Zod behavior |
-| `eae0d84` | 2026-10-28 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
