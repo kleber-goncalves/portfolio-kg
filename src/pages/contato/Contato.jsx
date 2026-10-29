@@ -334,16 +334,25 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
                                     || isSubmitting
                                     || (hasInteractedWithForm && !isFormValid)
                                 }
-                                className="group flex w-full items-center justify-center gap-3 border border-bronze bg-bronze px-5 py-4 font-space text-[11px] font-medium uppercase tracking-[0.16em] text-obsidian transition-colors duration-300 hover:bg-transparent hover:text-bronze focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne focus-visible:ring-offset-2 focus-visible:ring-offset-obsidian disabled:cursor-not-allowed disabled:border-graphite disabled:bg-graphite disabled:text-steel disabled:hover:bg-graphite disabled:hover:text-steel"
+                                className="contact-send-button group flex w-full items-center justify-center overflow-hidden border border-bronze bg-bronze px-5 py-4 font-space text-[11px] font-medium uppercase tracking-[0.16em] text-obsidian transition-[background-color,color,transform,border-color] duration-300 hover:bg-transparent hover:text-bronze active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne focus-visible:ring-offset-2 focus-visible:ring-offset-obsidian disabled:cursor-not-allowed disabled:border-graphite disabled:bg-graphite disabled:text-steel disabled:hover:bg-graphite disabled:hover:text-steel"
                             >
-                                {isSubmitting
-                                    ? "Enviando mensagem"
-                                    : !isBasinFormConfigured
-                                        ? "Formulário em configuração"
-                                        : hasInteractedWithForm && !isFormValid
-                                            ? "Complete os campos obrigatórios"
-                                            : "Enviar mensagem"}
-                                <Send aria-hidden="true" className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                                <span className="contact-send-button__content inline-flex items-center justify-center gap-3">
+                                    <span className="contact-send-button__icon-wrapper inline-flex shrink-0 items-center justify-center">
+                                        <Send
+                                            aria-hidden="true"
+                                            className="contact-send-button__icon h-4 w-4"
+                                        />
+                                    </span>
+                                    <span className="contact-send-button__label">
+                                        {isSubmitting
+                                            ? "Enviando mensagem"
+                                            : !isBasinFormConfigured
+                                                ? "Formulário em configuração"
+                                                : hasInteractedWithForm && !isFormValid
+                                                    ? "Complete os campos obrigatórios"
+                                                    : "Enviar mensagem"}
+                                    </span>
+                                </span>
                             </button>
 
                             {isBasinFormConfigured && hasInteractedWithForm && !isFormValid && !isSubmitting && (
