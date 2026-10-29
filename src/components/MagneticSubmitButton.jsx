@@ -88,8 +88,13 @@ function MagneticSubmitButton({
         const mouseY = event.clientY - rect.top;
 
         // Intensidade moderada: o botão ocupa toda a largura do formulário.
-        x.set((mouseX - rect.width / 2) * 0.1);
-        y.set((mouseY - rect.height / 2) * 0.1);
+        const magneticX = (mouseX - rect.width / 2) * 0.1;
+        const magneticY = (mouseY - rect.height / 2) * 0.1;
+
+        // Como o botão ocupa toda a largura do formulário, limitamos o
+        // deslocamento para preservar a estabilidade visual do layout.
+        x.set(Math.min(12, Math.max(-12, magneticX)));
+        y.set(Math.min(4, Math.max(-4, magneticY)));
 
         updateFillOrigin(event);
     };
