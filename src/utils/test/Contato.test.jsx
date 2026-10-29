@@ -151,6 +151,37 @@ describe("Contato", () => {
         expect(container.querySelector('[name="mensagem"]').maxLength).toBe(4000);
     });
 
+    it("organiza os quatro campos em linhas numeradas, com divisórias horizontais e inputs sem caixa", () => {
+        const form = container.querySelector("form");
+        const fields = [...container.querySelectorAll(".contact-form-field")];
+
+        expect(form.classList.contains("border-t")).toBe(true);
+        expect(fields).toHaveLength(4);
+        expect(fields.map((field) => (
+            field.querySelector('span[aria-hidden="true"]')?.textContent.trim()
+        ))).toEqual(["01", "02", "03", "04"]);
+
+        expect(fields.map((field) => (
+            field.querySelector("label")?.textContent.replace("*", "").trim()
+        ))).toEqual([
+            "Qual é o seu nome?",
+            "Qual é o seu e-mail?",
+            "Qual é o assunto da mensagem?",
+            "Como posso ajudar você?",
+        ]);
+
+        fields.forEach((field) => {
+            expect(field.classList.contains("border-b")).toBe(true);
+            expect(field.classList.contains("border-l")).toBe(false);
+            expect(field.classList.contains("border-r")).toBe(false);
+        });
+
+        container.querySelectorAll('input:not([type="hidden"]), textarea').forEach((field) => {
+            expect(field.classList.contains("border-0")).toBe(true);
+            expect(field.classList.contains("bg-transparent")).toBe(true);
+        });
+    });
+
     it("valida o campo ao perder o foco e limpa o erro quando corrigido", async () => {
         setField("nome", "K");
 
