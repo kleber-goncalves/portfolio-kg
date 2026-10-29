@@ -170,68 +170,32 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
     };
 
     return (
-        <InteriorPageLayout
-            title="Vamos conversar."
-            description="Tem uma oportunidade, uma ideia de projeto ou quer conversar sobre desenvolvimento? Entre em contato."
-            entranceKey={entranceKey}
-            isRouteTransitioning={isRouteTransitioning}
-        >
-            <section className="mx-auto w-full max-w-7xl px-5 pb-16 b-md:px-10 b-md:pb-24">
+        <InteriorPageLayout title="Vamos conversar." description="Tem uma oportunidade, uma ideia de projeto ou quer conversar sobre desenvolvimento? Entre em contato." entranceKey={entranceKey} isRouteTransitioning={isRouteTransitioning}>
+            <section className="mx-auto w-full b-md:max-w-[1500px]  px-5 pb-16 b-md:px-10 b-md:pb-24">
                 <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1.35fr)_minmax(280px,0.65fr)]">
-                    <div className="min-w-0">
-
+                    <div className="min-w-0 max-w-4xl">
                         {!isBasinFormConfigured && (
-                            <div
-                                role="status"
-                                className="mb-6 flex items-start gap-3 border border-bronze/40 bg-obsidian/70 p-4"
-                            >
+                            <div role="status" className="mb-6 flex items-start gap-3 border border-bronze/40 bg-obsidian/70 p-4">
                                 <AlertCircle aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-bronze" />
-                                <p className="text-xs leading-5 text-steel">
-                                    O formulário está pronto, mas ainda precisa ser conectado ao endpoint do Basin. Enquanto isso, você pode falar comigo pelo GitHub ou LinkedIn.
-                                </p>
+                                <p className="text-xs leading-5 text-steel">O formulário está pronto, mas ainda precisa ser conectado ao endpoint do Basin. Enquanto isso, você pode falar comigo pelo GitHub ou LinkedIn.</p>
                             </div>
                         )}
 
-                        <form
-                            action={isBasinFormConfigured ? basinEndpoint : undefined}
-                            method="POST"
-                            onSubmit={handleSubmit}
-                            aria-busy={isSubmitting}
-                            className="border-t border-graphite"
-                        >
-                            <input
-                                type="hidden"
-                                name="origem"
-                                value="KLEBER DEV — página de contato"
-                            />
+                        <form action={isBasinFormConfigured ? basinEndpoint : undefined} method="POST" onSubmit={handleSubmit} aria-busy={isSubmitting} className="border-t border-graphite">
+                            <input type="hidden" name="origem" value="KLEBER DEV — página de contato" />
 
                             <div className="contact-form-field group grid grid-cols-[2rem_minmax(0,1fr)] gap-4 border-b border-graphite py-6 transition-colors duration-500 hover:border-bronze/50 focus-within:border-bronze b-md:grid-cols-[2.5rem_minmax(0,1fr)] b-md:gap-6 b-md:py-8">
-                                <span
-                                    aria-hidden="true"
-                                    className="pt-1 font-bebas text-sm tracking-[0.2em] text-steel/70 transition-colors duration-500 group-hover:text-bronze group-focus-within:text-bronze b-md:pt-1.5"
-                                >
+                                <span aria-hidden="true" className="pt-1 font-bebas text-sm tracking-[0.2em] text-steel/70 transition-colors duration-500 group-hover:text-bronze group-focus-within:text-bronze b-md:pt-1.5">
                                     01
                                 </span>
                                 <div className="min-w-0">
                                     <label htmlFor="contact-name" className="block font-space text-lg font-medium leading-tight tracking-tight text-ivory b-md:text-2xl c-lg:text-3xl">
-                                        Qual é o seu nome? <span className="text-bronze" aria-hidden="true">*</span>
+                                        Qual é o seu nome?{" "}
+                                        <span className="text-bronze" aria-hidden="true">
+                                            *
+                                        </span>
                                     </label>
-                                    <input
-                                        id="contact-name"
-                                        name="nome"
-                                        type="text"
-                                        autoComplete="name"
-                                        minLength={2}
-                                        maxLength={100}
-                                        required
-                                        disabled={isSubmitting}
-                                        placeholder="Ex.: Kleber Gonçalves"
-                                        aria-invalid={fieldErrors.nome ? "true" : undefined}
-                                        aria-describedby={fieldErrors.nome ? "contact-name-error" : undefined}
-                                        onChange={handleFieldChange}
-                                        onBlur={handleFieldBlur}
-                                        className={FIELD_CLASS_NAME}
-                                    />
+                                    <input id="contact-name" name="nome" type="text" autoComplete="name" minLength={2} maxLength={100} required disabled={isSubmitting} placeholder="Ex.: Kleber Gonçalves" aria-invalid={fieldErrors.nome ? "true" : undefined} aria-describedby={fieldErrors.nome ? "contact-name-error" : undefined} onChange={handleFieldChange} onBlur={handleFieldBlur} className={FIELD_CLASS_NAME} />
                                     {fieldErrors.nome && (
                                         <p id="contact-name-error" className="mt-2 text-xs leading-5 text-red-300" aria-live="polite">
                                             {fieldErrors.nome}
@@ -241,31 +205,17 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
                             </div>
 
                             <div className="contact-form-field group grid grid-cols-[2rem_minmax(0,1fr)] gap-4 border-b border-graphite py-6 transition-colors duration-500 hover:border-bronze/50 focus-within:border-bronze b-md:grid-cols-[2.5rem_minmax(0,1fr)] b-md:gap-6 b-md:py-8">
-                                <span
-                                    aria-hidden="true"
-                                    className="pt-1 font-bebas text-sm tracking-[0.2em] text-steel/70 transition-colors duration-500 group-hover:text-bronze group-focus-within:text-bronze b-md:pt-1.5"
-                                >
+                                <span aria-hidden="true" className="pt-1 font-bebas text-sm tracking-[0.2em] text-steel/70 transition-colors duration-500 group-hover:text-bronze group-focus-within:text-bronze b-md:pt-1.5">
                                     02
                                 </span>
                                 <div className="min-w-0">
                                     <label htmlFor="contact-email" className="block font-space text-lg font-medium leading-tight tracking-tight text-ivory b-md:text-2xl c-lg:text-3xl">
-                                        Qual é o seu e-mail? <span className="text-bronze" aria-hidden="true">*</span>
+                                        Qual é o seu e-mail?{" "}
+                                        <span className="text-bronze" aria-hidden="true">
+                                            *
+                                        </span>
                                     </label>
-                                    <input
-                                        id="contact-email"
-                                        name="email"
-                                        type="email"
-                                        autoComplete="email"
-                                        maxLength={254}
-                                        required
-                                        disabled={isSubmitting}
-                                        placeholder="voce@exemplo.com"
-                                        aria-invalid={fieldErrors.email ? "true" : undefined}
-                                        aria-describedby={fieldErrors.email ? "contact-email-error" : undefined}
-                                        onChange={handleFieldChange}
-                                        onBlur={handleFieldBlur}
-                                        className={FIELD_CLASS_NAME}
-                                    />
+                                    <input id="contact-email" name="email" type="email" autoComplete="email" maxLength={254} required disabled={isSubmitting} placeholder="voce@exemplo.com" aria-invalid={fieldErrors.email ? "true" : undefined} aria-describedby={fieldErrors.email ? "contact-email-error" : undefined} onChange={handleFieldChange} onBlur={handleFieldBlur} className={FIELD_CLASS_NAME} />
                                     {fieldErrors.email && (
                                         <p id="contact-email-error" className="mt-2 text-xs leading-5 text-red-300" aria-live="polite">
                                             {fieldErrors.email}
@@ -275,31 +225,17 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
                             </div>
 
                             <div className="contact-form-field group grid grid-cols-[2rem_minmax(0,1fr)] gap-4 border-b border-graphite py-6 transition-colors duration-500 hover:border-bronze/50 focus-within:border-bronze b-md:grid-cols-[2.5rem_minmax(0,1fr)] b-md:gap-6 b-md:py-8">
-                                <span
-                                    aria-hidden="true"
-                                    className="pt-1 font-bebas text-sm tracking-[0.2em] text-steel/70 transition-colors duration-500 group-hover:text-bronze group-focus-within:text-bronze b-md:pt-1.5"
-                                >
+                                <span aria-hidden="true" className="pt-1 font-bebas text-sm tracking-[0.2em] text-steel/70 transition-colors duration-500 group-hover:text-bronze group-focus-within:text-bronze b-md:pt-1.5">
                                     03
                                 </span>
                                 <div className="min-w-0">
                                     <label htmlFor="contact-subject" className="block font-space text-lg font-medium leading-tight tracking-tight text-ivory b-md:text-2xl c-lg:text-3xl">
-                                        Qual é o assunto da mensagem? <span className="text-bronze" aria-hidden="true">*</span>
+                                        Qual é o assunto da mensagem?{" "}
+                                        <span className="text-bronze" aria-hidden="true">
+                                            *
+                                        </span>
                                     </label>
-                                    <input
-                                        id="contact-subject"
-                                        name="assunto"
-                                        type="text"
-                                        minLength={3}
-                                        maxLength={120}
-                                        required
-                                        disabled={isSubmitting}
-                                        placeholder="Ex.: Oportunidade profissional"
-                                        aria-invalid={fieldErrors.assunto ? "true" : undefined}
-                                        aria-describedby={fieldErrors.assunto ? "contact-subject-error" : undefined}
-                                        onChange={handleFieldChange}
-                                        onBlur={handleFieldBlur}
-                                        className={FIELD_CLASS_NAME}
-                                    />
+                                    <input id="contact-subject" name="assunto" type="text" minLength={3} maxLength={120} required disabled={isSubmitting} placeholder="Ex.: Oportunidade profissional" aria-invalid={fieldErrors.assunto ? "true" : undefined} aria-describedby={fieldErrors.assunto ? "contact-subject-error" : undefined} onChange={handleFieldChange} onBlur={handleFieldBlur} className={FIELD_CLASS_NAME} />
                                     {fieldErrors.assunto && (
                                         <p id="contact-subject-error" className="mt-2 text-xs leading-5 text-red-300" aria-live="polite">
                                             {fieldErrors.assunto}
@@ -309,31 +245,17 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
                             </div>
 
                             <div className="contact-form-field group grid grid-cols-[2rem_minmax(0,1fr)] gap-4 border-b border-graphite py-6 transition-colors duration-500 hover:border-bronze/50 focus-within:border-bronze b-md:grid-cols-[2.5rem_minmax(0,1fr)] b-md:gap-6 b-md:py-8">
-                                <span
-                                    aria-hidden="true"
-                                    className="pt-1 font-bebas text-sm tracking-[0.2em] text-steel/70 transition-colors duration-500 group-hover:text-bronze group-focus-within:text-bronze b-md:pt-1.5"
-                                >
+                                <span aria-hidden="true" className="pt-1 font-bebas text-sm tracking-[0.2em] text-steel/70 transition-colors duration-500 group-hover:text-bronze group-focus-within:text-bronze b-md:pt-1.5">
                                     04
                                 </span>
                                 <div className="min-w-0">
                                     <label htmlFor="contact-message" className="block font-space text-lg font-medium leading-tight tracking-tight text-ivory b-md:text-2xl c-lg:text-3xl">
-                                        Como posso ajudar você? <span className="text-bronze" aria-hidden="true">*</span>
+                                        Como posso ajudar você?{" "}
+                                        <span className="text-bronze" aria-hidden="true">
+                                            *
+                                        </span>
                                     </label>
-                                    <textarea
-                                        id="contact-message"
-                                        name="mensagem"
-                                        rows={4}
-                                        minLength={10}
-                                        maxLength={4000}
-                                        required
-                                        disabled={isSubmitting}
-                                        placeholder="Conte um pouco sobre o motivo do contato..."
-                                        aria-invalid={fieldErrors.mensagem ? "true" : undefined}
-                                        aria-describedby={fieldErrors.mensagem ? "contact-message-error contact-message-hint" : "contact-message-hint"}
-                                        onChange={handleFieldChange}
-                                        onBlur={handleFieldBlur}
-                                        className={FIELD_CLASS_NAME + " resize-y"}
-                                    />
+                                    <textarea id="contact-message" name="mensagem" rows={4} minLength={10} maxLength={4000} required disabled={isSubmitting} placeholder="Conte um pouco sobre o motivo do contato..." aria-invalid={fieldErrors.mensagem ? "true" : undefined} aria-describedby={fieldErrors.mensagem ? "contact-message-error contact-message-hint" : "contact-message-hint"} onChange={handleFieldChange} onBlur={handleFieldBlur} className={FIELD_CLASS_NAME + " resize-y"} />
                                     {fieldErrors.mensagem && (
                                         <p id="contact-message-error" className="mt-2 text-xs leading-5 text-red-300" aria-live="polite">
                                             {fieldErrors.mensagem}
@@ -345,31 +267,12 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
                                 </div>
                             </div>
 
-                            <button
-                                type="submit"
-                                disabled={
-                                    !isBasinFormConfigured
-                                    || isSubmitting
-                                    || (hasInteractedWithForm && !isFormValid)
-                                }
-                                className="contact-send-button group mt-8 flex w-full items-center justify-center overflow-hidden border border-bronze bg-bronze px-5 py-4 font-space text-[11px] font-medium uppercase tracking-[0.16em] text-obsidian transition-[background-color,color,transform,border-color] duration-300 hover:bg-transparent hover:text-bronze active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne focus-visible:ring-offset-2 focus-visible:ring-offset-obsidian disabled:cursor-not-allowed disabled:border-graphite disabled:bg-graphite disabled:text-steel disabled:hover:bg-graphite disabled:hover:text-steel"
-                            >
+                            <button type="submit" disabled={!isBasinFormConfigured || isSubmitting || (hasInteractedWithForm && !isFormValid)} className="contact-send-button group mt-8 flex w-full items-center rounded-md cursor-pointer justify-center overflow-hidden border border-bronze bg-bronze px-5 py-4 font-space text-[11px] font-medium uppercase tracking-[0.16em] text-obsidian transition-[background-color,color,transform,border-color] duration-300 hover:bg-transparent hover:text-bronze active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne focus-visible:ring-offset-2 focus-visible:ring-offset-obsidian disabled:cursor-not-allowed disabled:border-graphite disabled:bg-graphite disabled:text-steel disabled:hover:bg-graphite disabled:hover:text-steel">
                                 <span className="contact-send-button__content inline-flex items-center justify-center gap-3">
                                     <span className="contact-send-button__icon-wrapper inline-flex shrink-0 items-center justify-center">
-                                        <Send
-                                            aria-hidden="true"
-                                            className="contact-send-button__icon h-4 w-4"
-                                        />
+                                        <Send aria-hidden="true" className="contact-send-button__icon h-4 w-4" />
                                     </span>
-                                    <span className="contact-send-button__label">
-                                        {isSubmitting
-                                            ? "Enviando mensagem"
-                                            : !isBasinFormConfigured
-                                                ? "Formulário em configuração"
-                                                : hasInteractedWithForm && !isFormValid
-                                                    ? "Complete os campos obrigatórios"
-                                                    : "Enviar mensagem"}
-                                    </span>
+                                    <span className="contact-send-button__label">{isSubmitting ? "Enviando mensagem" : !isBasinFormConfigured ? "Formulário em configuração" : hasInteractedWithForm && !isFormValid ? "Complete os campos obrigatórios" : "Enviar mensagem"}</span>
                                 </span>
                             </button>
 
@@ -380,25 +283,11 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
                             )}
 
                             {submissionStatus && (
-                                <p
-                                    role={submissionStatus.type === "error" ? "alert" : "status"}
-                                    aria-live={submissionStatus.type === "error" ? "assertive" : "polite"}
-                                    className={[
-                                        "mt-5 flex items-start gap-2 text-xs leading-5",
-                                        submissionStatus.type === "success" ? "text-warm-bronze" : "",
-                                        submissionStatus.type === "error" ? "text-red-300" : "",
-                                        submissionStatus.type === "pending" ? "text-steel" : "",
-                                    ].join(" ")}
-                                >
-                                    {submissionStatus.type === "success" ? (
-                                        <CheckCircle2 aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0" />
-                                    ) : submissionStatus.type === "error" ? (
-                                        <AlertCircle aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0" />
-                                    ) : null}
+                                <p role={submissionStatus.type === "error" ? "alert" : "status"} aria-live={submissionStatus.type === "error" ? "assertive" : "polite"} className={["mt-5 flex items-start gap-2 text-xs leading-5", submissionStatus.type === "success" ? "text-warm-bronze" : "", submissionStatus.type === "error" ? "text-red-300" : "", submissionStatus.type === "pending" ? "text-steel" : ""].join(" ")}>
+                                    {submissionStatus.type === "success" ? <CheckCircle2 aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0" /> : submissionStatus.type === "error" ? <AlertCircle aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0" /> : null}
                                     <span>{submissionStatus.message}</span>
                                 </p>
                             )}
-
                         </form>
                     </div>
 
@@ -417,19 +306,13 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
                             <div className="mt-6 flex flex-wrap gap-3">
                                 {CONTACT_LINKS.map(({ label, href }) => (
                                     <div key={label} data-route-entrance="item">
-                                        <MagneticExternalLink
-                                            href={href}
-                                            Icon={ArrowUpRight}
-                                            className="contact-social-link"
-                                        >
+                                        <MagneticExternalLink href={href} Icon={ArrowUpRight} className="contact-social-link">
                                             {label}
                                         </MagneticExternalLink>
                                     </div>
                                 ))}
                             </div>
                         </div>
-
-                        
                     </aside>
                 </div>
             </section>
