@@ -406,7 +406,7 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
                     </div>
 
                     <aside className="space-y-5">
-                        <div className="border border-graphite bg-carbon/30 p-5 b-md:p-7">
+                        <div className=" p-5 b-md:p-7">
                             <p data-route-entrance="content" className="font-space text-[10px] uppercase tracking-[0.2em] text-bronze">
                                 Outras opções
                             </p>
