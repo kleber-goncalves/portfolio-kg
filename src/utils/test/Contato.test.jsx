@@ -138,6 +138,26 @@ describe("Contato", () => {
         expect(submitButton.disabled).toBe(false);
     });
 
+    it("usa os links magnéticos compartilhados com o Footer para GitHub e LinkedIn", () => {
+        const github = container.querySelector('a[href="https://github.com/kleber-goncalves"]');
+        const linkedin = container.querySelector('a[href="https://www.linkedin.com/in/kleber-goncalve-s/"]');
+
+        expect(github).not.toBeNull();
+        expect(linkedin).not.toBeNull();
+
+        [github, linkedin].forEach((link) => {
+            expect(link.getAttribute("target")).toBe("_blank");
+            expect(link.getAttribute("rel")).toContain("noopener");
+            expect(link.getAttribute("rel")).toContain("noreferrer");
+            expect(link.hasAttribute("data-ui-sfx-hover")).toBe(true);
+            expect(link.className).toContain("inline-flex");
+            expect(link.querySelector("svg")).not.toBeNull();
+        });
+
+        expect(github.textContent).toContain("GitHub");
+        expect(linkedin.textContent).toContain("LinkedIn");
+    });
+
     it("preserva a validação nativa do navegador nos campos", () => {
         expect(container.querySelector('[name="nome"]').required).toBe(true);
         expect(container.querySelector('[name="nome"]').minLength).toBe(2);

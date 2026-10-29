@@ -6,6 +6,7 @@ import {
     Send,
 } from "lucide-react";
 import InteriorPageLayout from "../../layouts/InteriorPageLayout";
+import MagneticExternalLink from "../../components/MagneticExternalLink";
 import {
     getContactFieldErrors,
     validateContactField,
@@ -20,15 +21,11 @@ import {
 const CONTACT_LINKS = [
     {
         label: "GitHub",
-        description: "Repositórios, projetos e código",
         href: "https://github.com/kleber-goncalves",
-        mark: "GH",
     },
     {
         label: "LinkedIn",
-        description: "Perfil profissional e networking",
         href: "https://www.linkedin.com/in/kleber-goncalve-s/",
-        mark: "in",
     },
 ];
 
@@ -417,29 +414,17 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
                                 Você também pode conhecer meus projetos ou entrar em contato pelo perfil profissional.
                             </p>
 
-                            <div className="mt-6 space-y-3">
-                                {CONTACT_LINKS.map(({ label, description, href, mark }) => (
-                                    <a
-                                        key={label}
-                                        href={href}
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        data-route-entrance="item"
-                                        className="group flex items-center gap-4 border border-graphite p-4 transition-colors duration-300 hover:border-bronze focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne"
-                                    >
-                                        <span className="flex h-10 w-10 shrink-0 items-center justify-center border border-graphite text-bronze transition-colors duration-300 group-hover:border-bronze">
-                                            <span className="font-space text-xs font-semibold">{mark}</span>
-                                        </span>
-                                        <span className="min-w-0 flex-1">
-                                            <span className="block font-space text-sm text-ivory">
-                                                {label}
-                                            </span>
-                                            <span className="mt-1 block text-xs leading-5 text-steel">
-                                                {description}
-                                            </span>
-                                        </span>
-                                        <ArrowUpRight aria-hidden="true" className="h-4 w-4 shrink-0 text-steel transition-colors group-hover:text-champagne" />
-                                    </a>
+                            <div className="mt-6 flex flex-wrap gap-3">
+                                {CONTACT_LINKS.map(({ label, href }) => (
+                                    <div key={label} data-route-entrance="item">
+                                        <MagneticExternalLink
+                                            href={href}
+                                            Icon={ArrowUpRight}
+                                            className="contact-social-link"
+                                        >
+                                            {label}
+                                        </MagneticExternalLink>
+                                    </div>
                                 ))}
                             </div>
                         </div>
