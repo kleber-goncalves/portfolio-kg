@@ -381,9 +381,6 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
                                 </p>
                             )}
 
-                            <p className="text-[10px] leading-5 text-steel">
-                                O Basin processa o envio e mantém as submissões no painel conforme o prazo de retenção do plano utilizado.
-                            </p>
                         </form>
                     </div>
 
@@ -426,17 +423,7 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
                             </div>
                         </div>
 
-                        <div className="border border-graphite/80 p-5 b-md:p-7">
-                            <div className="flex items-center gap-3">
-                                <span className="h-1.5 w-1.5 rounded-full bg-bronze" aria-hidden="true" />
-                                <p className="font-space text-[10px] uppercase tracking-[0.2em] text-steel">
-                                    Sobre a resposta
-                                </p>
-                            </div>
-                            <p className="mt-4 text-xs leading-6 text-steel">
-                                Ao enviar o formulário, informe um e-mail válido para que eu possa responder à sua mensagem.
-                            </p>
-                        </div>
+                        
                     </aside>
                 </div>
             </section>
