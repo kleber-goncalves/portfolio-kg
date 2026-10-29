@@ -343,9 +343,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `3612246d7152eb94246a373da15b3f5787de20d0`
-- **Data do commit analisado:** 2026-10-29T14:41:15-03:00
-- **Mensagem do commit:** feat(contact): add accessible send button animation
+- **Commit de código analisado:** `b4ef2dbf9df8aa1ea7e6fb635bbc2d1dcb4f1cb1`
+- **Data do commit analisado:** 2026-10-29T15:04:23-03:00
+- **Mensagem do commit:** docs(ai-context): atualizar estado do Basin e testes
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -464,13 +464,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `b4ef2db` | 2026-10-29 | docs(ai-context): atualizar estado do Basin e testes |
+| `91b6a64` | 2026-10-29 | docs(ai-context): atualizar snapshot automaticamente |
 | `3612246` | 2026-10-29 | feat(contact): add accessible send button animation |
 | `bcfa382` | 2026-10-29 | docs(ai-context): atualizar snapshot automaticamente |
 | `7d677e4` | 2026-10-29 | feat(contact): add animated send button |
 | `60d5372` | 2026-10-28 | docs(ai-context): atualizar snapshot automaticamente |
 | `3a84526` | 2026-10-28 | docs(ai-context): atualizar snapshot automaticamente |
 | `9855a8b` | 2026-10-28 | docs(contact): explain submit button validation feedback |
-| `c6bf8f3` | 2026-10-28 | docs(ai-context): describe contact submit feedback |
-| `dd5b169` | 2026-10-28 | test(contact): cover submit button validity feedback |
 
 <!-- END AUTO-GENERATED SECTION -->
