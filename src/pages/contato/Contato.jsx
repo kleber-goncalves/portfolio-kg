@@ -387,7 +387,7 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
                                     role={submissionStatus.type === "error" ? "alert" : "status"}
                                     aria-live={submissionStatus.type === "error" ? "assertive" : "polite"}
                                     className={[
-                                        "flex items-start gap-2 text-xs leading-5",
+                                        "mt-5 flex items-start gap-2 text-xs leading-5",
                                         submissionStatus.type === "success" ? "text-warm-bronze" : "",
                                         submissionStatus.type === "error" ? "text-red-300" : "",
                                         submissionStatus.type === "pending" ? "text-steel" : "",
