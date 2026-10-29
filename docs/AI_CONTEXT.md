@@ -343,9 +343,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `3196d2d93b11b044e3b6e34b75e45becaa535d45`
-- **Data do commit analisado:** 2026-10-29T17:29:36-03:00
-- **Mensagem do commit:** fix(contact): expose pending submit state accessibly
+- **Commit de código analisado:** `f021627a149c6517f8f12c5a48d3ec88cece8cff`
+- **Data do commit analisado:** 2026-10-29T17:31:10-03:00
+- **Mensagem do commit:** fix(contact): cap magnetic submit button movement
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -464,13 +464,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `f021627` | 2026-10-29 | fix(contact): cap magnetic submit button movement |
+| `f22b77a` | 2026-10-29 | docs(ai-context): atualizar snapshot automaticamente |
 | `3196d2d` | 2026-10-29 | fix(contact): expose pending submit state accessibly |
 | `4ce72e7` | 2026-10-29 | docs(ai-context): atualizar snapshot automaticamente |
 | `8455f08` | 2026-10-29 | feat(contact): add footer-style magnetic submit button |
 | `dd60435` | 2026-10-29 | docs(ai-context): atualizar snapshot automaticamente |
 | `536a30b` | 2026-10-29 | refactor(contato): simplificar estrutura do formulário de contato e melhorar acessibilidade |
 | `9e74e92` | 2026-10-29 | docs(ai-context): atualizar snapshot automaticamente |
-| `7dee084` | 2026-10-29 | feat(contact): reuse footer magnetic links in aside |
-| `fe4d085` | 2026-10-29 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
