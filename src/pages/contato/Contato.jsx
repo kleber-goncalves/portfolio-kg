@@ -3,9 +3,9 @@ import {
     AlertCircle,
     ArrowUpRight,
     CheckCircle2,
-    Send,
 } from "lucide-react";
 import InteriorPageLayout from "../../layouts/InteriorPageLayout";
+import MagneticSubmitButton from "../../components/MagneticSubmitButton";
 import MagneticExternalLink from "../../components/MagneticExternalLink";
 import {
     getContactFieldErrors,
@@ -267,14 +267,11 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
                                 </div>
                             </div>
 
-                            <button type="submit" disabled={!isBasinFormConfigured || isSubmitting || (hasInteractedWithForm && !isFormValid)} className="contact-send-button group mt-8 flex w-full items-center rounded-md cursor-pointer justify-center overflow-hidden border border-bronze bg-bronze px-5 py-4 font-space text-[11px] font-medium uppercase tracking-[0.16em] text-obsidian transition-[background-color,color,transform,border-color] duration-300 hover:bg-transparent hover:text-bronze active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne focus-visible:ring-offset-2 focus-visible:ring-offset-obsidian disabled:cursor-not-allowed disabled:border-graphite disabled:bg-graphite disabled:text-steel disabled:hover:bg-graphite disabled:hover:text-steel">
-                                <span className="contact-send-button__content inline-flex items-center justify-center gap-3">
-                                    <span className="contact-send-button__icon-wrapper inline-flex shrink-0 items-center justify-center">
-                                        <Send aria-hidden="true" className="contact-send-button__icon h-4 w-4" />
-                                    </span>
-                                    <span className="contact-send-button__label">{isSubmitting ? "Enviando mensagem" : !isBasinFormConfigured ? "Formulário em configuração" : hasInteractedWithForm && !isFormValid ? "Complete os campos obrigatórios" : "Enviar mensagem"}</span>
-                                </span>
-                            </button>
+                            <MagneticSubmitButton
+                                disabled={!isBasinFormConfigured || isSubmitting || (hasInteractedWithForm && !isFormValid)}
+                                isSubmitting={isSubmitting}
+                                label={isSubmitting ? "Enviando mensagem" : !isBasinFormConfigured ? "Formulário em configuração" : hasInteractedWithForm && !isFormValid ? "Complete os campos obrigatórios" : "Enviar mensagem"}
+                            />
 
                             {isBasinFormConfigured && hasInteractedWithForm && !isFormValid && !isSubmitting && (
                                 <p role="status" aria-live="polite" className="mt-4 text-xs leading-5 text-steel">

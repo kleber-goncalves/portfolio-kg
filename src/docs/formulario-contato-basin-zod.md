@@ -15,6 +15,7 @@ O projeto **não possui uma API própria para receber as mensagens**. O navegado
 | Arquivo | Responsabilidade |
 |---|---|
 | `src/pages/contato/Contato.jsx` | Renderiza os campos; controla erros, foco, estado do botão, envio, sucesso e falha. |
+| `src/components/MagneticSubmitButton.jsx` | Botão de envio nativo com preenchimento animado, deslocamento magnético por Motion, texto que desaparece e ícone Send centralizado no hover/foco; reduz o movimento quando solicitado pelo sistema. |
 | `src/utils/contactSchema.js` | Centraliza as regras Zod e as funções de validação. |
 | `src/utils/contactSubmission.js` | Obtém e valida o formato do endpoint, envia a requisição HTTP e trata respostas recusadas/falhas de rede. |
 | `src/utils/test/Contato.test.jsx` | Testa a interação da interface com a validação e o fluxo de submissão. |
@@ -82,6 +83,10 @@ As regras detalhadas estão em `src/utils/contactSchema.js` e em [Validação co
 - `onChange`: recalcula a validade do formulário completo. Se o campo já foi visitado ou já apresenta erro, atualiza a mensagem conforme o valor corrigido.
 - Depois da primeira interação, o botão fica desabilitado enquanto algum campo for inválido; quando todos passam pela validação, volta a ficar habilitado.
 - Quando o endpoint do Basin tem formato válido, o botão começa habilitado na tela inicial. A validação nativa do navegador continua ativa, portanto esse estado inicial não faz com que campos obrigatórios inválidos sejam enviados.
+
+### Comportamento visual do botão
+
+O botão é renderizado por `src/components/MagneticSubmitButton.jsx`, mantendo o elemento nativo `button[type="submit"]` e os estados de habilitado/desabilitado definidos em `Contato.jsx`. O preenchimento bronze se expande a partir da região do cursor, o botão acompanha discretamente o mouse com springs, e a cor do conteúdo muda durante hover/foco. O rótulo desliza e desaparece enquanto o ícone `Send` se move para o centro geométrico do botão, sem depender da largura do texto. O ícone continua decorativo para tecnologias assistivas e o rótulo mantém o nome acessível do botão. O movimento magnético do botão é desativado quando `prefers-reduced-motion` está ativo; o preenchimento e as transições tornam-se praticamente imediatos. Esses efeitos não substituem nem alteram a validação, a requisição Basin ou os estados de envio/sucesso/falha.
 
 ### Ao tentar enviar
 

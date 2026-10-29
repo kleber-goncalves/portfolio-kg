@@ -810,90 +810,9 @@ html::-webkit-scrollbar {
 }
 
 
-/* Botão de envio do formulário de contato: aviãozinho animado no hover. */
+/* O preenchimento, magnetismo e centralização do ícone são controlados
+   pelo componente MagneticSubmitButton com Motion, incluindo movimento reduzido.
+   Mantemos esta classe para identificar o controle nos testes e estilos da página. */
 .contact-send-button {
     position: relative;
-}
-
-.contact-send-button__content {
-    min-width: 0;
-}
-
-.contact-send-button__icon-wrapper {
-    transform-origin: center;
-}
-
-.contact-send-button__icon {
-    transform-origin: center;
-    transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
-    will-change: transform;
-}
-
-.contact-send-button__label {
-    display: inline-block;
-    transition:
-        transform 300ms cubic-bezier(0.16, 1, 0.3, 1),
-        opacity 180ms ease-out;
-    will-change: transform, opacity;
-}
-
-@media (hover: hover) and (pointer: fine) {
-    .contact-send-button:not(:disabled):hover .contact-send-button__icon-wrapper {
-        animation: contact-send-fly 600ms ease-in-out infinite alternate;
-    }
-
-    .contact-send-button:not(:disabled):hover .contact-send-button__icon {
-        transform: translateX(1.2em) rotate(45deg) scale(1.1);
-    }
-
-    .contact-send-button:not(:disabled):hover .contact-send-button__label {
-        transform: translateX(5em);
-        opacity: 0;
-    }
-}
-
-.contact-send-button:not(:disabled):focus-visible .contact-send-button__icon-wrapper {
-    animation: contact-send-fly 600ms ease-in-out infinite alternate;
-}
-
-.contact-send-button:not(:disabled):focus-visible .contact-send-button__icon {
-    transform: translateX(1.2em) rotate(45deg) scale(1.1);
-}
-
-.contact-send-button:not(:disabled):focus-visible .contact-send-button__label {
-    transform: translateX(5em);
-    opacity: 0;
-}
-
-@keyframes contact-send-fly {
-    from {
-        transform: translateY(0.1em);
-    }
-    to {
-        transform: translateY(-0.1em);
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .contact-send-button:not(:disabled):hover .contact-send-button__icon-wrapper,
-    .contact-send-button:not(:disabled):focus-visible .contact-send-button__icon-wrapper {
-        animation: none;
-    }
-
-    .contact-send-button:not(:disabled):hover .contact-send-button__icon,
-    .contact-send-button:not(:disabled):focus-visible .contact-send-button__icon {
-        transform: none;
-    }
-
-    .contact-send-button:not(:disabled):hover .contact-send-button__label,
-    .contact-send-button:not(:disabled):focus-visible .contact-send-button__label {
-        transform: none;
-        opacity: 1;
-    }
-
-    .contact-send-button__icon,
-    .contact-send-button__label {
-        transition: none;
-        will-change: auto;
-    }
 }
