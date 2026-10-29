@@ -343,9 +343,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `6216ed630cc07d0b552333d02b81bf07030a7a91`
-- **Data do commit analisado:** 2026-10-29T15:12:41-03:00
-- **Mensagem do commit:** docs(contact): ajustar descrição de teste Zod
+- **Commit de código analisado:** `5e15dd2b9665a0128400ac85cd737f829a16cfce`
+- **Data do commit analisado:** 2026-10-29T15:19:26-03:00
+- **Mensagem do commit:** remove informational text from contact form
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -464,13 +464,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `5e15dd2` | 2026-10-29 | remove informational text from contact form |
+| `c49dc71` | 2026-10-29 | docs(ai-context): atualizar snapshot automaticamente |
 | `6216ed6` | 2026-10-29 | docs(contact): ajustar descrição de teste Zod |
 | `c6d8b83` | 2026-10-29 | docs(ai-context): atualizar snapshot automaticamente |
 | `2ca990d` | 2026-10-29 | docs(contact): documentar schema e testes Zod |
 | `d2efe01` | 2026-10-29 | docs(ai-context): atualizar snapshot automaticamente |
 | `6fe461a` | 2026-10-29 | docs(contact): documentar fluxo Basin e Zod |
 | `aec3673` | 2026-10-29 | docs(ai-context): atualizar snapshot automaticamente |
-| `b4ef2db` | 2026-10-29 | docs(ai-context): atualizar estado do Basin e testes |
-| `91b6a64` | 2026-10-29 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
