@@ -36,7 +36,7 @@ const FIELD_CLASS_NAME = [
     "mt-3 block w-full border-0 bg-transparent px-0 py-2",
     "font-space text-lg leading-7 tracking-tight text-ivory placeholder:text-steel/80",
     "transition-colors duration-200",
-    "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-champagne",
+    "focus:outline-none focus-visible:outline-none",
     "disabled:cursor-not-allowed disabled:opacity-60",
 ].join(" ");
 
@@ -208,7 +208,7 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
                                 value="KLEBER DEV — página de contato"
                             />
 
-                            <div className="contact-form-field group grid grid-cols-[2rem_minmax(0,1fr)] gap-4 border-b border-graphite py-6 transition-colors duration-500 hover:border-bronze/50 focus-within:border-bronze/70 b-md:grid-cols-[2.5rem_minmax(0,1fr)] b-md:gap-6 b-md:py-8">
+                            <div className="contact-form-field group grid grid-cols-[2rem_minmax(0,1fr)] gap-4 border-b border-graphite py-6 transition-colors duration-500 hover:border-bronze/50 focus-within:border-bronze b-md:grid-cols-[2.5rem_minmax(0,1fr)] b-md:gap-6 b-md:py-8">
                                 <span
                                     aria-hidden="true"
                                     className="pt-1 font-bebas text-sm tracking-[0.2em] text-steel/70 transition-colors duration-500 group-hover:text-bronze group-focus-within:text-bronze b-md:pt-1.5"
@@ -243,7 +243,7 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
                                 </div>
                             </div>
 
-                            <div className="contact-form-field group grid grid-cols-[2rem_minmax(0,1fr)] gap-4 border-b border-graphite py-6 transition-colors duration-500 hover:border-bronze/50 focus-within:border-bronze/70 b-md:grid-cols-[2.5rem_minmax(0,1fr)] b-md:gap-6 b-md:py-8">
+                            <div className="contact-form-field group grid grid-cols-[2rem_minmax(0,1fr)] gap-4 border-b border-graphite py-6 transition-colors duration-500 hover:border-bronze/50 focus-within:border-bronze b-md:grid-cols-[2.5rem_minmax(0,1fr)] b-md:gap-6 b-md:py-8">
                                 <span
                                     aria-hidden="true"
                                     className="pt-1 font-bebas text-sm tracking-[0.2em] text-steel/70 transition-colors duration-500 group-hover:text-bronze group-focus-within:text-bronze b-md:pt-1.5"
@@ -277,7 +277,7 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
                                 </div>
                             </div>
 
-                            <div className="contact-form-field group grid grid-cols-[2rem_minmax(0,1fr)] gap-4 border-b border-graphite py-6 transition-colors duration-500 hover:border-bronze/50 focus-within:border-bronze/70 b-md:grid-cols-[2.5rem_minmax(0,1fr)] b-md:gap-6 b-md:py-8">
+                            <div className="contact-form-field group grid grid-cols-[2rem_minmax(0,1fr)] gap-4 border-b border-graphite py-6 transition-colors duration-500 hover:border-bronze/50 focus-within:border-bronze b-md:grid-cols-[2.5rem_minmax(0,1fr)] b-md:gap-6 b-md:py-8">
                                 <span
                                     aria-hidden="true"
                                     className="pt-1 font-bebas text-sm tracking-[0.2em] text-steel/70 transition-colors duration-500 group-hover:text-bronze group-focus-within:text-bronze b-md:pt-1.5"
@@ -311,7 +311,7 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
                                 </div>
                             </div>
 
-                            <div className="contact-form-field group grid grid-cols-[2rem_minmax(0,1fr)] gap-4 border-b border-graphite py-6 transition-colors duration-500 hover:border-bronze/50 focus-within:border-bronze/70 b-md:grid-cols-[2.5rem_minmax(0,1fr)] b-md:gap-6 b-md:py-8">
+                            <div className="contact-form-field group grid grid-cols-[2rem_minmax(0,1fr)] gap-4 border-b border-graphite py-6 transition-colors duration-500 hover:border-bronze/50 focus-within:border-bronze b-md:grid-cols-[2.5rem_minmax(0,1fr)] b-md:gap-6 b-md:py-8">
                                 <span
                                     aria-hidden="true"
                                     className="pt-1 font-bebas text-sm tracking-[0.2em] text-steel/70 transition-colors duration-500 group-hover:text-bronze group-focus-within:text-bronze b-md:pt-1.5"

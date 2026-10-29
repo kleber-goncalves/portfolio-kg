@@ -174,11 +174,15 @@ describe("Contato", () => {
             expect(field.classList.contains("border-b")).toBe(true);
             expect(field.classList.contains("border-l")).toBe(false);
             expect(field.classList.contains("border-r")).toBe(false);
+            expect(field.classList.contains("focus-within:border-bronze")).toBe(true);
         });
 
         container.querySelectorAll('input:not([type="hidden"]), textarea').forEach((field) => {
             expect(field.classList.contains("border-0")).toBe(true);
             expect(field.classList.contains("bg-transparent")).toBe(true);
+            expect(field.classList.contains("focus:outline-none")).toBe(true);
+            expect(field.classList.contains("focus-visible:outline-none")).toBe(true);
+            expect(field.className).not.toContain("focus-visible:outline-2");
         });
     });
 

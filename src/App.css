@@ -787,6 +787,12 @@ html::-webkit-scrollbar {
     outline-offset: 4px;
 }
 
+/* No formulário minimalista, a linha inferior e o número indicam o foco sem criar uma caixa ao redor do input. */
+.contact-form-field :is(input, textarea):focus {
+    outline: none;
+    outline-offset: 0;
+}
+
 @media (prefers-reduced-motion: reduce) {
     html,
     html:focus-within {
