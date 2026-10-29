@@ -105,7 +105,7 @@ Na última execução verificada, este arquivo continha **15 casos de teste**. E
 
 - Aceitação de um objeto com todos os campos válidos.
 - Remoção de espaços externos e retorno dos valores normalizados.
-- Rejeição de nome vazio/apenas espaços e de nome acima de 100 caracteres.
+- Rejeição de nome composto apenas por espaços e de nome acima de 100 caracteres.
 - Rejeição de e-mail vazio, e-mail em formato inválido e e-mail acima de 254 caracteres.
 - Rejeição de assunto abaixo de 3 caracteres e acima de 120 caracteres.
 - Rejeição de mensagem abaixo de 10 caracteres e acima de 4.000 caracteres.
