@@ -33,10 +33,10 @@ const CONTACT_LINKS = [
 ];
 
 const FIELD_CLASS_NAME = [
-    "mt-2 w-full rounded-sm border border-graphite bg-obsidian px-4 py-3",
-    "font-space text-sm leading-6 text-ivory placeholder:text-steel/70",
+    "mt-3 block w-full border-0 bg-transparent px-0 py-2",
+    "font-space text-lg leading-7 tracking-tight text-ivory placeholder:text-steel/80",
     "transition-colors duration-200",
-    "focus-visible:border-warm-bronze focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-warm-bronze",
+    "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-champagne",
     "disabled:cursor-not-allowed disabled:opacity-60",
 ].join(" ");
 
@@ -181,8 +181,7 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
         >
             <section className="mx-auto w-full max-w-7xl px-5 pb-16 b-md:px-10 b-md:pb-24">
                 <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1.35fr)_minmax(280px,0.65fr)]">
-                    <div className="border border-graphite bg-carbon/40 p-5 b-md:p-8">
-                        
+                    <div className="min-w-0">
 
                         {!isBasinFormConfigured && (
                             <div
@@ -201,7 +200,7 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
                             method="POST"
                             onSubmit={handleSubmit}
                             aria-busy={isSubmitting}
-                            className="space-y-5"
+                            className="border-t border-graphite"
                         >
                             <input
                                 type="hidden"
@@ -209,112 +208,144 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
                                 value="KLEBER DEV — página de contato"
                             />
 
-                            <div>
-                                <label htmlFor="contact-name" className="font-space text-xs text-ivory">
-                                    Nome <span className="text-bronze" aria-hidden="true">*</span>
-                                </label>
-                                <input
-                                    id="contact-name"
-                                    name="nome"
-                                    type="text"
-                                    autoComplete="name"
-                                    minLength={2}
-                                    maxLength={100}
-                                    required
-                                    disabled={isSubmitting}
-                                    placeholder="Como podemos chamar você?"
-                                    aria-invalid={fieldErrors.nome ? "true" : undefined}
-                                    aria-describedby={fieldErrors.nome ? "contact-name-error" : undefined}
-                                    onChange={handleFieldChange}
-                                    onBlur={handleFieldBlur}
-                                    className={FIELD_CLASS_NAME}
-                                />
-                                {fieldErrors.nome && (
-                                    <p id="contact-name-error" className="mt-2 text-xs leading-5 text-red-300" aria-live="polite">
-                                        {fieldErrors.nome}
-                                    </p>
-                                )}
+                            <div className="contact-form-field group grid grid-cols-[2rem_minmax(0,1fr)] gap-4 border-b border-graphite py-6 transition-colors duration-500 hover:border-bronze/50 focus-within:border-bronze/70 b-md:grid-cols-[2.5rem_minmax(0,1fr)] b-md:gap-6 b-md:py-8">
+                                <span
+                                    aria-hidden="true"
+                                    className="pt-1 font-bebas text-sm tracking-[0.2em] text-steel/70 transition-colors duration-500 group-hover:text-bronze group-focus-within:text-bronze b-md:pt-1.5"
+                                >
+                                    01
+                                </span>
+                                <div className="min-w-0">
+                                    <label htmlFor="contact-name" className="block font-space text-lg font-medium leading-tight tracking-tight text-ivory b-md:text-2xl c-lg:text-3xl">
+                                        Qual é o seu nome? <span className="text-bronze" aria-hidden="true">*</span>
+                                    </label>
+                                    <input
+                                        id="contact-name"
+                                        name="nome"
+                                        type="text"
+                                        autoComplete="name"
+                                        minLength={2}
+                                        maxLength={100}
+                                        required
+                                        disabled={isSubmitting}
+                                        placeholder="Ex.: Kleber Gonçalves"
+                                        aria-invalid={fieldErrors.nome ? "true" : undefined}
+                                        aria-describedby={fieldErrors.nome ? "contact-name-error" : undefined}
+                                        onChange={handleFieldChange}
+                                        onBlur={handleFieldBlur}
+                                        className={FIELD_CLASS_NAME}
+                                    />
+                                    {fieldErrors.nome && (
+                                        <p id="contact-name-error" className="mt-2 text-xs leading-5 text-red-300" aria-live="polite">
+                                            {fieldErrors.nome}
+                                        </p>
+                                    )}
+                                </div>
                             </div>
 
-                            <div>
-                                <label htmlFor="contact-email" className="font-space text-xs text-ivory">
-                                    Seu e-mail <span className="text-bronze" aria-hidden="true">*</span>
-                                </label>
-                                <input
-                                    id="contact-email"
-                                    name="email"
-                                    type="email"
-                                    autoComplete="email"
-                                    maxLength={254}
-                                    required
-                                    disabled={isSubmitting}
-                                    placeholder="voce@exemplo.com"
-                                    aria-invalid={fieldErrors.email ? "true" : undefined}
-                                    aria-describedby={fieldErrors.email ? "contact-email-error" : undefined}
-                                    onChange={handleFieldChange}
-                                    onBlur={handleFieldBlur}
-                                    className={FIELD_CLASS_NAME}
-                                />
-                                {fieldErrors.email && (
-                                    <p id="contact-email-error" className="mt-2 text-xs leading-5 text-red-300" aria-live="polite">
-                                        {fieldErrors.email}
-                                    </p>
-                                )}
+                            <div className="contact-form-field group grid grid-cols-[2rem_minmax(0,1fr)] gap-4 border-b border-graphite py-6 transition-colors duration-500 hover:border-bronze/50 focus-within:border-bronze/70 b-md:grid-cols-[2.5rem_minmax(0,1fr)] b-md:gap-6 b-md:py-8">
+                                <span
+                                    aria-hidden="true"
+                                    className="pt-1 font-bebas text-sm tracking-[0.2em] text-steel/70 transition-colors duration-500 group-hover:text-bronze group-focus-within:text-bronze b-md:pt-1.5"
+                                >
+                                    02
+                                </span>
+                                <div className="min-w-0">
+                                    <label htmlFor="contact-email" className="block font-space text-lg font-medium leading-tight tracking-tight text-ivory b-md:text-2xl c-lg:text-3xl">
+                                        Qual é o seu e-mail? <span className="text-bronze" aria-hidden="true">*</span>
+                                    </label>
+                                    <input
+                                        id="contact-email"
+                                        name="email"
+                                        type="email"
+                                        autoComplete="email"
+                                        maxLength={254}
+                                        required
+                                        disabled={isSubmitting}
+                                        placeholder="voce@exemplo.com"
+                                        aria-invalid={fieldErrors.email ? "true" : undefined}
+                                        aria-describedby={fieldErrors.email ? "contact-email-error" : undefined}
+                                        onChange={handleFieldChange}
+                                        onBlur={handleFieldBlur}
+                                        className={FIELD_CLASS_NAME}
+                                    />
+                                    {fieldErrors.email && (
+                                        <p id="contact-email-error" className="mt-2 text-xs leading-5 text-red-300" aria-live="polite">
+                                            {fieldErrors.email}
+                                        </p>
+                                    )}
+                                </div>
                             </div>
 
-                            <div>
-                                <label htmlFor="contact-subject" className="font-space text-xs text-ivory">
-                                    Assunto <span className="text-bronze" aria-hidden="true">*</span>
-                                </label>
-                                <input
-                                    id="contact-subject"
-                                    name="assunto"
-                                    type="text"
-                                    minLength={3}
-                                    maxLength={120}
-                                    required
-                                    disabled={isSubmitting}
-                                    placeholder="Ex.: Oportunidade profissional"
-                                    aria-invalid={fieldErrors.assunto ? "true" : undefined}
-                                    aria-describedby={fieldErrors.assunto ? "contact-subject-error" : undefined}
-                                    onChange={handleFieldChange}
-                                    onBlur={handleFieldBlur}
-                                    className={FIELD_CLASS_NAME}
-                                />
-                                {fieldErrors.assunto && (
-                                    <p id="contact-subject-error" className="mt-2 text-xs leading-5 text-red-300" aria-live="polite">
-                                        {fieldErrors.assunto}
-                                    </p>
-                                )}
+                            <div className="contact-form-field group grid grid-cols-[2rem_minmax(0,1fr)] gap-4 border-b border-graphite py-6 transition-colors duration-500 hover:border-bronze/50 focus-within:border-bronze/70 b-md:grid-cols-[2.5rem_minmax(0,1fr)] b-md:gap-6 b-md:py-8">
+                                <span
+                                    aria-hidden="true"
+                                    className="pt-1 font-bebas text-sm tracking-[0.2em] text-steel/70 transition-colors duration-500 group-hover:text-bronze group-focus-within:text-bronze b-md:pt-1.5"
+                                >
+                                    03
+                                </span>
+                                <div className="min-w-0">
+                                    <label htmlFor="contact-subject" className="block font-space text-lg font-medium leading-tight tracking-tight text-ivory b-md:text-2xl c-lg:text-3xl">
+                                        Qual é o assunto da mensagem? <span className="text-bronze" aria-hidden="true">*</span>
+                                    </label>
+                                    <input
+                                        id="contact-subject"
+                                        name="assunto"
+                                        type="text"
+                                        minLength={3}
+                                        maxLength={120}
+                                        required
+                                        disabled={isSubmitting}
+                                        placeholder="Ex.: Oportunidade profissional"
+                                        aria-invalid={fieldErrors.assunto ? "true" : undefined}
+                                        aria-describedby={fieldErrors.assunto ? "contact-subject-error" : undefined}
+                                        onChange={handleFieldChange}
+                                        onBlur={handleFieldBlur}
+                                        className={FIELD_CLASS_NAME}
+                                    />
+                                    {fieldErrors.assunto && (
+                                        <p id="contact-subject-error" className="mt-2 text-xs leading-5 text-red-300" aria-live="polite">
+                                            {fieldErrors.assunto}
+                                        </p>
+                                    )}
+                                </div>
                             </div>
 
-                            <div>
-                                <label htmlFor="contact-message" className="font-space text-xs text-ivory">
-                                    Mensagem <span className="text-bronze" aria-hidden="true">*</span>
-                                </label>
-                                <textarea
-                                    id="contact-message"
-                                    name="mensagem"
-                                    rows={6}
-                                    minLength={10}
-                                    maxLength={4000}
-                                    required
-                                    disabled={isSubmitting}
-                                    placeholder="Conte um pouco sobre o motivo do contato..."
-                                    aria-invalid={fieldErrors.mensagem ? "true" : undefined}
-                                    aria-describedby={fieldErrors.mensagem ? "contact-message-error contact-message-hint" : "contact-message-hint"}
-                                    onChange={handleFieldChange}
-                                    onBlur={handleFieldBlur}
-                                    className={FIELD_CLASS_NAME + " resize-y"}
-                                />
-                                {fieldErrors.mensagem && (
-                                    <p id="contact-message-error" className="mt-2 text-xs leading-5 text-red-300" aria-live="polite">
-                                        {fieldErrors.mensagem}
+                            <div className="contact-form-field group grid grid-cols-[2rem_minmax(0,1fr)] gap-4 border-b border-graphite py-6 transition-colors duration-500 hover:border-bronze/50 focus-within:border-bronze/70 b-md:grid-cols-[2.5rem_minmax(0,1fr)] b-md:gap-6 b-md:py-8">
+                                <span
+                                    aria-hidden="true"
+                                    className="pt-1 font-bebas text-sm tracking-[0.2em] text-steel/70 transition-colors duration-500 group-hover:text-bronze group-focus-within:text-bronze b-md:pt-1.5"
+                                >
+                                    04
+                                </span>
+                                <div className="min-w-0">
+                                    <label htmlFor="contact-message" className="block font-space text-lg font-medium leading-tight tracking-tight text-ivory b-md:text-2xl c-lg:text-3xl">
+                                        Como posso ajudar você? <span className="text-bronze" aria-hidden="true">*</span>
+                                    </label>
+                                    <textarea
+                                        id="contact-message"
+                                        name="mensagem"
+                                        rows={4}
+                                        minLength={10}
+                                        maxLength={4000}
+                                        required
+                                        disabled={isSubmitting}
+                                        placeholder="Conte um pouco sobre o motivo do contato..."
+                                        aria-invalid={fieldErrors.mensagem ? "true" : undefined}
+                                        aria-describedby={fieldErrors.mensagem ? "contact-message-error contact-message-hint" : "contact-message-hint"}
+                                        onChange={handleFieldChange}
+                                        onBlur={handleFieldBlur}
+                                        className={FIELD_CLASS_NAME + " resize-y"}
+                                    />
+                                    {fieldErrors.mensagem && (
+                                        <p id="contact-message-error" className="mt-2 text-xs leading-5 text-red-300" aria-live="polite">
+                                            {fieldErrors.mensagem}
+                                        </p>
+                                    )}
+                                    <p id="contact-message-hint" className="mt-2 text-[10px] leading-4 text-steel">
+                                        Não envie senhas ou informações pessoais sensíveis.
                                     </p>
-                                )}
-                                <p id="contact-message-hint" className="mt-2 text-[10px] leading-4 text-steel">
-                                    Não envie senhas ou informações pessoais sensíveis.
-                                </p>
+                                </div>
                             </div>
 
                             <button
@@ -324,7 +355,7 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
                                     || isSubmitting
                                     || (hasInteractedWithForm && !isFormValid)
                                 }
-                                className="contact-send-button group flex w-full items-center justify-center overflow-hidden border border-bronze bg-bronze px-5 py-4 font-space text-[11px] font-medium uppercase tracking-[0.16em] text-obsidian transition-[background-color,color,transform,border-color] duration-300 hover:bg-transparent hover:text-bronze active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne focus-visible:ring-offset-2 focus-visible:ring-offset-obsidian disabled:cursor-not-allowed disabled:border-graphite disabled:bg-graphite disabled:text-steel disabled:hover:bg-graphite disabled:hover:text-steel"
+                                className="contact-send-button group mt-8 flex w-full items-center justify-center overflow-hidden border border-bronze bg-bronze px-5 py-4 font-space text-[11px] font-medium uppercase tracking-[0.16em] text-obsidian transition-[background-color,color,transform,border-color] duration-300 hover:bg-transparent hover:text-bronze active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne focus-visible:ring-offset-2 focus-visible:ring-offset-obsidian disabled:cursor-not-allowed disabled:border-graphite disabled:bg-graphite disabled:text-steel disabled:hover:bg-graphite disabled:hover:text-steel"
                             >
                                 <span className="contact-send-button__content inline-flex items-center justify-center gap-3">
                                     <span className="contact-send-button__icon-wrapper inline-flex shrink-0 items-center justify-center">
@@ -346,7 +377,7 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
                             </button>
 
                             {isBasinFormConfigured && hasInteractedWithForm && !isFormValid && !isSubmitting && (
-                                <p role="status" aria-live="polite" className="-mt-3 text-xs leading-5 text-steel">
+                                <p role="status" aria-live="polite" className="mt-4 text-xs leading-5 text-steel">
                                     Preencha todos os campos corretamente para habilitar o envio.
                                 </p>
                             )}
