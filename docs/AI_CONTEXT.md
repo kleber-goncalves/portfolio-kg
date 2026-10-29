@@ -343,9 +343,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `7dee084fbeeeccf6202b78016b38481b09ef17bb`
-- **Data do commit analisado:** 2026-10-29T16:40:21-03:00
-- **Mensagem do commit:** feat(contact): reuse footer magnetic links in aside
+- **Commit de código analisado:** `536a30b21b37ec27806fadd1db81ff9820305788`
+- **Data do commit analisado:** 2026-10-29T17:12:19-03:00
+- **Mensagem do commit:** refactor(contato): simplificar estrutura do formulário de contato e melhorar acessibilidade
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -464,13 +464,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `536a30b` | 2026-10-29 | refactor(contato): simplificar estrutura do formulário de contato e melhorar acessibilidade |
+| `9e74e92` | 2026-10-29 | docs(ai-context): atualizar snapshot automaticamente |
 | `7dee084` | 2026-10-29 | feat(contact): reuse footer magnetic links in aside |
 | `fe4d085` | 2026-10-29 | docs(ai-context): atualizar snapshot automaticamente |
 | `fa8613a` | 2026-10-29 | fix(contato): remover borda do container de opções |
 | `a4b767a` | 2026-10-29 | docs(ai-context): atualizar snapshot automaticamente |
 | `3be74f7` | 2026-10-29 | fix(contact): integrate field focus with horizontal dividers |
 | `96083eb` | 2026-10-29 | docs(ai-context): atualizar snapshot automaticamente |
-| `2940914` | 2026-10-29 | fix(contact): manter espacamento do status de envio |
-| `d6202d0` | 2026-10-29 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
