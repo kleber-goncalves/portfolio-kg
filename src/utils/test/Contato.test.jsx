@@ -110,6 +110,7 @@ describe("Contato", () => {
         const submitButton = container.querySelector('button[type="submit"]');
 
         expect(submitButton.disabled).toBe(false);
+        expect(submitButton.getAttribute("aria-busy")).toBe("false");
         expect(submitButton.classList.contains("contact-send-button")).toBe(true);
         expect(submitButton.querySelector(".contact-send-button__fill")?.getAttribute("aria-hidden")).toBe("true");
         expect(submitButton.querySelector(".contact-send-button__border")?.getAttribute("aria-hidden")).toBe("true");
@@ -285,6 +286,7 @@ describe("Contato", () => {
 
         expect(globalThis.fetch).toHaveBeenCalledOnce();
         expect(container.querySelector("button[type='submit']").disabled).toBe(true);
+        expect(container.querySelector("button[type='submit']").getAttribute("aria-busy")).toBe("true");
 
         await act(async () => {
             resolveFetch(successResponse());

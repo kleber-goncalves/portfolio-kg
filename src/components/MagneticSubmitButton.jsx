@@ -111,6 +111,7 @@ function MagneticSubmitButton({
         <motion.button
             type="submit"
             disabled={disabled}
+            aria-busy={isSubmitting}
             data-ui-sfx-hover
             onMouseEnter={handleMouseEnter}
             onMouseMove={handleMouseMove}
