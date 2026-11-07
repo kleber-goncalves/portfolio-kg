@@ -377,9 +377,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `e4dc9e3c77b86879108ea886ef229c83b2f12f70`
-- **Data do commit analisado:** 2026-11-07T19:57:49-03:00
-- **Mensagem do commit:** docs(architecture): registrar etapa Footer concluída
+- **Commit de código analisado:** `daf45517baa892ada00cd419ceb0440acea81410`
+- **Data do commit analisado:** 2026-11-07T20:07:35-03:00
+- **Mensagem do commit:** docs(architecture): consolidar documentação da arquitetura
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -496,13 +496,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `daf4551` | 2026-11-07 | docs(architecture): consolidar documentação da arquitetura |
+| `fc67ea8` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `e4dc9e3` | 2026-11-07 | docs(architecture): registrar etapa Footer concluída |
 | `7b28959` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `955108a` | 2026-11-07 | refactor(layout): mover Footer compartilhado para layouts |
 | `0b05d60` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `ca04a7a` | 2026-11-07 | docs(architecture): corrigir continuidade após etapa Contato |
 | `3e6cde2` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
-| `558601e` | 2026-11-07 | docs(architecture): registrar etapa Contato concluída |
-| `5b2b5bc` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
