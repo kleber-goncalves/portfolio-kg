@@ -1,11 +1,12 @@
 # Plano de reorganização da arquitetura por página
 
 > **Tipo:** plano operacional de refatoração e documento de continuidade entre conversas/assistentes.  
-> **Estado atual:** EM ANDAMENTO — Etapa 0 concluída; Etapa 1 (Home) implementada, validações pendentes.  
+> **Estado atual:** EM ANDAMENTO — Etapas 0 (Preflight) e 1 (Home) concluídas; Etapa 2 (Sobre) é a próxima etapa, ainda não iniciada.
 > **Última análise estrutural:** 07/11/2026.  
 > **Repositório:** \`kleber-goncalves/portfolio-kg\`.  
 > **Branch exclusiva de trabalho:** \`feat/separacao-paginas\`.  
 > **Commit-base analisado:** \`a76466a2d14c7e26e0ad699f2cfc5131c906e0ae\`.
+> **HEAD validado após a conclusão da Etapa 1 (07/11/2026):** dfe832b958b5306ba1d2dc70b054e2840ddcc278.
 
 ## 1. Objetivo
 
@@ -22,7 +23,7 @@ Na análise de 07/11/2026:
 - \`feat/separacao-paginas\` estava em \`a76466a2d14c7e26e0ad699f2cfc5131c906e0ae\`.
 - A branch estava 375 commits à frente de \`dev\` e 379 à frente de \`main\`, sem commits atrás, conforme a comparação feita antes deste documento.
 - Não havia Pull Request aberto para essa branch.
-- Nenhum arquivo de código havia sido movido ou alterado nesta tarefa; a única alteração autorizada nesta etapa é registrar este plano e referenciá-lo no AI_CONTEXT.
+- **Estado no momento da criação do plano:** nenhum arquivo de código havia sido movido; a autorização inicial era apenas registrar o planejamento. As movimentações posteriores estão documentadas nos resultados das etapas abaixo.
 - \`main\` é a branch de produção e \`dev\` é a branch de desenvolvimento. Ambas devem permanecer intactas durante a refatoração.
 
 
@@ -303,6 +304,64 @@ Depois de atualizar workflows, verificar o YAML e conferir no GitHub Actions qua
 - Este arquivo: atualizar o estado de PLANEJADO para EM ANDAMENTO/CONCLUÍDO e marcar as etapas somente depois de implementadas e validadas.
 - Outros documentos: buscar referências aos caminhos antigos e editar somente quando estiverem desatualizados. Não reescrever documentos sem relação com a estrutura.
 
+### Resultado da Etapa 1 — Home (07/11/2026)
+
+**Estado: CONCLUÍDA.** A organização da Home foi aplicada na branch feat/separacao-paginas; build, testes unitários, lint, code splitting e workflows específicos foram validados.
+
+**Arquivos movidos para src/pages/home/:**
+
+- **layouts (10):** HeroSectionTransition.jsx, HeroTeste2.jsx, HeroDesktop.jsx, HeroMobile.jsx, Logo2.jsx, SeclogsDesktop.jsx, SeclogsMobile.jsx, ProjetosTeste2.jsx, ProjetoDesktop.jsx e ProjetoCarouselMobile.jsx.
+- **components (6):** DeferredProjects.jsx, DotField.jsx, Socials.jsx, FlowingMenu.jsx, logoLoop.jsx e ProjetoCard.jsx.
+- **data (2):** seclogsDesktop.data.jsx e seclogsMobile.data.jsx.
+- **styles (3):** LogoLoop.css, looptextHero.css e heroParallax.css.
+- **assets (6 imagens):** os seis originais passaram de src/assets/projetos/ para src/pages/home/assets/projetos/.
+
+Total: 21 arquivos de código/dados/estilos e 6 assets originais realocados. src/pages/home/Home.jsx permaneceu como entrada e teve imports apontados para os novos diretórios. Os caminhos públicos em public/_optimized/ e os metadados em src/generated/imageMetadata.json foram preservados.
+
+**Dependências e automação atualizadas:**
+
+- Imports relativos e imports dinâmicos/lazy da composição Home, inclusive ProjetoDesktop e ProjetoCarouselMobile.
+- scripts/optimize-project-images.mjs: novo inputRoot em src/pages/home/assets/projetos e novo caminho de HeroMobile.jsx.
+- Filtros de caminhos/branch em optimize-project-images.yml, logo-loop-performance.yml, menu-mobile-overlay.yml, minha-trajetoria-scroll.yml, mobile-ui-sfx-slider.yml, socials-panel-performance.yml, test-code-splitting.yml e menu-desktop-reduced.yml.
+- Seis workflows específicos também passaram a observar src/pages/home/layouts/ProjetosTeste2.jsx, dependência do bundle da Home, para reexecutarem quando esse módulo mudar.
+- Os testes E2E de code splitting, menu mobile e trajetória foram alinhados às rotas separadas e aos seletores corretos. A lógica funcional dos componentes da Home não foi reescrita.
+
+**Commits de implementação/correção da Etapa 1:**
+
+- 076329d — reorganização inicial de arquivos e assets da Home.
+- 15d27a1 — correção de imports lazy da composição dos projetos.
+- fb864cc e 9b108db — teste de code splitting alinhado à rota /sobre e medição de chunks isolada por página.
+- 6a535bd — filtros de workflows alinhados à composição atual da Home.
+- 9c621f4 — teste do menu mobile alinhado ao reset de scroll entre rotas.
+- d1b363c e d1be7a6 — teste de trajetória apontado para /sobre e seletor desktop sem ambiguidade.
+- O HEAD atual inclui sincronizações automáticas de AI_CONTEXT.md; conferir o HEAD novamente antes de qualquer nova gravação.
+
+**Validações aprovadas:**
+
+| Verificação | Execução | Resultado |
+|---|---|---|
+| Unit Tests (testes, ESLint e build) | #230 — [run 42416373732](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42416373732) | Aprovada |
+| Deferred Section and Project Code Splitting | #42 — [run 42415782514](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42415782514) | Aprovada |
+| Menu Mobile Overlay and Scroll Lock | #46 — [run 42416150108](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42416150108) | Aprovada |
+| Menu Desktop Reduced Visibility | #51 — [run 42415950580](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42415950580) | Aprovada |
+| Minha Trajetória Scroll Progress (Full/Reduced) | #49 — [run 42416373637](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42416373637) | Aprovada |
+| Socials Panel First Open Performance | #42 — [run 42415950463](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42415950463) | Aprovada |
+| Mobile UI Sound Interactions | #20 — [run 42415950448](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42415950448) | Aprovada |
+| LogoLoop Visibility Performance | #20 — [run 42415950426](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42415950426) | Aprovada |
+| Optimize project images | #36 — execução disparada pela reorganização | Aprovada |
+| AI Context — Synchronize | #229 — [run 42416373679](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42416373679) | Aprovada |
+
+**Falha de baseline fora do escopo:** Accessibility and SEO Audit #205 ([run 42415418318](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42415418318)) compilou o projeto e passou Lighthouse mobile/desktop, SEO estático, semântica e interações. O Axe reprovou grupos de contraste no formulário de Contato: texto #656565 sobre #0D0D0D, razão aproximada 3,33:1. Essa falha já existia antes da refatoração da Home, é independente dos arquivos movidos e permanece registrada como pendência separada; não foi corrigida nesta etapa.
+
+**Decisões preservadas:**
+
+- DeferredLayoutSection.jsx continua global porque atende Home, Sobre e páginas internas.
+- A Home mantém o preview com seis projetos (ProjetosTeste2); ele não foi misturado com o catálogo da rota /projetos.
+- OptimizedImage, MenuMobile, PortfolioDesktopHeader, hooks/utils globais, dados compartilhados e imageMetadata.json continuam globais.
+- src/styles/DotField.css não foi movido: não havia import direto confirmado no componente e não foi justificada alteração.
+- Nenhum componente legado foi removido apenas por parecer não utilizado.
+
+
 ## 9. Sequência recomendada de execução
 
 Cada etapa deve terminar com uma revisão dos arquivos alterados e verificação de referências antes de avançar. Preferir commits pequenos e temáticos na mesma branch, com mensagens Conventional Commits.
@@ -318,7 +377,7 @@ Cada etapa deve terminar com uma revisão dos arquivos alterados e verificação
 
 ### Etapa 1 — Home
 
-Mover layouts, componentes internos, dados e assets conforme o mapeamento. Atualizar imports da Home, imports internos, script de otimização e filtros de workflows afetados. Preservar exatamente as URLs geradas em \`public/_optimized\`.
+**CONCLUÍDA em 07/11/2026.** Arquivos, imports, assets, script de otimização e filtros de workflows reorganizados. Resultado e evidências de CI registrados em “Resultado da Etapa 1 — Home”.
 
 ### Etapa 2 — Sobre
 
@@ -379,7 +438,7 @@ Resultados de CI são específicos de commit e data. Antes de concluir, consulta
 Marcar somente após a conclusão real de cada etapa:
 
 - [x] Etapa 0 — Preflight e revalidação da árvore atual (07/11/2026; HEAD `c8f8efd`).
-- [ ] Etapa 1 — Home reorganizada e imports/automação validados.
+- [x] Etapa 1 — Home reorganizada e imports/automação validados (07/11/2026; Unit Tests #230, Code Splitting #42 e workflows específicos aprovados).
 - [ ] Etapa 2 — Sobre reorganizado e seções lazy validadas.
 - [ ] Etapa 3 — Catálogo de Projetos reorganizado e preview da Home preservado.
 - [ ] Etapa 4 — Contato reorganizado e testes encontrados.
@@ -388,9 +447,9 @@ Marcar somente após a conclusão real de cada etapa:
 - [ ] Etapa 7 — Testes, lint, build, Actions e smoke tests revisados.
 - [ ] Relatório final entregue ao usuário; nenhum PR/merge feito sem autorização.
 
-**Última etapa concluída:** Etapa 0 — Preflight.  
-**Etapa em andamento:** Etapa 1 — Home. Os arquivos e imports foram preparados para a nova estrutura; build, testes e Actions desta etapa ainda precisam ser conferidos antes de marcá-la como concluída.  
-**Próxima atividade ao retomar:** validar o HEAD mais recente e consultar os resultados de CI da Etapa 1. Não começar Sobre antes da validação da Home.
+**Última etapa concluída:** Etapa 1 — Home (Etapa 0 também concluída).  
+**Etapa em andamento:** nenhuma; Etapa 2 — Sobre ainda não iniciada.  
+**Próxima atividade ao retomar:** executar o Preflight da Etapa 2, confirmar HEAD/árvore atual e iniciar a movimentação de Sobre conforme o mapeamento da seção 4.2. Não refazer a Home.
 
 ## 12. Instruções para continuidade em uma nova conversa
 
@@ -400,7 +459,7 @@ O próximo assistente deve:
 2. Ler \`docs/AI_CONTEXT.md\` e este documento completo antes de editar.
 3. Verificar o HEAD atual; o commit-base registrado é apenas o ponto da análise de 07/11/2026, não uma autorização para resetar a branch.
 4. Conferir se houve commits ou alterações posteriores e atualizar o plano mentalmente/documentalmente conforme a árvore real.
-5. Retomar pela primeira caixa ainda desmarcada no checklist. No início, a próxima é a Etapa 0.
+5. Retomar pela primeira caixa ainda desmarcada no checklist. As Etapas 0 e 1 estão concluídas; a próxima é a Etapa 2 — Sobre.
 6. Executar uma etapa por vez, mantendo este documento atualizado com o que foi movido, o commit correspondente, as validações executadas e os problemas encontrados.
 7. Informar claramente o que foi concluído, o que falhou e qual é a próxima etapa. Não repetir perguntas já respondidas neste documento.
 8. Não abrir PR, não fazer merge e não alterar \`main\` ou \`dev\` sem solicitação expressa do usuário.

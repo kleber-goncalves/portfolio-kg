@@ -41,16 +41,18 @@
 - Carregamento diferido de seções e divisão de módulos por viewport.
 - Auditorias automatizadas de performance, acessibilidade, SEO e comportamentos específicos pelo GitHub Actions.
 
+
 ### Plano de continuidade — reorganização da arquitetura por página
 
-- **Documento operacional obrigatório:** `docs/PLANO-REORGANIZACAO-ARQUITETURA-POR-PAGINA.md`. Ele contém objetivo, estrutura-alvo, mapeamento dos arquivos, dependências, workflows, scripts, validações e checklist.
-- **Estado atual:** Etapa 0 — Preflight — concluída. Etapa 1 — Home — implementada na árvore de trabalho; validação de CI pendente. Confira o HEAD e os resultados de Actions mais recentes antes de marcar a Home como concluída.
-- **Organização prevista/implementada para Home:** a entrada está em `src/pages/home/Home.jsx`; layouts em `src/pages/home/layouts/`; componentes exclusivos em `src/pages/home/components/`; dados, assets e CSS da Home em `data/`, `assets/` e `styles/` dentro da pasta da página. Módulos compartilhados continuam nos diretórios globais. A documentação detalha o mapeamento completo.
-- **Preservação importante:** `DeferredLayoutSection` continua global porque atende várias páginas; o Footer ainda será movido para `src/layouts/Footer.jsx` na etapa de layouts compartilhados. A composição de seis projetos da Home (`ProjetosTeste2`) é diferente do catálogo da rota `/projetos` (`ProjetoCatalogo`); não misturar.
-- **Próxima atividade:** validar o HEAD mais recente da Etapa 1 por Unit Tests, lint, build, workflows específicos e smoke tests aplicáveis. Só então marcar a etapa concluída e iniciar Sobre.
-- **Instrução para outra conversa/assistente:** leia integralmente este AI_CONTEXT e o documento operacional. Confira o HEAD atual e retome pela primeira etapa não concluída do checklist. Não refaça a análise do zero nem peça novamente informações já registradas.
-- **Limites:** trabalhar apenas em `feat/separacao-paginas`; manter `main` e `dev` intactas; não abrir PR ou fazer merge sem autorização. Não alterar comportamento visual/funcional como parte da simples movimentação e não apagar arquivos legados sem busca global de referências.
-- **Validação:** executar e consultar testes, lint, build e Actions no commit atualizado. A falha de contraste Accessibility/SEO identificada no baseline deve ser acompanhada separadamente e não atribuída à refatoração sem evidência.
+- **Documento operacional obrigatório:** docs/PLANO-REORGANIZACAO-ARQUITETURA-POR-PAGINA.md. Ele registra objetivo, estrutura-alvo, mapeamento de arquivos, dependências, workflows, scripts, validações e checklist para retomada por outro assistente.
+- **Estado atual (07/11/2026):** Etapa 0 — Preflight — concluída. Etapa 1 — Home — concluída e validada. HEAD conferido ao atualizar esta nota: dfe832b958b5306ba1d2dc70b054e2840ddcc278. Não há movimentações pendentes da Home.
+- **Home reorganizada:** entrada em src/pages/home/Home.jsx; layouts em src/pages/home/layouts/; componentes exclusivos em src/pages/home/components/; dados, assets e CSS em src/pages/home/data/, assets/ e styles/. Foram movidos 21 arquivos de código/dados/estilos e 6 assets originais. O script de otimização e os filtros de workflows também foram atualizados; URLs públicas em public/_optimized/ e metadados globais permaneceram inalterados.
+- **Validação da Home:** Unit Tests #230 passou em testes, ESLint e build; Code Splitting #42 passou em mobile/desktop e nas rotas Home/Sobre; Menu Mobile #46, Menu Desktop Reduced #51, Minha Trajetória #49, Socials #42, Mobile UI Sound #20, LogoLoop #20 e Optimize Images #36 passaram. AI Context — Synchronize #229 passou. Os links e os commits que explicam os ajustes dos testes estão no documento operacional.
+- **Pendência fora da etapa:** Accessibility and SEO Audit #205 falhou no Axe por contraste já conhecido no formulário Contato (#656565 sobre #0D0D0D, ~3,33:1). Lighthouse mobile/desktop e SEO estático passaram; não alterar o formulário como parte da reorganização da Home.
+- **Próxima etapa:** Etapa 2 — Sobre. Executar o Preflight da etapa, conferir HEAD/árvore e mover layouts, componentes, dados e CSS exclusivos conforme a seção 4.2 do plano. Atualizar os imports lazy de DeferredLayoutSection.jsx e workflows relacionados; preservar o carregamento lazy das seções.
+- **Instrução para outra conversa/assistente:** leia integralmente este AI_CONTEXT e o documento operacional; confira o HEAD atual e continue na Etapa 2. Não refaça a Home nem solicite informações já registradas.
+- **Limites:** trabalhar somente em feat/separacao-paginas; manter main e dev intactas; não abrir PR/merge sem autorização. Preservar comportamento visual/funcional e não remover arquivos legados sem busca global de referências.
+- **Validação:** executar e consultar testes, lint, build e Actions do commit atualizado. Falhas históricas de testes corrigidas por alinhamento às rotas novas não devem ser tratadas como falhas atuais. A falha de contraste Accessibility/SEO deve permanecer separada.
 
 ### Implementação inicial da separação de páginas
 
