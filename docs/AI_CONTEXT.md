@@ -343,9 +343,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `80bba2be09be663bc5e3abcea512d167b192bae6`
-- **Data do commit analisado:** 2026-11-07T15:59:51-03:00
-- **Mensagem do commit:** fix(contact): restore submit button motion
+- **Commit de código analisado:** `d42f3eb6c6580d45f65d2d8835a6b0a10b079ab5`
+- **Data do commit analisado:** 2026-11-07T16:02:21-03:00
+- **Mensagem do commit:** fix(contact): use numeric label motion offset
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -464,13 +464,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `d42f3eb` | 2026-11-07 | fix(contact): use numeric label motion offset |
+| `239f571` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `80bba2b` | 2026-11-07 | fix(contact): restore submit button motion |
 | `8d06807` | 2026-10-29 | docs(ai-context): atualizar snapshot automaticamente |
 | `f021627` | 2026-10-29 | fix(contact): cap magnetic submit button movement |
 | `f22b77a` | 2026-10-29 | docs(ai-context): atualizar snapshot automaticamente |
 | `3196d2d` | 2026-10-29 | fix(contact): expose pending submit state accessibly |
 | `4ce72e7` | 2026-10-29 | docs(ai-context): atualizar snapshot automaticamente |
-| `8455f08` | 2026-10-29 | feat(contact): add footer-style magnetic submit button |
-| `dd60435` | 2026-10-29 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
