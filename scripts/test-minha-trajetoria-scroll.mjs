@@ -369,7 +369,7 @@ async function testModeSwitchReload(browser) {
 
         await page.waitForFunction(
             () => {
-                const button = document.querySelector('button[aria-label="Abrir menu"]');
+                const button = document.querySelector('button[data-menu-desktop-trigger][aria-label="Abrir menu"]');
                 return Boolean(
                     button &&
                     getComputedStyle(button).pointerEvents !== "none" &&
@@ -387,7 +387,7 @@ async function testModeSwitchReload(browser) {
             "The test must switch modes while scrolled into MinhaTrajetoria; scrollY=" + beforeSwitchY + ".",
         );
 
-        await page.locator('button[aria-label="Abrir menu"]').click();
+        await page.locator('button[data-menu-desktop-trigger][aria-label="Abrir menu"]').click();
 
         const fullOption = page.locator('[data-experience-mode-option="full"]');
         await fullOption.waitFor({ state: "visible", timeout: 10000 });
