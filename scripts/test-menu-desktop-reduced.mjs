@@ -213,25 +213,32 @@ async function testReducedReloadAtMiddle(browser) {
             history.scrollRestoration = "manual";
 
             window.addEventListener("DOMContentLoaded", () => {
-                if (sessionStorage.getItem("__menu_test_restore_midpage") !== "1") return;
+                const savedScrollY = sessionStorage.getItem("__menu_test_restore_midpage");
+                if (savedScrollY === null) return;
 
                 sessionStorage.removeItem("__menu_test_restore_midpage");
-                document.documentElement.style.scrollBehavior = "auto";
 
-                // Restaura após o HTML inicial, mas antes de o Hero lazy concluir onReady.
-                requestAnimationFrame(() => {
-                    requestAnimationFrame(() => {
-                        const target = document.querySelector("#projetos");
-                        if (!target) return;
+                // O Hero é carregado sob demanda. Aguarda o documento recuperar
+                // altura suficiente antes de reaplicar a posição de rolagem salva.
+                let attempts = 0;
+                const restoreScroll = () => {
+                    const maxScroll = Math.max(
+                        0,
+                        document.documentElement.scrollHeight - window.innerHeight,
+                    );
+                    const targetY = Number(savedScrollY);
 
-                        const targetY =
-                            window.scrollY +
-                            target.getBoundingClientRect().top -
-                            window.innerHeight * 0.25;
+                    if (maxScroll < targetY && attempts < 180) {
+                        attempts += 1;
+                        requestAnimationFrame(restoreScroll);
+                        return;
+                    }
 
-                        window.scrollTo(0, Math.max(0, targetY));
-                    });
-                });
+                    document.documentElement.style.scrollBehavior = "auto";
+                    window.scrollTo(0, Math.min(targetY, maxScroll));
+                };
+
+                window.setTimeout(() => requestAnimationFrame(restoreScroll), 100);
             });
         } catch {
             // Ignore storage access failures before navigation.
@@ -260,9 +267,9 @@ async function testReducedReloadAtMiddle(browser) {
 
         // Força uma restauração de posição controlada durante o reload para reproduzir
         // o cenário sem depender do comportamento variável de scroll restoration do Chromium.
-        await page.evaluate(() => {
-            sessionStorage.setItem("__menu_test_restore_midpage", "1");
-        });
+        await page.evaluate((scrollY) => {
+            sessionStorage.setItem("__menu_test_restore_midpage", String(scrollY));
+        }, beforeReload.scrollY);
 
         await page.reload({
             waitUntil: "domcontentloaded",
