@@ -221,7 +221,7 @@ async function testReducedReloadAtMiddle(browser) {
                 // Restaura após o HTML inicial, mas antes de o Hero lazy concluir onReady.
                 requestAnimationFrame(() => {
                     requestAnimationFrame(() => {
-                        const target = document.querySelector("#competencias");
+                        const target = document.querySelector("#projetos");
                         if (!target) return;
 
                         const targetY =
@@ -245,7 +245,7 @@ async function testReducedReloadAtMiddle(browser) {
         console.log("Testing Reduced refresh while scrolled away from Hero");
         await waitForPageReady(page, "reduced");
 
-        await page.locator("#competencias").scrollIntoViewIfNeeded();
+        await page.locator("#projetos").scrollIntoViewIfNeeded();
         await page.waitForTimeout(350);
 
         const beforeReload = await assertHamburgerAvailable(
