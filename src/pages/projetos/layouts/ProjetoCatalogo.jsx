@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView, useMotionValue, useSpring, useTransform } from "motion/react";
 import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
-import { playUiSound } from "../utils/uiSfx";
+import { playUiSound } from "../../../utils/uiSfx";
 
 import { CATEGORIAS_PROJETOS, projetosCatalogo } from "../data/projetosCatalogo";
-import { tecnologias } from "../data/tecnologias";
-import MagneticExternalLinkHover from "./MagneticExternalLinkHover";
-import { scrollToTarget } from "../utils/lenisControl";
-import useResponsive from "../hooks/useResponsive";
+import { tecnologias } from "../../../data/tecnologias";
+import MagneticExternalLinkHover from "../../../components/MagneticExternalLinkHover";
+import { scrollToTarget } from "../../../utils/lenisControl";
+import useResponsive from "../../../hooks/useResponsive";
 
 const PROJECTS_PAGE_SIZE = 10;
 

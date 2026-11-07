@@ -18,6 +18,8 @@ on:
       - "src/App.jsx"
       - "src/layouts/InteriorPageLayout.jsx"
       - "src/pages/projetos/Projetos.jsx"
+      - "src/pages/projetos/layouts/ProjetoCatalogo.jsx"
+      - "src/pages/projetos/data/projetosCatalogo.js"
       - "src/pages/sobre/Sobre.jsx"
       - "src/pages/contato/Contato.jsx"
       - "package.json"

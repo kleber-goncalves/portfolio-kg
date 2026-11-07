@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import InteriorPageLayout from "../../layouts/InteriorPageLayout";
-import ProjetoCatalogo from "../../components/ProjetoCatalogo";
+import ProjetoCatalogo from "./layouts/ProjetoCatalogo";
 
 function Projetos({ experienceMode = "full", entranceKey = 0, isRouteTransitioning = false, onRouteReady, onRouteNavigationElementChange }) {
     useEffect(() => {
