@@ -345,9 +345,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `3dd56f147ac0e3c110c6dee1bb6bc1578271f6b8`
-- **Data do commit analisado:** 2026-11-07T16:29:01-03:00
-- **Mensagem do commit:** test(menu): restore saved home scroll position
+- **Commit de código analisado:** `faace481bb61554f3ebd89d2a789f26359fde6f3`
+- **Data do commit analisado:** 2026-11-07T16:32:34-03:00
+- **Mensagem do commit:** test(menu): target desktop trigger explicitly
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -466,13 +466,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `faace48` | 2026-11-07 | test(menu): target desktop trigger explicitly |
+| `b639b0d` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `3dd56f1` | 2026-11-07 | test(menu): restore saved home scroll position |
 | `5e1c079` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `ed50465` | 2026-11-07 | test(menu): target current home projects section |
 | `080ddfc` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `506429c` | 2026-11-07 | fix(menu): observe internal route header after lazy mount |
 | `61f14df` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
-| `d42f3eb` | 2026-11-07 | fix(contact): use numeric label motion offset |
-| `239f571` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
