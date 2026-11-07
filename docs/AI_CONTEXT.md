@@ -373,9 +373,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `19d6dc58ec5fe45c1462d2666ed778b400f28086`
-- **Data do commit analisado:** 2026-11-07T19:22:11-03:00
-- **Mensagem do commit:** refactor(contato): organizar módulos por página
+- **Commit de código analisado:** `558601eca12793ad33be05dac78df444e28fd904`
+- **Data do commit analisado:** 2026-11-07T19:25:53-03:00
+- **Mensagem do commit:** docs(architecture): registrar etapa Contato concluída
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -493,13 +493,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `558601e` | 2026-11-07 | docs(architecture): registrar etapa Contato concluída |
+| `5b2b5bc` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `19d6dc5` | 2026-11-07 | refactor(contato): organizar módulos por página |
 | `56970ad` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `4d067c0` | 2026-11-07 | docs(architecture): concluir etapa Projetos e preparar Contato |
 | `36b9031` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `de18e42` | 2026-11-07 | docs(architecture): atualizar validações da etapa Projetos |
 | `8bae313` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
-| `a42678a` | 2026-11-07 | docs(architecture): registrar movimentação inicial de Projetos |
-| `88a4987` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
