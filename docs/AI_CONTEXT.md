@@ -354,9 +354,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `faace481bb61554f3ebd89d2a789f26359fde6f3`
-- **Data do commit analisado:** 2026-11-07T16:32:34-03:00
-- **Mensagem do commit:** test(menu): target desktop trigger explicitly
+- **Commit de código analisado:** `d267411637a6e29f868a0032627bef1fb330c52f`
+- **Data do commit analisado:** 2026-11-07T17:20:40-03:00
+- **Mensagem do commit:** docs: refresh project context and technical guides
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -475,13 +475,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `d267411` | 2026-11-07 | docs: refresh project context and technical guides |
+| `82c46f4` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `faace48` | 2026-11-07 | test(menu): target desktop trigger explicitly |
 | `b639b0d` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `3dd56f1` | 2026-11-07 | test(menu): restore saved home scroll position |
 | `5e1c079` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `ed50465` | 2026-11-07 | test(menu): target current home projects section |
 | `080ddfc` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
-| `506429c` | 2026-11-07 | fix(menu): observe internal route header after lazy mount |
-| `61f14df` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
