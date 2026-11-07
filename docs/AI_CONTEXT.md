@@ -369,9 +369,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `ab1eb94820611d542c3fdab1dd8c302985282cbb`
-- **Data do commit analisado:** 2026-11-07T18:55:01-03:00
-- **Mensagem do commit:** docs(architecture): registrar preflight da etapa Projetos
+- **Commit de código analisado:** `5f04d7cf0ceacfe497f0f2db0fe10d5de51ff303`
+- **Data do commit analisado:** 2026-11-07T18:55:53-03:00
+- **Mensagem do commit:** refactor(projetos): organizar catálogo por página
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -489,13 +489,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `5f04d7c` | 2026-11-07 | refactor(projetos): organizar catálogo por página |
+| `48b934c` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `ab1eb94` | 2026-11-07 | docs(architecture): registrar preflight da etapa Projetos |
 | `f650ff2` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `46c3498` | 2026-11-07 | docs(architecture): concluir etapa Sobre e preparar Projetos |
 | `780af1a` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `acbc906` | 2026-11-07 | test(navigation): aguardar altura da rota na restauração de scroll |
 | `434d960` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
-| `3db81bb` | 2026-11-07 | refactor(sobre): organizar módulos por página |
-| `cca882b` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
