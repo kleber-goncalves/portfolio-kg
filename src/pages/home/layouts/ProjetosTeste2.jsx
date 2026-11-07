@@ -13,8 +13,8 @@ import projeto04 from "../assets/projetos/projeto04/dnc-arq.png";
 import projeto05 from "../assets/projetos/projeto05/dashboard-de-vendas.png";
 import projeto06 from "../assets/projetos/projeto06/cafena.png";
 
-const ProjetoDesktop = lazy(() => import("../components/ProjetoDesktop"));
-const ProjetoCarouselMobile = lazy(() => import("../components/ProjetoCarouselMobile"));
+const ProjetoDesktop = lazy(() => import("./ProjetoDesktop"));
+const ProjetoCarouselMobile = lazy(() => import("./ProjetoCarouselMobile"));
 
 function MobileCarouselPlaceholder({ projectCount }) {
     return (
