@@ -1,6 +1,6 @@
 import DeferredLayoutSection from "../../components/DeferredLayoutSection";
 import InteriorPageLayout from "../../layouts/InteriorPageLayout";
-import SobreHero from "./SobreHero";
+import SobreHero from "./layouts/SobreHero";
 
 function Sobre({ experienceMode = "full", entranceKey = 0, isRouteTransitioning = false, onRouteReady, onRouteNavigationElementChange }) {
     return (

@@ -11,7 +11,7 @@ on:
       - "src/pages/home/assets/projetos/**"
       - "public/euNv.png"
       - "public/euNvEnvt.png"
-      - "src/pages/sobre/SobreHero.jsx"
+      - "src/pages/sobre/layouts/SobreHero.jsx"
       - "src/pages/home/layouts/HeroDesktop.jsx"
       - "src/pages/home/layouts/HeroMobile.jsx"
       - "scripts/optimize-project-images.mjs"

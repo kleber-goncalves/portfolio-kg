@@ -8,13 +8,14 @@ on:
       - feat/responsividadeFull
       - feat/separacao-paginas
     paths:
+      - "src/pages/sobre/Sobre.jsx"
       - "src/pages/home/layouts/ProjetosTeste2.jsx"
       - ".github/workflows/minha-trajetoria-scroll.yml"
       - "scripts/test-minha-trajetoria-scroll.mjs"
-      - "src/components/MinhaTrajetoria.jsx"
-      - "src/components/HeroSectionTransition.jsx"
+      - "src/pages/sobre/components/MinhaTrajetoria.jsx"
+      - "src/pages/home/layouts/HeroSectionTransition.jsx"
       - "src/components/SmoothScroll.jsx"
-      - "src/layout/Formacao.jsx"
+      - "src/pages/sobre/layouts/Formacao.jsx"
       - "src/pages/home/layouts/HeroTeste2.jsx"
       - "src/components/ExperienceDropdown.jsx"
       - "package.json"

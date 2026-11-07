@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef } from "react";
 import { gsap } from "gsap";
 
-import GlobeIcon from "../../components/GlobeIcon";
-import OptimizedImage from "../../components/OptimizedImage";
-import "../../styles/sobreHeroPortrait.css";
+import GlobeIcon from "../../../components/GlobeIcon";
+import OptimizedImage from "../../../components/OptimizedImage";
+import "../styles/sobreHeroPortrait.css";
 
 function SobreHero({ experienceMode = "full", onRouteReady }) {
     const portraitRef = useRef(null);

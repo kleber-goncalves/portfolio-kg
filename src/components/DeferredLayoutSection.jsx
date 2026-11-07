@@ -7,19 +7,19 @@ const SECTION_CONFIG = {
         id: "competencias",
         title: "// COMPETÊNCIAS",
         minHeight: "min-h-[1300px] b-md:min-h-[1000px]",
-        Component: lazy(() => import("../layout/Competencia")),
+        Component: lazy(() => import("../pages/sobre/layouts/Competencia")),
     },
     diferenciais: {
         id: "diferenciais",
         title: "// DIFERENCIAIS",
         minHeight: "min-h-[1000px] b-md:min-h-[850px]",
-        Component: lazy(() => import("../layout/DiferenciaisTeste")),
+        Component: lazy(() => import("../pages/sobre/layouts/DiferenciaisTeste")),
     },
     formacao: {
         id: "formacao",
         title: "// FORMAÇÃO",
         minHeight: "min-h-[1800px] b-md:min-h-[1500px]",
-        Component: lazy(() => import("../layout/Formacao")),
+        Component: lazy(() => import("../pages/sobre/layouts/Formacao")),
     },
     footer: {
         id: "footer",
