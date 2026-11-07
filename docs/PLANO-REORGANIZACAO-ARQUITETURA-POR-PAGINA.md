@@ -1,7 +1,7 @@
 # Plano de reorganização da arquitetura por página
 
 > **Tipo:** plano operacional de refatoração e documento de continuidade entre conversas/assistentes.  
-> **Estado atual:** EM ANDAMENTO — Etapas 0 (Preflight), 1 (Home) e 2 (Sobre) concluídas; Etapa 3 (Projetos) com movimentação aplicada, Unit Tests/Code Splitting/Menu Desktop aprovados e auditoria Axe pendente; erro de ScrollTrigger ainda observado no console de /projetos.
+> **Estado atual:** EM ANDAMENTO — Etapas 0 (Preflight), 1 (Home), 2 (Sobre) e 3 (Projetos) concluídas. Próxima etapa: Preflight da Etapa 4 (Contato). Pendências técnicas registradas separadamente: contraste do formulário /contato e erro ScrollTrigger.refresh() no console de /projetos.
 > **Última análise estrutural:** 07/11/2026.  
 > **Repositório:** \`kleber-goncalves/portfolio-kg\`.  
 > **Branch exclusiva de trabalho:** \`feat/separacao-paginas\`.  
@@ -11,6 +11,7 @@
 > **HEAD validado no Preflight da Etapa 3 (07/11/2026):** f650ff2865ca7a64c9c9b6f2e19296ee2212c8be.
 > **HEAD após a movimentação da Etapa 3 (07/11/2026):** 5f04d7cf0ceacfe497f0f2db0fe10d5de51ff303.
 > **HEAD verificado antes desta atualização documental (07/11/2026):** 8bae313c6fb958e912e730d24feeffb936628a15.
+> **HEAD verificado antes do fechamento da Etapa 3 (07/11/2026):** 36b903194e81f6fd49d5dd1bb9d77d39fd0bc3da.
 
 ## 1. Objetivo
 
@@ -460,9 +461,9 @@ Total: 12 arquivos movidos. Sobre.jsx permaneceu como entrada da página e passo
 **Limites confirmados durante aquele Preflight:** main e dev permaneceram intocadas; não havia PR aberto; nenhum arquivo de Projetos foi movido naquele momento.
 
 
-### Resultado parcial da implementação da Etapa 3 — Projetos (07/11/2026)
+### Resultado da Etapa 3 — Projetos (07/11/2026)
 
-**Estado: MOVIMENTAÇÃO APLICADA; validação E2E ainda em andamento.** A implementação estrutural foi registrada no commit `5f04d7c` (`refactor(projetos): organizar catálogo por página`). O HEAD atual é `88a4987`; a diferença posterior à implementação é uma sincronização automática do `AI_CONTEXT.md`, sem alteração de código.
+**Estado: CONCLUÍDA em 07/11/2026.** A implementação estrutural foi registrada no commit `5f04d7c` (`refactor(projetos): organizar catálogo por página`). O build, testes, ESLint, Code Splitting, Menu Desktop e Lighthouse foram validados. O Axe encontrou falha apenas no formulário `/contato`, sem violações nas rotas `/projetos` e `/sobre`; isso permanece como baseline separado. O HEAD após sincronizações documentais foi conferido antes desta atualização.
 
 **Arquivos reorganizados:**
 
@@ -492,11 +493,11 @@ Total: 12 arquivos movidos. Sobre.jsx permaneceu como entrada da página e passo
 | AI Context — Synchronize | #235 — [run 42418184146](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42418184146) | Aprovada |
 | Deferred Section and Project Code Splitting | #44 — [run 42418184096](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42418184096) | Aprovada em mobile/desktop |
 | Menu Desktop Reduced Visibility | #54 — [run 42418184102](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42418184102) | Aprovada nos cenários do menu/reload; o log ainda registra erro de ScrollTrigger em /projetos |
-| Accessibility and SEO Audit | #207 — [run 42418184158](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42418184158) | Build e Lighthouse mobile/desktop aprovados; Axe ainda em execução na última checagem |
+| Accessibility and SEO Audit | #207 — [run 42418184158](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42418184158) | Lighthouse mobile/desktop aprovados; Axe sem violações em `/projetos` e `/sobre`; falha global restrita a contraste em `/contato` |
 
 **Problema conhecido confirmado novamente:** Menu Desktop #54 passou nos cenários de navegação/reload, porém seu log ainda registra, durante reload direto de `/projetos`, a mensagem “Não foi possível atualizar os ScrollTriggers após mudar a página de projetos” seguida de `TypeError: Cannot read properties of undefined (reading 'restart')` em `ScrollTrigger.refresh()`. O teste passou apesar do erro de console. O comportamento já havia sido identificado antes da movimentação; tratá-lo como pendência técnica independente e não atribuí-lo automaticamente ao novo caminho.
 
-**Próxima atividade:** conferir a conclusão do Axe no run #207 e revisar o relatório. Os testes #44 e #54 e Unit Tests #236/#237 já passaram. Registrar o resultado de acessibilidade e manter o erro ScrollTrigger como pendência isolada; então decidir se a Etapa 3 pode ser marcada como concluída sem ampliar o escopo para uma correção funcional. Depois iniciar o Preflight da Etapa 4 — Contato.
+**Próxima atividade:** iniciar o Preflight da Etapa 4 — Contato. A falha Axe do formulário é uma pendência conhecida e não deve ser corrigida dentro de uma simples movimentação estrutural sem manter essa correção isolada. O erro ScrollTrigger em `/projetos` também permanece como item técnico separado.
 
 
 ## 9. Sequência recomendada de execução
@@ -577,16 +578,16 @@ Marcar somente após a conclusão real de cada etapa:
 - [x] Etapa 0 — Preflight e revalidação da árvore atual (07/11/2026; HEAD `c8f8efd`).
 - [x] Etapa 1 — Home reorganizada e imports/automação validados (07/11/2026; Unit Tests #230, Code Splitting #42 e workflows específicos aprovados).
 - [x] Etapa 2 — Sobre reorganizado e seções lazy validadas (07/11/2026; Unit Tests #233, Code Splitting #43, Trajetória #50 e Menu Desktop #53 aprovados).
-- [ ] Etapa 3 — Catálogo de Projetos reorganizado e preview da Home preservado (movimentação aplicada; Unit Tests #236/#237, Code Splitting #44 e Menu Desktop #54 aprovados; Axe #207 pendente; erro ScrollTrigger em /projetos registrado separadamente).
+- [x] Etapa 3 — Catálogo de Projetos reorganizado e preview da Home preservado (07/11/2026; Unit Tests #236/#237, Code Splitting #44 e Menu Desktop #54 aprovados; Axe #207 sem violações em /projetos e /sobre).
 - [ ] Etapa 4 — Contato reorganizado e testes encontrados.
 - [ ] Etapa 5 — Footer compartilhado movido e sem duplicação.
 - [ ] Etapa 6 — Scripts, workflows, README e AI_CONTEXT atualizados.
 - [ ] Etapa 7 — Testes, lint, build, Actions e smoke tests revisados.
 - [ ] Relatório final entregue ao usuário; nenhum PR/merge feito sem autorização.
 
-**Última etapa concluída:** Etapa 2 — Sobre.  
-**Etapa em andamento:** Etapa 3 — Projetos; os dois módulos já foram movidos e os testes de build, code splitting e menu passaram. A auditoria Axe ainda está pendente.  
-**Próxima atividade ao retomar:** conferir o resultado final do Accessibility/SEO #207 e registrar o resultado. O erro `ScrollTrigger.refresh()` em `/projetos` continua no console apesar do Menu Desktop #54 passar; mantê-lo como pendência técnica separada, sem repetir os moves.
+**Última etapa concluída:** Etapa 3 — Projetos (Etapas 0, 1 e 2 também concluídas).  
+**Etapa em andamento:** nenhuma; Etapa 4 — Contato é a próxima.  
+**Próxima atividade ao retomar:** executar o Preflight da Etapa 4, conferir HEAD/árvore e mapear botão, utilitários e testes exclusivos de Contato. Manter a falha de contraste Axe do formulário como pendência conhecida e separada; não misturar correção visual à movimentação de arquivos.
 
 ## 12. Instruções para continuidade em uma nova conversa
 
