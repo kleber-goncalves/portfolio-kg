@@ -269,7 +269,7 @@ function MagneticSubmitButton({
                 <motion.span
                     className="contact-send-button__label inline-block"
                     animate={{
-                        x: isInteractive && !reducedMotion ? "5em" : 0,
+                        x: isInteractive && !reducedMotion ? 55 : 0,
                         opacity: isInteractive ? 0 : 1,
                     }}
                     transition={reducedMotion ? { duration: 0.01 } : {
