@@ -434,20 +434,3 @@ Leia primeiro `docs/AI_CONTEXT.md`, confirme o estado remoto e a branch autoriza
 - **Stack e ferramentas:** GSAP/ScrollTrigger, Lenis, Motion, Vitest/jsdom, Playwright e GitHub Actions; consulte os arquivos reais antes de assumir versões ou comportamentos.
 
 **Continue a partir do pedido mais recente do usuário e valide cada afirmação nos arquivos e Actions do SHA correspondente.**
-
-
-## 8. Resumo para iniciar o trabalho rapidamente
-
-- **Projeto:** portfólio pessoal KLEBER DEV, React + Vite + JavaScript/JSX + Tailwind CSS 4; design editorial escuro e bronze.
-- **Branch de edição:** `dev`, confirmada em `28b30550fde834a73ee39cafe4570a0f0e2292bf` no registro de 19/10/2026. Reconfirme antes de agir.
-- **`main`:** `6abb4d1b81e2ed70329d3102fe47ae709b320a97` naquele momento; **não tocar**.
-- **`feat/responsividadeFull`:** `9401de3c57de98e6642eb6a938e7187c07ace289`, ancestral antigo/43 commits atrás de `dev` naquele momento; só trabalhar nela se o usuário pedir.
-- **Foco técnico recente:** sistema `uiSfx`, cues Zen, persistência e unlock correto do áudio, som no arraste do Socials, carregamento tardio do slider mobile e agrupamento visual único no `SoundControls` desktop.
-- **Última alteração visual:** commit `7d75135` em `src/components/SoundControls.jsx`, incorporado no head de `dev` atual `28b3055`.
-- **Socials:** commit `1a6b1de`, cue `drag-start` durante movimento, limite de 24 px e intervalo de 180 ms; `expand`/`collapse` preservados.
-- **Mobile slider lazy load:** commit `324d73a`.
-- **Ações:** em 19/10/2026, oito workflows do SHA `28b3055` passaram; o `UI Sound Preference and Refresh` do commit `7d75135` também passou. Confira o estado vivo, pois o GitHub muda.
-- **Ferramenta usada para trabalhar:** conector GitHub do ChatGPT através de `functions.exec` para ler/gravar arquivos, analisar commits/branches e consultar Actions; GitHub Actions roda build, Playwright, Lighthouse, Axe e análises especializadas.
-- **Regra principal:** inspecionar estado atual → fazer alteração mínima em `dev` → revisar diff → esperar/conferir workflows no SHA correto → comunicar exatamente o que passou e o que não foi validado.
-
-**Agora continue a conversa com o pedido mais recente do usuário, sem voltar a perguntar informações respondidas neste documento e sem modificar qualquer branch que ele não autorizou.**
