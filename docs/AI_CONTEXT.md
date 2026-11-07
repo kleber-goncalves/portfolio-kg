@@ -365,9 +365,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `d1b363c84582c010360aa6487ac1c0227900c83b`
-- **Data do commit analisado:** 2026-11-07T18:30:39-03:00
-- **Mensagem do commit:** test(sobre): executar trajetória na rota correta
+- **Commit de código analisado:** `d1be7a647bd41b996a4c1c4055fb9f21714175e8`
+- **Data do commit analisado:** 2026-11-07T18:32:46-03:00
+- **Mensagem do commit:** test(sobre): selecionar gatilho desktop sem ambiguidade
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -485,13 +485,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `d1be7a6` | 2026-11-07 | test(sobre): selecionar gatilho desktop sem ambiguidade |
+| `be06403` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `d1b363c` | 2026-11-07 | test(sobre): executar trajetória na rota correta |
 | `35aa777` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `9c621f4` | 2026-11-07 | test(navigation): alinhar menu mobile ao reset entre rotas |
 | `7a999c5` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `6a535bd` | 2026-11-07 | ci(home): validar composição atual nos workflows |
 | `19ee51f` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
-| `9b108db` | 2026-11-07 | test(architecture): isolar medição dos chunks da página Sobre |
-| `bee2227` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
