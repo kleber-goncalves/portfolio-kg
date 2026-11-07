@@ -173,9 +173,9 @@ flowchart TD
 
 - <code>src/main.jsx</code>: inicializa a aplicação React e o roteamento utilizado pela interface.
 - <code>src/App.jsx</code>: compõe a página principal e conecta as seções.
-- <code>src/components/HeroSectionTransition.jsx</code>: coordena o Hero, a navegação e a transição para a área de tecnologias.
+- <code>src/pages/home/layouts/HeroSectionTransition.jsx</code>: coordena o Hero, a navegação e a transição para a área de tecnologias.
 - <code>src/components/DeferredLayoutSection.jsx</code>: carrega seções secundárias de forma adiada.
-- <code>src/components/DeferredProjects.jsx</code>: coordena o carregamento da seção de projetos.
+- <code>src/pages/home/components/DeferredProjects.jsx</code>: coordena o carregamento da seção de projetos.
 - <code>src/layouts/</code>: reúne layouts compartilhados. <code>InteriorPageLayout.jsx</code> padroniza as rotas internas, enquanto <code>Footer.jsx</code> fornece o rodapé único e é carregado sob demanda por <code>DeferredLayoutSection.jsx</code>.
 - <code>src/pages/</code>: reúne as entradas das rotas e os módulos específicos de cada página, organizados em diretórios próprios.
 - <code>src/components/</code>: concentra componentes reutilizáveis, efeitos e experiências de interação.
@@ -199,7 +199,7 @@ Os módulos de projetos desktop e mobile são importados sob demanda. O layout m
 
 ### 3. Imagens responsivas
 
-As imagens originais dos projetos ficam em <code>src/assets/projetos/</code>. O script <code>scripts/optimize-project-images.mjs</code>, utilizado pelo workflow de otimização, gera variantes WebP e atualiza os metadados em <code>src/generated/imageMetadata.json</code>. Os arquivos gerados são disponibilizados em <code>public/\_optimized/</code>.
+As imagens originais dos projetos ficam em <code>src/pages/home/assets/projetos/</code>. O script <code>scripts/optimize-project-images.mjs</code>, utilizado pelo workflow de otimização, gera variantes WebP e atualiza os metadados em <code>src/generated/imageMetadata.json</code>. Os arquivos gerados são disponibilizados em <code>public/\_optimized/</code>.
 
 O componente <code>OptimizedImage</code> usa os metadados quando disponíveis para selecionar recursos responsivos por meio de <code>srcSet</code> e <code>sizes</code>, reservar dimensões e configurar carregamento e prioridade. Em geral, imagens que não precisam estar disponíveis imediatamente podem usar carregamento tardio, enquanto recursos essenciais do Hero recebem tratamento prioritário no HTML.
 

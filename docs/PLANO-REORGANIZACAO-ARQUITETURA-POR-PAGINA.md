@@ -1,7 +1,7 @@
 # Plano de reorganização da arquitetura por página
 
 > **Tipo:** plano operacional de refatoração e documento de continuidade entre conversas/assistentes.  
-> **Estado atual:** EM ANDAMENTO — Etapas 0 (Preflight), 1 (Home), 2 (Sobre), 3 (Projetos), 4 (Contato) e 5 (Footer compartilhado) concluídas. Próxima etapa: Etapa 6 (Consolidação e documentação). Pendências técnicas registradas separadamente: contraste do formulário /contato e erro ScrollTrigger.refresh() no console de /projetos.
+> **Estado atual:** EM ANDAMENTO — Etapas 0 (Preflight) a 6 (Consolidação e documentação) concluídas. Próxima etapa: Etapa 7 (Validação final e relatório). Pendências técnicas registradas separadamente: contraste do formulário /contato e erro ScrollTrigger.refresh() no console de /projetos.
 > **Commit de implementação da Etapa 5 (07/11/2026):** `955108a5939e76b957be88fff1d97d27c6f0c1bc` (`refactor(layout): mover Footer compartilhado para layouts`). Unit Tests #243 e Code Splitting #45 passaram.
 > **Última análise estrutural:** 07/11/2026.  
 > **Repositório:** \`kleber-goncalves/portfolio-kg\`.  
@@ -106,6 +106,8 @@ src/
 
 A árvore é um destino conceitual, não uma ordem para criar cada pasta. Por exemplo, Contato não precisa de \`layouts/\` enquanto não tiver um layout exclusivo extraído.
 
+
+> **Nota de leitura:** os caminhos listados no mapeamento inicial das seções 4 e 6 registram a localização de origem observada antes da reorganização. Eles são mantidos como histórico/auditoria das movimentações. Para caminhos atuais, imports e árvore final, use os resultados das etapas concluídas e o `docs/AI_CONTEXT.md`.
 ## 4. Mapeamento dos arquivos por página
 
 O mapeamento abaixo foi confirmado pela inspeção dos imports e da composição atual. Durante a execução, repetir a busca de referências antes de cada lote de movimentação.
@@ -589,8 +591,8 @@ Cada etapa deve terminar com uma revisão dos arquivos alterados e verificação
 
 - Atualizar todos os caminhos restantes em scripts, workflows e testes E2E.
 - Atualizar README e narrativa do AI_CONTEXT.
-- Revisar se \`src/layout/\` ficou vazio ou contém algum arquivo legitimamente compartilhado/legado.
-- Remover diretórios vazios apenas quando não houver arquivos restantes; não apagar arquivos legados sem auditoria.
+- Confirmar que `src/layout/` foi removido da árvore Git após a movimentação do Footer e que os módulos compartilhados estão em `src/layouts/`.
+- `src/layout/` não existe mais na árvore Git após a movimentação do Footer; diretórios vazios não são versionados pelo Git. Preservar arquivos legados que ainda tenham referências.
 - Executar busca final por caminhos antigos.
 
 ### Etapa 7 — Validação e relatório
@@ -633,13 +635,13 @@ Marcar somente após a conclusão real de cada etapa:
 - [x] Etapa 3 — Catálogo de Projetos reorganizado e preview da Home preservado (07/11/2026; Unit Tests #236/#237, Code Splitting #44 e Menu Desktop #54 aprovados; Axe #207 sem violações em /projetos e /sobre).
 - [x] Etapa 4 — Contato reorganizado e testes encontrados (07/11/2026; Unit Tests #240 e Menu Desktop #55 aprovados; 66 testes unitários, lint sem erros e build aprovados).
 - [x] Etapa 5 — Footer compartilhado movido e sem duplicação (07/11/2026; Unit Tests #243 e Code Splitting #45 aprovados; chunk adiado e instância única verificados em mobile/desktop).
-- [ ] Etapa 6 — Scripts, workflows, README e AI_CONTEXT atualizados.
+- [x] Etapa 6 — Scripts, workflows, README e AI_CONTEXT consolidados (07/11/2026; busca final em 158 arquivos textuais, caminhos obsoletos do README corrigidos e `src/layout/` ausente da árvore).
 - [ ] Etapa 7 — Testes, lint, build, Actions e smoke tests revisados.
 - [ ] Relatório final entregue ao usuário; nenhum PR/merge feito sem autorização.
 
-**Última etapa concluída:** Etapa 5 — Layout compartilhado (Footer) (Etapas 0, 1, 2, 3 e 4 também concluídas).  
-**Etapa em andamento:** nenhuma; Etapa 6 — Consolidação e documentação é a próxima.  
-**Próxima atividade ao retomar:** executar a busca final por caminhos antigos em scripts, workflows, testes, README e docs; revisar a árvore `src/` (incluindo a remoção de `src/layout/`, agora vazio); consolidar a arquitetura documentada e preservar os módulos legados que ainda tenham referências.
+**Última etapa concluída:** Etapa 6 — Consolidação e documentação (Etapas 0 a 5 também concluídas).  
+**Etapa em andamento:** nenhuma; Etapa 7 — Validação final e relatório é a próxima.  
+**Próxima atividade ao retomar:** consultar as execuções mais recentes de GitHub Actions, confirmar `npm test`, `npm run lint` e `npm run build`, revisar a auditoria Accessibility/SEO e realizar smoke tests de `/`, `/projetos`, `/sobre` e `/contato` quando o navegador estiver disponível.
 
 ## 12. Instruções para continuidade em uma nova conversa
 
@@ -649,10 +651,10 @@ O próximo assistente deve:
 2. Ler \`docs/AI_CONTEXT.md\` e este documento completo antes de editar.
 3. Verificar o HEAD atual; o commit-base registrado é apenas o ponto da análise de 07/11/2026, não uma autorização para resetar a branch.
 4. Conferir se houve commits ou alterações posteriores e atualizar o plano mentalmente/documentalmente conforme a árvore real.
-5. Retomar pela primeira etapa ainda não concluída. Etapas 0, 1 e 2 concluídas; Preflight da Etapa 3 concluído; próxima ação é implementar a movimentação de Projetos.
+5. Retomar pela primeira etapa ainda não concluída. Etapas 0 a 6 estão concluídas; a próxima ação é executar a Etapa 7 — validação final e relatório.
 6. Executar uma etapa por vez, mantendo este documento atualizado com o que foi movido, o commit correspondente, as validações executadas e os problemas encontrados.
 7. Informar claramente o que foi concluído, o que falhou e qual é a próxima etapa. Não repetir perguntas já respondidas neste documento.
 8. Não abrir PR, não fazer merge e não alterar \`main\` ou \`dev\` sem solicitação expressa do usuário.
 
 **Mensagem de retomada sugerida:**  
-“Retome a reorganização da arquitetura por página no repositório kleber-goncalves/portfolio-kg, branch feat/separacao-paginas. Leia integralmente docs/AI_CONTEXT.md e docs/PLANO-REORGANIZACAO-ARQUITETURA-POR-PAGINA.md, confira o HEAD atual e inicie a Etapa 6 — Consolidação e documentação. Etapas 0 a 5 estão concluídas. Não refaça as etapas anteriores, não altere main/dev e não abra PR ou faça merge sem autorização.”
+“Retome a reorganização da arquitetura por página no repositório kleber-goncalves/portfolio-kg, branch feat/separacao-paginas. Leia integralmente docs/AI_CONTEXT.md e docs/PLANO-REORGANIZACAO-ARQUITETURA-POR-PAGINA.md, confira o HEAD atual e execute a Etapa 7 — Validação final e relatório. Etapas 0 a 6 estão concluídas. Não refaça as etapas anteriores, não altere main/dev e não abra PR ou faça merge sem autorização.”
