@@ -5,7 +5,7 @@ import {
     getContactFieldErrors,
     validateContactField,
     validateContactForm,
-} from "../contactSchema.js";
+} from "../utils/contactSchema.js";
 
 const validContact = {
     nome: "Kleber Gonçalves",

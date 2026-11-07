@@ -5,18 +5,18 @@ import {
     CheckCircle2,
 } from "lucide-react";
 import InteriorPageLayout from "../../layouts/InteriorPageLayout";
-import MagneticSubmitButton from "../../components/MagneticSubmitButton";
+import MagneticSubmitButton from "./components/MagneticSubmitButton";
 import MagneticExternalLink from "../../components/MagneticExternalLink";
 import {
     getContactFieldErrors,
     validateContactField,
     validateContactForm,
-} from "../../utils/contactSchema.js";
+} from "./utils/contactSchema.js";
 import {
     getBasinFormEndpoint,
     isValidBasinFormEndpoint,
     submitContactForm,
-} from "../../utils/contactSubmission.js";
+} from "./utils/contactSubmission.js";
 
 const CONTACT_LINKS = [
     {

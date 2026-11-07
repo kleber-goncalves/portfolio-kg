@@ -4,7 +4,7 @@ import {
     getBasinFormEndpoint,
     isValidBasinFormEndpoint,
     submitContactForm,
-} from "../contactSubmission.js";
+} from "../utils/contactSubmission.js";
 
 const VALID_ENDPOINT = "https://usebasin.com/f/testForm_123";
 

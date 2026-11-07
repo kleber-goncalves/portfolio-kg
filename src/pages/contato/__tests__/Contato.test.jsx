@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const VALID_ENDPOINT = "https://usebasin.com/f/testForm_123";
 
-vi.mock("../../layouts/InteriorPageLayout", async () => {
+vi.mock("../../../layouts/InteriorPageLayout", async () => {
     const { createElement: h } = await import("react");
 
     return {
@@ -86,7 +86,7 @@ beforeEach(async () => {
     document.body.appendChild(container);
     root = createRoot(container);
 
-    const { default: Contato } = await import("../../pages/contato/Contato.jsx");
+    const { default: Contato } = await import("../Contato.jsx");
     await act(async () => {
         root.render(createElement(Contato));
     });
