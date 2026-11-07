@@ -15,12 +15,12 @@ O projeto **não possui uma API própria para receber as mensagens**. O navegado
 | Arquivo | Responsabilidade |
 |---|---|
 | `src/pages/contato/Contato.jsx` | Renderiza os campos; controla erros, foco, estado do botão, envio, sucesso e falha. |
-| `src/components/MagneticSubmitButton.jsx` | Botão de envio nativo com preenchimento animado, deslocamento magnético por Motion, texto que desaparece e ícone Send centralizado no hover/foco; reduz o movimento quando solicitado pelo sistema. |
-| `src/utils/contactSchema.js` | Centraliza as regras Zod e as funções de validação. |
-| `src/utils/contactSubmission.js` | Obtém e valida o formato do endpoint, envia a requisição HTTP e trata respostas recusadas/falhas de rede. |
-| `src/utils/test/Contato.test.jsx` | Testa a interação da interface com a validação e o fluxo de submissão. |
-| `src/utils/test/contactSchema.test.js` | Testa diretamente as regras e funções do schema Zod. |
-| `src/utils/test/contactSubmission.test.js` | Testa o contrato HTTP do envio para o Basin usando `fetch` simulado. |
+| `src/pages/contato/components/MagneticSubmitButton.jsx` | Botão de envio nativo com preenchimento animado, deslocamento magnético por Motion, texto que desaparece e ícone Send centralizado no hover/foco; reduz o movimento quando solicitado pelo sistema. |
+| `src/pages/contato/utils/contactSchema.js` | Centraliza as regras Zod e as funções de validação. |
+| `src/pages/contato/utils/contactSubmission.js` | Obtém e valida o formato do endpoint, envia a requisição HTTP e trata respostas recusadas/falhas de rede. |
+| `src/pages/contato/__tests__/Contato.test.jsx` | Testa a interação da interface com a validação e o fluxo de submissão. |
+| `src/pages/contato/__tests__/contactSchema.test.js` | Testa diretamente as regras e funções do schema Zod. |
+| `src/pages/contato/__tests__/contactSubmission.test.js` | Testa o contrato HTTP do envio para o Basin usando `fetch` simulado. |
 | `docs/BASIN_FORM_SETUP.md` | Guia de configuração do Basin, variável de ambiente, destinatário e notificação. |
 
 ## 3. Visão geral do fluxo
@@ -73,7 +73,7 @@ Também é enviado o campo oculto `origem`, com o valor `KLEBER DEV — página 
 
 O objeto validado pelo Zod contém somente os quatro campos visíveis. Na submissão, o código atualiza esses campos no `FormData` com os valores normalizados, preservando o campo oculto `origem`.
 
-As regras detalhadas estão em `src/utils/contactSchema.js` e em [Validação com Zod — formulário de contato](./validacao-zod-formulario-contato.md).
+As regras detalhadas estão em `src/pages/contato/utils/contactSchema.js` e em [Validação com Zod — formulário de contato](./validacao-zod-formulario-contato.md).
 
 ## 5. Como a interface usa o Zod
 
@@ -86,7 +86,7 @@ As regras detalhadas estão em `src/utils/contactSchema.js` e em [Validação co
 
 ### Comportamento visual do botão
 
-O botão é renderizado por `src/components/MagneticSubmitButton.jsx`, mantendo o elemento nativo `button[type="submit"]` e os estados de habilitado/desabilitado definidos em `Contato.jsx`. O preenchimento bronze se expande a partir da região do cursor, o botão acompanha discretamente o mouse com springs, com deslocamento limitado a 12px na horizontal e 4px na vertical para manter a estabilidade do formulário, e a cor do conteúdo muda durante hover/foco. Ao mesmo tempo, o rótulo desliza aproximadamente `5em` para a direita e desaparece; o ícone `Send` desloca-se até o centro geométrico do botão, gira 45°, aumenta para escala 1,1 e faz uma oscilação vertical suave e contínua. Ao sair do hover/foco, os elementos retornam às posições originais. O botão também mantém a resposta de pressão com escala de 0,99. O ícone continua decorativo para tecnologias assistivas e o rótulo mantém o nome acessível do botão. Com `prefers-reduced-motion`, a oscilação, a rotação, a ampliação e o deslocamento do rótulo são suprimidos; as mudanças visuais necessárias ocorrem praticamente de imediato. Esses efeitos não substituem nem alteram a validação, a requisição Basin ou os estados de envio/sucesso/falha.
+O botão é renderizado por `src/pages/contato/components/MagneticSubmitButton.jsx`, mantendo o elemento nativo `button[type="submit"]` e os estados de habilitado/desabilitado definidos em `Contato.jsx`. O preenchimento bronze se expande a partir da região do cursor, o botão acompanha discretamente o mouse com springs, com deslocamento limitado a 12px na horizontal e 4px na vertical para manter a estabilidade do formulário, e a cor do conteúdo muda durante hover/foco. Ao mesmo tempo, o rótulo desliza aproximadamente `5em` para a direita e desaparece; o ícone `Send` desloca-se até o centro geométrico do botão, gira 45°, aumenta para escala 1,1 e faz uma oscilação vertical suave e contínua. Ao sair do hover/foco, os elementos retornam às posições originais. O botão também mantém a resposta de pressão com escala de 0,99. O ícone continua decorativo para tecnologias assistivas e o rótulo mantém o nome acessível do botão. Com `prefers-reduced-motion`, a oscilação, a rotação, a ampliação e o deslocamento do rótulo são suprimidos; as mudanças visuais necessárias ocorrem praticamente de imediato. Esses efeitos não substituem nem alteram a validação, a requisição Basin ou os estados de envio/sucesso/falha.
 
 ### Ao tentar enviar
 
@@ -99,7 +99,7 @@ O botão é renderizado por `src/components/MagneticSubmitButton.jsx`, mantendo 
 
 ## 6. Como o envio ao Basin funciona
 
-A função `getBasinFormEndpoint()`, em `src/utils/contactSubmission.js`, lê a variável de ambiente `VITE_BASIN_FORM_ENDPOINT` e remove os espaços externos.
+A função `getBasinFormEndpoint()`, em `src/pages/contato/utils/contactSubmission.js`, lê a variável de ambiente `VITE_BASIN_FORM_ENDPOINT` e remove os espaços externos.
 
 A função `isValidBasinFormEndpoint()` aceita apenas endpoints no formato HTTPS `https://usebasin.com/f/ID`, com identificador composto pelos caracteres previstos na expressão regular. Ela valida o **formato** da URL, não confirma por conta própria que o formulário existe ou que a conta está configurada corretamente.
 
@@ -148,19 +148,19 @@ Execute os comandos a partir da raiz do repositório, onde fica o `package.json`
 Testar apenas a validação Zod:
 
 ```bash
-npm test -- src/utils/test/contactSchema.test.js
+npm test -- src/pages/contato/__tests__/contactSchema.test.js
 ```
 
 Testar o componente React e o fluxo da interface:
 
 ```bash
-npm test -- src/utils/test/Contato.test.jsx
+npm test -- src/pages/contato/__tests__/Contato.test.jsx
 ```
 
 Testar o envio HTTP simulado:
 
 ```bash
-npm test -- src/utils/test/contactSubmission.test.js
+npm test -- src/pages/contato/__tests__/contactSubmission.test.js
 ```
 
 Executar toda a suíte:

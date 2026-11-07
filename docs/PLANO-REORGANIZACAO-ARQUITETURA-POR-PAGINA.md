@@ -1,7 +1,7 @@
 # Plano de reorganização da arquitetura por página
 
 > **Tipo:** plano operacional de refatoração e documento de continuidade entre conversas/assistentes.  
-> **Estado atual:** EM ANDAMENTO — Etapas 0 (Preflight), 1 (Home), 2 (Sobre) e 3 (Projetos) concluídas. Próxima etapa: Preflight da Etapa 4 (Contato). Pendências técnicas registradas separadamente: contraste do formulário /contato e erro ScrollTrigger.refresh() no console de /projetos.
+> **Estado atual:** EM ANDAMENTO — Etapas 0 (Preflight), 1 (Home), 2 (Sobre), 3 (Projetos) e 4 (Contato) concluídas. Próxima etapa: Etapa 5 (Layout compartilhado — Footer). Pendências técnicas registradas separadamente: contraste do formulário /contato e erro ScrollTrigger.refresh() no console de /projetos.
 > **Última análise estrutural:** 07/11/2026.  
 > **Repositório:** \`kleber-goncalves/portfolio-kg\`.  
 > **Branch exclusiva de trabalho:** \`feat/separacao-paginas\`.  
@@ -12,6 +12,8 @@
 > **HEAD após a movimentação da Etapa 3 (07/11/2026):** 5f04d7cf0ceacfe497f0f2db0fe10d5de51ff303.
 > **HEAD verificado antes desta atualização documental (07/11/2026):** 8bae313c6fb958e912e730d24feeffb936628a15.
 > **HEAD verificado antes do fechamento da Etapa 3 (07/11/2026):** 36b903194e81f6fd49d5dd1bb9d77d39fd0bc3da.
+> **Commit de implementação da Etapa 4 (07/11/2026):** `19d6dc58ec5fe45c1462d2666ed778b400f28086` (`refactor(contato): organizar módulos por página`).
+> **HEAD com sincronização automática do AI_CONTEXT após a Etapa 4:** `5b2b5bc0d0c141dd0cea9dd78d925173217a5d4b`.
 
 ## 1. Objetivo
 
@@ -500,6 +502,26 @@ Total: 12 arquivos movidos. Sobre.jsx permaneceu como entrada da página e passo
 **Próxima atividade:** iniciar o Preflight da Etapa 4 — Contato. A falha Axe do formulário é uma pendência conhecida e não deve ser corrigida dentro de uma simples movimentação estrutural sem manter essa correção isolada. O erro ScrollTrigger em `/projetos` também permanece como item técnico separado.
 
 
+### Resultado da Etapa 4 — Contato (07/11/2026)
+
+**Estado: CONCLUÍDA.** A movimentação estrutural foi aplicada na branch `feat/separacao-paginas`, no commit `19d6dc58ec5fe45c1462d2666ed778b400f28086` (`refactor(contato): organizar módulos por página`). A execução automatizada AI Context — Synchronize #239 atualizou o snapshot, sem alteração de `main` ou `dev`.
+
+**Arquivos movidos:**
+
+- `src/components/MagneticSubmitButton.jsx` → `src/pages/contato/components/MagneticSubmitButton.jsx`.
+- `src/utils/contactSchema.js` → `src/pages/contato/utils/contactSchema.js`.
+- `src/utils/contactSubmission.js` → `src/pages/contato/utils/contactSubmission.js`.
+- Os testes `Contato.test.jsx`, `contactSchema.test.js` e `contactSubmission.test.js` passaram de `src/utils/test/` para `src/pages/contato/__tests__/`.
+
+**Imports atualizados:** `Contato.jsx` passou a consumir os módulos locais; o teste de integração passou a referenciar `InteriorPageLayout` global e `Contato.jsx` pelos caminhos relativos novos; os dois testes unitários passaram a importar os utilitários locais.
+
+**Documentação:** os dois documentos técnicos em `src/docs/` e `docs/BASIN_FORM_SETUP.md` tiveram seus caminhos e comandos de teste alinhados à estrutura nova. `docs/AI_CONTEXT.md` e este plano registram a arquitetura atual e a próxima etapa. O README foi inspecionado e não continha referências aos arquivos movidos, portanto não exigiu alteração.
+
+**Validação:** Unit Tests #240 (run `42420299177`) aprovou 66 testes em 6 arquivos, ESLint (0 erros; 5 avisos existentes) e build. Menu Desktop Reduced #55 (run `42420299130`) passou pelos cenários Full/Reduced e reload direto/reload nas quatro rotas; o log continua reportando o erro preexistente de `ScrollTrigger.refresh()` em `/projetos`. Accessibility and SEO Audit #208 (run `42420299146`) ainda precisa ter o resultado final conferido antes do fechamento documental da etapa.
+
+**Comportamento preservado:** nenhuma regra Zod, validação HTML, chave de campo Basin, integração HTTP, texto/mensagem, estado de submit ou animação do botão foi reescrita. `MagneticExternalLink.jsx` e `InteriorPageLayout.jsx` permanecem globais. Nenhum envio real ao Basin foi realizado.
+
+---
 ## 9. Sequência recomendada de execução
 
 Cada etapa deve terminar com uma revisão dos arquivos alterados e verificação de referências antes de avançar. Preferir commits pequenos e temáticos na mesma branch, com mensagens Conventional Commits.
@@ -527,7 +549,7 @@ Cada etapa deve terminar com uma revisão dos arquivos alterados e verificação
 
 ### Etapa 4 — Contato
 
-Mover botão, utilitários e os três testes. Atualizar imports relativos. Confirmar que o Vitest descobre todos os testes e que a lógica Basin/Zod permanece inalterada.
+**CONCLUÍDA em 07/11/2026.** O botão, os dois utilitários e os três testes foram movidos para `src/pages/contato/`; imports da página e dos testes atualizados. A descoberta dos testes foi confirmada pelo Vitest: 66 testes totais passaram (15 schema, 7 submissão HTTP e 9 integração de Contato). A lógica Basin/Zod permaneceu inalterada.
 
 ### Etapa 5 — Layout compartilhado
 
@@ -579,15 +601,15 @@ Marcar somente após a conclusão real de cada etapa:
 - [x] Etapa 1 — Home reorganizada e imports/automação validados (07/11/2026; Unit Tests #230, Code Splitting #42 e workflows específicos aprovados).
 - [x] Etapa 2 — Sobre reorganizado e seções lazy validadas (07/11/2026; Unit Tests #233, Code Splitting #43, Trajetória #50 e Menu Desktop #53 aprovados).
 - [x] Etapa 3 — Catálogo de Projetos reorganizado e preview da Home preservado (07/11/2026; Unit Tests #236/#237, Code Splitting #44 e Menu Desktop #54 aprovados; Axe #207 sem violações em /projetos e /sobre).
-- [ ] Etapa 4 — Contato reorganizado e testes encontrados.
+- [x] Etapa 4 — Contato reorganizado e testes encontrados (07/11/2026; Unit Tests #240 e Menu Desktop #55 aprovados; 66 testes unitários, lint sem erros e build aprovados).
 - [ ] Etapa 5 — Footer compartilhado movido e sem duplicação.
 - [ ] Etapa 6 — Scripts, workflows, README e AI_CONTEXT atualizados.
 - [ ] Etapa 7 — Testes, lint, build, Actions e smoke tests revisados.
 - [ ] Relatório final entregue ao usuário; nenhum PR/merge feito sem autorização.
 
-**Última etapa concluída:** Etapa 3 — Projetos (Etapas 0, 1 e 2 também concluídas).  
-**Etapa em andamento:** nenhuma; Etapa 4 — Contato é a próxima.  
-**Próxima atividade ao retomar:** executar o Preflight da Etapa 4, conferir HEAD/árvore e mapear botão, utilitários e testes exclusivos de Contato. Manter a falha de contraste Axe do formulário como pendência conhecida e separada; não misturar correção visual à movimentação de arquivos.
+**Última etapa concluída:** Etapa 4 — Contato (Etapas 0, 1, 2 e 3 também concluídas).  
+**Etapa em andamento:** nenhuma; Etapa 5 — Layout compartilhado (Footer) é a próxima.  
+**Próxima atividade ao retomar:** executar o Preflight da Etapa 5, conferir HEAD/árvore e mapear todas as referências a `src/layout/Footer.jsx` e o carregamento lazy em `src/components/DeferredLayoutSection.jsx`. Preservar uma única implementação do Footer e o carregamento sob demanda.
 
 ## 12. Instruções para continuidade em uma nova conversa
 

@@ -16,16 +16,16 @@ O Zod **não envia mensagens**. Ele valida e normaliza os dados. O componente Re
 
 | Caminho | O que faz |
 |---|---|
-| `src/utils/contactSchema.js` | Define o schema e exporta `validateContactForm`, `validateContactField` e `getContactFieldErrors`. |
+| `src/pages/contato/utils/contactSchema.js` | Define o schema e exporta `validateContactForm`, `validateContactField` e `getContactFieldErrors`. |
 | `src/pages/contato/Contato.jsx` | Chama as funções de validação em `onBlur`, `onChange` e antes da submissão; apresenta as mensagens no formulário. |
-| `src/utils/contactSubmission.js` | Faz o envio HTTP ao Basin depois que os dados foram validados pelo componente. |
-| `src/utils/test/contactSchema.test.js` | Testes unitários diretos do schema e de suas funções. |
-| `src/utils/test/Contato.test.jsx` | Testes de integração do comportamento da interface com a validação. |
-| `src/utils/test/contactSubmission.test.js` | Testes da camada HTTP associada ao fluxo do formulário; utiliza `fetch` simulado e não é uma suíte exclusivamente do Zod. |
+| `src/pages/contato/utils/contactSubmission.js` | Faz o envio HTTP ao Basin depois que os dados foram validados pelo componente. |
+| `src/pages/contato/__tests__/contactSchema.test.js` | Testes unitários diretos do schema e de suas funções. |
+| `src/pages/contato/__tests__/Contato.test.jsx` | Testes de integração do comportamento da interface com a validação. |
+| `src/pages/contato/__tests__/contactSubmission.test.js` | Testes da camada HTTP associada ao fluxo do formulário; utiliza `fetch` simulado e não é uma suíte exclusivamente do Zod. |
 
 ## 3. Regras atuais do schema
 
-O schema é definido em `src/utils/contactSchema.js` como `contactSchema = z.object(...)`.
+O schema é definido em `src/pages/contato/utils/contactSchema.js` como `contactSchema = z.object(...)`.
 
 | Campo | Operações e limites | Mensagens principais |
 |---|---|---|
@@ -149,7 +149,7 @@ Os comandos abaixo devem ser executados no terminal, a partir da raiz do reposit
 ### Executar somente os testes Zod
 
 ```bash
-npm test -- src/utils/test/contactSchema.test.js
+npm test -- src/pages/contato/__tests__/contactSchema.test.js
 ```
 
 Esse é o comando principal quando a alteração é no schema, nos limites, nas mensagens ou nas funções exportadas em `contactSchema.js`.
@@ -157,7 +157,7 @@ Esse é o comando principal quando a alteração é no schema, nos limites, nas 
 ### Executar os testes da interface de contato
 
 ```bash
-npm test -- src/utils/test/Contato.test.jsx
+npm test -- src/pages/contato/__tests__/Contato.test.jsx
 ```
 
 Use quando mudar a forma como os erros são mostrados, como o botão reage à validade, ou como os dados normalizados são preparados para o envio.
@@ -165,7 +165,7 @@ Use quando mudar a forma como os erros são mostrados, como o botão reage à va
 ### Executar os testes da camada Basin/HTTP
 
 ```bash
-npm test -- src/utils/test/contactSubmission.test.js
+npm test -- src/pages/contato/__tests__/contactSubmission.test.js
 ```
 
 Use quando alterar a leitura do endpoint, a validação do seu formato ou o tratamento da requisição e da resposta.
@@ -183,7 +183,7 @@ O comando executa a suíte Vitest completa do projeto.
 Para deixar o Vitest observando alterações no arquivo de teste Zod:
 
 ```bash
-npm run test:watch -- src/utils/test/contactSchema.test.js
+npm run test:watch -- src/pages/contato/__tests__/contactSchema.test.js
 ```
 
 ### Cobertura de testes
@@ -202,7 +202,7 @@ A execução CI verificada antes desta documentação, no commit `3612246`, term
 
 Ao alterar o schema:
 
-1. Atualize primeiro as regras e mensagens em `src/utils/contactSchema.js`.
+1. Atualize primeiro as regras e mensagens em `src/pages/contato/utils/contactSchema.js`.
 2. Ajuste os atributos nativos de `Contato.jsx` para continuar alinhados aos limites.
 3. Atualize `contactSchema.test.js` com os casos válidos e inválidos.
 4. Se mudar o comportamento da interface, revise também `Contato.test.jsx`.
