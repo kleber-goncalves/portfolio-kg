@@ -367,9 +367,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `0598f4a3db3461dc7f72ee4d44f1ca28a6d4cb9c`
-- **Data do commit analisado:** 2026-11-07T18:39:12-03:00
-- **Mensagem do commit:** docs(architecture): concluir etapa Home e preparar Sobre
+- **Commit de código analisado:** `3db81bbec93e5823c06ff5169e2e275177a77f5f`
+- **Data do commit analisado:** 2026-11-07T18:42:52-03:00
+- **Mensagem do commit:** refactor(sobre): organizar módulos por página
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -487,13 +487,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `3db81bb` | 2026-11-07 | refactor(sobre): organizar módulos por página |
+| `cca882b` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `0598f4a` | 2026-11-07 | docs(architecture): concluir etapa Home e preparar Sobre |
 | `dfe832b` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `d1be7a6` | 2026-11-07 | test(sobre): selecionar gatilho desktop sem ambiguidade |
 | `be06403` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `d1b363c` | 2026-11-07 | test(sobre): executar trajetória na rota correta |
 | `35aa777` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
-| `9c621f4` | 2026-11-07 | test(navigation): alinhar menu mobile ao reset entre rotas |
-| `7a999c5` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
