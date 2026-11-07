@@ -2,7 +2,7 @@
 
 Esta documentação descreve como funcionam os componentes reutilizáveis <code>MagneticExternalLinkHover</code> e <code>MagneticExternalLink</code> do KLEBER DEV. O objetivo é explicar a mola (spring), o deslocamento magnético, as diferenças entre os preenchimentos e a forma correta de reaproveitar o efeito em outros links.
 
-A análise tem como base o código existente em <code>src/components/MagneticExternalLinkHover.jsx</code>, <code>src/components/MagneticExternalLink.jsx</code>, seus usos em <code>src/components/ProjetoDesktop.jsx</code> e <code>src/layout/Footer.jsx</code>, e a API atual de [Motion for React](https://motion.dev/).
+A análise tem como base o código existente em <code>src/components/MagneticExternalLinkHover.jsx</code>, <code>src/components/MagneticExternalLink.jsx</code>, seus usos em <code>src/components/ProjetoDesktop.jsx</code> e <code>src/layouts/Footer.jsx</code>, e a API atual de [Motion for React](https://motion.dev/).
 
 > Esta alteração adiciona documentação. Os componentes existentes não foram modificados. A seção sobre origem do preenchimento registra um detalhe técnico observado no código e mostra uma correção possível, sem aplicá-la automaticamente.
 
@@ -172,7 +172,7 @@ A camada está marcada com <code>aria-hidden="true"</code> e <code>pointer-event
 
 ### 4. Onde esse componente é usado
 
-Em <code>src/layout/Footer.jsx</code>, os links GitHub e LinkedIn usam o componente com valores padrão:
+Em <code>src/layouts/Footer.jsx</code>, os links GitHub e LinkedIn usam o componente com valores padrão:
 
 ~~~jsx
 import { ArrowUpRight } from "lucide-react";
@@ -444,6 +444,6 @@ Evite manter um grande número de elementos magnéticos sobrepostos. Cada compon
 - [Componente MagneticExternalLink](../components/MagneticExternalLink.jsx)
 - [Componente MagneticExternalLinkHover](../components/MagneticExternalLinkHover.jsx)
 - [Uso no projeto desktop](../components/ProjetoDesktop.jsx)
-- [Uso no rodapé](../layout/Footer.jsx)
+- [Uso no rodapé](../layouts/Footer.jsx)
 
 A documentação oficial do Motion é a referência para opções e hooks. Os valores numéricos, classes nomeadas de hover, props e observações específicas deste documento foram extraídos dos componentes do repositório indicados acima.

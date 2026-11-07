@@ -176,7 +176,8 @@ flowchart TD
 - <code>src/components/HeroSectionTransition.jsx</code>: coordena o Hero, a navegação e a transição para a área de tecnologias.
 - <code>src/components/DeferredLayoutSection.jsx</code>: carrega seções secundárias de forma adiada.
 - <code>src/components/DeferredProjects.jsx</code>: coordena o carregamento da seção de projetos.
-- <code>src/layout/</code>: reúne os layouts das principais seções.
+- <code>src/layouts/</code>: reúne layouts compartilhados. <code>InteriorPageLayout.jsx</code> padroniza as rotas internas, enquanto <code>Footer.jsx</code> fornece o rodapé único e é carregado sob demanda por <code>DeferredLayoutSection.jsx</code>.
+- <code>src/pages/</code>: reúne as entradas das rotas e os módulos específicos de cada página, organizados em diretórios próprios.
 - <code>src/components/</code>: concentra componentes reutilizáveis, efeitos e experiências de interação.
 - <code>src/data/</code>: mantém dados estruturados de tecnologias e eventos da trajetória.
 - <code>src/hooks/useResponsive.js</code>: centraliza a leitura de características responsivas.

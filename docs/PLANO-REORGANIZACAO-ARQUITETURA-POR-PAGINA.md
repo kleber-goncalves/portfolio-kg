@@ -1,7 +1,8 @@
 # Plano de reorganização da arquitetura por página
 
 > **Tipo:** plano operacional de refatoração e documento de continuidade entre conversas/assistentes.  
-> **Estado atual:** EM ANDAMENTO — Etapas 0 (Preflight), 1 (Home), 2 (Sobre), 3 (Projetos) e 4 (Contato) concluídas. Próxima etapa: Etapa 5 (Layout compartilhado — Footer). Pendências técnicas registradas separadamente: contraste do formulário /contato e erro ScrollTrigger.refresh() no console de /projetos.
+> **Estado atual:** EM ANDAMENTO — Etapas 0 (Preflight), 1 (Home), 2 (Sobre), 3 (Projetos), 4 (Contato) e 5 (Footer compartilhado) concluídas. Próxima etapa: Etapa 6 (Consolidação e documentação). Pendências técnicas registradas separadamente: contraste do formulário /contato e erro ScrollTrigger.refresh() no console de /projetos.
+> **Commit de implementação da Etapa 5 (07/11/2026):** `955108a5939e76b957be88fff1d97d27c6f0c1bc` (`refactor(layout): mover Footer compartilhado para layouts`). Unit Tests #243 e Code Splitting #45 passaram.
 > **Última análise estrutural:** 07/11/2026.  
 > **Repositório:** \`kleber-goncalves/portfolio-kg\`.  
 > **Branch exclusiva de trabalho:** \`feat/separacao-paginas\`.  
@@ -251,7 +252,7 @@ Manter globais, salvo descoberta de novas referências que prove o contrário:
 - \`public/_optimized/**\`: manter os arquivos e URLs públicos gerados. Não alterar nomes nem caminhos de saída apenas por mover os originais.
 - \`docs/\`, \`src/docs/\`, scripts de manutenção e arquivos globais de configuração.
 
-O Footer é compartilhado: mover \`src/layout/Footer.jsx\` para \`src/layouts/Footer.jsx\`, não para uma pasta de página.
+O Footer compartilhado agora fica em `src/layouts/Footer.jsx`, fora das pastas de páginas. Há uma única implementação, carregada por `DeferredLayoutSection` via `React.lazy()` na Home e nas páginas internas.
 
 Arquivos legados/candidatos a auditoria — por exemplo \`Card.2-teste.jsx\`, \`EditorialCard.jsx\`, \`MagicCard.jsx\`, \`NavbarDesktop.jsx\`, \`card.jsx\`, \`cards.jsx\`, \`jubtAvats.jsx\` e estilos sem uso aparente — não devem ser movidos ou apagados no mesmo lote sem busca global e justificativa.
 
@@ -289,7 +290,7 @@ Manter inalterados \`optimizedRoot = public/_optimized\` e \`metadataPath = src/
 Revisar todos os 17 workflows existentes. Os seguintes têm referências específicas a caminhos de origem que podem mudar e exigem revisão:
 
 - \`optimize-project-images.yml\`: assets da Home, SobreHero e Hero desktop/mobile.
-- \`test-code-splitting.yml\`: DeferredProjects, ProjetoDesktop, carrossel, seções de Sobre, Footer, dados e layouts lazy.
+- \`test-code-splitting.yml\`: DeferredProjects, ProjetoDesktop, carrossel, seções de Sobre, Footer, dados e layouts lazy; o filtro monitora `src/layouts/Footer.jsx` após a movimentação.
 - \`logo-loop-performance.yml\`: LogoLoop, CSS, SeclogsMobile e dados mobile.
 - \`menu-mobile-overlay.yml\`: Socials e HeroMobile.
 - \`minha-trajetoria-scroll.yml\`: MinhaTrajetoria, Formação e Hero.
@@ -522,6 +523,35 @@ Total: 12 arquivos movidos. Sobre.jsx permaneceu como entrada da página e passo
 **Comportamento preservado:** nenhuma regra Zod, validação HTML, chave de campo Basin, integração HTTP, texto/mensagem, estado de submit ou animação do botão foi reescrita. `MagneticExternalLink.jsx` e `InteriorPageLayout.jsx` permanecem globais. Nenhum envio real ao Basin foi realizado.
 
 ---
+### Resultado do Preflight da Etapa 5 — Footer compartilhado (07/11/2026)
+
+**Preflight CONCLUÍDO.** HEAD confirmado em `0b05d60e9093f73527adb61a2a34bcb5e03b970e` antes da movimentação. A varredura de 146 arquivos textuais em `src/`, `scripts/`, `.github/workflows/`, `docs/` e README encontrou o uso de execução do Footer centralizado em `DeferredLayoutSection.jsx`; Home e páginas internas consomem a configuração `section="footer"`. O script E2E `scripts/test-code-splitting.mjs` já verificava o chunk `Footer-` e o carregamento adiado na rota Sobre. O workflow específico que monitorava o arquivo tinha apenas o caminho antigo em seu filtro.
+
+**Decisão:** mover somente `src/layout/Footer.jsx` para `src/layouts/Footer.jsx`. Os imports relativos internos (`../styles/loopText.css`, `../components/MagneticExternalLink` e `../utils/lenisControl`) permanecem corretos porque os dois diretórios são irmãos no mesmo nível de `src/`. Não alterar a lógica de data/hora, links, GSAP/ScrollTrigger, animações, dimensões ou conteúdo do rodapé.
+
+### Resultado da Etapa 5 — Footer compartilhado (07/11/2026)
+
+**Estado: CONCLUÍDA.** Implementação no commit `955108a5939e76b957be88fff1d97d27c6f0c1bc` (`refactor(layout): mover Footer compartilhado para layouts`).
+
+**Alterações aplicadas:**
+
+- `src/layout/Footer.jsx` foi movido integralmente para `src/layouts/Footer.jsx`; não foi criada uma segunda implementação. O diretório antigo `src/layout/` ficou sem arquivos rastreados.
+- `src/components/DeferredLayoutSection.jsx`: o `React.lazy()` da configuração `footer` agora importa `../layouts/Footer`, mantendo o carregamento adiado.
+- `.github/workflows/test-code-splitting.yml`: o filtro de caminhos passou a observar `src/layouts/Footer.jsx`.
+- `scripts/test-code-splitting.mjs`: além de confirmar que o chunk `Footer-` não entra no carregamento inicial, o teste agora rola até o footer da Home, confirma que o chunk é carregado, verifica uma única tag `<footer>` na Home e na rota Sobre, e preserva a checagem do carregamento tardio na rota Sobre.
+- `README.md` e `src/docs/efeito-magnetico-motion.md`: caminhos e responsabilidades atualizados.
+
+**Validações aprovadas:**
+
+| Verificação | Execução | Resultado |
+|---|---|---|
+| Unit Tests (Vitest, ESLint e build) | #243 — [run 42422769203](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42422769203) | Aprovada; 66 testes, 0 erros ESLint e build concluído |
+| Deferred Section and Project Code Splitting | #45 — [run 42422769208](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42422769208) | Aprovada em mobile (390px) e desktop (1365px); Footer inicial ausente e carregamento tardio verificado na Home/Sobre |
+| AI Context — Synchronize | #242 — [run 42422769230](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42422769230) | Aprovada |
+
+**Decisões preservadas:** `InteriorPageLayout.jsx` continua global e não renderiza outro Footer diretamente; a seção `section="footer"` é a única forma de inserir o componente compartilhado em Home e páginas internas. A auditoria Accessibility/SEO #210 continua como validação global separada; não foram feitas mudanças visuais nem correções na pendência conhecida de contraste do formulário `/contato`.
+
+---
 ## 9. Sequência recomendada de execução
 
 Cada etapa deve terminar com uma revisão dos arquivos alterados e verificação de referências antes de avançar. Preferir commits pequenos e temáticos na mesma branch, com mensagens Conventional Commits.
@@ -553,7 +583,7 @@ Cada etapa deve terminar com uma revisão dos arquivos alterados e verificação
 
 ### Etapa 5 — Layout compartilhado
 
-Mover Footer para \`src/layouts/Footer.jsx\`. Atualizar a configuração lazy em \`DeferredLayoutSection.jsx\` e conferir Home e páginas internas. Não duplicar Footer.
+**CONCLUÍDA em 07/11/2026.** Footer movido para `src/layouts/Footer.jsx`, import lazy atualizado em `DeferredLayoutSection.jsx`, filtro de Code Splitting corrigido e teste E2E ampliado para verificar carregamento tardio na Home e Sobre, com uma única instância em cada rota.
 
 ### Etapa 6 — Consolidação e documentação
 
@@ -602,14 +632,14 @@ Marcar somente após a conclusão real de cada etapa:
 - [x] Etapa 2 — Sobre reorganizado e seções lazy validadas (07/11/2026; Unit Tests #233, Code Splitting #43, Trajetória #50 e Menu Desktop #53 aprovados).
 - [x] Etapa 3 — Catálogo de Projetos reorganizado e preview da Home preservado (07/11/2026; Unit Tests #236/#237, Code Splitting #44 e Menu Desktop #54 aprovados; Axe #207 sem violações em /projetos e /sobre).
 - [x] Etapa 4 — Contato reorganizado e testes encontrados (07/11/2026; Unit Tests #240 e Menu Desktop #55 aprovados; 66 testes unitários, lint sem erros e build aprovados).
-- [ ] Etapa 5 — Footer compartilhado movido e sem duplicação.
+- [x] Etapa 5 — Footer compartilhado movido e sem duplicação (07/11/2026; Unit Tests #243 e Code Splitting #45 aprovados; chunk adiado e instância única verificados em mobile/desktop).
 - [ ] Etapa 6 — Scripts, workflows, README e AI_CONTEXT atualizados.
 - [ ] Etapa 7 — Testes, lint, build, Actions e smoke tests revisados.
 - [ ] Relatório final entregue ao usuário; nenhum PR/merge feito sem autorização.
 
-**Última etapa concluída:** Etapa 4 — Contato (Etapas 0, 1, 2 e 3 também concluídas).  
-**Etapa em andamento:** nenhuma; Etapa 5 — Layout compartilhado (Footer) é a próxima.  
-**Próxima atividade ao retomar:** executar o Preflight da Etapa 5, conferir HEAD/árvore e mapear todas as referências a `src/layout/Footer.jsx` e o carregamento lazy em `src/components/DeferredLayoutSection.jsx`. Preservar uma única implementação do Footer e o carregamento sob demanda.
+**Última etapa concluída:** Etapa 5 — Layout compartilhado (Footer) (Etapas 0, 1, 2, 3 e 4 também concluídas).  
+**Etapa em andamento:** nenhuma; Etapa 6 — Consolidação e documentação é a próxima.  
+**Próxima atividade ao retomar:** executar a busca final por caminhos antigos em scripts, workflows, testes, README e docs; revisar a árvore `src/` (incluindo a remoção de `src/layout/`, agora vazio); consolidar a arquitetura documentada e preservar os módulos legados que ainda tenham referências.
 
 ## 12. Instruções para continuidade em uma nova conversa
 
@@ -625,4 +655,4 @@ O próximo assistente deve:
 8. Não abrir PR, não fazer merge e não alterar \`main\` ou \`dev\` sem solicitação expressa do usuário.
 
 **Mensagem de retomada sugerida:**  
-“Retome a reorganização da arquitetura por página no repositório kleber-goncalves/portfolio-kg, branch feat/separacao-paginas. Leia integralmente docs/AI_CONTEXT.md e docs/PLANO-REORGANIZACAO-ARQUITETURA-POR-PAGINA.md, confira o HEAD atual e inicie a Etapa 5 — Layout compartilhado (Footer), conforme o checklist. Etapas 0 a 4 estão concluídas. Não refaça Home/Sobre, não altere main/dev e não abra PR ou faça merge sem autorização.”
+“Retome a reorganização da arquitetura por página no repositório kleber-goncalves/portfolio-kg, branch feat/separacao-paginas. Leia integralmente docs/AI_CONTEXT.md e docs/PLANO-REORGANIZACAO-ARQUITETURA-POR-PAGINA.md, confira o HEAD atual e inicie a Etapa 6 — Consolidação e documentação. Etapas 0 a 5 estão concluídas. Não refaça as etapas anteriores, não altere main/dev e não abra PR ou faça merge sem autorização.”
