@@ -338,12 +338,27 @@ async function testInteriorRouteReloadAtMiddle(browser, path) {
             if (savedScrollY === null) return;
 
             sessionStorage.removeItem("__interior_menu_restore_y");
-            window.setTimeout(() => {
-                requestAnimationFrame(() => {
-                    document.documentElement.style.scrollBehavior = "auto";
-                    window.scrollTo(0, Number(savedScrollY));
-                });
-            }, 300);
+            let attempts = 0;
+            const restoreScroll = () => {
+                const maxScroll = Math.max(
+                    0,
+                    document.documentElement.scrollHeight - window.innerHeight,
+                );
+                const targetY = Number(savedScrollY);
+
+                // Aguarda o conteúdo lazy da rota criar altura suficiente antes
+                // de restaurar a posição, evitando que scrollTo seja limitado a 0.
+                if (maxScroll < targetY && attempts < 180) {
+                    attempts += 1;
+                    requestAnimationFrame(restoreScroll);
+                    return;
+                }
+
+                document.documentElement.style.scrollBehavior = "auto";
+                window.scrollTo(0, Math.min(targetY, maxScroll));
+            };
+
+            window.setTimeout(() => requestAnimationFrame(restoreScroll), 100);
         }, { once: true });
     });
 
