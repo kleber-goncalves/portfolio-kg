@@ -48,7 +48,7 @@ function getContactFormValues(form) {
     };
 }
 
-function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }) {
+function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady, onRouteNavigationElementChange }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submissionStatus, setSubmissionStatus] = useState(null);
     const [fieldErrors, setFieldErrors] = useState({});
@@ -170,7 +170,7 @@ function Contato({ entranceKey = 0, isRouteTransitioning = false, onRouteReady }
     };
 
     return (
-        <InteriorPageLayout title="Vamos conversar." description="Tem uma oportunidade, uma ideia de projeto ou quer conversar sobre desenvolvimento? Entre em contato." entranceKey={entranceKey} isRouteTransitioning={isRouteTransitioning}>
+        <InteriorPageLayout title="Vamos conversar." description="Tem uma oportunidade, uma ideia de projeto ou quer conversar sobre desenvolvimento? Entre em contato." entranceKey={entranceKey} isRouteTransitioning={isRouteTransitioning} onRouteNavigationElementChange={onRouteNavigationElementChange}>
             <section className="mx-auto w-full b-md:max-w-[1500px]  px-5 pb-16 b-md:px-10 b-md:pb-24">
                 <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1.35fr)_minmax(280px,0.65fr)]">
                     <div className="min-w-0 max-w-4xl">

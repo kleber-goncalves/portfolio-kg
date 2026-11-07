@@ -254,6 +254,8 @@ As rotas iniciais já foram declaradas; ainda é necessário:
 - Confirmar na Vercel que as rotas estáticas geradas são servidas diretamente e que canonical não conflita com redirecionamentos de barra final.
 - Avaliar SSG/SSR do conteúdo React se a pré-renderização integral se mostrar necessária; metadados estáticos por rota não significam que o conteúdo do corpo foi pré-renderizado.
 
+- **Visibilidade do MenuDesktop nas páginas internas:** o `App.jsx` recebe por callback ref o elemento real `[data-route-navigation]` do `InteriorPageLayout`. O `IntersectionObserver` só é criado depois que o cabeçalho da rota lazy está montado; isso evita perder a inicialização em reload direto de `/projetos`, `/sobre` ou `/contato` quando o cabeçalho ainda não existia na primeira execução do efeito. A visibilidade continua sendo determinada pela interseção do cabeçalho com o viewport. O teste `scripts/test-menu-desktop-reduced.mjs` cobre reload com scroll restaurado nas três páginas internas, além do cenário já existente da Home.
+
 ## 12. GitHub Actions, scripts e ambiente de desenvolvimento
 
 O repositório possui workflows de auditoria e scripts especializados. A relação atual é gerada automaticamente ao fim deste documento, para evitar uma lista duplicada e desatualizada.

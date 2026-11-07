@@ -113,6 +113,7 @@ function App() {
         pathname: location.pathname,
         visible: true,
     }));
+    const [routeNavigationElement, setRouteNavigationElement] = useState(null);
     const [menuHasBeenShown, setMenuHasBeenShown] = useState(false);
     const isHomePath = location.pathname === "/";
     const isRouteTransitioning = (
@@ -128,13 +129,14 @@ function App() {
         if (visible) setMenuHasBeenShown(true);
     }, []);
 
+    const handleRouteNavigationElementChange = useCallback((element) => {
+        setRouteNavigationElement(element);
+    }, []);
+
     useEffect(() => attachUiSfxHoverListeners(), []);
 
     useEffect(() => {
-        if (isHomePath) return undefined;
-
-        const header = document.querySelector("[data-route-navigation]");
-        if (!header) return undefined;
+        if (isHomePath || !routeNavigationElement) return undefined;
 
         const pathname = location.pathname;
         const observer = new IntersectionObserver(([entry]) => {
@@ -148,9 +150,9 @@ function App() {
             if (!entry.isIntersecting) setMenuHasBeenShown(true);
         }, { threshold: 0.01 });
 
-        observer.observe(header);
+        observer.observe(routeNavigationElement);
         return () => observer.disconnect();
-    }, [isHomePath, location.pathname]);
+    }, [isHomePath, location.pathname, routeNavigationElement]);
 
     return (
         <>
@@ -187,9 +189,9 @@ function App() {
                                 path="/"
                                 element={<Home experienceMode={experienceMode} entranceKey={routeEntranceKey} isRouteTransitioning={isRouteTransitioning} onMenuVisibilityChange={handleHomeMenuVisibilityChange} onRouteReady={handleRouteReady} />}
                             />
-                            <Route path="/projetos" element={<Projetos experienceMode={experienceMode} entranceKey={routeEntranceKey} isRouteTransitioning={isRouteTransitioning} onRouteReady={handleRouteReady} />} />
-                            <Route path="/sobre" element={<Sobre experienceMode={experienceMode} entranceKey={routeEntranceKey} isRouteTransitioning={isRouteTransitioning} onRouteReady={handleRouteReady} />} />
-                            <Route path="/contato" element={<Contato entranceKey={routeEntranceKey} isRouteTransitioning={isRouteTransitioning} onRouteReady={handleRouteReady} />} />
+                            <Route path="/projetos" element={<Projetos experienceMode={experienceMode} entranceKey={routeEntranceKey} isRouteTransitioning={isRouteTransitioning} onRouteReady={handleRouteReady} onRouteNavigationElementChange={handleRouteNavigationElementChange} />} />
+                            <Route path="/sobre" element={<Sobre experienceMode={experienceMode} entranceKey={routeEntranceKey} isRouteTransitioning={isRouteTransitioning} onRouteReady={handleRouteReady} onRouteNavigationElementChange={handleRouteNavigationElementChange} />} />
+                            <Route path="/contato" element={<Contato entranceKey={routeEntranceKey} isRouteTransitioning={isRouteTransitioning} onRouteReady={handleRouteReady} onRouteNavigationElementChange={handleRouteNavigationElementChange} />} />
                             <Route path="*" element={<Navigate to="/" replace />} />
                         </Routes>
                     </Suspense>

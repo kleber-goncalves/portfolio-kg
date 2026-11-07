@@ -293,6 +293,126 @@ async function testReducedReloadAtMiddle(browser) {
     }
 }
 
+async function waitForInteriorPage(page, path, options = {}) {
+    if (options.navigate !== false) {
+        await page.goto(new URL(path, baseUrl).toString(), {
+            waitUntil: "domcontentloaded",
+            timeout: 60000,
+        });
+    }
+
+    await page.locator("[data-route-navigation]").waitFor({
+        state: "attached",
+        timeout: 30000,
+    });
+    await page.waitForFunction(
+        () => !document.querySelector(".route-preloader"),
+        null,
+        { timeout: 30000 },
+    );
+    await page.waitForTimeout(1200);
+}
+
+async function testInteriorRouteReloadAtMiddle(browser, path) {
+    const context = await browser.newContext({
+        viewport,
+        deviceScaleFactor: 1,
+        isMobile: false,
+        hasTouch: false,
+        reducedMotion: "no-preference",
+    });
+
+    await context.addInitScript(() => {
+        localStorage.setItem("experienceMode", "reduced");
+        history.scrollRestoration = "manual";
+
+        window.addEventListener("DOMContentLoaded", () => {
+            const savedScrollY = sessionStorage.getItem("__interior_menu_restore_y");
+            if (savedScrollY === null) return;
+
+            sessionStorage.removeItem("__interior_menu_restore_y");
+            window.setTimeout(() => {
+                requestAnimationFrame(() => {
+                    document.documentElement.style.scrollBehavior = "auto";
+                    window.scrollTo(0, Number(savedScrollY));
+                });
+            }, 300);
+        }, { once: true });
+    });
+
+    const page = await context.newPage();
+    logBrowserDiagnostics(page, "interior-" + path + "-reload");
+
+    try {
+        console.log("Testing direct " + path + " load and reload while scrolled");
+        await waitForInteriorPage(page, path);
+
+        const scrollTarget = await page.evaluate(() => {
+            const maxScroll = Math.max(
+                0,
+                document.documentElement.scrollHeight - window.innerHeight,
+            );
+            const target = Math.min(maxScroll, Math.max(240, Math.round(maxScroll * 0.55)));
+            window.scrollTo(0, target);
+            return {
+                target,
+                maxScroll,
+                headerBottom: document.querySelector("[data-route-navigation]")
+                    ?.getBoundingClientRect().bottom ?? null,
+            };
+        });
+
+        assert.ok(
+            scrollTarget.target > 100,
+            path + ": the page must be tall enough to scroll beyond its header. State=" + JSON.stringify(scrollTarget) + ".",
+        );
+
+        await assertHamburgerAvailable(page, path + " before refresh at mid-page");
+        const beforeReload = await page.evaluate(() => ({
+            scrollY: window.scrollY,
+            headerBottom: document.querySelector("[data-route-navigation]")
+                ?.getBoundingClientRect().bottom ?? null,
+        }));
+
+        assert.ok(
+            beforeReload.headerBottom <= 0,
+            path + ": the route header must be outside the viewport before refresh. State=" + JSON.stringify(beforeReload) + ".",
+        );
+
+        await page.evaluate(() => {
+            sessionStorage.setItem("__interior_menu_restore_y", String(window.scrollY));
+        });
+
+        await page.reload({
+            waitUntil: "domcontentloaded",
+            timeout: 60000,
+        });
+        await waitForInteriorPage(page, path, { navigate: false });
+
+        const afterReload = await page.evaluate(() => ({
+            scrollY: window.scrollY,
+            headerBottom: document.querySelector("[data-route-navigation]")
+                ?.getBoundingClientRect().bottom ?? null,
+        }));
+
+        assert.ok(
+            afterReload.scrollY > 100 && afterReload.headerBottom <= 0,
+            path + ": reload did not preserve the mid-page scenario. State=" + JSON.stringify(afterReload) + ".",
+        );
+
+        await assertHamburgerAvailable(page, path + " after refresh with restored mid-page scroll");
+
+        console.log(JSON.stringify({
+            scenario: path + " direct reload with restored mid-page scroll",
+            scrollBeforeReload: Math.round(beforeReload.scrollY),
+            scrollAfterReload: Math.round(afterReload.scrollY),
+            menuVisible: true,
+        }));
+    } finally {
+        await context.close();
+    }
+}
+
 const browser = await chromium.launch({
     headless: true,
     args: ["--no-sandbox", "--disable-dev-shm-usage"],
@@ -316,6 +436,10 @@ try {
     }
 
     await testReducedReloadAtMiddle(browser);
+
+    for (const path of ["/projetos", "/sobre", "/contato"]) {
+        await testInteriorRouteReloadAtMiddle(browser, path);
+    }
 } finally {
     await browser.close();
 }

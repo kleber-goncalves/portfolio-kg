@@ -6,6 +6,7 @@ on:
       - main
       - dev
       - feat/responsividadeFull
+      - feat/separacao-paginas
     paths:
       - ".github/workflows/menu-desktop-reduced.yml"
       - "scripts/test-menu-desktop-reduced.mjs"
@@ -13,6 +14,11 @@ on:
       - "src/components/MenuDesktop.jsx"
       - "src/components/SmoothScroll.jsx"
       - "src/utils/experienceMode.js"
+      - "src/App.jsx"
+      - "src/layouts/InteriorPageLayout.jsx"
+      - "src/pages/projetos/Projetos.jsx"
+      - "src/pages/sobre/Sobre.jsx"
+      - "src/pages/contato/Contato.jsx"
       - "package.json"
       - "package-lock.json"
       - "vite.config.js"

@@ -8,7 +8,7 @@ import { NAVIGATION_ITEMS } from "../data/navigation";
 import usePortfolioNavigation from "../hooks/usePortfolioNavigation";
 import useRouteEntrance from "../hooks/useRouteEntrance";
 
-function InteriorPageLayout({ title, description, heroContent = null, children, entranceKey = 0, isRouteTransitioning = false }) {
+function InteriorPageLayout({ title, description, heroContent = null, children, entranceKey = 0, isRouteTransitioning = false, onRouteNavigationElementChange }) {
     const { pathname } = useLocation();
     const navigatePortfolio = usePortfolioNavigation();
     const pageRef = useRef(null);
@@ -17,7 +17,7 @@ function InteriorPageLayout({ title, description, heroContent = null, children, 
 
     return (
         <div ref={pageRef} className="min-h-screen w-full bg-obsidian text-ivory">
-            <header data-route-navigation className="relative z-50 w-full">
+            <header ref={onRouteNavigationElementChange} data-route-navigation className="relative z-50 w-full">
                 <div className="hidden b-md:block">
                     <PortfolioDesktopHeader placement="interior" items={NAVIGATION_ITEMS} activeHref={pathname} onNavigate={navigatePortfolio} logoHref="/" />
                 </div>
