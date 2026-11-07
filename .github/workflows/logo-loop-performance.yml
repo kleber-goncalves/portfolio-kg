@@ -8,6 +8,7 @@ on:
       - feat/responsividadeFull
       - feat/separacao-paginas
     paths:
+      - "src/pages/home/layouts/ProjetosTeste2.jsx"
       - "src/pages/home/components/logoLoop.jsx"
       - "src/pages/home/styles/LogoLoop.css"
       - "src/pages/home/layouts/SeclogsMobile.jsx"

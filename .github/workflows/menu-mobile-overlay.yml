@@ -8,6 +8,7 @@ on:
       - feat/responsividadeFull
       - feat/separacao-paginas
     paths:
+      - "src/pages/home/layouts/ProjetosTeste2.jsx"
       - ".github/workflows/menu-mobile-overlay.yml"
       - "scripts/test-menu-mobile-overlay.mjs"
       - "src/components/MenuMobile.jsx"

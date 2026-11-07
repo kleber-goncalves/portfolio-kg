@@ -6,6 +6,7 @@ on:
       - dev
       - feat/separacao-paginas
     paths:
+      - "src/pages/home/layouts/ProjetosTeste2.jsx"
       - "src/components/MenuMobile.jsx"
       - "src/pages/home/layouts/ProjetoCarouselMobile.jsx"
       - "src/pages/home/components/Socials.jsx"
