@@ -116,6 +116,7 @@ function MagneticSubmitButton({
         <motion.button
             type="submit"
             disabled={disabled}
+            whileTap={!disabled && !reducedMotion ? { scale: 0.99 } : undefined}
             aria-busy={isSubmitting}
             data-ui-sfx-hover
             onMouseEnter={handleMouseEnter}
@@ -227,14 +228,39 @@ function MagneticSubmitButton({
                     className="contact-send-button__icon-wrapper inline-flex shrink-0 items-center justify-center"
                     animate={{
                         x: isInteractive ? iconCenterOffset : 0,
-                        y: isInteractive ? -1.5 : 0,
-                        scale: isInteractive ? 1.08 : 1,
+                        y: isInteractive && !reducedMotion ? [0, -1.5, 0] : 0,
+                        scale: isInteractive && !reducedMotion ? 1.1 : 1,
+                        rotate: isInteractive && !reducedMotion ? 45 : 0,
                     }}
                     transition={reducedMotion ? { duration: 0.01 } : {
-                        type: "spring",
-                        stiffness: 420,
-                        damping: 17,
-                        mass: 0.35,
+                        x: {
+                            type: "spring",
+                            stiffness: 420,
+                            damping: 17,
+                            mass: 0.35,
+                        },
+                        y: isInteractive ? {
+                            duration: 0.6,
+                            ease: "easeInOut",
+                            repeat: Infinity,
+                        } : {
+                            type: "spring",
+                            stiffness: 420,
+                            damping: 17,
+                            mass: 0.35,
+                        },
+                        scale: {
+                            type: "spring",
+                            stiffness: 420,
+                            damping: 17,
+                            mass: 0.35,
+                        },
+                        rotate: {
+                            type: "spring",
+                            stiffness: 420,
+                            damping: 17,
+                            mass: 0.35,
+                        },
                     }}
                 >
                     <Send aria-hidden="true" className="contact-send-button__icon h-4 w-4" />
@@ -243,7 +269,7 @@ function MagneticSubmitButton({
                 <motion.span
                     className="contact-send-button__label inline-block"
                     animate={{
-                        x: isInteractive ? 22 : 0,
+                        x: isInteractive && !reducedMotion ? "5em" : 0,
                         opacity: isInteractive ? 0 : 1,
                     }}
                     transition={reducedMotion ? { duration: 0.01 } : {
