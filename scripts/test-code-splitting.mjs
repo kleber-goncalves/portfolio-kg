@@ -45,14 +45,13 @@ async function testViewport({ width, height, mobile }) {
     const { scripts, errors } = makeRecorder(page);
 
     try {
+        // A Home e a página Sobre agora são rotas separadas.
+        // Na Home, somente Projetos e Footer pertencem a esta composição.
         await page.goto(baseUrl, { waitUntil: "domcontentloaded", timeout: 60000 });
         await page.waitForFunction(() =>
             Boolean(
-                document.querySelector('[data-deferred-section="competencia"]') &&
-                document.querySelector('[data-deferred-section="diferenciais"]') &&
-                document.querySelector('[data-deferred-section="formacao"]') &&
-                document.querySelector('[data-deferred-section="footer"]') &&
-                document.querySelector("#projetos")
+                document.querySelector("#projetos") &&
+                document.querySelector('[data-deferred-section="footer"]')
             ),
             null,
             { timeout: 60000 },
@@ -149,13 +148,41 @@ async function testViewport({ width, height, mobile }) {
             );
         }
 
-        // Os IDs das âncoras existem mesmo antes dos chunks serem carregados.
+        // Formação e seções institucionais pertencem à rota /sobre, não à Home.
+        await page.goto(new URL("/sobre", baseUrl).toString(), {
+            waitUntil: "domcontentloaded",
+            timeout: 60000,
+        });
+        await page.waitForFunction(() =>
+            Boolean(
+                document.querySelector('[data-deferred-section="competencia"]') &&
+                document.querySelector('[data-deferred-section="diferenciais"]') &&
+                document.querySelector('[data-deferred-section="formacao"]') &&
+                document.querySelector('[data-deferred-section="footer"]')
+            ),
+            null,
+            { timeout: 60000 },
+        );
+        await page.waitForTimeout(500);
+
+        const aboutInitialScripts = new Set(scripts);
+        assert.equal(
+            hasChunk(aboutInitialScripts, "Formacao-"),
+            false,
+            "A seção Formação não deve ser transferida no primeiro carregamento da página Sobre.",
+        );
+        assert.equal(
+            hasChunk(aboutInitialScripts, "Footer-"),
+            false,
+            "O Footer não deve ser transferido antes de se aproximar do final da página Sobre.",
+        );
+
         await page.locator("#formacao").scrollIntoViewIfNeeded();
         await waitForReadySection(page, "formacao");
         assert.equal(
             hasChunk(scripts, "Formacao-"),
             true,
-            "Formação deve ser carregada ao aproximar-se da seção.",
+            "Formação deve ser carregada ao aproximar-se da seção na página Sobre.",
         );
 
         await page.locator("#footer").scrollIntoViewIfNeeded();
@@ -163,7 +190,7 @@ async function testViewport({ width, height, mobile }) {
         assert.equal(
             hasChunk(scripts, "Footer-"),
             true,
-            "Footer deve ser carregado ao aproximar-se do final da página.",
+            "Footer deve ser carregado ao aproximar-se do final da página Sobre.",
         );
 
         const relevantErrors = errors.filter((message) =>
