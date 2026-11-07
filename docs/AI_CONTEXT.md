@@ -365,9 +365,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `9b108db866ee6af3bed64978a30e16f272bf8255`
-- **Data do commit analisado:** 2026-11-07T18:25:18-03:00
-- **Mensagem do commit:** test(architecture): isolar medição dos chunks da página Sobre
+- **Commit de código analisado:** `6a535bd3c7d644aabe09711c450a39e9ecbe8b2f`
+- **Data do commit analisado:** 2026-11-07T18:27:30-03:00
+- **Mensagem do commit:** ci(home): validar composição atual nos workflows
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -485,13 +485,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `6a535bd` | 2026-11-07 | ci(home): validar composição atual nos workflows |
+| `19ee51f` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `9b108db` | 2026-11-07 | test(architecture): isolar medição dos chunks da página Sobre |
 | `bee2227` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `fb864cc` | 2026-11-07 | test(architecture): alinhar code splitting às rotas separadas |
 | `5e8ccf9` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `15d27a1` | 2026-11-07 | fix(home): corrigir imports dos layouts de projetos |
 | `c4b5a72` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
-| `076329d` | 2026-11-07 | refactor(home): organizar módulos por página |
-| `5be137e` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
