@@ -1103,6 +1103,7 @@ function MenuDesktop({ items = [], showMenu = false }) {
             <motion.button
                 ref={buttonRef}
                 type="button"
+                data-menu-desktop-trigger
                 aria-label={isOpen ? "Fechar menu" : "Abrir menu"}
                 title={isOpen ? "Fechar menu" : "Abrir menu"}
                 aria-expanded={isOpen}

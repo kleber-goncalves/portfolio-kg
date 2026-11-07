@@ -45,7 +45,7 @@ async function waitForPageReady(page, expectedMode, options = {}) {
 async function readHamburgerState(page) {
     return page.evaluate(() => {
         const button = document.querySelector(
-            'button[aria-label="Abrir menu"], button[aria-label="Fechar menu"]',
+            "[data-menu-desktop-trigger]",
         );
 
         const hero = document.querySelector("#hero");
@@ -108,7 +108,7 @@ async function assertHamburgerAvailable(page, scenario) {
     try {
         await page.waitForFunction(() => {
             const button = document.querySelector(
-                'button[aria-label="Abrir menu"], button[aria-label="Fechar menu"]',
+                "[data-menu-desktop-trigger]",
             );
 
             if (!button) return false;
@@ -169,7 +169,7 @@ async function testFullToReduced(page) {
     await waitForPageReady(page, "full");
     const before = await scrollUntilHamburgerAvailable(page, "Full before switching mode");
 
-    await page.locator('button[aria-label="Abrir menu"]').click();
+    await page.locator('[data-menu-desktop-trigger][aria-label="Abrir menu"]').click();
     const reducedOption = page.locator('[data-experience-mode-option="reduced"]');
     await reducedOption.waitFor({ state: "visible", timeout: 10000 });
 
