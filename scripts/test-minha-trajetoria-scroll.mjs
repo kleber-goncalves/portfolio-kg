@@ -10,7 +10,8 @@ const maxStepsPerDirection = 85;
 
 async function waitForPageReady(page, expectedMode, { navigate = true } = {}) {
     if (navigate) {
-        await page.goto(baseUrl, {
+        // A trajetória e a Formação pertencem à página Sobre desde a separação das rotas.
+        await page.goto(new URL("/sobre", baseUrl).toString(), {
             waitUntil: "domcontentloaded",
             timeout: 60000,
         });
