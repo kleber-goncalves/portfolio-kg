@@ -13,7 +13,7 @@
 > **HEAD verificado antes desta atualização documental (07/11/2026):** 8bae313c6fb958e912e730d24feeffb936628a15.
 > **HEAD verificado antes do fechamento da Etapa 3 (07/11/2026):** 36b903194e81f6fd49d5dd1bb9d77d39fd0bc3da.
 > **Commit de implementação da Etapa 4 (07/11/2026):** `19d6dc58ec5fe45c1462d2666ed778b400f28086` (`refactor(contato): organizar módulos por página`).
-> **HEAD com sincronização automática do AI_CONTEXT após a Etapa 4:** `5b2b5bc0d0c141dd0cea9dd78d925173217a5d4b`.
+> **HEAD registrado imediatamente após o commit de código da Etapa 4 e antes das atualizações documentais:** `5b2b5bc0d0c141dd0cea9dd78d925173217a5d4b`. Sempre confirme o HEAD atual antes de uma nova alteração.
 
 ## 1. Objetivo
 
@@ -499,7 +499,7 @@ Total: 12 arquivos movidos. Sobre.jsx permaneceu como entrada da página e passo
 
 **Problema conhecido confirmado novamente:** Menu Desktop #54 passou nos cenários de navegação/reload, porém seu log ainda registra, durante reload direto de `/projetos`, a mensagem “Não foi possível atualizar os ScrollTriggers após mudar a página de projetos” seguida de `TypeError: Cannot read properties of undefined (reading 'restart')` em `ScrollTrigger.refresh()`. O teste passou apesar do erro de console. O comportamento já havia sido identificado antes da movimentação; tratá-lo como pendência técnica independente e não atribuí-lo automaticamente ao novo caminho.
 
-**Próxima atividade:** iniciar o Preflight da Etapa 4 — Contato. A falha Axe do formulário é uma pendência conhecida e não deve ser corrigida dentro de uma simples movimentação estrutural sem manter essa correção isolada. O erro ScrollTrigger em `/projetos` também permanece como item técnico separado.
+**Etapa concluída:** o Preflight e a implementação da Etapa 4 — Contato foram concluídos. A falha Axe conhecida do formulário permanece fora do escopo da movimentação estrutural; qualquer correção visual deve ser tratada em mudança isolada. O erro ScrollTrigger em `/projetos` também permanece como item técnico separado. A próxima atividade é o Preflight da Etapa 5 — Footer compartilhado.
 
 
 ### Resultado da Etapa 4 — Contato (07/11/2026)
@@ -517,7 +517,7 @@ Total: 12 arquivos movidos. Sobre.jsx permaneceu como entrada da página e passo
 
 **Documentação:** os dois documentos técnicos em `src/docs/` e `docs/BASIN_FORM_SETUP.md` tiveram seus caminhos e comandos de teste alinhados à estrutura nova. `docs/AI_CONTEXT.md` e este plano registram a arquitetura atual e a próxima etapa. O README foi inspecionado e não continha referências aos arquivos movidos, portanto não exigiu alteração.
 
-**Validação:** Unit Tests #240 (run `42420299177`) aprovou 66 testes em 6 arquivos, ESLint (0 erros; 5 avisos existentes) e build. Menu Desktop Reduced #55 (run `42420299130`) passou pelos cenários Full/Reduced e reload direto/reload nas quatro rotas; o log continua reportando o erro preexistente de `ScrollTrigger.refresh()` em `/projetos`. Accessibility and SEO Audit #208 (run `42420299146`) ainda precisa ter o resultado final conferido antes do fechamento documental da etapa.
+**Validação:** Unit Tests #240 (run `42420299177`) aprovou 66 testes em 6 arquivos, ESLint (0 erros; 5 avisos existentes) e build. Menu Desktop Reduced #55 (run `42420299130`) passou pelos cenários Full/Reduced e reload direto/reload nas quatro rotas; o log continua reportando o erro preexistente de `ScrollTrigger.refresh()` em `/projetos`. A auditoria Accessibility and SEO integra a validação global da Etapa 7. A execução iniciada no commit de código foi cancelada por um push documental posterior; conferir a execução mais recente antes de declarar a Etapa 7 concluída. A pendência de contraste conhecida em `/contato` permanece separada da movimentação de arquivos.
 
 **Comportamento preservado:** nenhuma regra Zod, validação HTML, chave de campo Basin, integração HTTP, texto/mensagem, estado de submit ou animação do botão foi reescrita. `MagneticExternalLink.jsx` e `InteriorPageLayout.jsx` permanecem globais. Nenhum envio real ao Basin foi realizado.
 
@@ -545,7 +545,7 @@ Cada etapa deve terminar com uma revisão dos arquivos alterados e verificação
 
 ### Etapa 3 — Projetos
 
-**Movimentação inicial aplicada em 07/11/2026; validação E2E pendente.** Dois módulos foram realocados e os imports/workflows atualizados. Evidências e execuções em andamento estão registradas em “Resultado parcial da implementação da Etapa 3 — Projetos”.
+**CONCLUÍDA em 07/11/2026.** O catálogo da rota `/projetos` e seus dados foram realocados, imports atualizados e workflows específicos ajustados. A validação de build, testes, lint, Code Splitting, Menu Desktop e Lighthouse está registrada em “Resultado da Etapa 3 — Projetos”; a falha Axe global restringiu-se ao contraste do formulário `/contato`.
 
 ### Etapa 4 — Contato
 
@@ -625,4 +625,4 @@ O próximo assistente deve:
 8. Não abrir PR, não fazer merge e não alterar \`main\` ou \`dev\` sem solicitação expressa do usuário.
 
 **Mensagem de retomada sugerida:**  
-“Retome a reorganização da arquitetura por página no repositório kleber-goncalves/portfolio-kg, branch feat/separacao-paginas. Leia integralmente docs/AI_CONTEXT.md e docs/PLANO-REORGANIZACAO-ARQUITETURA-POR-PAGINA.md, confira o HEAD atual e implemente a Etapa 3 — Projetos conforme o resultado do Preflight já registrado. Etapas 0, 1 e 2 estão concluídas. Não refaça Home/Sobre, não altere main/dev e não abra PR ou faça merge sem autorização.”
+“Retome a reorganização da arquitetura por página no repositório kleber-goncalves/portfolio-kg, branch feat/separacao-paginas. Leia integralmente docs/AI_CONTEXT.md e docs/PLANO-REORGANIZACAO-ARQUITETURA-POR-PAGINA.md, confira o HEAD atual e inicie a Etapa 5 — Layout compartilhado (Footer), conforme o checklist. Etapas 0 a 4 estão concluídas. Não refaça Home/Sobre, não altere main/dev e não abra PR ou faça merge sem autorização.”
