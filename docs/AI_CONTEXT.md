@@ -345,9 +345,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `506429c39e09f77371e0ef2e8d2c2a3df7781217`
-- **Data do commit analisado:** 2026-11-07T16:22:26-03:00
-- **Mensagem do commit:** fix(menu): observe internal route header after lazy mount
+- **Commit de código analisado:** `ed504657fd6ff5ee575b16a4316fdb6b62ed9a95`
+- **Data do commit analisado:** 2026-11-07T16:25:51-03:00
+- **Mensagem do commit:** test(menu): target current home projects section
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -466,13 +466,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `ed50465` | 2026-11-07 | test(menu): target current home projects section |
+| `080ddfc` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `506429c` | 2026-11-07 | fix(menu): observe internal route header after lazy mount |
 | `61f14df` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `d42f3eb` | 2026-11-07 | fix(contact): use numeric label motion offset |
 | `239f571` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `80bba2b` | 2026-11-07 | fix(contact): restore submit button motion |
 | `8d06807` | 2026-10-29 | docs(ai-context): atualizar snapshot automaticamente |
-| `f021627` | 2026-10-29 | fix(contact): cap magnetic submit button movement |
-| `f22b77a` | 2026-10-29 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
