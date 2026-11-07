@@ -41,6 +41,14 @@
 - Carregamento diferido de seções e divisão de módulos por viewport.
 - Auditorias automatizadas de performance, acessibilidade, SEO e comportamentos específicos pelo GitHub Actions.
 
+### Plano de continuidade — reorganização da arquitetura por página
+
+- **Documento operacional obrigatório para esta tarefa:** `docs/PLANO-REORGANIZACAO-ARQUITETURA-POR-PAGINA.md`. Ele registra o objetivo, a estrutura-alvo, o mapeamento dos arquivos por página, dependências que exigem atualização, scripts/workflows afetados, validações, estado inicial, regras de branch e checklist de retomada.
+- **Estado em 07/11/2026:** planejamento registrado; nenhuma movimentação de código iniciada. A análise estrutural foi feita na branch `feat/separacao-paginas`, commit-base `a76466a2d14c7e26e0ad699f2cfc5131c906e0ae`. A próxima atividade é executar a Etapa 0 (Preflight), conferir o HEAD atual e então avançar pela primeira etapa ainda não concluída.
+- **Instrução para outra conversa/assistente:** antes de alterar arquivos, leia integralmente este AI_CONTEXT e o documento operacional acima. Continue pelo checklist do plano; não peça ao usuário para repetir o contexto já registrado.
+- **Limites:** trabalhar somente em `feat/separacao-paginas`; manter `main` e `dev` intactas; não abrir PR, fazer merge ou alterar branches protegidas sem autorização expressa. Preservar comportamento, imports lazy, URLs públicas de imagens, Basin/Zod, rotas, animações e modos Full/Reduced. Não apagar arquivos legados sem busca global de referências.
+- **Validação:** não marcar etapas como concluídas nem declarar testes/Actions aprovados sem executar e consultar evidências do commit atualizado. A falha de contraste da auditoria Accessibility/SEO já existia no baseline e deve ser acompanhada separadamente.
+
 ### Implementação inicial da separação de páginas
 
 - **src/App.jsx** declara as rotas `/`, `/projetos`, `/sobre` e `/contato` com React Router e carrega os componentes de página sob demanda. Também coordena o `RouteTransitionPreloader` por mudança de `location.pathname`; cada página sinaliza quando seu conteúdo essencial está pronto, sem transformar as seções diferidas em dependências da navegação.
