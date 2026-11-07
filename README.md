@@ -378,7 +378,7 @@ O comando de build gera os arquivos de produção em <code>dist/</code>. O coman
 | <code>npm run preview</code> | Serve localmente a build de produção.         |
 | <code>npm run lint</code>    | Executa o ESLint no projeto.                  |
 
-O <code>package.json</code> não declara atualmente um comando <code>npm test</code>. Os testes especializados listados na próxima seção são executados por scripts e workflows do GitHub Actions.
+Os testes unitários usam Vitest e podem ser executados localmente com <code>npm test</code> (execução única), <code>npm run test:watch</code> (modo de observação) e <code>npm run test:coverage</code> (relatório de cobertura). Também existem scripts Playwright especializados, executados pelos workflows do GitHub Actions; consulte os arquivos YAML para conhecer os cenários automatizados.
 
 ## Qualidade e GitHub Actions
 
@@ -395,7 +395,7 @@ A automação de qualidade está em <code>.github/workflows/</code>. Ela combina
 | [Analyze JavaScript Runtime Coverage](.github/workflows/analyze-js-runtime-coverage.yml)   | Inspeção de cobertura de JavaScript em execução.                                |
 | [Optimize project images](.github/workflows/optimize-project-images.yml)                   | Geração das variantes WebP e atualização de metadados de imagem.                |
 
-Há também workflows e scripts voltados a interações específicas, incluindo menu desktop em Reduced, menu mobile, loop de logos, painel de redes sociais e scroll da trajetória.
+Há também workflows e scripts voltados a interações específicas, incluindo a visibilidade do MenuDesktop em Reduced após troca de modo e reload da Home e das rotas internas, menu mobile, loop de logos, painel de redes sociais e scroll da trajetória.
 
 ### Fluxo resumido de validação
 

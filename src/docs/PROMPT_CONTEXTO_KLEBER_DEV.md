@@ -1,6 +1,6 @@
 # PROMPT DE CONTEXTO — KLEBER DEV / PORTFOLIO-KG
 
-> **Instrução para o novo chat:** leia este documento inteiro e use-o como contexto inicial de trabalho. Continue o projeto a partir do estado real do GitHub, sem presumir que hashes, branches, workflows ou arquivos permaneçam iguais. Este documento registra o estado confirmado em **19 de outubro de 2026**. Antes de editar código, confira novamente o repositório e os resultados mais recentes do GitHub Actions.
+> **Instrução para o novo chat:** leia este documento inteiro e use-o como contexto inicial de trabalho. Continue o projeto a partir do estado real do GitHub, sem presumir que hashes, branches, workflows ou arquivos permaneçam iguais. Este documento foi revisado em **07 de novembro de 2026**. Os registros de branch e workflows datados de outubro são históricos; `docs/AI_CONTEXT.md` e o estado vivo do GitHub são as referências técnicas prioritárias. Antes de editar código, confira novamente o repositório e os resultados mais recentes do GitHub Actions.
 
 ---
 
@@ -14,8 +14,8 @@ O usuário prefere respostas em português do Brasil, diretas, práticas e expli
 
 ### Regras inegociáveis
 
-1. **Trabalhe somente na branch `dev` por padrão.** O histórico mostra que as últimas alterações deste trabalho foram feitas em `dev`. Não altere `main` em hipótese alguma sem um pedido explícito do usuário. Não faça deploy, merge, cherry-pick, rebase ou sincronização entre branches sem entender o efeito e obter autorização quando a mudança ultrapassar a tarefa pedida.
-2. **Não escreva na branch `feat/responsividadeFull` sem pedido explícito.** Ela deve ser considerada uma branch histórica de responsividade; no estado confirmado em 19/10/2026, estava 43 commits atrás de `dev` e sem commits exclusivos em relação ao histórico de `dev`.
+1. **Não presuma uma branch padrão.** Trabalhe somente na branch explicitamente indicada/autorizada pelo usuário para a tarefa atual. Se a branch não estiver clara, confirme o estado atual do GitHub e use o contexto da conversa; não migre automaticamente para `dev` ou `main`.
+2. **Preserve `main` e `dev` por padrão.** Não escreva, faça merge, rebase, cherry-pick, deploy ou sincronização nessas branches sem pedido explícito. Branches de feature também não são autorização permanente: confirme a branch vigente em cada nova tarefa. `feat/responsividadeFull` aparece neste documento apenas como referência histórica de responsividade, não como branch de trabalho.
 3. Antes de mudar qualquer arquivo, consulte sua versão atual no GitHub, o contexto do componente, os utilitários relacionados e os testes/workflows que o cobrem. Não edite baseado apenas em snippets antigos, memória ou neste prompt.
 4. Faça a menor alteração coerente possível. Evite refatorações amplas, reescritas de arquivos grandes, trocas de arquitetura ou mudanças de estilo não solicitadas.
 5. Preserve React com **JavaScript e JSX**. Não introduza TypeScript (`.ts`/`.tsx`) nem migre o projeto para outra stack.
@@ -111,60 +111,40 @@ A preferência é persistida e também deve considerar `prefers-reduced-motion`.
 
 ---
 
-## 3. Repositório, branches e estado confirmado
+## 3. Repositório, branches e estado de referência
 
 Repositório: [kleber-goncalves/portfolio-kg](https://github.com/kleber-goncalves/portfolio-kg)
 
 Portfólio público indicado no README: [https://kleber-goncalves-dev.vercel.app/](https://kleber-goncalves-dev.vercel.app/)
 
-Preview usado pelo workflow para `dev`: `https://portfolio-kg-git-dev-kleber-goncalves-s-projects.vercel.app/`
+### Regra operacional vigente
 
-Preview configurado para `feat/responsividadeFull`: `https://portfolio-kg-git-feat-respon-0847d0-kleber-goncalves-s-projects.vercel.app/`
+- A branch de trabalho deve ser a indicada/autorizada pelo usuário na tarefa atual. Não existe regra geral de usar `dev` por padrão.
+- Na sequência documental e na correção recente do MenuDesktop, a branch autorizada e conferida em 07/11/2026 foi `feat/separacao-paginas`. O head consultado durante esta revisão era `82c46f4f9a6c4f7204d64b48bbd0746ac04e5d34`; esse SHA é uma fotografia daquele momento, não uma autorização permanente nem substituto de nova consulta.
+- Não altere `main` ou `dev` sem pedido explícito. Não faça merge, deploy, cherry-pick, rebase ou sincronização entre branches por iniciativa própria.
+- Antes de qualquer gravação, consulte o head remoto da branch autorizada, leia os arquivos nessa mesma ref e crie o commit usando o SHA esperado. Se o head mudar, releia os arquivos e reconcilie as alterações antes de continuar.
+- Depois de gravar, confirme o commit, a ref, os arquivos resultantes e os workflows associados ao SHA correto.
 
-### `dev` — branch de trabalho
+### Registros históricos de 19/10/2026 — não usar como estado atual
 
-Em 19/10/2026, o head confirmado era:
+Os dados abaixo preservam a origem do trabalho e não devem orientar a escolha de branch em tarefas futuras.
 
-- **SHA:** `28b30550fde834a73ee39cafe4570a0f0e2292bf`
-- [Commit](https://github.com/kleber-goncalves/portfolio-kg/commit/28b30550fde834a73ee39cafe4570a0f0e2292bf)
-- Mensagem: `Merge branch 'dev' of https://github.com/kleber-goncalves/portfolio-kg into dev`
-
-O merge preservou o commit de `SoundControls` descrito abaixo. Seu outro pai incluiu `af0a2b686993ecac5f89c0bb5bb67c3fc301fef7`, com a mensagem `fix(config): update server port to 3000 for consistency`.
-
-### `main` — não tocar
-
-Em 19/10/2026:
-
-- **SHA:** `6abb4d1b81e2ed70329d3102fe47ae709b320a97`
-- [Branch main](https://github.com/kleber-goncalves/portfolio-kg/tree/main)
-
-A comparação `main...dev` estava **divergente**: `dev` tinha 35 commits exclusivos e estava 2 commits atrás de `main`; merge base `f89bbdf8a69795d67ec331de68552c43dbf24e7d`. Isso não autoriza sincronizar as branches automaticamente. A regra prática continua: **todas as alterações solicitadas neste fluxo ficam em `dev`; `main` permanece intocada.** Antes de cada tarefa nova, confirme se houve atualização remota.
-
-### `feat/responsividadeFull` — branch de referência/histórico de responsividade
-
-Em 19/10/2026:
-
-- **SHA:** `9401de3c57de98e6642eb6a938e7187c07ace289`
-- [Commit da branch](https://github.com/kleber-goncalves/portfolio-kg/commit/9401de3c57de98e6642eb6a938e7187c07ace289)
-- Mensagem: `ci(actions): support main, dev and feature branch`
-- A comparação contra `dev` mostrava `feat/responsividadeFull` como ancestral/atrasada em 43 commits, com **0 commits exclusivos** na comparação feita naquele momento.
-
-Essa branch foi usada para organizar a experiência responsiva/full e contém uma alteração histórica de workflows para reconhecer `main`, `dev` e a branch de feature. Não a trate como branch de trabalho atual nem copie seus arquivos por cima de `dev`: ela está defasada em relação às alterações recentes de sons, testes e performance. Atualize os dados consultando o GitHub se essa branch virar parte explícita da tarefa.
+- `dev` tinha o SHA `28b30550fde834a73ee39cafe4570a0f0e2292bf`; o registro descrevia um merge que incorporou a alteração de `SoundControls` e o commit `af0a2b686993ecac5f89c0bb5bb67c3fc301fef7` de configuração da porta 3000.
+- `main` tinha o SHA `6abb4d1b81e2ed70329d3102fe47ae709b320a97`. Na comparação da época, `dev` e `main` estavam divergentes; isso não deve ser tratado como comparação atual.
+- `feat/responsividadeFull` tinha o SHA `9401de3c57de98e6642eb6a938e7187c07ace289` e aparecia 43 commits atrás de `dev`, sem commits exclusivos naquela comparação.
+- Os previews de Vercel registrados anteriormente para `dev` e `feat/responsividadeFull` podem ter mudado; consulte os workflows/aliases antes de usá-los.
 
 ### Rotina segura ao editar pelo GitHub
 
-Use a integração/conector do GitHub disponível ao ChatGPT para ler arquivos, comparar commits/branches, gravar alterações e conferir Actions. No trabalho recente, foram usados comandos do conector através de `functions.exec`, especialmente:
+Use a integração/conector do GitHub para ler/gravar arquivos, comparar commits/branches e conferir Actions. Foram utilizados, entre outros:
 
-- `mcp__GitHub__fetch_file` para ler o arquivo de uma branch específica.
-- `mcp__GitHub__search_branches` / listagem de branches para localizar refs.
-- `mcp__GitHub__fetch` para consultar endpoints públicos do GitHub, incluindo commits, comparações e Actions.
-- `mcp__GitHub__update_file` para alterações simples de um arquivo na branch `dev`.
-- Para alterações atômicas de múltiplos arquivos, use a sequência cuidadosa de blobs/árvore/commit/update-ref, com SHA esperado, se as funções disponíveis permitirem.
-- `mcp__GitHub__fetch_commit` e `mcp__GitHub__get_commit_combined_status` para inspecionar commit/status.
+- `mcp__GitHub__fetch_file` para ler arquivos de uma branch específica.
+- `mcp__GitHub__fetch` para consultar commits, árvores, branches e Actions.
+- `mcp__GitHub__create_blob`, `mcp__GitHub__create_tree` e `mcp__GitHub__create_commit` para alterações atômicas em múltiplos arquivos.
+- `mcp__GitHub__update_ref` com SHA esperado para atualizar a branch sem sobrescrever uma alteração remota concorrente.
 
-**Antes de escrever:** buscar a branch `dev` atual, buscar o arquivo na ref `dev`, conferir o SHA do conteúdo, inspecionar diff e paths. **Depois de escrever:** confirmar o novo commit, ref `dev`, arquivo resultante e os runs dos workflows com o SHA correto. Nunca use um SHA memorizado para mover uma branch sem verificar o head mais recente e usar uma atualização protegida por SHA esperado.
+**Nunca use hashes memorizados para mover uma branch.** Confirme o head remoto imediatamente antes de gravar e use a atualização protegida com o SHA esperado.
 
----
 
 ## 4. Foco principal desta sequência: `uiSfx` e os efeitos sonoros
 
@@ -316,9 +296,9 @@ O projeto depende de GitHub Actions para validar alterações com build, Playwri
 6. Se o usuário pedir explicitamente para validar visualmente, o teste automatizado não substitui inspeção de navegador/screenshot. Diga com clareza quando ainda não houve verificação visual manual.
 7. Depois de uma alteração de UI/SFX, no mínimo confira `npm run build` via workflow relevante e os testes comportamentais apropriados. Evite lançar um build local pesado no notebook do usuário sem necessidade, pois Actions já oferece ambiente limpo.
 
-### Workflows existentes em `dev`
+### Inventário histórico de workflows (19/10/2026)
 
-Os nomes abaixo foram observados em `.github/workflows/` em 19/10/2026. Confirme os YAMLs antes de supor os gatilhos exatos:
+Os nomes abaixo foram observados em `.github/workflows/` naquele momento. A lista é uma referência histórica; confira a branch atual e os arquivos YAML antes de supor que todos os workflows ou gatilhos continuam iguais:
 
 | Workflow / arquivo                                                          | Principal objetivo                                                                                                                                                 |
 | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -340,9 +320,9 @@ Os nomes abaixo foram observados em `.github/workflows/` em 19/10/2026. Confirme
 
 Os testes Playwright geralmente fazem checkout, configuram Node 24, executam `npm ci`, instalam Playwright temporário sem gravá-lo no lockfile, instalam Chromium, validam o build de produção e iniciam um preview local antes de executar os scripts.
 
-### Resultado confirmado dos Actions mais recentes
+### Resultado histórico de Actions — 19/10/2026
 
-Em 19/10/2026, os runs que tinham o head SHA atual `28b30550fde834a73ee39cafe4570a0f0e2292bf` terminaram com sucesso:
+Os resultados abaixo pertencem ao SHA e à branch daquela data; não representam o estado atual do repositório:
 
 | Workflow                               | Run                                                                                      |
 | -------------------------------------- | ---------------------------------------------------------------------------------------- |
@@ -360,6 +340,19 @@ Na alteração de estilo de `SoundControls` (SHA `7d7513558d273e99f85e523b4c5f77
 No commit `1a6b1de`, o workflow Mobile UI Sound Interactions também terminou com sucesso: [run 39071684452](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/39071684452).
 
 **Interpretação correta:** isso confirma os workflows que efetivamente rodaram nesses SHAs, não uma garantia de que todo aspecto visual foi manualmente inspecionado nem de que nenhuma futura regressão seja possível.
+
+### Resultado recente relacionado ao MenuDesktop — 07/11/2026
+
+Os resultados abaixo foram consultados na branch `feat/separacao-paginas`, para o código do commit `faace481bb61554f3ebd89d2a789f26359fde6f3`:
+
+| Workflow | Resultado |
+|---|---|
+| [Unit Tests — run 42406728366](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42406728366) | Sucesso em testes unitários, ESLint e build. |
+| [Menu Desktop Reduced Visibility — run 42406728373](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42406728373) | Sucesso: troca Full → Reduced, reload da Home com scroll restaurado e reload direto com scroll restaurado em `/projetos`, `/sobre` e `/contato`. |
+| [AI Context — Synchronize — run 42406728393](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42406728393) | Sucesso. |
+| [Accessibility and SEO Audit — run 42406728425](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42406728425) | Lighthouse mobile e desktop passaram; Axe falhou por contraste dos números dos campos de Contato (3,33:1, abaixo de 4,5:1). |
+
+Durante o teste Menu Desktop, o console também registrou um erro não investigado de `ScrollTrigger.refresh()` em `/projetos` (`Cannot read properties of undefined (reading 'restart')`). O cenário de visibilidade do menu passou apesar desse log; não declarar a falha de ScrollTrigger como corrigida.
 
 ---
 
@@ -400,41 +393,48 @@ O repositório já tem metas, canônica, descrição, OG/Twitter, sitemap/robots
 
 ---
 
-## 7. O que fazer ao continuar agora
+## 7. Estado corrente e como continuar
 
-### Estado corrente
+### Estado confirmado na revisão de 07/11/2026
 
-O último pedido implementado foi reunir visualmente o botão de ativar/desativar efeitos sonoros e o botão de volume do `SoundControls` desktop. A alteração está em `dev` e permanece no head atual `28b3055`. O workflow de preferências de som associado ao commit da alteração passou. O conjunto de Actions do head atual também foi confirmado como verde para os oito workflows listados na seção 5.
+- A separação de páginas mantém as rotas `/`, `/projetos`, `/sobre` e `/contato`.
+- A correção de visibilidade do MenuDesktop foi implementada no commit [`506429c`](https://github.com/kleber-goncalves/portfolio-kg/commit/506429c39e09f77371e0ef2e8d2c2a3df7781217): `InteriorPageLayout` encaminha o cabeçalho real por callback ref; o `App.jsx` registra o `IntersectionObserver` depois que o cabeçalho lazy existe. A Home preserva a lógica baseada em `HeroSectionTransition`.
+- O Playwright que passou no run 42406728373 confirmou a visibilidade do botão flutuante após reload com scroll restaurado nas três páginas internas e na Home. O atributo `data-menu-desktop-trigger` identifica o botão desktop sem confundi-lo com o MenuMobile oculto.
+- **Pendência de investigação:** o teste de `/projetos` registrou erro de `ScrollTrigger.refresh()` com leitura de `restart` em valor indefinido. O menu passou; a causa de ScrollTrigger permanece aberta.
+- **Pendência de acessibilidade:** o run 42406728425 passou no Lighthouse mobile/desktop, mas falhou em Axe por contraste 3,33:1 nos números dos campos da página Contato. A auditoria apontou `#656565` sobre `#0D0D0D`, com texto de 14px; o ajuste visual ainda não foi feito.
+- A branch autorizada nessa sequência foi `feat/separacao-paginas`. Reconfirme a branch atual em cada novo pedido. Não presuma que `dev` seja a branch padrão e não altere `main` ou `dev` sem autorização explícita.
 
-Portanto, **não existe uma falha pendente conhecida nessa alteração visual**. O próximo chat deve primeiro perguntar/interpretar qual é o próximo pedido específico do usuário, mas manter a área atual de atenção como `uiSfx`/interações sonoras e controles, caso o usuário esteja continuando essa sequência.
+### Próximos cuidados técnicos
 
-### Checklist sugerido antes de qualquer próxima mudança de som
+- Para mudanças no MenuDesktop, execute `.github/workflows/menu-desktop-reduced.yml` e confira o Playwright em reload das quatro páginas/rotas cobertas.
+- Investigue separadamente o erro de `ScrollTrigger.refresh()` em Projetos antes de alterar GSAP, timelines ou gatilhos.
+- Corrija o contraste do formulário de Contato em uma tarefa própria, preservando a identidade visual e reexecutando Axe.
+- Continue diferenciando teste automatizado em Chromium, auditoria Lighthouse/Axe, inspeção visual manual e validação em dispositivo físico. Um não substitui o outro.
 
-- [ ] Buscar estado atual de `dev`, `main`, `feat/responsividadeFull` e mudanças recentes.
-- [ ] Ler a versão atual dos componentes envolvidos e `src/utils/uiSfx.js` / `uiSfxEvents.js`.
-- [ ] Conferir se o cue já é disparado por listener delegado ou ponte `requestUiSound`; evitar registrar segunda vez.
-- [ ] Identificar os comportamentos esperados antes de editar (mouse/pen/touch, primeira interação após reload, som on/off, persistência de volume, sem autoplay).
-- [ ] Fazer diff pequeno e revisar que não removeu handlers, atributos ARIA, storage, hooks ou animações.
-- [ ] Validar `npm run build` dentro do workflow aplicável.
-- [ ] Para mudanças em `Socials`, carrossel ou slider mobile, conferir e rodar `Mobile UI Sound Interactions`.
-- [ ] Para mudanças no motor/controles desktop/preferências, conferir `UI Sound Preference and Refresh`.
-- [ ] Para alteração no peso dos chunks, conferir `Analyze JavaScript Bundle`, `Analyze Unused JavaScript` e/ou `Deferred Section and Project Code Splitting` conforme os arquivos alterados.
-- [ ] Para alteração de layout, scroll, menu ou experiência, executar os workflows específicos listados anteriormente.
-- [ ] Confirmar os resultados dos workflows no SHA atual e distinguir sucesso, falha e cancelamento.
-- [ ] Confirmar que a alteração foi feita somente em `dev` e que `main` continua no mesmo SHA, a menos que exista autorização explícita diferente.
+### Referência técnica anterior: UI/SFX
 
-### Pendências futuras a considerar (não tratar como bugs já confirmados)
+A seção 4 conserva o contexto técnico construído para `uiSfx`, Socials, carrossel e controles de som. Esse conteúdo continua útil quando a tarefa envolver esses componentes, mas não descreve a última alteração nem determina a branch de trabalho atual.
 
-Estas são linhas de investigação possíveis, não alegações de que a aplicação está quebrada:
+### Regra para a próxima conversa
 
-1. Se o usuário pedir confirmação visual, revisar o `SoundControls` no preview de desktop para assegurar que a borda externa compartilhada e o hover deixam os botões perceptivelmente como um único grupo, sem prejudicar foco acessível, hit-area ou responsividade.
-2. Se for útil e solicitado, considerar teste visual/DOM específico para o agrupamento do desktop. O workflow `UI Sound Preference and Refresh` já cobre comportamento de preferência/volume, mas isso não significa necessariamente que existe uma asserção automatizada para a estética da borda compartilhada.
-3. Continuar monitorando a regra de não autoplay e a primeira interação touch após reload, porque o histórico demonstra que navegadores podem se comportar diferentemente em desktop e emulação mobile.
-4. Continuar cuidando do custo inicial de JavaScript, módulos adiados, imagens responsivas, animações de scroll e modo Reduced. Não desfazer otimizações que passaram sem evidência de um benefício concreto.
-
-Não invente uma lista obrigatória de tarefas que não está respaldada por um pedido ou por falha observada. Se o usuário trouxer uma nova mudança, siga a intenção concreta e priorize uma implementação pequena com validação direcionada.
+Leia primeiro `docs/AI_CONTEXT.md`, confirme o estado remoto e a branch autorizada para o pedido mais recente, depois leia os arquivos e workflows específicos envolvidos. Não trate este prompt ou os registros históricos abaixo como substitutos da fonte de código atual.
 
 ---
+
+## 8. Resumo para iniciar o trabalho rapidamente
+
+- **Projeto:** KLEBER DEV, portfólio em React + Vite + JavaScript/JSX + Tailwind CSS 4.
+- **Referência principal para continuidade:** `docs/AI_CONTEXT.md`; este prompt complementa o contexto histórico e técnico, mas não é a autoridade sobre branch, SHA, scripts ou status dos workflows.
+- **Branch da sequência documentada em 07/11/2026:** `feat/separacao-paginas`. Confirme o head atual e a autorização a cada tarefa; não assuma `dev` como padrão.
+- **MenuDesktop:** correção de montagem do observador após o cabeçalho lazy implementada; regressão Playwright passou no run 42406728373.
+- **Testes de código:** Unit Tests, ESLint e build passaram no run 42406728366.
+- **Acessibilidade:** Lighthouse mobile/desktop passou; Axe ainda acusa contraste insuficiente na numeração do formulário de Contato (run 42406728425).
+- **ScrollTrigger:** existe erro observado de `refresh()` em `/projetos`; causa não investigada.
+- **Branch policy:** não alterar `main` ou `dev` sem solicitação explícita; não realizar merge/deploy/sincronização por iniciativa própria.
+- **Stack e ferramentas:** GSAP/ScrollTrigger, Lenis, Motion, Vitest/jsdom, Playwright e GitHub Actions; consulte os arquivos reais antes de assumir versões ou comportamentos.
+
+**Continue a partir do pedido mais recente do usuário e valide cada afirmação nos arquivos e Actions do SHA correspondente.**
+
 
 ## 8. Resumo para iniciar o trabalho rapidamente
 
