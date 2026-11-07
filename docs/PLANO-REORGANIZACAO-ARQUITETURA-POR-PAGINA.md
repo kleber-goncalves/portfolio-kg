@@ -1,13 +1,14 @@
 # Plano de reorganização da arquitetura por página
 
 > **Tipo:** plano operacional de refatoração e documento de continuidade entre conversas/assistentes.  
-> **Estado atual:** EM ANDAMENTO — Etapas 0 (Preflight), 1 (Home) e 2 (Sobre) concluídas; Etapa 3 (Projetos) é a próxima, ainda não iniciada.
+> **Estado atual:** EM ANDAMENTO — Etapas 0 (Preflight), 1 (Home) e 2 (Sobre) concluídas; Preflight da Etapa 3 (Projetos) concluído e movimentação dos arquivos ainda não iniciada.
 > **Última análise estrutural:** 07/11/2026.  
 > **Repositório:** \`kleber-goncalves/portfolio-kg\`.  
 > **Branch exclusiva de trabalho:** \`feat/separacao-paginas\`.  
 > **Commit-base analisado:** \`a76466a2d14c7e26e0ad699f2cfc5131c906e0ae\`.
 > **HEAD validado após a conclusão da Etapa 1 (07/11/2026):** dfe832b958b5306ba1d2dc70b054e2840ddcc278.
 > **HEAD validado após a conclusão da Etapa 2 (07/11/2026):** 780af1acb653f7714622a6683cba6dc2cc3d0b1d.
+> **HEAD validado no Preflight da Etapa 3 (07/11/2026):** f650ff2865ca7a64c9c9b6f2e19296ee2212c8be.
 
 ## 1. Objetivo
 
@@ -418,6 +419,45 @@ Total: 12 arquivos movidos. Sobre.jsx permaneceu como entrada da página e passo
 - Nenhuma lógica visual ou funcional de Sobre foi reescrita; somente organização e caminhos foram alterados.
 
 
+### Resultado do Preflight da Etapa 3 — Projetos (07/11/2026)
+
+**Estado: PREflight CONCLUÍDO; movimentação ainda NÃO iniciada.** A árvore foi conferida na branch feat/separacao-paginas, no commit f650ff2. Desde o commit documental da Etapa 2, a comparação apontou apenas uma atualização automática de docs/AI_CONTEXT.md; nenhum arquivo de código-fonte mudou.
+
+**Arquivos e destino planejado:**
+
+- src/pages/projetos/Projetos.jsx permanece como entrada da rota.
+- src/components/ProjetoCatalogo.jsx será movido para src/pages/projetos/layouts/ProjetoCatalogo.jsx.
+- src/data/projetosCatalogo.js será movido para src/pages/projetos/data/projetosCatalogo.js.
+- Não há necessidade identificada de criar components/ para Projetos nesta etapa, pois o catálogo não contém componentes filhos exportados como módulos separados.
+
+**Imports a atualizar após a movimentação:**
+
+- Projetos.jsx: importar o catálogo pelo caminho local ./layouts/ProjetoCatalogo.
+- ProjetoCatalogo.jsx: o import de projetosCatalogo.js passa a usar ../data/projetosCatalogo (subpastas layouts/ e data/ são irmãs).
+- ProjetoCatalogo.jsx: os módulos globais precisam continuar globais, com caminhos relativos ajustados a partir de pages/projetos/layouts/: uiSfx.js em ../../../utils/uiSfx; tecnologias.js em ../../../data/tecnologias; MagneticExternalLinkHover.jsx em ../../../components/MagneticExternalLinkHover; lenisControl.js em ../../../utils/lenisControl; useResponsive.js em ../../../hooks/useResponsive.
+
+**Dependências compartilhadas confirmadas:**
+
+- src/data/tecnologias.js é usado pela composição de projetos da Home e pelo catálogo completo; permanecer em src/data/.
+- src/components/MagneticExternalLinkHover.jsx é usado pelo preview da Home e pelo catálogo; permanecer em src/components/.
+- src/hooks/useResponsive.js e src/utils/uiSfx.js / lenisControl.js continuam globais.
+- projetosCatalogo.js contém os dados do catálogo completo e é específico da rota /projetos; não misturar com os dados de seis projetos do preview da Home em pages/home/layouts/ProjetosTeste2.jsx.
+
+**Workflows identificados para atualizar:**
+
+- .github/workflows/test-code-splitting.yml: adicionar monitoramento para src/pages/projetos/Projetos.jsx, src/pages/projetos/layouts/ProjetoCatalogo.jsx e src/pages/projetos/data/projetosCatalogo.js. O workflow já monitora tecnologias.js compartilhado.
+- .github/workflows/menu-desktop-reduced.yml: adicionar monitoramento para src/pages/projetos/layouts/ProjetoCatalogo.jsx, pois o teste visita /projetos e cobre o menu/scroll na rota.
+- .github/workflows/accessibility-seo.yml e workflows genéricos que observam src/** já cobrem os novos caminhos; não ampliar filtros genéricos sem necessidade.
+- A inspeção dirigida não encontrou necessidade de alterar scripts de otimização de imagem: o catálogo não contém assets originais próprios nem interfere nos caminhos de public/_optimized/.
+
+**Risco conhecido a acompanhar nesta etapa:**
+
+- Menu Desktop Reduced #53 passou nos cenários de navegação/reload, mas o log ainda registrou o erro conhecido em /projetos: ScrollTrigger.refresh() lança TypeError ao ler restart durante mudança do catálogo. Esse erro é anterior à movimentação de ProjetoCatalogo e não deve ser atribuído automaticamente ao novo caminho. Ao validar a etapa, conferir o log novamente e decidir separadamente se o defeito exige correção funcional ou apenas registro.
+- A auditoria global de acessibilidade ainda tem o baseline de contraste no formulário /contato (#656565 sobre #0D0D0D, 3,33:1); não misturar essa correção com a movimentação de Projetos.
+
+**Limites confirmados:** main e dev permanecem intocadas; não há PR aberto; nenhum arquivo da página Projetos foi movido durante este Preflight.
+
+
 ## 9. Sequência recomendada de execução
 
 Cada etapa deve terminar com uma revisão dos arquivos alterados e verificação de referências antes de avançar. Preferir commits pequenos e temáticos na mesma branch, com mensagens Conventional Commits.
@@ -441,7 +481,7 @@ Cada etapa deve terminar com uma revisão dos arquivos alterados e verificação
 
 ### Etapa 3 — Projetos
 
-Mover \`ProjetoCatalogo.jsx\` e \`projetosCatalogo.js\` para a página Projetos. Atualizar imports e o workflow de code splitting. Confirmar que o preview da Home continua separado e funcional.
+**Preflight concluído em 07/11/2026; implementação pendente.** O mapeamento e os imports a atualizar estão registrados em “Resultado do Preflight da Etapa 3 — Projetos”.
 
 ### Etapa 4 — Contato
 
@@ -504,8 +544,8 @@ Marcar somente após a conclusão real de cada etapa:
 - [ ] Relatório final entregue ao usuário; nenhum PR/merge feito sem autorização.
 
 **Última etapa concluída:** Etapa 2 — Sobre (Etapas 0 e 1 também concluídas).  
-**Etapa em andamento:** nenhuma; Etapa 3 — Projetos ainda não iniciada.  
-**Próxima atividade ao retomar:** executar o Preflight da Etapa 3, revisar ProjetoCatalogo.jsx e projetosCatalogo.js, preservar a separação entre o catálogo /projetos e o preview da Home, e conferir os workflows afetados.
+**Etapa em andamento:** Etapa 3 — Projetos; Preflight concluído, movimentação ainda não iniciada.  
+**Próxima atividade ao retomar:** mover ProjetoCatalogo.jsx e projetosCatalogo.js conforme o mapeamento do Preflight da Etapa 3; ajustar imports e os filtros dos workflows test-code-splitting e menu-desktop-reduced. Validar antes de iniciar Contato.
 
 ## 12. Instruções para continuidade em uma nova conversa
 
@@ -515,10 +555,10 @@ O próximo assistente deve:
 2. Ler \`docs/AI_CONTEXT.md\` e este documento completo antes de editar.
 3. Verificar o HEAD atual; o commit-base registrado é apenas o ponto da análise de 07/11/2026, não uma autorização para resetar a branch.
 4. Conferir se houve commits ou alterações posteriores e atualizar o plano mentalmente/documentalmente conforme a árvore real.
-5. Retomar pela primeira caixa ainda desmarcada no checklist. As Etapas 0, 1 e 2 estão concluídas; a próxima é a Etapa 3 — Projetos.
+5. Retomar pela primeira etapa ainda não concluída. Etapas 0, 1 e 2 concluídas; Preflight da Etapa 3 concluído; próxima ação é implementar a movimentação de Projetos.
 6. Executar uma etapa por vez, mantendo este documento atualizado com o que foi movido, o commit correspondente, as validações executadas e os problemas encontrados.
 7. Informar claramente o que foi concluído, o que falhou e qual é a próxima etapa. Não repetir perguntas já respondidas neste documento.
 8. Não abrir PR, não fazer merge e não alterar \`main\` ou \`dev\` sem solicitação expressa do usuário.
 
 **Mensagem de retomada sugerida:**  
-“Retome a reorganização da arquitetura por página no repositório kleber-goncalves/portfolio-kg, branch feat/separacao-paginas. Leia integralmente docs/AI_CONTEXT.md e docs/PLANO-REORGANIZACAO-ARQUITETURA-POR-PAGINA.md, confira o HEAD atual e continue pela Etapa 3 — Projetos. As Etapas 0, 1 e 2 estão concluídas. Não refaça Home ou Sobre, não altere main/dev e não abra PR ou faça merge sem autorização.”
+“Retome a reorganização da arquitetura por página no repositório kleber-goncalves/portfolio-kg, branch feat/separacao-paginas. Leia integralmente docs/AI_CONTEXT.md e docs/PLANO-REORGANIZACAO-ARQUITETURA-POR-PAGINA.md, confira o HEAD atual e implemente a Etapa 3 — Projetos conforme o resultado do Preflight já registrado. Etapas 0, 1 e 2 estão concluídas. Não refaça Home/Sobre, não altere main/dev e não abra PR ou faça merge sem autorização.”

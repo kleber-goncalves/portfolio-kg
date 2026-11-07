@@ -43,17 +43,18 @@
 
 
 
+
 ### Plano de continuidade — reorganização da arquitetura por página
 
 - **Documento operacional obrigatório:** docs/PLANO-REORGANIZACAO-ARQUITETURA-POR-PAGINA.md. Ele contém objetivo, estrutura-alvo, mapeamento de arquivos, dependências, workflows, scripts, validações e checklist.
-- **Estado atual (07/11/2026):** Etapa 0 — Preflight — concluída. Etapa 1 — Home — concluída. Etapa 2 — Sobre — concluída e validada. HEAD conferido ao atualizar esta nota: 780af1acb653f7714622a6683cba6dc2cc3d0b1d.
-- **Home:** reorganizada em pages/home com layouts, components, data, assets e styles locais. Foram movidos 21 arquivos de código/dados/estilos e 6 imagens originais. Otimizador, imports lazy e workflows correspondentes foram atualizados.
-- **Sobre:** reorganizado em pages/sobre com 4 layouts, 3 componentes, 1 módulo de dados e 4 folhas de estilo (12 arquivos movidos). Sobre.jsx importa layouts/SobreHero.jsx. DeferredLayoutSection.jsx permanece global e carrega Competencia, DiferenciaisTeste e Formacao via React.lazy com os novos caminhos. Os filtros dos workflows relacionados foram atualizados.
-- **Validação da Sobre:** Unit Tests #233 (testes, ESLint e build), Code Splitting #43, Trajetória #50, Optimize Images #37, Menu Desktop Reduced #53 e AI Context — Synchronize #232 passaram. O Axe não encontrou violações em /sobre no desktop, mobile e estados de menu. A auditoria global ainda falha por contraste no formulário /contato (#656565 sobre #0D0D0D, 3,33:1), pendência preexistente e fora de escopo.
-- **Observação conhecida:** o teste Menu Desktop passou no run #53 após tornar a restauração de scroll sensível à altura real do documento. O log ainda registra erro ScrollTrigger.refresh() no catálogo /projetos, anteriormente conhecido; investigar na Etapa 3, sem misturar com a reorganização de Sobre.
-- **Próxima etapa:** Etapa 3 — Projetos. Executar Preflight, revisar ProjetoCatalogo.jsx e projetosCatalogo.js, preservar a separação entre o catálogo /projetos e os seis projetos em destaque na Home, e atualizar os filtros/workflows afetados. Não refazer Home nem Sobre.
-- **Instrução para outro assistente:** leia integralmente este AI_CONTEXT e o plano operacional; confira o HEAD atual e retome pela Etapa 3. Não solicite contexto já registrado.
-- **Limites:** trabalhar somente em feat/separacao-paginas; manter main e dev intactas; não abrir PR/merge sem autorização; preservar comportamento funcional/visual e não excluir arquivos sem auditoria de referências.
+- **Estado atual (07/11/2026):** Etapas 0 (Preflight), 1 (Home) e 2 (Sobre) concluídas. Preflight da Etapa 3 — Projetos — concluído, mas a movimentação dos dois arquivos ainda não começou. HEAD validado no Preflight: f650ff2865ca7a64c9c9b6f2e19296ee2212c8be.
+- **Home:** organizada em pages/home; 21 arquivos de código/dados/estilos e seis imagens originais movidos; otimizador, imports lazy e workflows atualizados.
+- **Sobre:** organizada em pages/sobre; 12 arquivos movidos; DeferredLayoutSection continua global e carrega Competencia, DiferenciaisTeste e Formacao com React.lazy. Testes unitários, ESLint, build, Code Splitting, Trajetória, Menu Desktop e acessibilidade específica de /sobre validados.
+- **Projetos — plano já analisado:** mover src/components/ProjetoCatalogo.jsx para src/pages/projetos/layouts/ProjetoCatalogo.jsx e src/data/projetosCatalogo.js para src/pages/projetos/data/projetosCatalogo.js. Atualizar Projetos.jsx e os imports globais relativos. Não mover tecnologias.js nem MagneticExternalLinkHover: ambos são compartilhados com a Home.
+- **Workflows para atualizar na Etapa 3:** test-code-splitting.yml e menu-desktop-reduced.yml precisam observar o novo caminho do catálogo; o primeiro também deve observar Projetos.jsx e o novo módulo data. accessibility-seo.yml e pipelines genéricos com src/** já cobrem novos caminhos.
+- **Risco conhecido:** Menu Desktop Reduced #53 passou, mas seu log ainda mostra TypeError de ScrollTrigger.refresh() no catálogo /projetos. Reavaliar durante os testes da Etapa 3; não atribuir ao move sem evidência. A auditoria global de contraste do formulário /contato também permanece separada.
+- **Próxima atividade:** implementar a movimentação de ProjetoCatalogo e projetosCatalogo conforme a seção “Resultado do Preflight da Etapa 3 — Projetos” no plano. Depois validar imports, build, testes, Code Splitting e Menu Desktop.
+- **Limites:** trabalhar somente em feat/separacao-paginas; manter main/dev intactas; não abrir PR/merge sem autorização; preservar comportamento e não remover arquivos sem busca de referências.
 
 ### Implementação inicial da separação de páginas
 
