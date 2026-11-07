@@ -364,9 +364,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `d5f2653b0cd87d7673bcec9baadb6f49f80e21cd`
-- **Data do commit analisado:** 2026-11-07T18:09:31-03:00
-- **Mensagem do commit:** docs(architecture): registrar plano de reorganização por página
+- **Commit de código analisado:** `b998c584faf48621f2b17315d2977c8442964913`
+- **Data do commit analisado:** 2026-11-07T18:13:33-03:00
+- **Mensagem do commit:** docs(architecture): concluir preflight da reorganização
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -485,13 +485,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `b998c58` | 2026-11-07 | docs(architecture): concluir preflight da reorganização |
+| `c8f8efd` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `d5f2653` | 2026-11-07 | docs(architecture): registrar plano de reorganização por página |
 | `a76466a` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `17b76cf` | 2026-11-07 | docs(ai-context): fix issue list formatting |
 | `b64f3c7` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `4525502` | 2026-11-07 | docs(prompt): remove duplicated legacy summary |
 | `2abb71f` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
-| `d267411` | 2026-11-07 | docs: refresh project context and technical guides |
-| `82c46f4` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
