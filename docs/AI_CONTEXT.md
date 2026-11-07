@@ -373,9 +373,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `ca04a7af4e3be074014a2e0c76d1a652a090e403`
-- **Data do commit analisado:** 2026-11-07T19:28:10-03:00
-- **Mensagem do commit:** docs(architecture): corrigir continuidade após etapa Contato
+- **Commit de código analisado:** `955108a5939e76b957be88fff1d97d27c6f0c1bc`
+- **Data do commit analisado:** 2026-11-07T19:54:14-03:00
+- **Mensagem do commit:** refactor(layout): mover Footer compartilhado para layouts
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -483,7 +483,6 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 - `src/docs/`
 - `src/generated/`
 - `src/hooks/`
-- `src/layout/`
 - `src/layouts/`
 - `src/pages/`
 - `src/styles/`
@@ -493,13 +492,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `955108a` | 2026-11-07 | refactor(layout): mover Footer compartilhado para layouts |
+| `0b05d60` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `ca04a7a` | 2026-11-07 | docs(architecture): corrigir continuidade após etapa Contato |
 | `3e6cde2` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `558601e` | 2026-11-07 | docs(architecture): registrar etapa Contato concluída |
 | `5b2b5bc` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `19d6dc5` | 2026-11-07 | refactor(contato): organizar módulos por página |
 | `56970ad` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
-| `4d067c0` | 2026-11-07 | docs(architecture): concluir etapa Projetos e preparar Contato |
-| `36b9031` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
