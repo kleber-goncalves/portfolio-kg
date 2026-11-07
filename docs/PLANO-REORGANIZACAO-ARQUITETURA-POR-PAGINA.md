@@ -1,7 +1,7 @@
 # Plano de reorganização da arquitetura por página
 
 > **Tipo:** plano operacional de refatoração e documento de continuidade entre conversas/assistentes.  
-> **Estado atual:** EM ANDAMENTO — Etapas 0 (Preflight), 1 (Home) e 2 (Sobre) concluídas; Preflight da Etapa 3 (Projetos) concluído e movimentação dos arquivos ainda não iniciada.
+> **Estado atual:** EM ANDAMENTO — Etapas 0 (Preflight), 1 (Home) e 2 (Sobre) concluídas; movimentação inicial da Etapa 3 (Projetos) aplicada em 07/11/2026; validações E2E e auditoria ainda pendentes.
 > **Última análise estrutural:** 07/11/2026.  
 > **Repositório:** \`kleber-goncalves/portfolio-kg\`.  
 > **Branch exclusiva de trabalho:** \`feat/separacao-paginas\`.  
@@ -421,7 +421,7 @@ Total: 12 arquivos movidos. Sobre.jsx permaneceu como entrada da página e passo
 
 ### Resultado do Preflight da Etapa 3 — Projetos (07/11/2026)
 
-**Estado: PREflight CONCLUÍDO; movimentação ainda NÃO iniciada.** A árvore foi conferida na branch feat/separacao-paginas, no commit f650ff2. Desde o commit documental da Etapa 2, a comparação apontou apenas uma atualização automática de docs/AI_CONTEXT.md; nenhum arquivo de código-fonte mudou.
+**Registro histórico: Preflight CONCLUÍDO no commit f650ff2.** Naquele momento, a árvore foi conferida na branch feat/separacao-paginas e a movimentação ainda não havia começado. A execução posterior está registrada em “Resultado parcial da implementação da Etapa 3 — Projetos”.
 
 **Arquivos e destino planejado:**
 
@@ -455,7 +455,46 @@ Total: 12 arquivos movidos. Sobre.jsx permaneceu como entrada da página e passo
 - Menu Desktop Reduced #53 passou nos cenários de navegação/reload, mas o log ainda registrou o erro conhecido em /projetos: ScrollTrigger.refresh() lança TypeError ao ler restart durante mudança do catálogo. Esse erro é anterior à movimentação de ProjetoCatalogo e não deve ser atribuído automaticamente ao novo caminho. Ao validar a etapa, conferir o log novamente e decidir separadamente se o defeito exige correção funcional ou apenas registro.
 - A auditoria global de acessibilidade ainda tem o baseline de contraste no formulário /contato (#656565 sobre #0D0D0D, 3,33:1); não misturar essa correção com a movimentação de Projetos.
 
-**Limites confirmados:** main e dev permanecem intocadas; não há PR aberto; nenhum arquivo da página Projetos foi movido durante este Preflight.
+**Limites confirmados durante aquele Preflight:** main e dev permaneceram intocadas; não havia PR aberto; nenhum arquivo de Projetos foi movido naquele momento.
+
+
+### Resultado parcial da implementação da Etapa 3 — Projetos (07/11/2026)
+
+**Estado: MOVIMENTAÇÃO APLICADA; validação E2E ainda em andamento.** A implementação estrutural foi registrada no commit `5f04d7c` (`refactor(projetos): organizar catálogo por página`). O HEAD atual é `88a4987`; a diferença posterior à implementação é uma sincronização automática do `AI_CONTEXT.md`, sem alteração de código.
+
+**Arquivos reorganizados:**
+
+- `src/components/ProjetoCatalogo.jsx` foi movido para `src/pages/projetos/layouts/ProjetoCatalogo.jsx`.
+- `src/data/projetosCatalogo.js` foi movido para `src/pages/projetos/data/projetosCatalogo.js`.
+- `src/pages/projetos/Projetos.jsx` permanece como entrada e agora importa `./layouts/ProjetoCatalogo`.
+- O catálogo importa seus dados por `../data/projetosCatalogo` e ajusta os caminhos relativos dos módulos globais.
+
+**Dependências compartilhadas preservadas:**
+
+- `src/data/tecnologias.js` continua global, pois é usado pela Home e pelo catálogo completo.
+- `src/components/MagneticExternalLinkHover.jsx` continua global, pois é compartilhado entre o preview da Home e a rota `/projetos`.
+- `src/hooks/useResponsive.js`, `src/utils/uiSfx.js` e `src/utils/lenisControl.js` continuam globais.
+- O preview de seis projetos da Home (`src/pages/home/layouts/ProjetosTeste2.jsx`) permanece separado do catálogo completo de Projetos.
+
+**Workflows atualizados no commit `5f04d7c`:**
+
+- `test-code-splitting.yml` monitora a entrada Projetos, o novo layout do catálogo e o novo arquivo de dados.
+- `menu-desktop-reduced.yml` monitora os novos caminhos do catálogo e dos dados.
+- Não foi necessário alterar o otimizador de imagens: a movimentação não incluiu assets originais.
+
+**Validação registrada até o momento:**
+
+| Verificação | Execução | Estado observado |
+|---|---|---|
+| Unit Tests (testes, ESLint e build) | #236 — [run 42418184125](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42418184125) | Aprovada |
+| AI Context — Synchronize | #235 — [run 42418184146](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42418184146) | Aprovada |
+| Deferred Section and Project Code Splitting | #44 — [run 42418184096](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42418184096) | Em execução no teste de módulos mobile/desktop |
+| Menu Desktop Reduced Visibility | #54 — [run 42418184102](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42418184102) | Em execução no teste do menu Reduced |
+| Accessibility and SEO Audit | #207 — [run 42418184158](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42418184158) | Em execução; build concluído e Lighthouse mobile iniciado |
+
+**Risco conhecido a reavaliar:** a execução anterior do Menu Desktop (#53) passou nos cenários, mas registrou `ScrollTrigger.refresh()` lançando `TypeError` ao ler `restart` durante interações no catálogo `/projetos`. A execução #54 está reavaliando esse comportamento no código reorganizado. Não atribuir o erro à movimentação sem evidência.
+
+**Próxima atividade:** aguardar/conferir os resultados dos runs #44, #54 e #207. Abrir logs caso algum falhe; corrigir apenas problemas comprovadamente relacionados à mudança. Somente depois marcar a Etapa 3 como concluída e iniciar a Etapa 4 — Contato.
 
 
 ## 9. Sequência recomendada de execução
@@ -481,7 +520,7 @@ Cada etapa deve terminar com uma revisão dos arquivos alterados e verificação
 
 ### Etapa 3 — Projetos
 
-**Preflight concluído em 07/11/2026; implementação pendente.** O mapeamento e os imports a atualizar estão registrados em “Resultado do Preflight da Etapa 3 — Projetos”.
+**Movimentação inicial aplicada em 07/11/2026; validação E2E pendente.** Dois módulos foram realocados e os imports/workflows atualizados. Evidências e execuções em andamento estão registradas em “Resultado parcial da implementação da Etapa 3 — Projetos”.
 
 ### Etapa 4 — Contato
 
@@ -536,16 +575,16 @@ Marcar somente após a conclusão real de cada etapa:
 - [x] Etapa 0 — Preflight e revalidação da árvore atual (07/11/2026; HEAD `c8f8efd`).
 - [x] Etapa 1 — Home reorganizada e imports/automação validados (07/11/2026; Unit Tests #230, Code Splitting #42 e workflows específicos aprovados).
 - [x] Etapa 2 — Sobre reorganizado e seções lazy validadas (07/11/2026; Unit Tests #233, Code Splitting #43, Trajetória #50 e Menu Desktop #53 aprovados).
-- [ ] Etapa 3 — Catálogo de Projetos reorganizado e preview da Home preservado.
+- [ ] Etapa 3 — Catálogo de Projetos reorganizado e preview da Home preservado (movimentação aplicada em `5f04d7c`; Code Splitting #44, Menu Desktop #54 e Accessibility/SEO #207 ainda pendentes).
 - [ ] Etapa 4 — Contato reorganizado e testes encontrados.
 - [ ] Etapa 5 — Footer compartilhado movido e sem duplicação.
 - [ ] Etapa 6 — Scripts, workflows, README e AI_CONTEXT atualizados.
 - [ ] Etapa 7 — Testes, lint, build, Actions e smoke tests revisados.
 - [ ] Relatório final entregue ao usuário; nenhum PR/merge feito sem autorização.
 
-**Última etapa concluída:** Etapa 2 — Sobre (Etapas 0 e 1 também concluídas).  
-**Etapa em andamento:** Etapa 3 — Projetos; Preflight concluído, movimentação ainda não iniciada.  
-**Próxima atividade ao retomar:** mover ProjetoCatalogo.jsx e projetosCatalogo.js conforme o mapeamento do Preflight da Etapa 3; ajustar imports e os filtros dos workflows test-code-splitting e menu-desktop-reduced. Validar antes de iniciar Contato.
+**Última etapa concluída:** Etapa 2 — Sobre.  
+**Etapa em andamento:** Etapa 3 — Projetos; a movimentação inicial já está aplicada, mas as validações E2E/auditoria ainda não foram encerradas.  
+**Próxima atividade ao retomar:** conferir os runs Code Splitting #44, Menu Desktop #54 e Accessibility/SEO #207. Investigar logs em caso de falha. Não repetir as movimentações de ProjetoCatalogo e projetosCatalogo; elas já estão em `src/pages/projetos/layouts/` e `src/pages/projetos/data/`.
 
 ## 12. Instruções para continuidade em uma nova conversa
 
