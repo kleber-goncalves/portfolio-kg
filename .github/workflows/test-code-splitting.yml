@@ -32,7 +32,7 @@ on:
       - "src/pages/projetos/Projetos.jsx"
       - "src/pages/projetos/layouts/ProjetoCatalogo.jsx"
       - "src/pages/projetos/data/projetosCatalogo.js"
-      - "src/layout/Footer.jsx"
+      - "src/layouts/Footer.jsx"
       - "src/pages/home/layouts/ProjetosTeste2.jsx"
       - "src/pages/home/layouts/Logo2.jsx"
       - "src/pages/home/layouts/SeclogsMobile.jsx"

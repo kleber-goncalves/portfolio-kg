@@ -25,7 +25,7 @@ const SECTION_CONFIG = {
         id: "footer",
         title: "// FIM",
         minHeight: "min-h-[520px] b-md:min-h-[560px]",
-        Component: lazy(() => import("../layout/Footer")),
+        Component: lazy(() => import("../layouts/Footer")),
     },
 };
 

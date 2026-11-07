@@ -148,6 +148,21 @@ async function testViewport({ width, height, mobile }) {
             );
         }
 
+        // Confirma que o Footer da Home continua adiado e é renderizado uma única vez.
+        await page.locator("#footer").scrollIntoViewIfNeeded();
+        await waitForReadySection(page, "footer");
+        await page.locator("#footer footer").waitFor({ state: "attached", timeout: 60000 });
+        assert.equal(
+            hasChunk(scripts, "Footer-"),
+            true,
+            "Footer deve ser carregado ao aproximar-se do final da Home.",
+        );
+        assert.equal(
+            await page.locator("#footer footer").count(),
+            1,
+            "A Home deve renderizar uma única instância do Footer.",
+        );
+
         // Formação e seções institucionais pertencem à rota /sobre, não à Home.
         // Usa uma página isolada para não misturar chunks solicitados durante o teste da Home.
         const aboutPage = await context.newPage();
@@ -195,6 +210,13 @@ async function testViewport({ width, height, mobile }) {
             hasChunk(aboutScripts, "Footer-"),
             true,
             "Footer deve ser carregado ao aproximar-se do final da página Sobre.",
+        );
+
+        await aboutPage.locator("#footer footer").waitFor({ state: "attached", timeout: 60000 });
+        assert.equal(
+            await aboutPage.locator("#footer footer").count(),
+            1,
+            "A página Sobre deve renderizar uma única instância do Footer.",
         );
 
         const relevantErrors = [...errors, ...aboutErrors].filter((message) =>
