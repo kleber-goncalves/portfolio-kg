@@ -1,7 +1,7 @@
 # Plano de reorganização da arquitetura por página
 
 > **Tipo:** plano operacional de refatoração e documento de continuidade entre conversas/assistentes.  
-> **Estado inicial:** PLANEJADO — nenhuma movimentação de código foi iniciada.  
+> **Estado atual:** EM ANDAMENTO — Etapa 0 concluída; Etapa 1 (Home) ainda não iniciada.  
 > **Última análise estrutural:** 07/11/2026.  
 > **Repositório:** \`kleber-goncalves/portfolio-kg\`.  
 > **Branch exclusiva de trabalho:** \`feat/separacao-paginas\`.  
@@ -24,6 +24,21 @@ Na análise de 07/11/2026:
 - Não havia Pull Request aberto para essa branch.
 - Nenhum arquivo de código havia sido movido ou alterado nesta tarefa; a única alteração autorizada nesta etapa é registrar este plano e referenciá-lo no AI_CONTEXT.
 - \`main\` é a branch de produção e \`dev\` é a branch de desenvolvimento. Ambas devem permanecer intactas durante a refatoração.
+
+
+### Resultado da Etapa 0 — Preflight (07/11/2026)
+
+- **HEAD confirmado:** `c8f8efd6ac15093e0dafb3122c24ad6c9f728d53`.
+- **Integridade da árvore:** árvore recursiva completa, sem truncamento; 273 entradas totais, 99 arquivos de código/estilo dentro de `src/`, 17 workflows e 19 scripts de automação.
+- **Mudanças concorrentes:** comparação entre o commit que registrou o plano (`d5f2653b0cd87d7673bcec9baadb6f49f80e21cd`) e o HEAD atual encontrou apenas uma alteração em `docs/AI_CONTEXT.md`, gerada pela sincronização automática. Nenhum arquivo de código-fonte mudou desde a criação do plano.
+- **Documentação:** o plano e a referência no `AI_CONTEXT.md` estão presentes e legíveis na branch atual.
+- **Composição da Home confirmada:** `Home.jsx` consome `HeroSectionTransition`, `DeferredProjects` e o `DeferredLayoutSection` global. `HeroSectionTransition` conecta `HeroTeste2` e `Logo2`; estes carregam sob demanda as variações desktop/mobile do Hero, da stack e dos projetos em destaque. A organização pode preservar os limites lazy existentes.
+- **Dependências compartilhadas que permanecem globais:** `OptimizedImage`, `GlobeIcon`, `PortfolioDesktopHeader`, `MenuMobile`, `MagneticExternalLinkHover`, `useResponsive`, `navigation.js`, `tecnologias.js`, `lenisControl.js`, `uiSfx.js` e `uiSfxEvents.js`. `Socials`, `DotField`, `FlowingMenu`, `logoLoop` e `ProjetoCard` pertencem à composição da Home.
+- **Assets:** os seis arquivos originais de projeto são importados diretamente por `src/layout/ProjetosTeste2.jsx`. A movimentação para `pages/home/assets/` fica condicionada à busca global final de referências no início da Etapa 1; se houver qualquer outro consumidor, manter os assets compartilhados em local global.
+- **CSS da Home:** `looptextHero.css` e `heroParallax.css` são importados pelo Hero desktop; `LogoLoop.css` é importado pelo LogoLoop mobile. `DotField.css` não tem import direto identificado em `DotField.jsx`; não mover nem excluir sem rastrear outras referências.
+- **GitHub Actions:** os filtros de caminhos e branches que precisam ser atualizados na Etapa 1 foram mapeados em `logo-loop-performance.yml`, `menu-mobile-overlay.yml`, `minha-trajetoria-scroll.yml`, `mobile-ui-sfx-slider.yml`, `socials-panel-performance.yml`, `test-code-splitting.yml` e `menu-desktop-reduced.yml`. `optimize-project-images.yml` já inclui a branch de trabalho, mas seus caminhos de assets/hero precisam ser alinhados se houver movimentação.
+- **Validações disponíveis:** Unit Tests #221 concluiu com sucesso no commit `d5f2653` ([execução](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42414505551)); AI Context — Synchronize #220 também concluiu com sucesso ([execução](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42414505535)). Essas execuções antecedem o commit automático de sincronização de contexto, que não alterou código. A falha conhecida da auditoria de contraste Accessibility/SEO continua como baseline preexistente.
+- **Limites confirmados:** nenhuma movimentação de código, alteração visual/funcional, PR ou merge foi realizado durante o Preflight. `main` e `dev` permanecem fora do escopo.
 
 **Regras obrigatórias para a execução:**
 
@@ -363,7 +378,7 @@ Resultados de CI são específicos de commit e data. Antes de concluir, consulta
 
 Marcar somente após a conclusão real de cada etapa:
 
-- [ ] Etapa 0 — Preflight e revalidação da árvore atual.
+- [x] Etapa 0 — Preflight e revalidação da árvore atual (07/11/2026; HEAD `c8f8efd`).
 - [ ] Etapa 1 — Home reorganizada e imports/automação validados.
 - [ ] Etapa 2 — Sobre reorganizado e seções lazy validadas.
 - [ ] Etapa 3 — Catálogo de Projetos reorganizado e preview da Home preservado.
@@ -373,8 +388,8 @@ Marcar somente após a conclusão real de cada etapa:
 - [ ] Etapa 7 — Testes, lint, build, Actions e smoke tests revisados.
 - [ ] Relatório final entregue ao usuário; nenhum PR/merge feito sem autorização.
 
-**Última etapa concluída:** registro do plano e referência no AI_CONTEXT.  
-**Próxima etapa ao retomar:** Etapa 0 — Preflight. Não começar diretamente movendo arquivos.
+**Última etapa concluída:** Etapa 0 — Preflight (HEAD `c8f8efd`). Nenhum arquivo de código foi movido.  
+**Próxima etapa ao retomar:** Etapa 1 — Home. Antes de mover assets, executar a busca global de referências indicada no resultado do Preflight.
 
 ## 12. Instruções para continuidade em uma nova conversa
 

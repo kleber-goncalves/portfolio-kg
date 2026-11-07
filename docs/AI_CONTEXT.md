@@ -43,11 +43,13 @@
 
 ### Plano de continuidade — reorganização da arquitetura por página
 
-- **Documento operacional obrigatório para esta tarefa:** `docs/PLANO-REORGANIZACAO-ARQUITETURA-POR-PAGINA.md`. Ele registra o objetivo, a estrutura-alvo, o mapeamento dos arquivos por página, dependências que exigem atualização, scripts/workflows afetados, validações, estado inicial, regras de branch e checklist de retomada.
-- **Estado em 07/11/2026:** planejamento registrado; nenhuma movimentação de código iniciada. A análise estrutural foi feita na branch `feat/separacao-paginas`, commit-base `a76466a2d14c7e26e0ad699f2cfc5131c906e0ae`. A próxima atividade é executar a Etapa 0 (Preflight), conferir o HEAD atual e então avançar pela primeira etapa ainda não concluída.
-- **Instrução para outra conversa/assistente:** antes de alterar arquivos, leia integralmente este AI_CONTEXT e o documento operacional acima. Continue pelo checklist do plano; não peça ao usuário para repetir o contexto já registrado.
-- **Limites:** trabalhar somente em `feat/separacao-paginas`; manter `main` e `dev` intactas; não abrir PR, fazer merge ou alterar branches protegidas sem autorização expressa. Preservar comportamento, imports lazy, URLs públicas de imagens, Basin/Zod, rotas, animações e modos Full/Reduced. Não apagar arquivos legados sem busca global de referências.
-- **Validação:** não marcar etapas como concluídas nem declarar testes/Actions aprovados sem executar e consultar evidências do commit atualizado. A falha de contraste da auditoria Accessibility/SEO já existia no baseline e deve ser acompanhada separadamente.
+- **Documento operacional obrigatório:** `docs/PLANO-REORGANIZACAO-ARQUITETURA-POR-PAGINA.md`. Ele contém objetivo, estrutura-alvo, mapa dos arquivos, dependências, workflows, scripts, validações e checklist.
+- **Estado atual (07/11/2026):** Etapa 0 — Preflight — concluída. HEAD conferido durante a etapa: `c8f8efd6ac15093e0dafb3122c24ad6c9f728d53`. A comparação desde o commit do plano encontrou apenas a atualização automática do `AI_CONTEXT.md`; nenhum código-fonte foi alterado. Nenhum arquivo da Home foi movido ainda.
+- **Resultado resumido:** árvore completa com 273 entradas; 99 arquivos de código/estilo em `src/`, 17 workflows e 19 scripts. A composição e os limites lazy da Home foram revisitados. Dependências compartilhadas, CSS, referências a assets e filtros de Actions estão mapeados no resultado da Etapa 0 do documento operacional.
+- **Próxima etapa:** Etapa 1 — Home. Antes de mover os seis assets de projeto, fazer busca global de referências; mantê-los em local global se houver consumidor fora da Home. Preservar imports lazy, URLs de `public/_optimized` e metadados globais.
+- **Instrução para outra conversa/assistente:** leia integralmente este AI_CONTEXT e o documento operacional. Confira o HEAD atual e continue pela primeira etapa não concluída do checklist. Não refaça a análise do zero nem peça novamente informações já registradas.
+- **Limites:** trabalhar apenas em `feat/separacao-paginas`; manter `main` e `dev` intactas; não abrir PR ou fazer merge sem autorização. Não alterar comportamento visual/funcional como parte da simples movimentação e não apagar arquivos legados sem busca global de referências.
+- **Validação:** executar e consultar testes, lint, build e Actions no commit atualizado. A falha de contraste Accessibility/SEO identificada no baseline deve ser acompanhada separadamente e não atribuída à refatoração sem evidência.
 
 ### Implementação inicial da separação de páginas
 
