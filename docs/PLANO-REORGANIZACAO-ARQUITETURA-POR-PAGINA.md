@@ -1,12 +1,13 @@
 # Plano de reorganização da arquitetura por página
 
 > **Tipo:** plano operacional de refatoração e documento de continuidade entre conversas/assistentes.  
-> **Estado atual:** EM ANDAMENTO — Etapas 0 (Preflight) e 1 (Home) concluídas; Etapa 2 (Sobre) é a próxima etapa, ainda não iniciada.
+> **Estado atual:** EM ANDAMENTO — Etapas 0 (Preflight), 1 (Home) e 2 (Sobre) concluídas; Etapa 3 (Projetos) é a próxima, ainda não iniciada.
 > **Última análise estrutural:** 07/11/2026.  
 > **Repositório:** \`kleber-goncalves/portfolio-kg\`.  
 > **Branch exclusiva de trabalho:** \`feat/separacao-paginas\`.  
 > **Commit-base analisado:** \`a76466a2d14c7e26e0ad699f2cfc5131c906e0ae\`.
 > **HEAD validado após a conclusão da Etapa 1 (07/11/2026):** dfe832b958b5306ba1d2dc70b054e2840ddcc278.
+> **HEAD validado após a conclusão da Etapa 2 (07/11/2026):** 780af1acb653f7714622a6683cba6dc2cc3d0b1d.
 
 ## 1. Objetivo
 
@@ -362,6 +363,61 @@ Total: 21 arquivos de código/dados/estilos e 6 assets originais realocados. src
 - Nenhum componente legado foi removido apenas por parecer não utilizado.
 
 
+### Resultado da Etapa 2 — Sobre (07/11/2026)
+
+**Estado: CONCLUÍDA.** Os módulos exclusivos da página Sobre foram organizados em sua pasta, com imports lazy preservados e automações atualizadas.
+
+**Arquivos movidos para src/pages/sobre/:**
+
+- **layouts (4):** SobreHero.jsx, Competencia.jsx, DiferenciaisTeste.jsx e Formacao.jsx.
+- **components (3):** Card1-teste.jsx, card2.jsx e MinhaTrajetoria.jsx.
+- **data (1):** eventosTrajetoria.js.
+- **styles (4):** sobreHeroPortrait.css, formationCard.css, editorialCard.css e editorialCard2.css.
+
+Total: 12 arquivos movidos. Sobre.jsx permaneceu como entrada da página e passou a importar layouts/SobreHero.jsx. Os imports dos layouts para componentes, dados e estilos locais continuaram relativos às pastas irmãs.
+
+**Imports e carregamento diferido:**
+
+- SobreHero passou a importar GlobeIcon e OptimizedImage dos diretórios globais, usando o CSS local styles/sobreHeroPortrait.css.
+- DeferredLayoutSection.jsx permaneceu global e teve os três imports React.lazy atualizados para src/pages/sobre/layouts/Competencia.jsx, DiferenciaisTeste.jsx e Formacao.jsx.
+- Competências, Diferenciais e Formação continuam carregados sob demanda; não foram convertidos em imports estáticos.
+- Footer permanece compartilhado e será tratado na Etapa 5.
+
+**Workflows atualizados:**
+
+- minha-trajetoria-scroll.yml: paths para MinhaTrajetoria e Formacao atualizados; referência de HeroSectionTransition alinhada ao novo caminho da Home.
+- test-code-splitting.yml: paths dos três layouts atualizados e monitoramento adicionado para a entrada Sobre, SobreHero, componentes, dados e CSS da página.
+- optimize-project-images.yml: caminho de SobreHero atualizado para src/pages/sobre/layouts/SobreHero.jsx.
+
+**Commits da Etapa 2:**
+
+- 3db81bb — movimentação dos 12 módulos, atualização dos imports lazy e filtros dos workflows.
+- acbc906 — estabilização do teste Menu Desktop: a restauração de scroll aguarda a altura real do documento em vez de depender de atraso fixo de 300 ms.
+- O HEAD atual inclui sincronização automática do AI_CONTEXT; conferir o HEAD antes da próxima gravação.
+
+**Validações aprovadas:**
+
+| Verificação | Execução | Resultado |
+|---|---|---|
+| Unit Tests (testes, ESLint e build) | #232 — [run 42417166919](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42417166919) e #233 — [run 42417419520](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42417419520) | Aprovadas |
+| Deferred Section and Project Code Splitting | #43 — [run 42417166986](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42417166986) | Aprovada |
+| Minha Trajetória Scroll Progress (Full/Reduced) | #50 — [run 42417166924](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42417166924) | Aprovada |
+| Optimize project images | #37 — [run 42417167018](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42417167018) | Aprovada |
+| Menu Desktop Reduced Visibility | #53 — [run 42417419497](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42417419497) | Aprovada |
+| AI Context — Synchronize | #232 — [run 42417419594](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42417419594) | Aprovada |
+
+**Acessibilidade e SEO:** Accessibility and SEO Audit #206 ([run 42417167022](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42417167022)) passou Lighthouse mobile/desktop e não encontrou erros estáticos de SEO, semântica ou interação. O Axe registrou zero grupos de violação em /sobre — desktop, mobile e estados de menu incluídos. A auditoria global ainda falhou por contraste no formulário /contato: texto #656565 sobre #0D0D0D, razão 3,33:1. A pendência é restrita ao Contato, já existia no baseline e não foi alterada nesta etapa.
+
+**Observação fora do escopo:** o teste Menu Desktop voltou a registrar mensagens de console de ScrollTrigger.refresh() no catálogo /projetos (TypeError ao ler restart), comportamento já identificado na análise anterior. Os cenários de visibilidade e restauração do scroll passaram no run #53. Reavaliar a origem na Etapa 3, sem misturar o problema à movimentação de Sobre.
+
+**Decisões preservadas:**
+
+- DeferredLayoutSection.jsx permanece global porque atende mais de uma página.
+- CompetenciaItem.jsx não foi movido: não foi confirmado como dependência direta das seções atuais. Não excluir sem auditoria global.
+- Footer.jsx permanece em sua localização atual até a etapa de layouts compartilhados.
+- Nenhuma lógica visual ou funcional de Sobre foi reescrita; somente organização e caminhos foram alterados.
+
+
 ## 9. Sequência recomendada de execução
 
 Cada etapa deve terminar com uma revisão dos arquivos alterados e verificação de referências antes de avançar. Preferir commits pequenos e temáticos na mesma branch, com mensagens Conventional Commits.
@@ -381,7 +437,7 @@ Cada etapa deve terminar com uma revisão dos arquivos alterados e verificação
 
 ### Etapa 2 — Sobre
 
-Mover os layouts, componentes, dados e CSS exclusivos. Atualizar \`Sobre.jsx\`, os imports internos e os imports lazy em \`DeferredLayoutSection.jsx\`. Validar o carregamento das seções de Competências, Diferenciais e Formação.
+**CONCLUÍDA em 07/11/2026.** Os 12 arquivos exclusivos foram movidos, os imports lazy preservados e os workflows afetados atualizados. Resultado e evidências em “Resultado da Etapa 2 — Sobre”.
 
 ### Etapa 3 — Projetos
 
@@ -439,7 +495,7 @@ Marcar somente após a conclusão real de cada etapa:
 
 - [x] Etapa 0 — Preflight e revalidação da árvore atual (07/11/2026; HEAD `c8f8efd`).
 - [x] Etapa 1 — Home reorganizada e imports/automação validados (07/11/2026; Unit Tests #230, Code Splitting #42 e workflows específicos aprovados).
-- [ ] Etapa 2 — Sobre reorganizado e seções lazy validadas.
+- [x] Etapa 2 — Sobre reorganizado e seções lazy validadas (07/11/2026; Unit Tests #233, Code Splitting #43, Trajetória #50 e Menu Desktop #53 aprovados).
 - [ ] Etapa 3 — Catálogo de Projetos reorganizado e preview da Home preservado.
 - [ ] Etapa 4 — Contato reorganizado e testes encontrados.
 - [ ] Etapa 5 — Footer compartilhado movido e sem duplicação.
@@ -447,9 +503,9 @@ Marcar somente após a conclusão real de cada etapa:
 - [ ] Etapa 7 — Testes, lint, build, Actions e smoke tests revisados.
 - [ ] Relatório final entregue ao usuário; nenhum PR/merge feito sem autorização.
 
-**Última etapa concluída:** Etapa 1 — Home (Etapa 0 também concluída).  
-**Etapa em andamento:** nenhuma; Etapa 2 — Sobre ainda não iniciada.  
-**Próxima atividade ao retomar:** executar o Preflight da Etapa 2, confirmar HEAD/árvore atual e iniciar a movimentação de Sobre conforme o mapeamento da seção 4.2. Não refazer a Home.
+**Última etapa concluída:** Etapa 2 — Sobre (Etapas 0 e 1 também concluídas).  
+**Etapa em andamento:** nenhuma; Etapa 3 — Projetos ainda não iniciada.  
+**Próxima atividade ao retomar:** executar o Preflight da Etapa 3, revisar ProjetoCatalogo.jsx e projetosCatalogo.js, preservar a separação entre o catálogo /projetos e o preview da Home, e conferir os workflows afetados.
 
 ## 12. Instruções para continuidade em uma nova conversa
 
@@ -459,10 +515,10 @@ O próximo assistente deve:
 2. Ler \`docs/AI_CONTEXT.md\` e este documento completo antes de editar.
 3. Verificar o HEAD atual; o commit-base registrado é apenas o ponto da análise de 07/11/2026, não uma autorização para resetar a branch.
 4. Conferir se houve commits ou alterações posteriores e atualizar o plano mentalmente/documentalmente conforme a árvore real.
-5. Retomar pela primeira caixa ainda desmarcada no checklist. As Etapas 0 e 1 estão concluídas; a próxima é a Etapa 2 — Sobre.
+5. Retomar pela primeira caixa ainda desmarcada no checklist. As Etapas 0, 1 e 2 estão concluídas; a próxima é a Etapa 3 — Projetos.
 6. Executar uma etapa por vez, mantendo este documento atualizado com o que foi movido, o commit correspondente, as validações executadas e os problemas encontrados.
 7. Informar claramente o que foi concluído, o que falhou e qual é a próxima etapa. Não repetir perguntas já respondidas neste documento.
 8. Não abrir PR, não fazer merge e não alterar \`main\` ou \`dev\` sem solicitação expressa do usuário.
 
 **Mensagem de retomada sugerida:**  
-“Retome a reorganização da arquitetura por página no repositório \`kleber-goncalves/portfolio-kg\`, branch \`feat/separacao-paginas\`. Leia integralmente \`docs/AI_CONTEXT.md\` e \`docs/PLANO-REORGANIZACAO-ARQUITETURA-POR-PAGINA.md\`, confira o HEAD e as mudanças posteriores ao commit-base e continue pela primeira etapa não concluída do checklist. Não refaça a análise do zero, não altere \`main\`/\`dev\` e não abra PR ou faça merge sem autorização.”
+“Retome a reorganização da arquitetura por página no repositório kleber-goncalves/portfolio-kg, branch feat/separacao-paginas. Leia integralmente docs/AI_CONTEXT.md e docs/PLANO-REORGANIZACAO-ARQUITETURA-POR-PAGINA.md, confira o HEAD atual e continue pela Etapa 3 — Projetos. As Etapas 0, 1 e 2 estão concluídas. Não refaça Home ou Sobre, não altere main/dev e não abra PR ou faça merge sem autorização.”
