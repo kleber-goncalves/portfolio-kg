@@ -149,11 +149,15 @@ async function testViewport({ width, height, mobile }) {
         }
 
         // Formação e seções institucionais pertencem à rota /sobre, não à Home.
-        await page.goto(new URL("/sobre", baseUrl).toString(), {
+        // Usa uma página isolada para não misturar chunks solicitados durante o teste da Home.
+        const aboutPage = await context.newPage();
+        const { scripts: aboutScripts, errors: aboutErrors } = makeRecorder(aboutPage);
+
+        await aboutPage.goto(new URL("/sobre", baseUrl).toString(), {
             waitUntil: "domcontentloaded",
             timeout: 60000,
         });
-        await page.waitForFunction(() =>
+        await aboutPage.waitForFunction(() =>
             Boolean(
                 document.querySelector('[data-deferred-section="competencia"]') &&
                 document.querySelector('[data-deferred-section="diferenciais"]') &&
@@ -163,9 +167,9 @@ async function testViewport({ width, height, mobile }) {
             null,
             { timeout: 60000 },
         );
-        await page.waitForTimeout(500);
+        await aboutPage.waitForTimeout(500);
 
-        const aboutInitialScripts = new Set(scripts);
+        const aboutInitialScripts = new Set(aboutScripts);
         assert.equal(
             hasChunk(aboutInitialScripts, "Formacao-"),
             false,
@@ -177,23 +181,23 @@ async function testViewport({ width, height, mobile }) {
             "O Footer não deve ser transferido antes de se aproximar do final da página Sobre.",
         );
 
-        await page.locator("#formacao").scrollIntoViewIfNeeded();
-        await waitForReadySection(page, "formacao");
+        await aboutPage.locator("#formacao").scrollIntoViewIfNeeded();
+        await waitForReadySection(aboutPage, "formacao");
         assert.equal(
-            hasChunk(scripts, "Formacao-"),
+            hasChunk(aboutScripts, "Formacao-"),
             true,
             "Formação deve ser carregada ao aproximar-se da seção na página Sobre.",
         );
 
-        await page.locator("#footer").scrollIntoViewIfNeeded();
-        await waitForReadySection(page, "footer");
+        await aboutPage.locator("#footer").scrollIntoViewIfNeeded();
+        await waitForReadySection(aboutPage, "footer");
         assert.equal(
-            hasChunk(scripts, "Footer-"),
+            hasChunk(aboutScripts, "Footer-"),
             true,
             "Footer deve ser carregado ao aproximar-se do final da página Sobre.",
         );
 
-        const relevantErrors = errors.filter((message) =>
+        const relevantErrors = [...errors, ...aboutErrors].filter((message) =>
             /tecnologias is not defined|Failed to fetch dynamically imported module|ProjetoDesktop|ProjetoCarouselMobile|SeclogsMobile|DeferredLayoutSection|ScrollTrigger/i.test(message)
         );
         assert.deepEqual(
