@@ -6,11 +6,12 @@ on:
       - main
       - dev
       - feat/responsividadeFull
+      - feat/separacao-paginas
     paths:
-      - "src/components/logoLoop.jsx"
-      - "src/styles/LogoLoop.css"
-      - "src/layout/SeclogsMobile.jsx"
-      - "src/data/seclogsMobile.data.jsx"
+      - "src/pages/home/components/logoLoop.jsx"
+      - "src/pages/home/styles/LogoLoop.css"
+      - "src/pages/home/layouts/SeclogsMobile.jsx"
+      - "src/pages/home/data/seclogsMobile.data.jsx"
       - "scripts/test-logo-loop-performance.mjs"
       - ".github/workflows/logo-loop-performance.yml"
   workflow_dispatch:

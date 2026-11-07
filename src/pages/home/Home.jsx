@@ -1,6 +1,6 @@
-import DeferredProjects from "../../components/DeferredProjects";
+import DeferredProjects from "./components/DeferredProjects";
 import DeferredLayoutSection from "../../components/DeferredLayoutSection";
-import HeroSectionTransition from "../../components/HeroSectionTransition";
+import HeroSectionTransition from "./layouts/HeroSectionTransition";
 
 function Home({ experienceMode = "full", entranceKey = 0, isRouteTransitioning = false, onMenuVisibilityChange, onRouteReady }) {
     return (

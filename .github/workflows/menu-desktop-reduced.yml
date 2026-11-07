@@ -10,7 +10,7 @@ on:
     paths:
       - ".github/workflows/menu-desktop-reduced.yml"
       - "scripts/test-menu-desktop-reduced.mjs"
-      - "src/components/HeroSectionTransition.jsx"
+      - "src/pages/home/layouts/HeroSectionTransition.jsx"
       - "src/components/MenuDesktop.jsx"
       - "src/components/SmoothScroll.jsx"
       - "src/utils/experienceMode.js"

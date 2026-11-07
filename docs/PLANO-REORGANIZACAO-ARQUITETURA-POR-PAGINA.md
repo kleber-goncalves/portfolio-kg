@@ -1,7 +1,7 @@
 # Plano de reorganização da arquitetura por página
 
 > **Tipo:** plano operacional de refatoração e documento de continuidade entre conversas/assistentes.  
-> **Estado atual:** EM ANDAMENTO — Etapa 0 concluída; Etapa 1 (Home) ainda não iniciada.  
+> **Estado atual:** EM ANDAMENTO — Etapa 0 concluída; Etapa 1 (Home) implementada, validações pendentes.  
 > **Última análise estrutural:** 07/11/2026.  
 > **Repositório:** \`kleber-goncalves/portfolio-kg\`.  
 > **Branch exclusiva de trabalho:** \`feat/separacao-paginas\`.  
@@ -388,8 +388,9 @@ Marcar somente após a conclusão real de cada etapa:
 - [ ] Etapa 7 — Testes, lint, build, Actions e smoke tests revisados.
 - [ ] Relatório final entregue ao usuário; nenhum PR/merge feito sem autorização.
 
-**Última etapa concluída:** Etapa 0 — Preflight (HEAD `c8f8efd`). Nenhum arquivo de código foi movido.  
-**Próxima etapa ao retomar:** Etapa 1 — Home. Antes de mover assets, executar a busca global de referências indicada no resultado do Preflight.
+**Última etapa concluída:** Etapa 0 — Preflight.  
+**Etapa em andamento:** Etapa 1 — Home. Os arquivos e imports foram preparados para a nova estrutura; build, testes e Actions desta etapa ainda precisam ser conferidos antes de marcá-la como concluída.  
+**Próxima atividade ao retomar:** validar o HEAD mais recente e consultar os resultados de CI da Etapa 1. Não começar Sobre antes da validação da Home.
 
 ## 12. Instruções para continuidade em uma nova conversa
 

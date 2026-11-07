@@ -1,8 +1,8 @@
 import { lazy, Suspense } from "react";
-import { NAVIGATION_ITEMS } from "../data/navigation";
+import { NAVIGATION_ITEMS } from "../../../data/navigation";
 
-const HeroMobile = lazy(() => import("../components/HeroMobile"));
-const HeroDesktop = lazy(() => import("../components/HeroDesktop"));
+const HeroMobile = lazy(() => import("./HeroMobile"));
+const HeroDesktop = lazy(() => import("./HeroDesktop"));
 
 function Hero({ isMobileLayout, isCompactLandscape = false, isTablet = false, dotFieldFrozen = false, onNavigate, onReady, onContentReady, experienceMode = "full", entranceKey = 0, isRouteTransitioning = false }) {
 

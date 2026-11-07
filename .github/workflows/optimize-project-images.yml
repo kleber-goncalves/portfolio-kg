@@ -8,12 +8,12 @@ on:
       - feat/responsividadeFull
       - feat/separacao-paginas
     paths:
-      - "src/assets/projetos/**"
+      - "src/pages/home/assets/projetos/**"
       - "public/euNv.png"
       - "public/euNvEnvt.png"
       - "src/pages/sobre/SobreHero.jsx"
-      - "src/components/HeroDesktop.jsx"
-      - "src/components/HeroMobile.jsx"
+      - "src/pages/home/layouts/HeroDesktop.jsx"
+      - "src/pages/home/layouts/HeroMobile.jsx"
       - "scripts/optimize-project-images.mjs"
       - ".github/workflows/optimize-project-images.yml"
   workflow_dispatch:

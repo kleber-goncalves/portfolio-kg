@@ -6,11 +6,12 @@ on:
       - main
       - dev
       - feat/responsividadeFull
+      - feat/separacao-paginas
     paths:
-      - "src/components/Socials.jsx"
+      - "src/pages/home/components/Socials.jsx"
       - "src/components/Preloader.jsx"
-      - "src/components/HeroMobile.jsx"
-      - "src/components/HeroDesktop.jsx"
+      - "src/pages/home/layouts/HeroMobile.jsx"
+      - "src/pages/home/layouts/HeroDesktop.jsx"
       - "scripts/test-socials-panel-performance.mjs"
       - ".github/workflows/socials-panel-performance.yml"
   workflow_dispatch:

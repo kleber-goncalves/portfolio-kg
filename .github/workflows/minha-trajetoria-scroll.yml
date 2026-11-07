@@ -6,6 +6,7 @@ on:
       - main
       - dev
       - feat/responsividadeFull
+      - feat/separacao-paginas
     paths:
       - ".github/workflows/minha-trajetoria-scroll.yml"
       - "scripts/test-minha-trajetoria-scroll.mjs"
@@ -13,7 +14,7 @@ on:
       - "src/components/HeroSectionTransition.jsx"
       - "src/components/SmoothScroll.jsx"
       - "src/layout/Formacao.jsx"
-      - "src/layout/HeroTeste2.jsx"
+      - "src/pages/home/layouts/HeroTeste2.jsx"
       - "src/components/ExperienceDropdown.jsx"
       - "package.json"
       - "package-lock.json"

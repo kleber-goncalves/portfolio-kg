@@ -1,8 +1,8 @@
 import { useLayoutEffect } from "react";
 
 import Socials from "../components/Socials";
-import MenuMobile from "../components/MenuMobile";
-import OptimizedImage from "./OptimizedImage";
+import MenuMobile from "../../../components/MenuMobile";
+import OptimizedImage from "../../../components/OptimizedImage";
 
 function HeroMobile({ items, onReady, onContentReady, isCompactLandscape = false, isTablet = false }) {
     const useFullLogo = isCompactLandscape || isTablet;

@@ -5,10 +5,10 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-import { tecnologias } from "../data/tecnologias";
+import { tecnologias } from "../../../data/tecnologias";
 import { ArrowUpRight } from "lucide-react";
-import MagneticExternalLinkHover from "./MagneticExternalLinkHover";
-import OptimizedImage from "./OptimizedImage";
+import MagneticExternalLinkHover from "../../../components/MagneticExternalLinkHover";
+import OptimizedImage from "../../../components/OptimizedImage";
 
 function ProjetoDesktop({ projetos, experienceMode = "full", onReady }) {
     // ============================================================

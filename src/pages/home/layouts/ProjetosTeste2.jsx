@@ -1,6 +1,6 @@
 import { lazy, Suspense } from "react";
 
-import useResponsive from "../hooks/useResponsive";
+import useResponsive from "../../../hooks/useResponsive";
 
 // ============================================================
 // IMAGENS — UMA OU MAIS POR PROJETO

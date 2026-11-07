@@ -3,7 +3,7 @@ import path from "node:path";
 import sharp from "sharp";
 
 const root = process.cwd();
-const inputRoot = path.join(root, "src/assets/projetos");
+const inputRoot = path.join(root, "src/pages/home/assets/projetos");
 const optimizedRoot = path.join(root, "public/_optimized");
 const metadataPath = path.join(root, "src/generated/imageMetadata.json");
 const heroProfileUrl = "https://github.com/kleber-goncalves.png";
@@ -168,7 +168,7 @@ if (await fileExists(aboutPortraitPath)) {
 }
 
 // HeroMobile usa o retrato hospedado no GitHub. Só o baixa quando o componente existe.
-const mobileHeroPath = path.join(root, "src", "components", "HeroMobile.jsx");
+const mobileHeroPath = path.join(root, "src", "pages", "home", "layouts", "HeroMobile.jsx");
 
 if (await fileExists(mobileHeroPath)) {
     const profileResponse = await fetch(heroProfileUrl, {

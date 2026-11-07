@@ -1,6 +1,6 @@
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 
-const Projetos = lazy(() => import("../layout/ProjetosTeste2"));
+const Projetos = lazy(() => import("../layouts/ProjetosTeste2"));
 
 const PREFETCH_MARGIN = "1000px 0px";
 

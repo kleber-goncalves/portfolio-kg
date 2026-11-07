@@ -6,23 +6,24 @@ on:
       - main
       - dev
       - feat/responsividadeFull
+      - feat/separacao-paginas
     paths:
       - "src/App.jsx"
       - "src/components/DeferredLayoutSection.jsx"
-      - "src/components/HeroSectionTransition.jsx"
+      - "src/pages/home/layouts/HeroSectionTransition.jsx"
       - "src/components/SmoothScroll.jsx"
       - "src/components/buttonReset.jsx"
-      - "src/components/DeferredProjects.jsx"
-      - "src/components/ProjetoDesktop.jsx"
-      - "src/components/ProjetoCarouselMobile.jsx"
+      - "src/pages/home/components/DeferredProjects.jsx"
+      - "src/pages/home/layouts/ProjetoDesktop.jsx"
+      - "src/pages/home/layouts/ProjetoCarouselMobile.jsx"
       - "src/layout/Competencia.jsx"
       - "src/layout/DiferenciaisTeste.jsx"
       - "src/layout/Formacao.jsx"
       - "src/layout/Footer.jsx"
-      - "src/layout/ProjetosTeste2.jsx"
-      - "src/layout/Logo2.jsx"
-      - "src/layout/SeclogsMobile.jsx"
-      - "src/data/seclogsMobile.data.jsx"
+      - "src/pages/home/layouts/ProjetosTeste2.jsx"
+      - "src/pages/home/layouts/Logo2.jsx"
+      - "src/pages/home/layouts/SeclogsMobile.jsx"
+      - "src/pages/home/data/seclogsMobile.data.jsx"
       - "src/data/tecnologias*"
       - "scripts/test-code-splitting.mjs"
       - ".github/workflows/test-code-splitting.yml"

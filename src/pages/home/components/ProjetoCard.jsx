@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
-import OptimizedImage from "./OptimizedImage";
+import OptimizedImage from "../../../components/OptimizedImage";
 
 function ProjetoCard({
     numero,

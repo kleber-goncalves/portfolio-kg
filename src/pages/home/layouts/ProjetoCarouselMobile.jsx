@@ -4,13 +4,13 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { MoveLeft, MoveRight } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow } from "swiper/modules";
-import { tecnologias } from "../data/tecnologias";
-import { requestUiSound } from "../utils/uiSfxEvents";
+import { tecnologias } from "../../../data/tecnologias";
+import { requestUiSound } from "../../../utils/uiSfxEvents";
 
 import "swiper/css";
 import "swiper/css/effect-coverflow";
 
-import ProjetoCard from "./ProjetoCard";
+import ProjetoCard from "../components/ProjetoCard";
 
 gsap.registerPlugin(ScrollTrigger);
 

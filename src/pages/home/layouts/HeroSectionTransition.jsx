@@ -4,11 +4,11 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-import Hero from "../layout/HeroTeste2";
-import Seclogs from "../layout/Logo2";
-import useResponsive from "../hooks/useResponsive";
-import { scrollToTarget } from "../utils/lenisControl";
-import { playUiSound } from "../utils/uiSfx";
+import Hero from "./HeroTeste2";
+import Seclogs from "./Logo2";
+import useResponsive from "../../../hooks/useResponsive";
+import { scrollToTarget } from "../../../utils/lenisControl";
+import { playUiSound } from "../../../utils/uiSfx";
 
 gsap.registerPlugin(ScrollTrigger);
 

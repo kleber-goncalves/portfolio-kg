@@ -1,6 +1,6 @@
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 
-import useResponsive from "../hooks/useResponsive";
+import useResponsive from "../../../hooks/useResponsive";
 
 const SeclogsMobile = lazy(() => import("./SeclogsMobile"));
 const SeclogsDesktop = lazy(() => import("./SeclogsDesktop"));

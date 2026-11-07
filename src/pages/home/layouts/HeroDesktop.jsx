@@ -5,15 +5,15 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import Socials from "../components/Socials";
 import DotField from "../components/DotField";
-import OptimizedImage from "./OptimizedImage";
+import OptimizedImage from "../../../components/OptimizedImage";
 
 import { ArrowDownRight } from "lucide-react";
 
-import PortfolioDesktopHeader from "./PortfolioDesktopHeader";
+import PortfolioDesktopHeader from "../../../components/PortfolioDesktopHeader";
 
 import "../styles/looptextHero.css";
 import "../styles/heroParallax.css";
-import GlobeIcon from "./GlobeIcon";
+import GlobeIcon from "../../../components/GlobeIcon";
 
 gsap.registerPlugin(ScrollTrigger);
 
