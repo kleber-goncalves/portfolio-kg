@@ -365,9 +365,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `6a535bd3c7d644aabe09711c450a39e9ecbe8b2f`
-- **Data do commit analisado:** 2026-11-07T18:27:30-03:00
-- **Mensagem do commit:** ci(home): validar composição atual nos workflows
+- **Commit de código analisado:** `9c621f4cc6a885d485708d25b68bd621fa2104fb`
+- **Data do commit analisado:** 2026-11-07T18:30:06-03:00
+- **Mensagem do commit:** test(navigation): alinhar menu mobile ao reset entre rotas
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -485,13 +485,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `9c621f4` | 2026-11-07 | test(navigation): alinhar menu mobile ao reset entre rotas |
+| `7a999c5` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `6a535bd` | 2026-11-07 | ci(home): validar composição atual nos workflows |
 | `19ee51f` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `9b108db` | 2026-11-07 | test(architecture): isolar medição dos chunks da página Sobre |
 | `bee2227` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `fb864cc` | 2026-11-07 | test(architecture): alinhar code splitting às rotas separadas |
 | `5e8ccf9` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
-| `15d27a1` | 2026-11-07 | fix(home): corrigir imports dos layouts de projetos |
-| `c4b5a72` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
