@@ -462,17 +462,26 @@ async function testMenuOverlayAndScrollLock(browser, mode) {
             null,
             { timeout: 10000 },
         );
-        await page.waitForFunction(() => window.scrollY > 100, null, { timeout: 10000 });
+        // A terceira opção é Sobre. A navegação entre rotas reinicia o scroll
+        // pela regra global do App; o teste deve validar a rota, não preservar
+        // a rolagem da página anterior.
+        await page.waitForFunction(
+            () => window.location.pathname === "/sobre",
+            null,
+            { timeout: 10000 },
+        );
 
         const afterNavigation = await page.evaluate(() => ({
+            pathname: window.location.pathname,
             scrollY: window.scrollY,
             bodyPosition: document.body.style.position,
             htmlOverflow: document.documentElement.style.overflow,
         }));
 
-        assert.ok(
-            afterNavigation.scrollY > 100,
-            "Selecting a menu link should still navigate after scroll lock is removed.",
+        assert.equal(
+            afterNavigation.pathname,
+            "/sobre",
+            "Selecionar o link Sobre deve navegar depois que o bloqueio de scroll for removido.",
         );
         assert.notEqual(
             afterNavigation.bodyPosition,
