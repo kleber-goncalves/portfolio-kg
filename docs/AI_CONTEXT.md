@@ -382,10 +382,10 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `b070dd0a3e07093c1be6edad9daada460de51f75`
-- **Data do commit analisado:** 2026-11-25T15:00:51-03:00
-- **Mensagem do commit:** docs(architecture): registrar revisão do PR de integração
-- **Branch de referência desta execução:** feat/separacao-paginas
+- **Commit de código analisado:** `b93eab675f88ef42c2753ef7642f72e5c06e616f`
+- **Data do commit analisado:** 2026-11-25T15:16:35-03:00
+- **Mensagem do commit:** Merge pull request #37 from kleber-goncalves/feat/separacao-paginas
+- **Branch de referência desta execução:** dev
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
 - **Dependências de runtime:** 16
@@ -501,13 +501,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `b93eab6` | 2026-11-25 | Merge pull request #37 from kleber-goncalves/feat/separacao-paginas |
+| `fe7af1c` | 2026-11-25 | docs(ai-context): atualizar snapshot automaticamente |
 | `b070dd0` | 2026-11-25 | docs(architecture): registrar revisão do PR de integração |
 | `7565c70` | 2026-11-25 | docs(ai-context): atualizar snapshot do pull request |
 | `b95ec3c` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `cb3d77f` | 2026-11-07 | docs(architecture): registrar validação final da reorganização |
 | `1a3ef08` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `daf4551` | 2026-11-07 | docs(architecture): consolidar documentação da arquitetura |
-| `fc67ea8` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
-| `e4dc9e3` | 2026-11-07 | docs(architecture): registrar etapa Footer concluída |
 
 <!-- END AUTO-GENERATED SECTION -->
