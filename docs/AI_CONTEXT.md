@@ -382,16 +382,16 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `6fa781ae8bdb51ce5dd1b972261d06b8ef60f991`
-- **Data do commit analisado:** 2026-11-25T16:24:13-03:00
-- **Mensagem do commit:** test: ampliar auditoria de performance para todas as rotas
+- **Commit de código analisado:** `45e771c37f02d8d6ba58040d2a8caeeb4c2a4977`
+- **Data do commit analisado:** 2026-11-25T16:25:50-03:00
+- **Mensagem do commit:** test: adicionar auditoria responsiva e navegação SPA
 - **Branch de referência desta execução:** feat/auditoria-multirota
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
 - **Dependências de runtime:** 16
 - **Dependências de desenvolvimento:** 12
-- **Workflows encontrados:** 17
-- **Scripts de automação encontrados:** 19
+- **Workflows encontrados:** 18
+- **Scripts de automação encontrados:** 20
 
 ### Scripts npm
 
@@ -458,6 +458,7 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 - `.github/workflows/minha-trajetoria-scroll.yml` — Minha Trajetoria Scroll Progress
 - `.github/workflows/mobile-ui-sfx-slider.yml` — Mobile UI Sound Interactions
 - `.github/workflows/optimize-project-images.yml` — Optimize project images
+- `.github/workflows/route-uiux-audit.yml` — Route UI UX Audit
 - `.github/workflows/socials-panel-performance.yml` — Socials Panel First Open Performance
 - `.github/workflows/test-code-splitting.yml` — Deferred Section and Project Code Splitting
 - `.github/workflows/ui-sfx-refresh.yml` — UI Sound Preference and Refresh
@@ -468,6 +469,7 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 - `scripts/analyze-js-bundle.mjs`
 - `scripts/analyze-js-runtime-coverage.mjs`
 - `scripts/audit-accessibility-seo.mjs`
+- `scripts/audit-route-uiux.mjs`
 - `scripts/check-reduced-mode-scroll.mjs`
 - `scripts/generate-seo-routes.mjs`
 - `scripts/lhci-set-experience-mode.cjs`
@@ -501,13 +503,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `45e771c` | 2026-11-25 | test: adicionar auditoria responsiva e navegação SPA |
+| `bc47c5b` | 2026-11-25 | docs(ai-context): atualizar snapshot automaticamente |
 | `6fa781a` | 2026-11-25 | test: ampliar auditoria de performance para todas as rotas |
 | `6b4d0d2` | 2026-11-25 | docs(ai-context): atualizar snapshot automaticamente |
 | `6dcd2cc` | 2026-11-25 | docs(ai-context): atualizar snapshot automaticamente |
 | `3cca519` | 2026-11-25 | refatorar: simplificar a renderização do componente RouteFallback e otimizar a lógica de transição de rotas |
 | `1849a8b` | 2026-11-25 | docs(ai-context): atualizar snapshot automaticamente |
 | `b93eab6` | 2026-11-25 | Merge pull request #37 from kleber-goncalves/feat/separacao-paginas |
-| `fe7af1c` | 2026-11-25 | docs(ai-context): atualizar snapshot automaticamente |
-| `b070dd0` | 2026-11-25 | docs(architecture): registrar revisão do PR de integração |
 
 <!-- END AUTO-GENERATED SECTION -->
