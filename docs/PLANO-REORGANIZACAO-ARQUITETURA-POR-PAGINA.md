@@ -630,7 +630,7 @@ Depois validar os workflows aplicáveis e, quando disponíveis, os cenários de 
 
 **Limites dos smoke tests:** os workflows usaram o build de produção local (`vite preview`) e Chromium. O Code Splitting percorreu Home e Sobre em mobile/desktop e confirmou o carregamento tardio e a presença de exatamente um `<footer>` em cada rota. A auditoria percorreu as quatro rotas. Não foi realizada inspeção física/manual em dispositivos nem validação de deploy pela URL pública da Vercel.
 
-**Conclusão:** as mudanças arquiteturais estão concluídas e os checks de testes, lint, build e carregamento diferido passaram. A pendência de contraste do formulário e o erro histórico `ScrollTrigger.refresh()` em `/projetos` permanecem como tarefas técnicas independentes. Nenhum PR ou merge foi criado; `main` e `dev` permaneceram intactas.
+**Conclusão da reorganização (07/11/2026):** as mudanças arquiteturais estão concluídas e os checks de testes, lint, build e carregamento diferido passaram. Naquela data, nenhum PR ou merge havia sido criado; `main` e `dev` permaneceram intactas. **Atualização de integração (25/11/2026):** após autorização expressa do usuário, foi aberto o PR [#37](https://github.com/kleber-goncalves/portfolio-kg/pull/37) em estado Draft, com destino `dev`. Nenhum merge foi realizado.
 
 ---
 ## 10. Baseline conhecido de validações
@@ -657,7 +657,7 @@ Marcar somente após a conclusão real de cada etapa:
 - [x] Etapa 5 — Footer compartilhado movido e sem duplicação (07/11/2026; Unit Tests #243 e Code Splitting #45 aprovados; chunk adiado e instância única verificados em mobile/desktop).
 - [x] Etapa 6 — Scripts, workflows, README e AI_CONTEXT consolidados (07/11/2026; busca final em 158 arquivos textuais, caminhos obsoletos do README corrigidos e `src/layout/` ausente da árvore).
 - [x] Etapa 7 — Testes, lint, build, Actions e smoke tests revisados (07/11/2026; Unit Tests #245 e Code Splitting #45 aprovados; Axe #211 com pendência de contraste preexistente documentada).
-- [x] Relatório final entregue ao usuário; nenhum PR/merge feito sem autorização.
+- [x] Relatório final entregue ao usuário; PR #37 aberto como Draft após autorização expressa em 25/11/2026; nenhum merge realizado.
 
 **Última etapa concluída:** Etapa 7 — Validação final e relatório.  
 **Etapa em andamento:** nenhuma; a reorganização arquitetural está concluída.  
@@ -678,3 +678,47 @@ O próximo assistente deve:
 
 **Mensagem de retomada sugerida:**  
 “Retome a reorganização da arquitetura por página no repositório kleber-goncalves/portfolio-kg, branch feat/separacao-paginas. Leia integralmente docs/AI_CONTEXT.md e docs/PLANO-REORGANIZACAO-ARQUITETURA-POR-PAGINA.md, confira o HEAD atual e considere a reorganização por página concluída (Etapas 0 a 7). Trate apenas novas solicitações ou pendências técnicas separadas. Não refaça as etapas anteriores, não altere main/dev e não abra PR ou faça merge sem autorização.”
+
+
+## 13. Revisão do Pull Request #37 — 25/11/2026
+
+**Estado atual:** PR [#37 — feat(portfolio): consolidar evolução multipágina e reorganização arquitetural](https://github.com/kleber-goncalves/portfolio-kg/pull/37), aberto como **Draft** de \`feat/separacao-paginas\` para \`dev\`, após autorização do usuário. Nenhum merge foi realizado.
+
+### Comparação e ancestralidade
+
+- HEAD de \`dev\` confirmado: \`49b84f56f7ed6166cf6921535102015a2a7c0950\`.
+- HEAD de \`main\` confirmado: \`df8ef52588dd994c7c4fc049680d20fd30f43017\`.
+- Merge-base de \`dev...feat/separacao-paginas\`: o próprio HEAD de \`dev\`; a branch de origem não está atrás de \`dev\`.
+- Comparação após a atualização automática do contexto: 428 commits à frente, 0 atrás, 113 arquivos alterados, 10.918 adições e 5.219 remoções.
+- \`main\` e \`dev\` continuam nos SHAs registrados acima.
+
+### Escopo revisado
+
+O PR não é somente uma movimentação estrutural. O conjunto acumulado contém quatro grupos coerentes para levar \`dev\` ao estado atual da aplicação:
+
+1. **Aplicação multipágina e navegação:** rotas Home, Projetos, Sobre e Contato; carregamento lazy; navegação, preloader de rota e animações de entrada; catálogo de Projetos separado dos destaques da Home.
+2. **Reorganização por página:** módulos exclusivos de Home, Projetos, Sobre e Contato organizados localmente; Footer compartilhado em \`src/layouts/Footer.jsx\`; imports, dados, estilos, assets e testes realocados.
+3. **Funcionalidades complementares acumuladas:** formulário Basin/Zod, SEO por rota e geração de HTML/sitemap, otimização de imagens WebP e ajustes de navegação, animações, Lenis e UI SFX.
+4. **Qualidade e documentação:** workflows, scripts de teste/auditoria, README, AI_CONTEXT e documentação do formulário/plano.
+
+**Decisão:** manter o conjunto no mesmo PR porque representa a evolução acumulada da branch desde o HEAD de \`dev\`, mas descrever honestamente o alcance completo. Não foi feito rebase, reset, cherry-pick ou separação artificial de commits durante esta revisão.
+
+### Checks associados
+
+- Unit Tests #247 — run \`45669775044\`, no HEAD anterior \`b95ec3c\`: conclusão \`success\`; instalação, testes, ESLint e build concluídos.
+- Unit Tests #248 — no HEAD \`7565c706d4d7120dc2dfacbf423b17d616526187\`: conclusão \`action_required\`; a consulta de jobs não retornou jobs. Não declarar esse run aprovado.
+- Status Vercel no HEAD \`7565c70\`: \`success\`.
+- Code Splitting #45 — run \`42422769208\`: passou em mobile 390×844 e desktop 1365×900, validando carregamento diferido e instância única do Footer em Home/Sobre.
+- Accessibility and SEO #211 — run \`42423029115\`: Lighthouse mobile/desktop aprovado; Axe com contraste 3,33:1 em textos de \`/contato\`, abaixo de 4,5:1.
+- Não havia reviews nem threads de revisão registrados no PR durante esta auditoria.
+
+### Observações que precisam permanecer visíveis
+
+- O contraste baixo em \`/contato\` está documentado como pendência.
+- O erro conhecido de \`ScrollTrigger.refresh()\` em \`/projetos\` continua sendo uma pendência independente.
+- \`RouteFallback\` em \`src/App.jsx\` expõe \`role="status"\` e \`aria-label\`, mas não possui mensagem visível de carregamento; melhoria pequena de UX/acessibilidade ainda recomendada.
+- Não houve validação manual em dispositivos físicos. O status Vercel verde não substitui a inspeção manual do preview em todas as rotas.
+
+### Condição para avançar
+
+Manter o PR em Draft até que o run #248 seja liberado/executado e o escopo completo seja aprovado conscientemente. Depois, revisar as quatro rotas no preview e decidir separadamente sobre a correção de contraste e a mensagem de fallback. **Não fazer merge sem uma autorização expressa posterior.**
