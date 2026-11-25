@@ -17,6 +17,7 @@ const viewports = [
 const results = [];
 const navigationResults = [];
 const failures = [];
+const interactionResults = [];
 
 function addFailure(scope, id, message) {
     failures.push({ scope, id, message });
@@ -299,6 +300,198 @@ async function auditSpaNavigation(browser, mobile) {
     }
 }
 
+function recordInteraction(scope, id, passed, message) {
+    const result = { scope, id, passed, message };
+    interactionResults.push(result);
+    if (!passed) addFailure(scope, id, message);
+    else console.log("[PASS][" + scope + "][" + id + "] " + message);
+}
+
+async function auditSkipLink(browser, viewport) {
+    const scope = "Skip link — " + viewport.label;
+    const context = await browser.newContext({
+        viewport: { width: viewport.width, height: viewport.height },
+        deviceScaleFactor: 1,
+        isMobile: viewport.mobile,
+        hasTouch: viewport.mobile,
+    });
+    const page = await context.newPage();
+
+    try {
+        await page.goto(new URL("/", BASE_URL).href, { waitUntil: "domcontentloaded", timeout: 60000 });
+        await page.locator("main#main-content").waitFor({ state: "visible", timeout: 25000 });
+        await waitForPreloaderToFinish(page, scope);
+        await page.keyboard.press("Tab");
+
+        const focusedLink = await page.evaluate(() => ({
+            text: document.activeElement?.textContent?.trim() ?? "",
+            visible: (() => {
+                const rect = document.activeElement?.getBoundingClientRect();
+                const style = document.activeElement ? getComputedStyle(document.activeElement) : null;
+                return Boolean(rect && style && rect.width > 0 && rect.height > 0 && style.visibility !== "hidden");
+            })(),
+        }));
+        const linkFocused = focusedLink.text.includes("Pular para o conteúdo principal") && focusedLink.visible;
+        recordInteraction(scope, "skip-link-keyboard-focus", linkFocused,
+            linkFocused ? "O primeiro Tab revela o link para o conteúdo principal." : "O primeiro Tab não revelou o link de salto.");
+
+        await page.keyboard.press("Enter");
+        const focusMovedToMain = await page.evaluate(() => document.activeElement?.id === "main-content");
+        recordInteraction(scope, "skip-link-main-focus", focusMovedToMain,
+            focusMovedToMain ? "O link move o foco para main#main-content." : "O link não moveu o foco para main#main-content.");
+    } catch (error) {
+        recordInteraction(scope, "skip-link-execution", false, String(error?.message ?? error));
+    } finally {
+        await context.close();
+    }
+}
+
+async function auditProjectInteractions(browser, viewport) {
+    const scope = "Projetos — " + viewport.label;
+    const context = await browser.newContext({
+        viewport: { width: viewport.width, height: viewport.height },
+        deviceScaleFactor: 1,
+        isMobile: viewport.mobile,
+        hasTouch: viewport.mobile,
+    });
+    const page = await context.newPage();
+
+    try {
+        await page.goto(new URL("/projetos", BASE_URL).href, { waitUntil: "domcontentloaded", timeout: 60000 });
+        await page.locator("main").first().waitFor({ state: "visible", timeout: 25000 });
+        await waitForPreloaderToFinish(page, scope);
+
+        const rows = page.locator("[data-project-id]");
+        await rows.first().waitFor({ state: "visible", timeout: 20000 });
+        const initialIds = await rows.evaluateAll((items) => items.map((item) => item.getAttribute("data-project-id")));
+        recordInteraction(scope, "catalog-initial-page", initialIds.length === 10,
+            "A primeira página exibe " + initialIds.length + " projetos (esperado: 10).");
+
+        const next = page.getByRole("button", { name: "Próxima página" });
+        const canPaginate = await next.count() > 0 && await next.isEnabled();
+        if (canPaginate) {
+            const previousFirstId = initialIds[0];
+            await next.click();
+            await page.waitForFunction(
+                (id) => document.querySelector("[data-project-id]")?.getAttribute("data-project-id") !== id,
+                previousFirstId,
+                { timeout: 12000 },
+            );
+            const secondPageIds = await rows.evaluateAll((items) => items.map((item) => item.getAttribute("data-project-id")));
+            const changed = secondPageIds.length > 0 && secondPageIds[0] !== previousFirstId;
+            recordInteraction(scope, "catalog-pagination-next", changed,
+                changed ? "A paginação alterou o conjunto de projetos." : "A paginação não alterou os projetos.");
+        } else {
+            recordInteraction(scope, "catalog-pagination-next", false, "Não há próxima página em Todos.");
+        }
+
+        const filter = page.getByRole("button", { name: /^Front-end,/ }).first();
+        await filter.waitFor({ state: "visible", timeout: 15000 });
+        const label = await filter.getAttribute("aria-label");
+        const expectedCount = Number(label?.match(/(\d+) projetos?$/)?.[1] ?? NaN);
+        await filter.click();
+        await page.waitForFunction(() => [...document.querySelectorAll('button[aria-pressed="true"]')]
+            .some((element) => (element.getAttribute("aria-label") || "").startsWith("Front-end,")), null, { timeout: 10000 });
+
+        const filteredIds = await rows.evaluateAll((items) => items.map((item) => item.getAttribute("data-project-id")));
+        const expectedVisible = Number.isFinite(expectedCount) ? Math.min(expectedCount, 10) : -1;
+        recordInteraction(scope, "catalog-category-filter", filteredIds.length === expectedVisible,
+            "Filtro Front-end: " + filteredIds.length + " projetos visíveis; esperado: " + expectedVisible + ".");
+
+        const activeFilterCount = await page.locator('button[aria-pressed="true"][aria-label^="Front-end,"]').count();
+        recordInteraction(scope, "catalog-filter-aria-pressed", activeFilterCount === 1,
+            activeFilterCount === 1 ? "Filtro ativo expõe aria-pressed=true." : "Filtro ativo não expõe estado acessível único.");
+    } catch (error) {
+        recordInteraction(scope, "catalog-interaction-execution", false, String(error?.message ?? error));
+    } finally {
+        await context.close();
+    }
+}
+
+async function fillValidContactForm(page) {
+    await page.locator('input[name="nome"]').fill("Pessoa de Teste");
+    await page.locator('input[name="email"]').fill("teste@example.com");
+    await page.locator('input[name="assunto"]').fill("Teste automatizado");
+    await page.locator('textarea[name="mensagem"]').fill("Esta é uma mensagem fictícia usada somente na auditoria automatizada.");
+}
+
+async function auditContactForm(browser, viewport) {
+    const scope = "Contato — " + viewport.label;
+    const context = await browser.newContext({
+        viewport: { width: viewport.width, height: viewport.height },
+        deviceScaleFactor: 1,
+        isMobile: viewport.mobile,
+        hasTouch: viewport.mobile,
+    });
+    const page = await context.newPage();
+    let mockMode = "success";
+    let interceptedRequests = 0;
+
+    try {
+        await page.route("https://usebasin.com/f/route-uiux-audit", async (route) => {
+            if (route.request().method() !== "POST") {
+                await route.continue();
+                return;
+            }
+            interceptedRequests += 1;
+            await route.fulfill({
+                status: mockMode === "success" ? 200 : 422,
+                contentType: "application/json",
+                body: JSON.stringify({ success: mockMode === "success" }),
+            });
+        });
+
+        await page.goto(new URL("/contato", BASE_URL).href, { waitUntil: "domcontentloaded", timeout: 60000 });
+        await page.locator('form input[name="nome"]').waitFor({ state: "visible", timeout: 25000 });
+        await waitForPreloaderToFinish(page, scope);
+
+        const form = page.locator("form").first();
+        const name = form.locator('input[name="nome"]');
+        const email = form.locator('input[name="email"]');
+        const subject = form.locator('input[name="assunto"]');
+        const message = form.locator('textarea[name="mensagem"]');
+        const submit = form.getByRole("button", { name: "Enviar mensagem" });
+
+        await name.fill("K");
+        await name.blur();
+        const nameInvalid = await name.getAttribute("aria-invalid") === "true" && Boolean(await name.getAttribute("aria-describedby"));
+        recordInteraction(scope, "form-name-validation", nameInvalid,
+            nameInvalid ? "Nome inválido recebe aria-invalid e aria-describedby." : "Nome inválido sem estado acessível de erro.");
+
+        await name.fill("Pessoa de Teste");
+        await email.fill("email-invalido");
+        await email.blur();
+        const emailInvalid = await email.getAttribute("aria-invalid") === "true" && Boolean(await email.getAttribute("aria-describedby"));
+        recordInteraction(scope, "form-email-validation", emailInvalid,
+            emailInvalid ? "E-mail inválido recebe aria-invalid e aria-describedby." : "E-mail inválido sem estado acessível de erro.");
+
+        await email.fill("teste@example.com");
+        await subject.fill("Teste automatizado");
+        await message.fill("Esta é uma mensagem fictícia usada somente na auditoria automatizada.");
+        const enabled = await submit.isEnabled();
+        recordInteraction(scope, "form-valid-enables-submit", enabled,
+            enabled ? "Quatro campos válidos habilitam o envio." : "Envio permaneceu desabilitado com campos válidos.");
+
+        await submit.click();
+        await page.getByText("Mensagem enviada com sucesso. Obrigado pelo contato!", { exact: true })
+            .waitFor({ state: "visible", timeout: 12000 });
+        recordInteraction(scope, "form-success-state", interceptedRequests === 1,
+            interceptedRequests === 1 ? "Resposta de sucesso simulada foi interceptada." : "Envio de sucesso não foi interceptado uma única vez.");
+
+        mockMode = "failure";
+        await fillValidContactForm(page);
+        await form.getByRole("button", { name: "Enviar mensagem" }).click();
+        await page.getByText("Não foi possível enviar a mensagem agora. Tente novamente ou use um dos canais alternativos.", { exact: true })
+            .waitFor({ state: "visible", timeout: 12000 });
+        recordInteraction(scope, "form-error-state", interceptedRequests === 2,
+            interceptedRequests === 2 ? "Resposta de falha simulada apresenta mensagem de erro." : "Falha simulada não foi interceptada como esperado.");
+    } catch (error) {
+        recordInteraction(scope, "form-interaction-execution", false, String(error?.message ?? error));
+    } finally {
+        await context.close();
+    }
+}
+
 async function main() {
     await fs.mkdir(REPORT_DIR, { recursive: true });
     const browser = await chromium.launch({
@@ -316,6 +509,15 @@ async function main() {
 
         await auditSpaNavigation(browser, false);
         await auditSpaNavigation(browser, true);
+
+        for (const viewport of [
+            { id: "desktop-1365", label: "Desktop 1365×900", width: 1365, height: 900, mobile: false },
+            { id: "mobile-390", label: "Mobile 390×844", width: 390, height: 844, mobile: true },
+        ]) {
+            await auditSkipLink(browser, viewport);
+            await auditProjectInteractions(browser, viewport);
+            await auditContactForm(browser, viewport);
+        }
     } finally {
         await browser.close();
     }
@@ -327,10 +529,13 @@ async function main() {
         viewports,
         directRouteAudits: results,
         spaNavigation: navigationResults,
+        interactionAudits: interactionResults,
         failures,
         summary: {
             scenarios: results.length,
             spaNavigationChecks: navigationResults.length,
+            interactionChecks: interactionResults.length,
+            interactionFailures: interactionResults.filter((item) => !item.passed).length,
             failures: failures.length,
         },
         notes: [
@@ -348,6 +553,8 @@ async function main() {
         "- Rotas: " + report.routes.join(", "),
         "- Cenários diretos: " + report.summary.scenarios,
         "- Checagens de navegação SPA: " + report.summary.spaNavigationChecks,
+        "- Checagens funcionais: " + report.summary.interactionChecks,
+        "- Falhas funcionais: " + report.summary.interactionFailures,
         "- Falhas: " + report.summary.failures,
         "",
         "## Resultados por rota e viewport",
@@ -369,6 +576,11 @@ async function main() {
     for (const item of navigationResults) {
         lines.push("- " + item.mode + " → **" + item.route + "**: " +
             (item.checks.every((check) => check.passed) ? "metadados sincronizados" : "metadados com falha"));
+    }
+
+    lines.push("", "## Interações funcionais", "");
+    for (const item of interactionResults) {
+        lines.push("- " + (item.passed ? "PASS" : "FAIL") + " — " + item.scope + " — " + item.id + ": " + item.message);
     }
 
     lines.push(

@@ -53,6 +53,9 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Build production assets
+        env:
+          # Endpoint fictício exclusivo do teste; o Playwright intercepta todos os POSTs.
+          VITE_BASIN_FORM_ENDPOINT: https://usebasin.com/f/route-uiux-audit
         run: npm run build
 
       - name: Start production preview
