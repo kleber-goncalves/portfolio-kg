@@ -39,15 +39,7 @@ function RouteScrollReset() {
 }
 
 function RouteFallback() {
-    return (
-        <div
-            role="status"
-            aria-label="Carregando página"
-            className="min-h-[50vh] bg-obsidian px-5 py-24 text-sm text-steel"
-        >
-            
-        </div>
-    );
+    return <div role="status" aria-label="Carregando página" className="min-h-[50vh] bg-obsidian px-5 py-24 text-sm text-steel"></div>;
 }
 
 function App() {
@@ -91,20 +83,14 @@ function App() {
         if (routeEntranceStartedRef.current === id) return;
 
         routeEntranceStartedRef.current = id;
-        setRouteTransition((current) => (
-            current?.id === id
-                ? { ...current, entranceStarted: true }
-                : current
-        ));
+        setRouteTransition((current) => (current?.id === id ? { ...current, entranceStarted: true } : current));
         setRouteEntranceKey((current) => current + 1);
     }, []);
 
     const handleRouteTransitionComplete = useCallback((id) => {
         if (routeTransitionSequence.current !== id) return;
 
-        setRouteTransition((current) => (
-            current?.id === id ? null : current
-        ));
+        setRouteTransition((current) => (current?.id === id ? null : current));
     }, []);
 
     const [experienceMode] = useState(() => getExperienceMode() || "full");
@@ -116,12 +102,8 @@ function App() {
     const [routeNavigationElement, setRouteNavigationElement] = useState(null);
     const [menuHasBeenShown, setMenuHasBeenShown] = useState(false);
     const isHomePath = location.pathname === "/";
-    const isRouteTransitioning = (
-        Boolean(routeTransition) && !routeTransition.entranceStarted
-    ) || lastRenderedRoutePathname !== pathname;
-    const routeNavigationVisible = routeNavigationStatus.pathname === location.pathname
-        ? routeNavigationStatus.visible
-        : true;
+    const isRouteTransitioning = (Boolean(routeTransition) && !routeTransition.entranceStarted) || lastRenderedRoutePathname !== pathname;
+    const routeNavigationVisible = routeNavigationStatus.pathname === location.pathname ? routeNavigationStatus.visible : true;
     const showDesktopMenu = isHomePath ? homeMenuVisible : !routeNavigationVisible;
 
     const handleHomeMenuVisibilityChange = useCallback((visible) => {
@@ -139,16 +121,19 @@ function App() {
         if (isHomePath || !routeNavigationElement) return undefined;
 
         const pathname = location.pathname;
-        const observer = new IntersectionObserver(([entry]) => {
-            if (!entry) return;
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (!entry) return;
 
-            setRouteNavigationStatus({
-                pathname,
-                visible: entry.isIntersecting,
-            });
+                setRouteNavigationStatus({
+                    pathname,
+                    visible: entry.isIntersecting,
+                });
 
-            if (!entry.isIntersecting) setMenuHasBeenShown(true);
-        }, { threshold: 0.01 });
+                if (!entry.isIntersecting) setMenuHasBeenShown(true);
+            },
+            { threshold: 0.01 },
+        );
 
         observer.observe(routeNavigationElement);
         return () => observer.disconnect();
@@ -157,12 +142,7 @@ function App() {
     return (
         <>
             <Preloader />
-            <RouteTransitionPreloader
-                key={routeTransition?.id ?? "idle"}
-                transition={routeTransition}
-                onExitStart={handleRouteTransitionExitStart}
-                onComplete={handleRouteTransitionComplete}
-            />
+            <RouteTransitionPreloader key={routeTransition?.id ?? "idle"} transition={routeTransition} onExitStart={handleRouteTransitionExitStart} onComplete={handleRouteTransitionComplete} />
             <CursorTrail />
 
             <SmoothScroll>
@@ -185,10 +165,7 @@ function App() {
 
                     <Suspense fallback={<RouteFallback />}>
                         <Routes>
-                            <Route
-                                path="/"
-                                element={<Home experienceMode={experienceMode} entranceKey={routeEntranceKey} isRouteTransitioning={isRouteTransitioning} onMenuVisibilityChange={handleHomeMenuVisibilityChange} onRouteReady={handleRouteReady} />}
-                            />
+                            <Route path="/" element={<Home experienceMode={experienceMode} entranceKey={routeEntranceKey} isRouteTransitioning={isRouteTransitioning} onMenuVisibilityChange={handleHomeMenuVisibilityChange} onRouteReady={handleRouteReady} />} />
                             <Route path="/projetos" element={<Projetos experienceMode={experienceMode} entranceKey={routeEntranceKey} isRouteTransitioning={isRouteTransitioning} onRouteReady={handleRouteReady} onRouteNavigationElementChange={handleRouteNavigationElementChange} />} />
                             <Route path="/sobre" element={<Sobre experienceMode={experienceMode} entranceKey={routeEntranceKey} isRouteTransitioning={isRouteTransitioning} onRouteReady={handleRouteReady} onRouteNavigationElementChange={handleRouteNavigationElementChange} />} />
                             <Route path="/contato" element={<Contato entranceKey={routeEntranceKey} isRouteTransitioning={isRouteTransitioning} onRouteReady={handleRouteReady} onRouteNavigationElementChange={handleRouteNavigationElementChange} />} />
