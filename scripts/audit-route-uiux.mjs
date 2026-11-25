@@ -41,44 +41,41 @@ async function waitForPreloaderToFinish(page, scope) {
 }
 
 async function revealFullPage(page) {
-    let previousHeight = -1;
+    // Primeiro força o carregamento dos blocos que usam IntersectionObserver.
+    const deferredSections = page.locator("#projetos[aria-busy], [data-deferred-section]");
+    const deferredCount = await deferredSections.count();
 
-    for (let pass = 0; pass < 3; pass += 1) {
-        for (let step = 0; step < 60; step += 1) {
-            const state = await page.evaluate(() => ({
-                y: window.scrollY,
-                viewport: window.innerHeight,
-                height: Math.max(document.documentElement.scrollHeight, document.body.scrollHeight),
-            }));
-            const maxY = Math.max(0, state.height - state.viewport);
-            const nextY = Math.min(maxY, state.y + Math.max(250, Math.floor(state.viewport * 0.75)));
-            if (nextY <= state.y + 1) break;
+    for (let index = 0; index < deferredCount; index += 1) {
+        const section = deferredSections.nth(index);
+        await section.scrollIntoViewIfNeeded({ timeout: 15000 });
 
-            await page.mouse.wheel(0, nextY - state.y);
-            await page.waitForTimeout(250);
+        const handle = await section.elementHandle();
+        if (!handle) continue;
 
-            const actualY = await page.evaluate(() => window.scrollY);
-            if (Math.abs(actualY - nextY) > Math.max(100, state.viewport * 0.2)) {
-                await page.evaluate((y) => window.scrollTo({ top: y, behavior: "instant" }), nextY);
-            }
-            await page.waitForTimeout(250);
-        }
-
-        await page.waitForTimeout(700);
-        const height = await page.evaluate(() => Math.max(
-            document.documentElement.scrollHeight,
-            document.body.scrollHeight,
-        ));
-        if (height === previousHeight) break;
-        previousHeight = height;
-        await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
-        await page.waitForTimeout(300);
+        await page.waitForFunction(
+            (element) => element.getAttribute("aria-busy") === "false",
+            handle,
+            { timeout: 20000 },
+        );
+        await page.waitForTimeout(350);
     }
 
-    await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
-    await page.waitForTimeout(900);
-}
+    // Percorre cada alvo animado para ativar ScrollTrigger/useInView.
+    // Não retorna ao topo: animações scrub precisam permanecer no estado final
+    // de rolagem enquanto o screenshot fullPage é capturado.
+    const revealTargets = page.locator(
+        '[data-route-entrance], [data-project-scroll-reveal], [data-diferencial-card], [data-formation-entry]',
+    );
+    const revealCount = await revealTargets.count();
 
+    for (let index = 0; index < revealCount; index += 1) {
+        const target = revealTargets.nth(index);
+        await target.scrollIntoViewIfNeeded({ timeout: 15000 });
+        await page.waitForTimeout(180);
+    }
+
+    await page.waitForTimeout(1000);
+}
 async function waitForRoute(page, route) {
     const expectedUrl = new URL(route, BASE_URL).href;
     await page.waitForURL(expectedUrl, { timeout: 20000 });
