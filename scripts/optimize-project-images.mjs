@@ -3,7 +3,7 @@ import path from "node:path";
 import sharp from "sharp";
 
 const root = process.cwd();
-const inputRoot = path.join(root, "src/assets/projetos");
+const inputRoot = path.join(root, "src/pages/home/assets/projetos");
 const optimizedRoot = path.join(root, "public/_optimized");
 const metadataPath = path.join(root, "src/generated/imageMetadata.json");
 const heroProfileUrl = "https://github.com/kleber-goncalves.png";
@@ -149,8 +149,26 @@ if (await fileExists(desktopPortraitPath)) {
     console.log("Imagem pública do HeroDesktop ausente; etapa ignorada.");
 }
 
+// A página Sobre usa um retrato independente do HeroDesktop.
+const aboutPortraitPath = path.join(root, "public", "euNvEnvt.png");
+
+if (await fileExists(aboutPortraitPath)) {
+    await optimizeImage({
+        input: aboutPortraitPath,
+        key: "euNvEnvt.png",
+        baseName: "euNvEnvt",
+        outputDirectory: "hero",
+        publicDirectory: "hero",
+        sizes: "(min-width: 1280px) 600px, (min-width: 768px) 45vw, 350px",
+        fallbackWidth: 640,
+        label: "Sobre page portrait (public/euNvEnvt.png)",
+    });
+} else {
+    console.log("Imagem do Sobre ausente; otimização do retrato ignorada.");
+}
+
 // HeroMobile usa o retrato hospedado no GitHub. Só o baixa quando o componente existe.
-const mobileHeroPath = path.join(root, "src", "components", "HeroMobile.jsx");
+const mobileHeroPath = path.join(root, "src", "pages", "home", "layouts", "HeroMobile.jsx");
 
 if (await fileExists(mobileHeroPath)) {
     const profileResponse = await fetch(heroProfileUrl, {

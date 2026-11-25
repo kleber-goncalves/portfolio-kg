@@ -5,10 +5,12 @@ import { Menu, X, ArrowUpRight } from "lucide-react";
 import gsap from "gsap";
 import { startSmoothScroll, stopSmoothScroll } from "../utils/lenisControl";
 import { playUiSound } from "../utils/uiSfx";
+import usePortfolioNavigation from "../hooks/usePortfolioNavigation";
 import SoundToggle from "./SoundToggle";
 const SoundVolumeSliderMobile = lazy(() => import("./SoundVolumeSliderMobile"));
 
 function MenuMobile({ items = [] }) {
+    const navigatePortfolio = usePortfolioNavigation();
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef(null);
     const pendingNavigationRef = useRef(null);
@@ -129,16 +131,11 @@ function MenuMobile({ items = [] }) {
         pendingNavigationRef.current = null;
 
         const frameId = requestAnimationFrame(() => {
-            const section = document.querySelector(href);
-
-            section?.scrollIntoView({
-                behavior: "smooth",
-                block: "start",
-            });
+            navigatePortfolio(href);
         });
 
         return () => cancelAnimationFrame(frameId);
-    }, [isOpen]);
+    }, [isOpen, navigatePortfolio]);
 
     // =========================================
     // ANIMAÇÃO
@@ -239,8 +236,7 @@ function MenuMobile({ items = [] }) {
                     aria-expanded={isOpen}
                     className="
                         flex
-                        h-11
-                        w-11
+                        control-size-icon
                         items-center
                         justify-center
                         rounded-xl
@@ -324,8 +320,7 @@ function MenuMobile({ items = [] }) {
                                 title="Fechar menu"
                                 className="
                                     flex
-                                    h-11
-                                    w-11
+                                    control-size-icon
                                     items-center
                                     justify-center
                                     rounded-full

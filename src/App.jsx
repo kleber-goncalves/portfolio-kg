@@ -1,36 +1,168 @@
-// ScrollSmooth - Lenis
-import SmoothScroll from "./components/SmoothScroll";
-
-// React
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-
-// Layouts carregados conforme se aproximam da viewport
-import DeferredLayoutSection from "./components/DeferredLayoutSection";
-import DeferredProjects from "./components/DeferredProjects";
-
-// Styles
+import { lazy, Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Link, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
 
-// Components
-import HeroSectionTransition from "./components/HeroSectionTransition";
+// Camada global da aplicação
+import SmoothScroll from "./components/SmoothScroll";
 import ButtonReset from "./components/buttonReset";
 import CursorTrail from "./components/CursorTrail";
 import Preloader from "./components/Preloader";
-
-// Experience Mode
+import RouteTransitionPreloader from "./components/RouteTransitionPreloader";
 import { getExperienceMode } from "./utils/experienceMode";
+import useRouteSeo from "./hooks/useRouteSeo";
+import { scrollToTarget } from "./utils/lenisControl";
 import { attachUiSfxHoverListeners } from "./utils/uiSfx";
+import { NAVIGATION_ITEMS } from "./data/navigation";
+
+const MenuDesktop = lazy(() => import("./components/MenuDesktop"));
+
+// As páginas são carregadas sob demanda para não enviar todo o conteúdo
+// de rotas secundárias no primeiro carregamento da Home.
+const Home = lazy(() => import("./pages/home/Home"));
+const Projetos = lazy(() => import("./pages/projetos/Projetos"));
+const Sobre = lazy(() => import("./pages/sobre/Sobre"));
+const Contato = lazy(() => import("./pages/contato/Contato"));
+
+function RouteScrollReset() {
+    const { pathname } = useLocation();
+    const previousPathname = useRef(pathname);
+
+    useEffect(() => {
+        // Não interfere no scroll/restauração inicial do navegador.
+        if (previousPathname.current === pathname) return;
+
+        previousPathname.current = pathname;
+        scrollToTarget(0, { immediate: true });
+    }, [pathname]);
+
+    return null;
+}
+
+function RouteFallback() {
+    return (
+        <div
+            role="status"
+            aria-label="Carregando página"
+            className="min-h-[50vh] bg-obsidian px-5 py-24 text-sm text-steel"
+        >
+            
+        </div>
+    );
+}
 
 function App() {
+    const location = useLocation();
+    const { pathname } = location;
+    useRouteSeo(pathname);
+    const [routeTransition, setRouteTransition] = useState(null);
+    const [routeEntranceKey, setRouteEntranceKey] = useState(0);
+    const [lastRenderedRoutePathname, setLastRenderedRoutePathname] = useState(pathname);
+    const previousRoutePathname = useRef(pathname);
+    const routeTransitionSequence = useRef(0);
+    const routeEntranceStartedRef = useRef(null);
+
+    useLayoutEffect(() => {
+        if (previousRoutePathname.current === pathname) return;
+
+        previousRoutePathname.current = pathname;
+        setLastRenderedRoutePathname(pathname);
+        routeTransitionSequence.current += 1;
+
+        setRouteTransition({
+            id: routeTransitionSequence.current,
+            pathname,
+            ready: false,
+            entranceStarted: false,
+        });
+    }, [pathname]);
+
+    const handleRouteReady = useCallback((pathname) => {
+        setRouteTransition((current) => {
+            if (!current || current.pathname !== pathname || current.ready) {
+                return current;
+            }
+
+            return { ...current, ready: true };
+        });
+    }, []);
+
+    const handleRouteTransitionExitStart = useCallback((id) => {
+        if (routeTransitionSequence.current !== id) return;
+        if (routeEntranceStartedRef.current === id) return;
+
+        routeEntranceStartedRef.current = id;
+        setRouteTransition((current) => (
+            current?.id === id
+                ? { ...current, entranceStarted: true }
+                : current
+        ));
+        setRouteEntranceKey((current) => current + 1);
+    }, []);
+
+    const handleRouteTransitionComplete = useCallback((id) => {
+        if (routeTransitionSequence.current !== id) return;
+
+        setRouteTransition((current) => (
+            current?.id === id ? null : current
+        ));
+    }, []);
+
     const [experienceMode] = useState(() => getExperienceMode() || "full");
+    const [homeMenuVisible, setHomeMenuVisible] = useState(false);
+    const [routeNavigationStatus, setRouteNavigationStatus] = useState(() => ({
+        pathname: location.pathname,
+        visible: true,
+    }));
+    const [routeNavigationElement, setRouteNavigationElement] = useState(null);
+    const [menuHasBeenShown, setMenuHasBeenShown] = useState(false);
+    const isHomePath = location.pathname === "/";
+    const isRouteTransitioning = (
+        Boolean(routeTransition) && !routeTransition.entranceStarted
+    ) || lastRenderedRoutePathname !== pathname;
+    const routeNavigationVisible = routeNavigationStatus.pathname === location.pathname
+        ? routeNavigationStatus.visible
+        : true;
+    const showDesktopMenu = isHomePath ? homeMenuVisible : !routeNavigationVisible;
+
+    const handleHomeMenuVisibilityChange = useCallback((visible) => {
+        setHomeMenuVisible(visible);
+        if (visible) setMenuHasBeenShown(true);
+    }, []);
+
+    const handleRouteNavigationElementChange = useCallback((element) => {
+        setRouteNavigationElement(element);
+    }, []);
 
     useEffect(() => attachUiSfxHoverListeners(), []);
+
+    useEffect(() => {
+        if (isHomePath || !routeNavigationElement) return undefined;
+
+        const pathname = location.pathname;
+        const observer = new IntersectionObserver(([entry]) => {
+            if (!entry) return;
+
+            setRouteNavigationStatus({
+                pathname,
+                visible: entry.isIntersecting,
+            });
+
+            if (!entry.isIntersecting) setMenuHasBeenShown(true);
+        }, { threshold: 0.01 });
+
+        observer.observe(routeNavigationElement);
+        return () => observer.disconnect();
+    }, [isHomePath, location.pathname, routeNavigationElement]);
 
     return (
         <>
             <Preloader />
-
+            <RouteTransitionPreloader
+                key={routeTransition?.id ?? "idle"}
+                transition={routeTransition}
+                onExitStart={handleRouteTransitionExitStart}
+                onComplete={handleRouteTransitionComplete}
+            />
             <CursorTrail />
 
             <SmoothScroll>
@@ -49,20 +181,26 @@ function App() {
                     </Link>
 
                     <ButtonReset />
+                    <RouteScrollReset />
 
-                    <main id="main-content" tabIndex={-1} className="w-full outline-none">
-                        <HeroSectionTransition experienceMode={experienceMode} />
+                    <Suspense fallback={<RouteFallback />}>
+                        <Routes>
+                            <Route
+                                path="/"
+                                element={<Home experienceMode={experienceMode} entranceKey={routeEntranceKey} isRouteTransitioning={isRouteTransitioning} onMenuVisibilityChange={handleHomeMenuVisibilityChange} onRouteReady={handleRouteReady} />}
+                            />
+                            <Route path="/projetos" element={<Projetos experienceMode={experienceMode} entranceKey={routeEntranceKey} isRouteTransitioning={isRouteTransitioning} onRouteReady={handleRouteReady} onRouteNavigationElementChange={handleRouteNavigationElementChange} />} />
+                            <Route path="/sobre" element={<Sobre experienceMode={experienceMode} entranceKey={routeEntranceKey} isRouteTransitioning={isRouteTransitioning} onRouteReady={handleRouteReady} onRouteNavigationElementChange={handleRouteNavigationElementChange} />} />
+                            <Route path="/contato" element={<Contato entranceKey={routeEntranceKey} isRouteTransitioning={isRouteTransitioning} onRouteReady={handleRouteReady} onRouteNavigationElementChange={handleRouteNavigationElementChange} />} />
+                            <Route path="*" element={<Navigate to="/" replace />} />
+                        </Routes>
+                    </Suspense>
 
-                        <DeferredLayoutSection section="competencia" experienceMode={experienceMode} />
-
-                        <DeferredProjects experienceMode={experienceMode} />
-
-                        <DeferredLayoutSection section="diferenciais" experienceMode={experienceMode} />
-
-                        <DeferredLayoutSection section="formacao" experienceMode={experienceMode} />
-                    </main>
-
-                    <DeferredLayoutSection section="footer" />
+                    {menuHasBeenShown && (
+                        <Suspense fallback={null}>
+                            <MenuDesktop items={NAVIGATION_ITEMS} showMenu={showDesktopMenu} />
+                        </Suspense>
+                    )}
                 </div>
             </SmoothScroll>
         </>

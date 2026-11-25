@@ -6,11 +6,14 @@ on:
       - main
       - dev
       - feat/responsividadeFull
+      - feat/separacao-paginas
     paths:
-      - "src/assets/projetos/**"
+      - "src/pages/home/assets/projetos/**"
       - "public/euNv.png"
-      - "src/components/HeroDesktop.jsx"
-      - "src/components/HeroMobile.jsx"
+      - "public/euNvEnvt.png"
+      - "src/pages/sobre/layouts/SobreHero.jsx"
+      - "src/pages/home/layouts/HeroDesktop.jsx"
+      - "src/pages/home/layouts/HeroMobile.jsx"
       - "scripts/optimize-project-images.mjs"
       - ".github/workflows/optimize-project-images.yml"
   workflow_dispatch:

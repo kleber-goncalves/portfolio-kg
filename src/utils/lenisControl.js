@@ -1,5 +1,34 @@
 let lenisInstance = null;
 
+/**
+ * Observa o fim de uma rolagem nativa do viewport.
+ * O timeout serve como fallback para navegadores sem suporte a scrollend.
+ */
+function waitForNativeScrollEnd(onComplete, fallbackDelay) {
+    let completed = false;
+    let fallbackTimeoutId = null;
+
+    const finish = () => {
+        if (completed) return;
+
+        completed = true;
+        window.removeEventListener("scrollend", finish);
+        document.removeEventListener("scrollend", finish);
+
+        if (fallbackTimeoutId !== null) {
+            window.clearTimeout(fallbackTimeoutId);
+        }
+
+        onComplete();
+    };
+
+    window.addEventListener("scrollend", finish);
+    document.addEventListener("scrollend", finish);
+    fallbackTimeoutId = window.setTimeout(finish, fallbackDelay);
+
+    return finish;
+}
+
 export function setLenisInstance(instance) {
     lenisInstance = instance;
 }
@@ -34,6 +63,7 @@ export function scrollToTarget(
         force = false,
         behavior = "smooth",
         block = "start",
+        onComplete,
     } = {},
 ) {
     if (lenisInstance && typeof lenisInstance.scrollTo === "function") {
@@ -45,15 +75,38 @@ export function scrollToTarget(
             immediate,
             lock,
             force,
+            ...(typeof onComplete === "function" ? { onComplete } : {}),
         });
         return true;
     }
 
     if (typeof target === "number") {
+        const scrollBehavior = immediate ? "auto" : behavior;
+        const currentScrollY = window.scrollY
+            ?? document.documentElement.scrollTop
+            ?? 0;
+        const isAlreadyAtTarget = Math.abs(currentScrollY - target) < 1;
+        const completeImmediately = immediate
+            || scrollBehavior === "auto"
+            || isAlreadyAtTarget;
+
+        if (typeof onComplete === "function" && !completeImmediately) {
+            // Registra o observador antes de iniciar a animação de rolagem.
+            waitForNativeScrollEnd(
+                onComplete,
+                Math.max(1800, duration * 1000 + 1200),
+            );
+        }
+
         window.scrollTo({
             top: target,
-            behavior: immediate ? "auto" : behavior,
+            behavior: scrollBehavior,
         });
+
+        if (typeof onComplete === "function" && completeImmediately) {
+            onComplete();
+        }
+
         return true;
     }
 
@@ -65,9 +118,23 @@ export function scrollToTarget(
         return false;
     }
 
+    const scrollBehavior = immediate ? "auto" : behavior;
+
+    if (typeof onComplete === "function" && !immediate && scrollBehavior !== "auto") {
+        waitForNativeScrollEnd(
+            onComplete,
+            Math.max(1800, duration * 1000 + 1200),
+        );
+    }
+
     element.scrollIntoView({
-        behavior: immediate ? "auto" : behavior,
+        behavior: scrollBehavior,
         block,
     });
+
+    if (typeof onComplete === "function" && (immediate || scrollBehavior === "auto")) {
+        onComplete();
+    }
+
     return true;
 }

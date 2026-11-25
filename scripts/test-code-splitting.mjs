@@ -45,14 +45,13 @@ async function testViewport({ width, height, mobile }) {
     const { scripts, errors } = makeRecorder(page);
 
     try {
+        // A Home e a página Sobre agora são rotas separadas.
+        // Na Home, somente Projetos e Footer pertencem a esta composição.
         await page.goto(baseUrl, { waitUntil: "domcontentloaded", timeout: 60000 });
         await page.waitForFunction(() =>
             Boolean(
-                document.querySelector('[data-deferred-section="competencia"]') &&
-                document.querySelector('[data-deferred-section="diferenciais"]') &&
-                document.querySelector('[data-deferred-section="formacao"]') &&
-                document.querySelector('[data-deferred-section="footer"]') &&
-                document.querySelector("#projetos")
+                document.querySelector("#projetos") &&
+                document.querySelector('[data-deferred-section="footer"]')
             ),
             null,
             { timeout: 60000 },
@@ -149,24 +148,78 @@ async function testViewport({ width, height, mobile }) {
             );
         }
 
-        // Os IDs das âncoras existem mesmo antes dos chunks serem carregados.
-        await page.locator("#formacao").scrollIntoViewIfNeeded();
-        await waitForReadySection(page, "formacao");
-        assert.equal(
-            hasChunk(scripts, "Formacao-"),
-            true,
-            "Formação deve ser carregada ao aproximar-se da seção.",
-        );
-
+        // Confirma que o Footer da Home continua adiado e é renderizado uma única vez.
         await page.locator("#footer").scrollIntoViewIfNeeded();
         await waitForReadySection(page, "footer");
+        await page.locator("#footer footer").waitFor({ state: "attached", timeout: 60000 });
         assert.equal(
             hasChunk(scripts, "Footer-"),
             true,
-            "Footer deve ser carregado ao aproximar-se do final da página.",
+            "Footer deve ser carregado ao aproximar-se do final da Home.",
+        );
+        assert.equal(
+            await page.locator("#footer footer").count(),
+            1,
+            "A Home deve renderizar uma única instância do Footer.",
         );
 
-        const relevantErrors = errors.filter((message) =>
+        // Formação e seções institucionais pertencem à rota /sobre, não à Home.
+        // Usa uma página isolada para não misturar chunks solicitados durante o teste da Home.
+        const aboutPage = await context.newPage();
+        const { scripts: aboutScripts, errors: aboutErrors } = makeRecorder(aboutPage);
+
+        await aboutPage.goto(new URL("/sobre", baseUrl).toString(), {
+            waitUntil: "domcontentloaded",
+            timeout: 60000,
+        });
+        await aboutPage.waitForFunction(() =>
+            Boolean(
+                document.querySelector('[data-deferred-section="competencia"]') &&
+                document.querySelector('[data-deferred-section="diferenciais"]') &&
+                document.querySelector('[data-deferred-section="formacao"]') &&
+                document.querySelector('[data-deferred-section="footer"]')
+            ),
+            null,
+            { timeout: 60000 },
+        );
+        await aboutPage.waitForTimeout(500);
+
+        const aboutInitialScripts = new Set(aboutScripts);
+        assert.equal(
+            hasChunk(aboutInitialScripts, "Formacao-"),
+            false,
+            "A seção Formação não deve ser transferida no primeiro carregamento da página Sobre.",
+        );
+        assert.equal(
+            hasChunk(aboutInitialScripts, "Footer-"),
+            false,
+            "O Footer não deve ser transferido antes de se aproximar do final da página Sobre.",
+        );
+
+        await aboutPage.locator("#formacao").scrollIntoViewIfNeeded();
+        await waitForReadySection(aboutPage, "formacao");
+        assert.equal(
+            hasChunk(aboutScripts, "Formacao-"),
+            true,
+            "Formação deve ser carregada ao aproximar-se da seção na página Sobre.",
+        );
+
+        await aboutPage.locator("#footer").scrollIntoViewIfNeeded();
+        await waitForReadySection(aboutPage, "footer");
+        assert.equal(
+            hasChunk(aboutScripts, "Footer-"),
+            true,
+            "Footer deve ser carregado ao aproximar-se do final da página Sobre.",
+        );
+
+        await aboutPage.locator("#footer footer").waitFor({ state: "attached", timeout: 60000 });
+        assert.equal(
+            await aboutPage.locator("#footer footer").count(),
+            1,
+            "A página Sobre deve renderizar uma única instância do Footer.",
+        );
+
+        const relevantErrors = [...errors, ...aboutErrors].filter((message) =>
             /tecnologias is not defined|Failed to fetch dynamically imported module|ProjetoDesktop|ProjetoCarouselMobile|SeclogsMobile|DeferredLayoutSection|ScrollTrigger/i.test(message)
         );
         assert.deepEqual(

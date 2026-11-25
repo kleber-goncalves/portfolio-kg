@@ -173,10 +173,11 @@ flowchart TD
 
 - <code>src/main.jsx</code>: inicializa a aplicação React e o roteamento utilizado pela interface.
 - <code>src/App.jsx</code>: compõe a página principal e conecta as seções.
-- <code>src/components/HeroSectionTransition.jsx</code>: coordena o Hero, a navegação e a transição para a área de tecnologias.
+- <code>src/pages/home/layouts/HeroSectionTransition.jsx</code>: coordena o Hero, a navegação e a transição para a área de tecnologias.
 - <code>src/components/DeferredLayoutSection.jsx</code>: carrega seções secundárias de forma adiada.
-- <code>src/components/DeferredProjects.jsx</code>: coordena o carregamento da seção de projetos.
-- <code>src/layout/</code>: reúne os layouts das principais seções.
+- <code>src/pages/home/components/DeferredProjects.jsx</code>: coordena o carregamento da seção de projetos.
+- <code>src/layouts/</code>: reúne layouts compartilhados. <code>InteriorPageLayout.jsx</code> padroniza as rotas internas, enquanto <code>Footer.jsx</code> fornece o rodapé único e é carregado sob demanda por <code>DeferredLayoutSection.jsx</code>.
+- <code>src/pages/</code>: reúne as entradas das rotas e os módulos específicos de cada página, organizados em diretórios próprios.
 - <code>src/components/</code>: concentra componentes reutilizáveis, efeitos e experiências de interação.
 - <code>src/data/</code>: mantém dados estruturados de tecnologias e eventos da trajetória.
 - <code>src/hooks/useResponsive.js</code>: centraliza a leitura de características responsivas.
@@ -198,7 +199,7 @@ Os módulos de projetos desktop e mobile são importados sob demanda. O layout m
 
 ### 3. Imagens responsivas
 
-As imagens originais dos projetos ficam em <code>src/assets/projetos/</code>. O script <code>scripts/optimize-project-images.mjs</code>, utilizado pelo workflow de otimização, gera variantes WebP e atualiza os metadados em <code>src/generated/imageMetadata.json</code>. Os arquivos gerados são disponibilizados em <code>public/\_optimized/</code>.
+As imagens originais dos projetos ficam em <code>src/pages/home/assets/projetos/</code>. O script <code>scripts/optimize-project-images.mjs</code>, utilizado pelo workflow de otimização, gera variantes WebP e atualiza os metadados em <code>src/generated/imageMetadata.json</code>. Os arquivos gerados são disponibilizados em <code>public/\_optimized/</code>.
 
 O componente <code>OptimizedImage</code> usa os metadados quando disponíveis para selecionar recursos responsivos por meio de <code>srcSet</code> e <code>sizes</code>, reservar dimensões e configurar carregamento e prioridade. Em geral, imagens que não precisam estar disponíveis imediatamente podem usar carregamento tardio, enquanto recursos essenciais do Hero recebem tratamento prioritário no HTML.
 
@@ -378,7 +379,7 @@ O comando de build gera os arquivos de produção em <code>dist/</code>. O coman
 | <code>npm run preview</code> | Serve localmente a build de produção.         |
 | <code>npm run lint</code>    | Executa o ESLint no projeto.                  |
 
-O <code>package.json</code> não declara atualmente um comando <code>npm test</code>. Os testes especializados listados na próxima seção são executados por scripts e workflows do GitHub Actions.
+Os testes unitários usam Vitest e podem ser executados localmente com <code>npm test</code> (execução única), <code>npm run test:watch</code> (modo de observação) e <code>npm run test:coverage</code> (relatório de cobertura). Também existem scripts Playwright especializados, executados pelos workflows do GitHub Actions; consulte os arquivos YAML para conhecer os cenários automatizados.
 
 ## Qualidade e GitHub Actions
 
@@ -395,7 +396,7 @@ A automação de qualidade está em <code>.github/workflows/</code>. Ela combina
 | [Analyze JavaScript Runtime Coverage](.github/workflows/analyze-js-runtime-coverage.yml)   | Inspeção de cobertura de JavaScript em execução.                                |
 | [Optimize project images](.github/workflows/optimize-project-images.yml)                   | Geração das variantes WebP e atualização de metadados de imagem.                |
 
-Há também workflows e scripts voltados a interações específicas, incluindo menu desktop em Reduced, menu mobile, loop de logos, painel de redes sociais e scroll da trajetória.
+Há também workflows e scripts voltados a interações específicas, incluindo a visibilidade do MenuDesktop em Reduced após troca de modo e reload da Home e das rotas internas, menu mobile, loop de logos, painel de redes sociais e scroll da trajetória.
 
 ### Fluxo resumido de validação
 

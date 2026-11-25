@@ -79,6 +79,31 @@ describe("lenisControl", () => {
         });
     });
 
+    it("aguarda a callback onComplete de Lenis quando solicitada", () => {
+        const onComplete = vi.fn();
+        const instance = {
+            start: vi.fn(),
+            scrollTo: vi.fn((_target, options) => options.onComplete()),
+        };
+        setLenisInstance(instance);
+
+        const result = scrollToTarget(0, {
+            duration: 0.75,
+            onComplete,
+        });
+
+        expect(result).toBe(true);
+        expect(instance.scrollTo).toHaveBeenCalledWith(0, {
+            duration: 0.75,
+            offset: 0,
+            immediate: false,
+            lock: false,
+            force: false,
+            onComplete,
+        });
+        expect(onComplete).toHaveBeenCalledOnce();
+    });
+
     it("preserva as opções personalizadas ao navegar com Lenis", () => {
         const instance = {
             start: vi.fn(),
@@ -116,6 +141,35 @@ describe("lenisControl", () => {
             top: 240,
             behavior: "smooth",
         });
+    });
+
+    it("aguarda scrollend nativo antes de disparar onComplete", () => {
+        vi.spyOn(window, "scrollTo").mockImplementation(() => {});
+        const onComplete = vi.fn();
+
+        const result = scrollToTarget(120, {
+            duration: 0.75,
+            onComplete,
+        });
+
+        expect(result).toBe(true);
+        expect(onComplete).not.toHaveBeenCalled();
+
+        document.dispatchEvent(new Event("scrollend"));
+
+        expect(onComplete).toHaveBeenCalledOnce();
+    });
+
+    it("dispara onComplete imediatamente para rolagem nativa imediata", () => {
+        vi.spyOn(window, "scrollTo").mockImplementation(() => {});
+        const onComplete = vi.fn();
+
+        scrollToTarget(120, {
+            immediate: true,
+            onComplete,
+        });
+
+        expect(onComplete).toHaveBeenCalledOnce();
     });
 
     it("usa behavior auto na rolagem nativa quando immediate é true", () => {

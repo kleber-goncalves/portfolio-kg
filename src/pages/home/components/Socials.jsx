@@ -3,7 +3,7 @@ import gsap from "gsap";
 
 import { ArrowRight, X } from "lucide-react";
 import { Github, Linkedin, Instagram } from "@thesvg/react";
-import { requestUiSound } from "../utils/uiSfxEvents";
+import { requestUiSound } from "../../../utils/uiSfxEvents";
 
 function Socials() {
     const [isOpen, setIsOpen] = useState(false);

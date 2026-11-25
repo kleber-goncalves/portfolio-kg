@@ -2,24 +2,22 @@ import { useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-import ExperienceDropdown from "./ExperienceDropdown";
-import SoundControls from "./SoundControls";
 
 import Socials from "../components/Socials";
 import DotField from "../components/DotField";
+import OptimizedImage from "../../../components/OptimizedImage";
 
 import { ArrowDownRight } from "lucide-react";
 
-import MagneticLink from "../components/MagneticNavLink";
+import PortfolioDesktopHeader from "../../../components/PortfolioDesktopHeader";
 
 import "../styles/looptextHero.css";
 import "../styles/heroParallax.css";
-import GlobeIcon from "./GlobeIcon";
-import OptimizedImage from "./OptimizedImage";
+import GlobeIcon from "../../../components/GlobeIcon";
 
 gsap.registerPlugin(ScrollTrigger);
 
-function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, experienceMode = "full" }) {
+function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, onContentReady, experienceMode = "full", entranceKey = 0, isRouteTransitioning = false }) {
     useLayoutEffect(() => {
         onReady?.("desktop", { gsap, ScrollTrigger });
     }, [onReady]);
@@ -28,6 +26,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, exper
     // ============================================================
 
     const heroRef = useRef(null);
+    const pendingRouteEntranceRef = useRef(false);
 
     const heroTitleRef = useRef(null);
     const heroTextRef = useRef(null);
@@ -215,9 +214,16 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, exper
     useLayoutEffect(() => {
         const hero = heroRef.current;
 
-        if (!hero) {
+        // Start as soon as the preloader fades; only direct loads need scroll-restoration settling.
+        if (isRouteTransitioning) {
+            pendingRouteEntranceRef.current = true;
             return;
         }
+
+        if (!hero) return;
+
+        const isRouteEntrance = pendingRouteEntranceRef.current;
+        pendingRouteEntranceRef.current = false;
 
         const ctx = gsap.context(() => {
             const title = heroTitleRef.current;
@@ -346,7 +352,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, exper
                             y: 0,
                             duration: 0.75,
                         },
-                        0.05,
+                        0.03,
                     );
                 }
 
@@ -362,7 +368,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, exper
                             y: 0,
                             duration: 0.8,
                         },
-                        0.12,
+                        0.07,
                     );
                 }
 
@@ -380,7 +386,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, exper
                             duration: 1.2,
                             ease: "power3.out",
                         },
-                        0.15,
+                        0.08,
                     );
                 }
 
@@ -397,7 +403,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, exper
                             duration: 0.95,
                             ease: "power3.out",
                         },
-                        0.35,
+                        0.13,
                     );
                 }
 
@@ -414,7 +420,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, exper
                             duration: 0.85,
                             ease: "power3.out",
                         },
-                        0.42,
+                        0.18,
                     );
                 }
 
@@ -431,7 +437,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, exper
                             duration: 0.95,
                             ease: "power3.out",
                         },
-                        0.5,
+                        0.21,
                     );
                 }
 
@@ -447,7 +453,7 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, exper
                             y: 0,
                             duration: 0.75,
                         },
-                        0.68,
+                        0.26,
                     );
                 }
 
@@ -538,7 +544,11 @@ function HeroDesktop({ items, dotFieldFrozen = false, onNavigate, onReady, exper
             // PRIMEIRO FRAME
             // ========================================================
 
-            frameId = requestAnimationFrame(waitForScrollRestoration);
+            if (isRouteEntrance) {
+                animationCleanup = initializeEntry();
+            } else {
+                frameId = requestAnimationFrame(waitForScrollRestoration);
+            }
 
             // ========================================================
             // CLEANUP
@@ -558,7 +568,7 @@ if (animationCleanup) {
         return () => {
             ctx.revert();
         };
-    }, []);
+    }, [entranceKey, isRouteTransitioning]);
 
     // ============================================================
     // ANIMAÇÃO DE SAÍDA — SOMENTE REDUCED
@@ -829,102 +839,15 @@ if (animationCleanup) {
                     LOGO
                 ================================================== */}
 
-                <div
-                    className="
-                        absolute
-                        left-8
-                        top-8
-                        z-40
-
-                        flex
-                        items-center
-                        gap-5
-
-                        c-lg:left-18
-                        c-lg:top-10
-                        c-lg:gap-12
-                    "
-                >
-                    <div
-                        ref={logoRef}
-                        className="
-                    "
-                    >
-                        <div
-                            className="
-                            h-10
-                            w-10
-
-                            c-lg:h-11
-                            c-lg:w-11
-                        "
-                        >
-                            <OptimizedImage
-                                src="/logo.svg"
-                                alt="Kleber Dev"
-                                width={44}
-                                height={44}
-                                loading="eager"
-                                fetchPriority="high"
-                                wrapperClassName="h-full w-full"
-                                className="object-contain"
-                            />
-                        </div>
-                    </div>
-                    <div className="flex items-center gap-2 c-lg:gap-3">
-                        <ExperienceDropdown experienceMode={experienceMode} />
-                        <SoundControls />
-                    </div>
-                </div>
-
-                {/* =================================================
-                    NAVBAR
-                ================================================== */}
-
-                <nav
-                    ref={navRef}
-                    aria-label="Navegação principal"
-                    className="
-        absolute
-        right-8
-        top-8
-        z-40
-        flex
-        items-center
-        gap-5
-
-        c-lg:right-17
-        c-lg:top-10
-        c-lg:gap-7
-    "
-                >
-                    {items.map((item) => {
-                        const isActive = activeHref === item.href;
-
-                        return (
-                            <MagneticLink
-                                key={item.href}
-                                href={item.href}
-                                onNavigate={onNavigate}
-                                className="
-                                    font-space
-                                    text-[9px]
-                                    uppercase
-                                    tracking-[0.12em]
-
-                                    c-lg:text-[10px]
-                                "
-                                isActive={isActive}
-                            >
-                                {item.label}
-                            </MagneticLink>
-                        );
-                    })}
-
-                    {/* =================================================
-        EXPERIENCE
-    ================================================== */}
-                </nav>
+                <PortfolioDesktopHeader
+                    placement="hero"
+                    items={items}
+                    activeHref={activeHref}
+                    onNavigate={onNavigate}
+                    navRef={navRef}
+                    logoRef={logoRef}
+                    experienceMode={experienceMode}
+                />
 
                 {/* =================================================
                     FOTO CENTRAL
@@ -957,6 +880,8 @@ if (animationCleanup) {
                         sizes="(min-width: 1280px) 970px, (min-width: 1024px) 440px, 420px"
                         loading="eager"
                         fetchPriority="high"
+                        onLoad={() => onContentReady?.("desktop")}
+                        onError={() => onContentReady?.("desktop")}
                         wrapperClassName="h-full w-full"
                         className="
                             object-cover

@@ -201,7 +201,8 @@ function ExperienceDropdown({ experienceMode = getExperienceMode() || "full", on
                     cursor-pointer
                     overflow-hidden
                     rounded-sm
-                    px-2
+                    control-size-compact
+                    px-3
                     py-1
 
                     font-space

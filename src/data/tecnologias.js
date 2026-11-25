@@ -9,6 +9,7 @@ import { Html5 as HTMLIcon } from "@thesvg/react";
 import { CssNew as CssNewIcon } from "@thesvg/react";
 import { Cookiecutter as CookiecutterIcon } from "@thesvg/react";
 import { Axios as AxiosIcon } from "@thesvg/react";
+import { Javascript as JavascriptIcon } from "@thesvg/react";
 
 export const tecnologias = {
     React: {
@@ -32,6 +33,19 @@ export const tecnologias = {
         hoverText: "group-hover:text-green-300",
         icon: "text-green-300 ",
     },
+
+    Javascript: {
+        nome: "JavaScript",
+        icone: JavascriptIcon,
+        bg: "bg-sky-500/10",
+        border: "border-sky-400/20",
+        hoverBorder: "group-hover:border-sky-400",
+        text: "text-sky-300",
+        hoverText: "group-hover:text-sky-300",
+        icon: "text-sky-300",
+    },
+
+
 
     Tailwind: {
         nome: "Tailwind",

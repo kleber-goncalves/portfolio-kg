@@ -31,8 +31,8 @@ function MagneticExternalLinkHover({
     // ESPAÇAMENTO
     // ============================================================
 
-    px = "px-5",
-    py = "py-3",
+    px = "px-3",
+    py = "py-2",
 
     // ============================================================
     // CLASSES EXTRAS
@@ -52,6 +52,10 @@ function MagneticExternalLinkHover({
     // ============================================================
 
     Icon,
+
+    // Ativa o estado visual do grupo quando o cursor está sobre a linha
+    // calculada pelo catálogo durante a rolagem, mesmo sem novo pointermove.
+    isGroupHoverActive = false,
 }) {
     // ============================================================
     // MOVIMENTO MAGNÉTICO
@@ -142,9 +146,11 @@ function MagneticExternalLinkHover({
                 "--hover-text-color": hoverTextColor,
 
                 "--accent-color": accent,
+                borderColor: isGroupHoverActive ? hoverBorderColor : undefined,
             }}
             className={`
                 relative
+                control-size-standard
                 inline-flex
                 items-center
                 justify-center
@@ -178,7 +184,7 @@ function MagneticExternalLinkHover({
 
             <span
                 aria-hidden="true"
-                className="
+                className={`
                     pointer-events-none
                     absolute
                     inset-[-5px]
@@ -194,9 +200,11 @@ function MagneticExternalLinkHover({
 
                     group-hover/preview:scale-100
                     group-hover/preview:opacity-100
-                "
+                `}
                 style={{
                     backgroundColor: "var(--accent-color)",
+                    scale: isGroupHoverActive ? 1 : undefined,
+                    opacity: isGroupHoverActive ? 1 : undefined,
                 }}
             />
 
@@ -216,8 +224,8 @@ function MagneticExternalLinkHover({
                     text-[var(--text-color)]
                 "
                 animate={{
-                    y: 0,
-                    letterSpacing: "0.12em",
+                    y: isGroupHoverActive ? -0.5 : 0,
+                    letterSpacing: isGroupHoverActive ? "0.14em" : "0.12em",
                 }}
                 whileHover={{
                     y: -0.5,
@@ -241,12 +249,15 @@ function MagneticExternalLinkHover({
                 ================================================= */}
 
                 <span
-                    className="
+                    className={`
                         transition-colors
                         duration-300
 
                         group-hover/preview:text-[var(--hover-text-color)]
-                    "
+                    `}
+                    style={{
+                        color: isGroupHoverActive ? "var(--hover-text-color)" : undefined,
+                    }}
                 >
                     {children}
                 </span>
@@ -257,7 +268,7 @@ function MagneticExternalLinkHover({
 
                 {Icon && (
                     <motion.span
-                        className="
+                        className={`
             inline-flex
             items-center
             justify-center
@@ -268,11 +279,14 @@ function MagneticExternalLinkHover({
             duration-300
 
             group-hover/preview:text-[var(--hover-text-color)]
-        "
+        `}
+                        style={{
+                            color: isGroupHoverActive ? "var(--hover-text-color)" : undefined,
+                        }}
                         animate={{
-                            x: 0,
-                            y: 0,
-                            scale: 1,
+                            x: isGroupHoverActive ? 2 : 0,
+                            y: isGroupHoverActive ? -2 : 0,
+                            scale: isGroupHoverActive ? 1.05 : 1,
                         }}
                         whileHover={{
                             x: 2,

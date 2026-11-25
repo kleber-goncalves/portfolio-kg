@@ -92,6 +92,11 @@ html::-webkit-scrollbar {
     --accent-hover: #c49a78;
     --accent-light: #d8c2aa;
 
+    /* Escala dimensional compartilhada para controles interativos. */
+    --control-height-compact: 2rem;
+    --control-height-standard: 2.25rem;
+    --control-height-touch: 2.75rem;
+
     /* Tipografia */
     --font-bebas: "Bebas Neue", sans-serif;
     --font-dm: "DM Mono", monospace;
@@ -375,10 +380,417 @@ html::-webkit-scrollbar {
 }
 
 
+/* Preloader de navegação entre rotas. */
+/* A camada cobre a rota imediatamente; apenas o conteúdo anima na entrada. */
+.route-preloader {
+    opacity: 1;
+    transition: opacity 300ms ease-out;
+}
+
+.route-preloader__content {
+    animation: route-preloader-content-enter 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+        opacity 220ms ease-out,
+        transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.route-preloader--leaving {
+    opacity: 0;
+}
+
+.route-preloader--leaving .route-preloader__content {
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+.route-preloader__title {
+    clip-path: inset(0 0 100% 0);
+    opacity: 0;
+    transform: translateY(16px);
+    animation: route-preloader-title-enter 560ms cubic-bezier(0.16, 1, 0.3, 1) 40ms both;
+}
+
+.route-preloader__status {
+    opacity: 0;
+    transform: translateY(8px);
+    animation: route-preloader-status-enter 420ms cubic-bezier(0.16, 1, 0.3, 1) 150ms both;
+}
+
+.route-preloader__indicator-track {
+    opacity: 0;
+    transform: translateY(6px);
+    animation: route-preloader-indicator-enter 360ms cubic-bezier(0.16, 1, 0.3, 1) 250ms both;
+}
+
+.route-preloader__indicator {
+    display: block;
+    width: 38%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-bronze), var(--color-champagne));
+    animation: route-preloader-indeterminate 1.2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+    will-change: transform, opacity;
+}
+
+.route-preloader__indicator--ready {
+    width: 100%;
+    opacity: 1;
+    animation: none;
+    transform: translateX(0);
+    transition:
+        width 240ms ease-out,
+        transform 240ms ease-out,
+        opacity 180ms ease-out;
+}
+
+@keyframes route-preloader-content-enter {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes route-preloader-title-enter {
+    from {
+        clip-path: inset(0 0 100% 0);
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        clip-path: inset(0);
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes route-preloader-status-enter {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes route-preloader-indicator-enter {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes route-preloader-indeterminate {
+    0% {
+        opacity: 0.3;
+        transform: translateX(-120%);
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.45;
+        transform: translateX(330%);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .route-preloader__title,
+    .route-preloader__status,
+    .route-preloader__indicator-track {
+        opacity: 1;
+        clip-path: none;
+        transform: none;
+        animation: none;
+    }
+
+    .route-preloader__indicator,
+    .route-preloader__indicator--ready {
+        width: 100%;
+        opacity: 1;
+        animation: none;
+        transform: none;
+        transition: none;
+    }
+}
+
+/* Escala de dimensões: altura consistente sem uniformizar larguras por texto. */
+.control-size-compact {
+    height: var(--control-height-compact);
+}
+
+.control-size-standard {
+    height: var(--control-height-standard);
+}
+
+.control-size-touch {
+    min-height: var(--control-height-touch);
+}
+
+.control-size-icon {
+    width: var(--control-height-touch);
+    height: var(--control-height-touch);
+}
+
+/* Preloader principal: símbolo central, wordmark revelada e saída em cortina. */
+.site-preloader {
+    transform: translateY(0);
+    transition: transform 760ms cubic-bezier(0.76, 0, 0.24, 1);
+    will-change: transform;
+}
+
+.site-preloader__content {
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+        opacity 220ms ease-out,
+        transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* A área mantém a wordmark centralizada. O símbolo começa no centro e
+   desloca-se para a esquerda antes de a marca completa ser revelada. */
+.site-preloader__brand-stage {
+    position: relative;
+    flex: none;
+    width: min(82vw, 320px);
+    min-width: 0;
+    max-width: none;
+    height: min(24vw, 94px);
+    overflow: hidden;
+    will-change: width;
+}
+
+.site-preloader__wordmark,
+.site-preloader__symbol-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: min(82vw, 320px);
+    max-width: none;
+    height: 100%;
+    object-fit: fill;
+    flex: none;
+}
+
+.site-preloader__wordmark {
+    clip-path: inset(0 100% 0 0);
+}
+
+.site-preloader__symbol {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 50%;
+    width: 30%;
+    height: 100%;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateX(-50%);
+    will-change: left, transform, opacity;
+}
+
+.site-preloader__brand-stage--animate {
+    animation: site-preloader-brand-collapse 420ms cubic-bezier(0.76, 0, 0.24, 1) 1640ms both;
+}
+
+.site-preloader__brand-stage--animate .site-preloader__symbol {
+    animation:
+        site-preloader-symbol-appear 260ms cubic-bezier(0.16, 1, 0.3, 1) 40ms both,
+        site-preloader-symbol-align 460ms cubic-bezier(0.16, 1, 0.3, 1) 320ms both,
+        site-preloader-symbol-dismiss 180ms ease-out 1430ms forwards;
+}
+
+.site-preloader__brand-stage--animate .site-preloader__wordmark {
+    animation: site-preloader-brand-reveal 650ms cubic-bezier(0.16, 1, 0.3, 1) 820ms both;
+}
+
+.site-preloader--leaving {
+    transform: translateY(-100%);
+}
+
+.site-preloader--leaving .site-preloader__content {
+    opacity: 0;
+    transform: translateY(-12px);
+}
+
+.site-preloader__name {
+    opacity: 0;
+    transform: translateY(12px);
+    animation: site-preloader-name-enter 420ms cubic-bezier(0.16, 1, 0.3, 1) 2060ms both;
+}
+
+.site-preloader__role {
+    opacity: 0;
+    transform: translateY(8px);
+    animation: site-preloader-role-enter 350ms cubic-bezier(0.16, 1, 0.3, 1) 2290ms both;
+}
+
+.site-preloader__progress {
+    opacity: 0;
+    transform: translateY(10px);
+    animation: site-preloader-progress-enter 420ms cubic-bezier(0.16, 1, 0.3, 1) 2400ms both;
+}
+
+.site-preloader__status {
+    display: inline-block;
+    animation: site-preloader-status-enter 240ms ease-out both;
+}
+
+.site-preloader__bar {
+    position: relative;
+    overflow: hidden;
+    transition: width 480ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.site-preloader__bar::after {
+    position: absolute;
+    inset: 0;
+    content: "";
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.38), transparent);
+    transform: translateX(-120%);
+    animation: site-preloader-bar-sheen 1.6s ease-in-out infinite;
+}
+
+@keyframes site-preloader-symbol-appear {
+    from {
+        opacity: 0;
+        filter: blur(4px);
+    }
+    to {
+        opacity: 1;
+        filter: blur(0);
+    }
+}
+
+@keyframes site-preloader-symbol-align {
+    from {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    to {
+        left: 0;
+        transform: translateX(0);
+    }
+}
+
+@keyframes site-preloader-brand-reveal {
+    from { clip-path: inset(0 100% 0 0); }
+    to { clip-path: inset(0); }
+}
+
+@keyframes site-preloader-brand-collapse {
+    from { width: min(82vw, 320px); }
+    to { width: min(24.6vw, 96px); }
+}
+
+@keyframes site-preloader-symbol-dismiss {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes site-preloader-name-enter {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes site-preloader-role-enter {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes site-preloader-progress-enter {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes site-preloader-status-enter {
+    from {
+        opacity: 0;
+        transform: translateY(3px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes site-preloader-bar-sheen {
+    0% {
+        transform: translateX(-120%);
+        opacity: 0;
+    }
+    25% { opacity: 0.7; }
+    70% { opacity: 0.25; }
+    100% {
+        transform: translateX(320%);
+        opacity: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .site-preloader__brand-stage--animate {
+        width: min(82vw, 320px) !important;
+        animation: none !important;
+    }
+
+    .site-preloader__wordmark {
+        clip-path: none !important;
+        animation: none !important;
+    }
+
+    .site-preloader__symbol {
+        display: none !important;
+        animation: none !important;
+    }
+
+    .site-preloader__name,
+    .site-preloader__role,
+    .site-preloader__progress {
+        opacity: 1 !important;
+        transform: none !important;
+        animation: none !important;
+    }
+}
+
 /* Acessibilidade: foco de teclado visível e preferência por movimento reduzido. */
 :where(a, button, input, select, textarea, [tabindex]):focus-visible {
     outline: 2px solid var(--accent-light, #d8c2aa);
     outline-offset: 4px;
+}
+
+/* No formulário minimalista, a linha inferior e o número indicam o foco sem criar uma caixa ao redor do input. */
+.contact-form-field :is(input, textarea):focus {
+    outline: none;
+    outline-offset: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -395,4 +807,12 @@ html::-webkit-scrollbar {
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
     }
+}
+
+
+/* O preenchimento, magnetismo e centralização do ícone são controlados
+   pelo componente MagneticSubmitButton com Motion, incluindo movimento reduzido.
+   Mantemos esta classe para identificar o controle nos testes e estilos da página. */
+.contact-send-button {
+    position: relative;
 }

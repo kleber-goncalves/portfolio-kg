@@ -1,22 +1,25 @@
-import { lazy, Suspense, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-import Hero from "../layout/HeroTeste2";
-import Seclogs from "../layout/Logo2";
-const MenuDesktop = lazy(() => import("../components/MenuDesktop"));
-import useResponsive from "../hooks/useResponsive";
-import { scrollToTarget } from "../utils/lenisControl";
-import { playUiSound } from "../utils/uiSfx";
+import Hero from "./HeroTeste2";
+import Seclogs from "./Logo2";
+import useResponsive from "../../../hooks/useResponsive";
+import { scrollToTarget } from "../../../utils/lenisControl";
+import { playUiSound } from "../../../utils/uiSfx";
 
 gsap.registerPlugin(ScrollTrigger);
 
-function HeroSectionTransition({ experienceMode = "full" }) {
+function HeroSectionTransition({ experienceMode = "full", entranceKey = 0, isRouteTransitioning = false, onMenuVisibilityChange, onRouteReady }) {
+    const navigate = useNavigate();
+    const location = useLocation();
     const { isMobileLayout, isCompactLandscape, isTablet } = useResponsive();
     const requiredHeroLayout = isMobileLayout ? "mobile" : "desktop";
     const requiredStackLayout = isMobileLayout ? "mobile" : "desktop";
     const [readyHeroLayout, setReadyHeroLayout] = useState(null);
+    const [readyHeroContentLayout, setReadyHeroContentLayout] = useState(null);
     const [readyStackLayout, setReadyStackLayout] = useState(null);
 
     const sectionRef = useRef(null);
@@ -42,8 +45,6 @@ function HeroSectionTransition({ experienceMode = "full" }) {
      * o menu fica disponível desde o início.
      */
     const [showDesktopMenu, setShowDesktopMenu] = useState(false);
-    // Mantém o menu montado após a primeira aparição para permitir a animação de saída.
-    const [hasShownDesktopMenu, setHasShownDesktopMenu] = useState(false);
 
     const [dotFieldFrozen, setDotFieldFrozen] = useState(false);
 
@@ -61,36 +62,95 @@ function HeroSectionTransition({ experienceMode = "full" }) {
 
     const dotFieldFrozenRef = useRef(false);
 
-    // ============================================================
-    // ITENS DO MENU
-    // ============================================================
 
-    const menuItems = [
-        {
-            label: "Hero",
-            href: "#hero",
-        },
-        {
-            label: "Stack",
-            href: "#stack",
-        },
-        {
-            label: "Competências",
-            href: "#competencias",
-        },
-        {
-            label: "Projetos",
-            href: "#projetos",
-        },
-        {
-            label: "Diferenciais",
-            href: "#diferenciais",
-        },
-        {
-            label: "Formação",
-            href: "#formacao",
-        },
-    ];
+    // O menu flutuante é renderizado uma única vez pelo shell global.
+    // O Hero continua sendo a fonte da visibilidade no modo Home.
+    useEffect(() => {
+        onMenuVisibilityChange?.(showDesktopMenu);
+    }, [showDesktopMenu, onMenuVisibilityChange]);
+
+    useEffect(() => () => {
+        onMenuVisibilityChange?.(false);
+    }, [onMenuVisibilityChange]);
+
+    // O preloader de rota só termina quando o layout do Hero e sua imagem
+    // principal estão prontos. No desktop Full, o Stack também é necessário
+    // para que o pin e os ScrollTriggers tenham medidas válidas.
+    useEffect(() => {
+        if (readyHeroLayout !== requiredHeroLayout) return;
+        if (readyHeroContentLayout !== requiredHeroLayout) return;
+
+        const waitsForPinnedStack = (
+            experienceMode === "full" &&
+            !isMobileLayout &&
+            readyStackLayout !== requiredStackLayout
+        );
+
+        if (waitsForPinnedStack) return;
+
+        onRouteReady?.("/");
+    }, [
+        onRouteReady,
+        readyHeroLayout,
+        readyHeroContentLayout,
+        requiredHeroLayout,
+        experienceMode,
+        isMobileLayout,
+        readyStackLayout,
+        requiredStackLayout,
+    ]);
+
+    // Links de âncora vindos das páginas internas aguardam os layouts lazy e o pin.
+    useEffect(() => {
+        const target = location.state?.portfolioScrollTarget;
+
+        if (location.pathname !== "/" || !target) return;
+        if (readyHeroLayout !== requiredHeroLayout) return;
+        if (target === "#stack" && readyStackLayout !== requiredStackLayout) return;
+
+        let firstFrameId = 0;
+        let secondFrameId = 0;
+
+        firstFrameId = requestAnimationFrame(() => {
+            secondFrameId = requestAnimationFrame(() => {
+                if (target === "#hero") {
+                    scrollToTarget(0, { duration: 1.4 });
+                } else if (target === "#stack") {
+                    const heroTransition = experienceMode === "full" && !isMobileLayout
+                        ? ScrollTrigger.getById("heroTransition")
+                        : null;
+
+                    if (heroTransition) {
+                        scrollToTarget(heroTransition.end, { duration: 1.4 });
+                    } else {
+                        const section = document.querySelector(target);
+                        if (section) scrollToTarget(section, { duration: 1.4 });
+                    }
+                } else {
+                    const section = document.querySelector(target);
+                    if (section) scrollToTarget(section, { duration: 1.4 });
+                }
+
+                navigate("/", { replace: true, state: null });
+            });
+        });
+
+        return () => {
+            cancelAnimationFrame(firstFrameId);
+            cancelAnimationFrame(secondFrameId);
+        };
+    }, [
+        location.pathname,
+        location.state,
+        navigate,
+        readyHeroLayout,
+        readyStackLayout,
+        requiredHeroLayout,
+        requiredStackLayout,
+        experienceMode,
+        isMobileLayout,
+    ]);
+
 
     // ============================================================
     // NAVEGAÇÃO DO HERO
@@ -98,6 +158,11 @@ function HeroSectionTransition({ experienceMode = "full" }) {
 
     const handleHeroNavigation = (href) => {
         playUiSound(href === "#hero" ? "back" : "forward");
+
+        if (!href.startsWith("#")) {
+            navigate(href);
+            return;
+        }
 
         if (href === "#hero") {
             scrollToTarget(0, { duration: 1.4 });
@@ -199,10 +264,6 @@ function HeroSectionTransition({ experienceMode = "full" }) {
 
                 if (menuVisibleRef.current !== shouldShowMenu) {
                     menuVisibleRef.current = shouldShowMenu;
-
-                    if (shouldShowMenu) {
-                        setHasShownDesktopMenu(true);
-                    }
 
                     setShowDesktopMenu(shouldShowMenu);
                 }
@@ -375,10 +436,6 @@ function HeroSectionTransition({ experienceMode = "full" }) {
                              */
                             if (menuVisibleRef.current !== shouldShowMenu) {
                                 menuVisibleRef.current = shouldShowMenu;
-
-                                if (shouldShowMenu) {
-                                    setHasShownDesktopMenu(true);
-                                }
 
                                 setShowDesktopMenu(shouldShowMenu);
                             }
@@ -657,7 +714,7 @@ function HeroSectionTransition({ experienceMode = "full" }) {
             ================================================== */}
 
             <div ref={heroRef} className={heroWrapperClass}>
-                <Hero isMobileLayout={isMobileLayout} isCompactLandscape={isCompactLandscape} isTablet={isTablet} dotFieldFrozen={dotFieldFrozen} onNavigate={handleHeroNavigation} onReady={setReadyHeroLayout} experienceMode={experienceMode} />
+                <Hero isMobileLayout={isMobileLayout} isCompactLandscape={isCompactLandscape} isTablet={isTablet} dotFieldFrozen={dotFieldFrozen} onNavigate={handleHeroNavigation} onReady={setReadyHeroLayout} onContentReady={setReadyHeroContentLayout} experienceMode={experienceMode} entranceKey={entranceKey} isRouteTransitioning={isRouteTransitioning} />
                 {isFullExperience === false && (
                     <div
                         className="
@@ -684,15 +741,6 @@ function HeroSectionTransition({ experienceMode = "full" }) {
                 <Seclogs onReady={setReadyStackLayout} />
             </div>
 
-            {/* ==================================================
-                MENU DESKTOP
-            ================================================== */}
-
-            {hasShownDesktopMenu && (
-                <Suspense fallback={null}>
-                    <MenuDesktop items={menuItems} showMenu={showDesktopMenu} />
-                </Suspense>
-            )}
         </section>
     );
 }

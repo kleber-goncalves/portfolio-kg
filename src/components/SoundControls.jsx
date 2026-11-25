@@ -110,7 +110,7 @@ function SoundControls({ className = "" }) {
     };
 
     const buttonClassName = `
-        inline-flex group py-1 cursor-pointer items-center justify-center gap-2 px-3
+        inline-flex group h-full cursor-pointer items-center justify-center gap-2 px-3 py-0
         font-space text-[9px] uppercase tracking-[0.14em] c-lg:text-[10px] text-[#8B8B8B]
         transition-colors duration-200
         hover:bg-[#A87852] hover:text-[#0D0D0D]
@@ -125,7 +125,7 @@ function SoundControls({ className = "" }) {
                 onMouseMove={handleMouseMove}
                 onMouseLeave={handleMouseLeave}
                 style={{ x: springX, y: springY }}
-                className={`relative inline-flex shrink-0 items-center rounded-sm border border-graphite/90 bg-obsidian/75 transition-colors duration-200 hover:border-bronze ${className}`}
+                className={`control-size-compact relative inline-flex shrink-0 items-center rounded-sm border border-graphite/90 bg-obsidian/75 transition-colors duration-200 hover:border-bronze ${className}`}
             >
                 <button type="button" data-ui-sfx-hover onClick={handleToggle} disabled={isUpdating} aria-pressed={enabled} aria-label={enabled ? "Desativar efeitos sonoros" : "Ativar efeitos sonoros"} title={enabled ? "Desativar efeitos sonoros" : "Ativar efeitos sonoros"} className={buttonClassName}>
                     {enabled ? <Volume2 aria-hidden="true" className="h-3.5 w-3.5 text-bronze group-hover:text-[#0D0D0D]" /> : <VolumeX aria-hidden="true" className="h-3.5 w-3.5" />}
@@ -160,8 +160,8 @@ function SoundControls({ className = "" }) {
                         style={{ transformOrigin: "top right" }}
                         className="
                             absolute -right-9 rounded-sm top-full z-[80] mt-3 w-56
-                            border border-graphite bg-carbon/95 p-4
-                            shadow-[0_18px_50px_rgba(0,0,0,0.42)]
+                            border border-graphite bg-carbon p-4
+                            shadow-2xl shadow-black
                         "
                     >
                         <div className="mb-4 flex items-center justify-between gap-3">

@@ -7,7 +7,7 @@
 1. Leia este documento por inteiro antes de editar o código.
 2. Confirme o estado atual na branch e no commit do repositório. A seção automatizada indica a revisão usada pelo processo de sincronização; commits posteriores podem existir.
 3. Trate o código atual como fonte de verdade para o comportamento implementado. Este documento ajuda a entender contexto, mas pode estar desatualizado entre atualizações.
-4. Não confunda funcionalidade **implementada**, problema **observado**, decisão **vigente** e ideia **planejada**. As páginas `/sobre`, `/projetos` e `/contato` são uma proposta arquitetural discutida, não rotas já implementadas no estado analisado.
+4. Não confunda funcionalidade **implementada**, problema **observado**, decisão **vigente** e ideia **planejada**. As quatro rotas existem. A Home foi preservada; Projetos já tem catálogo, filtros e paginação; Sobre tem Hero próprio e seções de conteúdo; Contato oferece formulário integrado ao Basin com validação individual por campo via Zod ao perder o foco e validação completa antes do envio, mantendo GitHub e LinkedIn como alternativas. Em 29/10/2026, o usuário confirmou que o destinatário e a notificação personalizada estão configurados, o filtro de duplicados (conteúdo idêntico em até 10 minutos) está ativo e o envio de teste funcionou. O estado das demais opções do painel não foi auditado; não presumir CAPTCHA, Turnstile, honeypot ou filtros opcionais como ativos. Sobre continua aberta a refinamento.
 5. Preserve a identidade visual, o uso de JavaScript/JSX e os comportamentos do portfólio. Não introduza TypeScript sem solicitação explícita.
 6. Faça mudanças pequenas e coesas. Antes de refatorar GSAP, ScrollTrigger, Lenis, carregamento diferido ou UI SFX, estude os fluxos atuais e os testes associados.
 7. Não declare testes aprovados sem executar ou consultar as evidências correspondentes. Diferencie testes automatizados em Chromium de validação em dispositivos físicos.
@@ -24,7 +24,7 @@
 - **Propósito:** portfólio pessoal para apresentar a identidade profissional, competências, diferenciais, formação, trajetória, tecnologias e projetos web.
 - **Público principal:** recrutadores, equipes técnicas, clientes potenciais e desenvolvedores que queiram avaliar os trabalhos.
 - **Direção:** experiência visual própria, interações cuidadas, responsividade, acessibilidade, SEO técnico e investigação contínua de desempenho. O site não deve ser tratado como um template genérico.
-- **Forma atual:** aplicação React de página única, com seções e âncoras. O projeto inclui `BrowserRouter`, mas o `App.jsx` analisado não define rotas dedicadas para Home, Sobre, Projetos e Contato.
+- **Forma atual:** aplicação React com `BrowserRouter` e rotas `/`, `/projetos`, `/sobre` e `/contato`. A Home reúne Hero/Stack, projetos em destaque e footer. Sobre reúne Hero editorial, competências, diferenciais, formação e footer. Projetos já oferece um catálogo independente com filtros e paginação; Contato oferece formulário Basin com validação nativa, envio assíncrono, estados de sucesso/erro e links alternativos para GitHub e LinkedIn. O usuário confirmou em 29/10/2026 que a configuração inicial do Basin está concluída e que o envio de teste funcionou.
 
 ## 3. Estado atual versus plano futuro
 
@@ -41,16 +41,63 @@
 - Carregamento diferido de seções e divisão de módulos por viewport.
 - Auditorias automatizadas de performance, acessibilidade, SEO e comportamentos específicos pelo GitHub Actions.
 
-### Plano discutido, ainda não tratado como implementado
 
-Há uma proposta para reorganizar o portfólio em quatro páginas:
 
-- `/` — Home: Hero, projetos em destaque, breve apresentação/CTA e footer.
-- `/projetos` — catálogo completo dos projetos.
-- `/sobre` — trajetória, formação, competências e diferenciais.
-- `/contato` — formulário funcional para enviar uma mensagem.
 
-A proposta deve ser avaliada e implementada em uma mudança planejada, preservando a identidade visual. Antes de criar essas páginas, definir contratos de rota, conteúdo, títulos SEO, hierarquia dos headings, navegação, foco e testes. Não implementar um formulário que apenas simule sucesso: é necessário definir um destino real de envio, como uma função serverless ou serviço apropriado, junto com validação, estados de sucesso/erro e proteção contra spam.
+### Plano de continuidade — reorganização da arquitetura por página
+
+- **Documento operacional obrigatório:** `docs/PLANO-REORGANIZACAO-ARQUITETURA-POR-PAGINA.md`. Ele registra objetivo, estrutura-alvo, mapa de arquivos, dependências, workflows, scripts, validações e checklist.
+- **Estado atual (07/11/2026):** Reorganização arquitetural das Etapas 0 a 7 concluída, com ressalva de acessibilidade já conhecida no formulário `/contato`. O Footer está em `src/layouts/Footer.jsx`, movido no commit `955108a5939e76b957be88fff1d97d27c6f0c1bc`; a consolidação confirmou `src/layout/` ausente da árvore Git. A validação final está registrada no plano.
+- **Home:** organizada em `src/pages/home/`; 21 arquivos de código/dados/estilos e seis imagens originais movidos. Otimizador, imports lazy e workflows atualizados. Unit Tests #230, Code Splitting #42 e workflows específicos aprovados.
+- **Validação final — Unit Tests #245:** run `42423797890` concluiu com 66 testes em seis arquivos, ESLint com zero erros (cinco avisos de hooks já existentes) e build de produção concluído. AI Context — Synchronize #244 (run `42423797770`) também passou.
+- **Validação de carregamento — Code Splitting #45:** run `42422769208` passou em mobile (390×844) e desktop (1365×900). Em ambos, o chunk `Footer-` ficou fora do carregamento inicial e foi carregado ao aproximar-se do rodapé. O teste também confirma uma única tag `<footer>` na Home e em `/sobre`.
+- **Accessibility and SEO Audit #211:** run `42423029115` concluiu Lighthouse mobile/desktop com sucesso, zero erros estáticos de SEO, zero erros semânticos e zero erros de interação. O Axe reprovou três grupos de `color-contrast` no formulário `/contato`, referentes aos quatro rótulos numerados em `#656565` sobre `#0D0D0D` (3,33:1; alvo de 4,5:1). Não houve grupos de violação nas rotas `/`, `/projetos` ou `/sobre`. A pendência já existia no baseline e não foi alterada nesta refatoração.
+- **Escopo da smoke validation:** os workflows usaram build de produção local com Chromium; Code Splitting verificou o lazy loading em Home/Sobre nos dois viewports, e a auditoria abriu as quatro rotas. Não foi feita inspeção manual em dispositivo físico nem validação de deploy da URL pública da Vercel nesta etapa.
+- **Resultado:** testes, lint, build e code splitting aprovados; auditoria de acessibilidade/SEO revisada com pendência de contraste documentada. Não há etapa de reorganização pendente. Manter o erro conhecido de `ScrollTrigger.refresh()` em `/projetos` como investigação independente.
+- **Validação da Etapa 5 — Footer:** Unit Tests #243 (run `42422769203`) e Deferred Section and Project Code Splitting #45 (run `42422769208`) passaram. O teste de navegador confirma que o chunk `Footer-` não é baixado no carregamento inicial, é carregado ao aproximar-se do final da Home/Sobre e produz exatamente uma tag `<footer>` em cada rota testada.
+- **Consolidação da Etapa 6:** o README agora aponta para `src/pages/home/layouts/HeroSectionTransition.jsx`, `src/pages/home/components/DeferredProjects.jsx` e `src/pages/home/assets/projetos/`. A varredura final de 158 arquivos textuais não encontrou imports executáveis, scripts, workflows ou testes usando os caminhos antigos dos módulos realocados. As ocorrências antigas restantes em `docs/PLANO-REORGANIZACAO-ARQUITETURA-POR-PAGINA.md` são mapas de origem e registros históricos de movimentação, não caminhos de execução. `src/layout/` está ausente da árvore Git; o Footer único está em `src/layouts/Footer.jsx`.
+- **Próxima atividade:** não há etapa de reorganização pendente. Tratar separadamente, quando solicitado, a correção do contraste no formulário `/contato` e a investigação do erro `ScrollTrigger.refresh()` em `/projetos`; não atribuir essas pendências à movimentação estrutural sem evidência.
+- **Sobre:** organizada em `src/pages/sobre/`; 12 arquivos movidos: quatro layouts, três componentes, um arquivo de dados e quatro estilos. `DeferredLayoutSection.jsx` continua global e carrega Competências, Diferenciais e Formação com `React.lazy`. Unit Tests #233, Code Splitting #43, Trajetória #50, Menu Desktop #53 e otimização #37 passaram. A auditoria #206 encontrou zero grupos Axe em `/sobre`; a falha global ficou restrita ao contraste de `/contato`.
+- **Contato:** reorganizada em `src/pages/contato/`; `MagneticSubmitButton.jsx`, `contactSchema.js` e `contactSubmission.js` agora ficam nas pastas locais `components/` e `utils/`, e os três testes ficam em `__tests__/`. Os imports da página e dos testes foram atualizados. A suíte Vitest confirmou a descoberta dos testes no novo local: 15 testes do schema, 7 da camada HTTP e 9 de integração do componente.
+- **Validação da Etapa 4:** Unit Tests #240 (run `42420299177`) passou com 66 testes, ESLint sem erros (5 avisos preexistentes) e build; Menu Desktop Reduced #55 (run `42420299130`) passou incluindo reload direto/reload em `/contato`. A auditoria Accessibility/SEO faz parte da validação global da Etapa 7. A execução #208 foi cancelada quando um push documental iniciou uma nova execução; conferir a execução mais recente antes de concluir a Etapa 7. A pendência histórica de contraste no formulário permanece fora do escopo da reorganização estrutural.
+- **Limites da Etapa 4:** o schema Zod, os campos Basin (`nome`, `email`, `assunto`, `mensagem`, `origem`), endpoint, validação HTML, estados de envio e botão não tiveram sua lógica alterada. Nenhum envio real foi realizado. `MagneticExternalLink` e `InteriorPageLayout` permanecem compartilhados.
+- **Projetos:** `ProjetoCatalogo.jsx` está em `src/pages/projetos/layouts/`; `projetosCatalogo.js` está em `src/pages/projetos/data/`; `Projetos.jsx` importa `./layouts/ProjetoCatalogo`. `tecnologias.js`, `MagneticExternalLinkHover.jsx`, `useResponsive.js`, `uiSfx.js` e `lenisControl.js` permanecem globais. Preview da Home continua separado do catálogo.
+- **Validação da Etapa 3:** Unit Tests #236 ([run 42418184125](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42418184125)) e #237 ([run 42418379608](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42418379608)) passaram em testes, ESLint e build. Code Splitting #44 ([run 42418184096](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42418184096)) e Menu Desktop #54 ([run 42418184102](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42418184102)) passaram. Accessibility/SEO #207 ([run 42418184158](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42418184158)) passou Lighthouse mobile/desktop e Axe não encontrou violações em `/projetos` ou `/sobre`.
+- **Pendência de acessibilidade:** o run #207 falhou globalmente por três grupos Axe de `color-contrast` em `/contato`: quatro textos auxiliares `#656565` sobre `#0D0D0D` (3,33:1, abaixo de 4,5:1). Essa falha já existia no baseline e não pertence à movimentação de Projetos. Não alterar o formulário como parte de uma simples movimentação estrutural; manter eventual correção separada.
+- **Pendência técnica independente:** o Menu Desktop #54 passou, mas o log ainda registra durante reload de `/projetos` um `TypeError` em `ScrollTrigger.refresh()` (“Cannot read properties of undefined (reading 'restart')”). O erro já era conhecido antes da movimentação. Não atribuir ao move sem evidência; registrar e investigar em trabalho próprio.
+- **Próxima atividade:** iniciar a Etapa 7 — Validação final e relatório. Consultar os resultados mais recentes de GitHub Actions, confirmar testes, lint e build, revisar a auditoria de acessibilidade/SEO e executar smoke tests nas quatro rotas. Preservar como pendências separadas o contraste do formulário e o erro ScrollTrigger em Projetos.
+- **Limites:** trabalhar somente em `feat/separacao-paginas`; manter `main` e `dev` intactas; não abrir PR/merge sem autorização; preservar comportamento e não remover arquivos sem busca global de referências.
+
+### Implementação inicial da separação de páginas
+
+- **src/App.jsx** declara as rotas `/`, `/projetos`, `/sobre` e `/contato` com React Router e carrega os componentes de página sob demanda. Também coordena o `RouteTransitionPreloader` por mudança de `location.pathname`; cada página sinaliza quando seu conteúdo essencial está pronto, sem transformar as seções diferidas em dependências da navegação.
+- **Fallback de carregamento das rotas (26/10/2026):** o `RouteFallback`, usado como fallback de `Suspense` em `src/App.jsx`, mantém uma área reservada com altura mínima enquanto o módulo da página carrega, mas não apresenta texto visível. A transição visível entre rotas continua sob responsabilidade de `RouteTransitionPreloader`; não reintroduzir “Carregando página...” sem reavaliar esse comportamento.
+- **src/pages/home/Home.jsx** contém apenas `HeroSectionTransition`, `DeferredProjects` e a chamada ao footer compartilhado (`DeferredLayoutSection` com `section="footer"`). O componente único está em `src/layouts/Footer.jsx` e continua sob demanda. Competências, diferenciais e formação não devem permanecer na Home.
+- **src/pages/sobre/Sobre.jsx** apresenta um Hero editorial próprio por meio de `SobreHero.jsx`, seguido de `DeferredLayoutSection` para competências, diferenciais, formação e o footer compartilhado (`src/layouts/Footer.jsx`). O layout interno não duplica o rodapé nesta rota.
+- **src/pages/projetos/Projetos.jsx** usa `InteriorPageLayout` e `ProjetoCatalogo.jsx` para apresentar o catálogo completo da rota `/projetos`. O catálogo de 41 projetos fica em `src/pages/projetos/data/projetosCatalogo.js`, com categorias, tecnologias, descrições e links; a interface oferece filtros por categoria e linhas inspiradas no modo Reduced de `ProjetoDesktop`, sem o preview flutuante. A listagem usa paginação numerada: apresenta 10 projetos por página, com botões numéricos, anterior/próxima e indicação de página atual. No modo Full, no desktop cada artigo começa em `scale: 0` e anima até `scale: 1` uma única vez quando o contêiner externo — que mantém dimensões de layout normais — entra no viewport; `useInView` observa esse contêiner e a escala é aplicada ao conteúdo interno. No mobile e em tablets classificados pelo hook `useResponsive.js` como `isMobileLayout`, a entrada reproduz a animação de Competências com GSAP + ScrollTrigger: `opacity: 0`, `y: 75` até `opacity: 1`, `y: 0`, com `start: "top 95%"`, `end: "top 55%"` e `scrub: 1`; o contexto GSAP é revertido quando a lista ou o layout muda. A chave do item combina categoria e ID do projeto para reiniciar corretamente a animação quando o filtro muda, inclusive para projetos que aparecem em mais de uma categoria. O modo Reduced inicia a observação como concluída e não aplica animação de escala nem de rolagem, mantendo os artigos no tamanho normal e os efeitos de hover existentes. `experienceMode` é encaminhado por `App.jsx` para `Projetos.jsx` e `ProjetoCatalogo.jsx`. Os botões controlam explicitamente o hover; a troca de página ou categoria limpa o estado visual anterior, enquanto a página atual mantém apenas o destaque de seleção, evitando que a elevação/borda de hover fique presa no botão antigo. Ao mudar de categoria, volta para a página 1. Ao trocar de página, a rolagem suave retorna ao topo do documento com `scrollToTarget(0)` e aguarda `onComplete` antes de montar a nova lista, para que as animações de entrada não sejam consumidas durante a rolagem; `lenisControl.js` encaminha a conclusão pelo callback do Lenis ou pelo evento nativo `scrollend` (com timeout de segurança), e o catálogo atualiza o `ScrollTrigger`; a contagem apresenta o intervalo visível e o total da categoria. Os botões de filtro preservam o efeito magnético e as transições do preenchimento originado pelo mouse no desktop; em `isMobileLayout`, desativam o movimento magnético, fixam a origem do preenchimento no centro e aplicam imediatamente o fundo e a borda de seleção, sem crescimento, spring ou fade, mantendo o destaque da categoria ativa. O catálogo captura globalmente a posição do ponteiro em dispositivos com mouse/trackpad e recalcula a linha sob o cursor durante scroll e resize, agrupando atualizações via `requestAnimationFrame`; os estados resultantes ativam os efeitos visuais da linha e a prop opcional `isGroupHoverActive` de `MagneticExternalLinkHover`, preservando a interação magnética individual dos links. A mudança de categoria e cada novo lote visível também acionam a atualização do `ScrollTrigger` para recalcular as posições das animações e do footer. Essa página não reutiliza nem altera `ProjetosTeste2.jsx`: a Home mantém seus seis projetos em destaque e o comportamento atual do preview.
+- **src/pages/contato/Contato.jsx:** apresenta formulário com rótulos visuais em português e envia os campos Basin `nome`, `email`, `assunto`, `mensagem` e o campo oculto `origem`; `email` permanece com esse nome para compatibilidade com os recursos Basin que identificam o endereço do visitante. Mantém a validação nativa do HTML, validação complementar com Zod no `onBlur` por campo e novamente no envio, erros de campo acessíveis e botão de envio com estado inicial habilitado (quando Basin está configurado), desativação após a primeira interação enquanto qualquer campo estiver inválido e reativação quando todos estiverem válidos; o componente `src/pages/contato/components/MagneticSubmitButton.jsx` reproduz o preenchimento bronze originado pelo cursor e o movimento magnético por Motion (limitado a 12px na horizontal e 4px na vertical), muda a cor do conteúdo no hover/foco e preserva as animações do botão: o rótulo desliza aproximadamente 5em para a direita e desaparece, enquanto o ícone Send vai ao centro geométrico, gira 45°, aumenta para escala 1,1 e oscila verticalmente; a pressão reduz a escala do botão para 0,99; com `prefers-reduced-motion`, os movimentos decorativos são suprimidos e as mudanças visuais ocorrem quase imediatamente; magnetismo e animações não interferem no submit nativo; estados de envio/sucesso/erro, prevenção de envios simultâneos, mensagem de configuração quando o endpoint não está definido e Aside sem caixa externa com links de GitHub e LinkedIn usando o componente `MagneticExternalLink` compartilhado com o Footer (movimento magnético, preenchimento no hover/foco e seta animada). O layout visual dos quatro campos usa numeração 01–04, rótulos em formato de pergunta, inputs transparentes sem caixa e divisórias horizontais (borda superior no formulário e inferior em cada campo), seguindo a linguagem visual do catálogo de Projetos; não há caixa externa nem bordas laterais nos inputs. Ao focar um campo, a linha inferior e o número mudam para bronze, sem contorno retangular ao redor dos inputs; botões e links mantêm o indicador de foco global para navegação por teclado. O schema reutilizável está em `src/pages/contato/utils/contactSchema.js`; a integração HTTP está em `src/pages/contato/utils/contactSubmission.js`; os testes desses utilitários e do componente ficam em `src/pages/contato/__tests__/`. Os valores enviados ao Basin são normalizados pelo Zod, sem remover o campo oculto `origem`. A variável `VITE_BASIN_FORM_ENDPOINT` contém o endpoint público e não deve conter segredos. Como o campo `subject` foi renomeado para `assunto`, o campo Subject da notificação Basin deve usar o merge tag `{{assunto}}` em vez de `{{subject}}`. A validação no cliente não substitui as proteções e o processamento do Basin nem a validação no servidor. **Estado confirmado pelo usuário em 29/10/2026:** destinatário da notificação e conteúdo personalizado configurados; filtro de duplicados ativado para marcar como spam envios subsequentes com conteúdo idêntico em até 10 minutos; envio de teste realizado com sucesso. O estado das demais opções do painel não foi inspecionado; não declarar CAPTCHA, Turnstile, honeypot ou filtros opcionais adicionais como ativos sem confirmação. **Decisão vigente:** manter a configuração atual, monitorar periodicamente a pasta Spam e a entrega de mensagens, e considerar proteções adicionais apenas se surgir uma necessidade concreta. O guia está em `docs/BASIN_FORM_SETUP.md`.
+- **src/layouts/InteriorPageLayout.jsx** fornece estrutura comum às páginas internas, sem gerir diretamente os metadados do documento. O SEO global é sincronizado por `src/hooks/useRouteSeo.js`, acionado em `src/App.jsx` pela rota atual. Em desktop, o layout usa `PortfolioDesktopHeader` com o item ativo definido pela rota; em mobile, mantém o cabeçalho compacto e `MenuMobile`. Aceita a prop opcional `heroContent`: quando fornecida, substitui o cabeçalho genérico de eyebrow/título/descrição, evitando duplicar o `h1`; quando omitida, Projetos e Contato mantêm o cabeçalho padrão. Todas as rotas internas carregam automaticamente o único footer em `src/layouts/Footer.jsx` por meio de `DeferredLayoutSection section="footer"`; a Home utiliza a mesma configuração global.
+- **Animação de entrada das rotas (26/10/2026):** `src/App.jsx` calcula `isRouteTransitioning` no primeiro render da nova rota e, no início da fase `leaving` de `RouteTransitionPreloader`, marca `entranceStarted` e incrementa `routeEntranceKey` uma única vez. `src/hooks/useRouteEntrance.js` e `HeroDesktop` iniciam a entrada assim que o overlay começa a desaparecer, com offsets visuais reprogramados para que cabeçalho, visual, título, descrição, filtros e itens comecem dentro da janela de fade de ~300 ms. Na Home, navegação SPA ignora a espera de estabilidade por RAF porque o scroll já foi resetado enquanto o preloader cobria a tela; acesso direto/atualização preserva a checagem de restauração. `onComplete` apenas remove o preloader e libera o scroll, sem reiniciar a entrada. O hook de páginas internas respeita `prefers-reduced-motion` e deixa as páginas restauradas com `scrollY > 50` visíveis. Os artigos de Projetos preservam revelações por viewport; Sobre mantém os efeitos de cursor do retrato; Contato anima painel e links em sequência.
+- O `BrowserRouter` já existia no `src/main.jsx` e foi mantido. A navegação usa uma lista central em `src/data/navigation.js`; os links para `#hero` e `#stack` são tratados como âncoras da Home, enquanto `/projetos`, `/sobre` e `/contato` são rotas.
+- **Camadas do navbar e dropdowns desktop (27/10/2026):** para evitar que os painéis `ExperienceDropdown` e `SoundControls` fiquem atrás dos títulos/textos após a entrada das páginas internas, `src/layouts/InteriorPageLayout.jsx` define o `header` com `relative z-50`, colocando a camada da navegação acima do `main`. A timeline em `src/hooks/useRouteEntrance.js` limpa o `transform` dos alvos da entrada em `onComplete` com `gsap.set(allTargets, { clearProps: "transform" })`, removendo o deslocamento aplicado apenas para a animação. A alteração entrou no commit [`7214042`](https://github.com/kleber-goncalves/portfolio-kg/commit/7214042f3b8aaf33c58013c9ed98509155832fd3); o workflow [Unit Tests — run 40565294706](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/40565294706) passou em testes, ESLint e build, e a auditoria [Accessibility and SEO — run 40565294722](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/40565294722) também passou. A inspeção visual manual dos dropdowns depois da transição continua pendente; resultados de CI não devem ser tratados como confirmação visual.
+- **Cabeçalho desktop compartilhado:** `src/components/PortfolioDesktopHeader.jsx` compõe o logo via `OptimizedImage`, `ExperienceDropdown`, `SoundControls` e `PortfolioNavigation`. O modo `placement="hero"` conserva o posicionamento absoluto do Hero; o modo `placement="interior"` usa o conjunto nas páginas internas. `logoRef` e `navRef` continuam sendo encaminhados ao logo e à navegação para preservar as animações GSAP de entrada de `HeroDesktop`.
+- **Navegação reutilizável:** `src/components/PortfolioNavigation.jsx` renderiza os itens compartilhados usando `MagneticNavLink`. O estado ativo vem do contexto: seção atual no Hero e rota atual nas páginas internas.
+- **Legibilidade do navbar desktop (26/10/2026):** os links usam tipografia de 11 px no breakpoint desktop inicial e 12 px em `c-lg`, mantendo a altura de interação em 32 px (`control-size-compact`) e reduzindo o padding horizontal para 8 px por lado (`px-2`). O indicador de foco por teclado (`focus-visible`) foi preservado. Validar o encaixe visual manualmente em desktop estreito (a partir de 768 px) e nas páginas internas; os checks automatizados não substituem essa conferência visual.
+- **Navegação de rotas e âncoras:** `src/hooks/usePortfolioNavigation.js` centraliza os cliques. Ao acionar `#hero` ou `#stack` em uma rota interna, navega primeiro para `/` com `portfolioScrollTarget` no state do Router; `HeroSectionTransition` completa a rolagem quando o conteúdo da Home está pronto.
+- **Menu desktop flutuante é separado do cabeçalho horizontal:** `src/components/MenuDesktop.jsx` renderiza o botão/painel acionado conforme a rolagem. O botão flutuante recebe `data-menu-desktop-trigger`, usado pelos testes de navegador para distingui-lo do `MenuMobile`, que também pode permanecer no DOM em layouts desktop. `App.jsx` monta `MenuDesktop` sob demanda depois da primeira exibição; na Home, a visibilidade vem da callback do `HeroSectionTransition`, e nas páginas internas depende da interseção do cabeçalho da rota.
+- **Mobile preservado:** o cabeçalho interno mantém uma composição compacta com `MenuMobile`; os controles móveis de som (`SoundToggle` e `SoundVolumeSliderMobile`) continuam no painel mobile, sem renderizar a composição desktop completa em telas pequenas.
+- **Hero específico do Sobre:** `src/pages/sobre/layouts/SobreHero.jsx` apresenta o texto à esquerda e a fotografia `/euNvEnvt.png` à direita no desktop, mudando para uma coluna no mobile. A borda inferior da seção funciona como linha horizontal de ponta a ponta; o círculo decorativo com `GlobeIcon` fica sobre essa borda, alinhado horizontalmente ao centro do retrato. Seu posicionamento vertical acompanha os diferentes paddings inferiores responsivos, sem atravessar o meio da fotografia. No desktop definido pela variante `b-md` (largura a partir de 48rem, altura acima de 600px e ponteiro fino com hover), o bloco de texto usa `position: sticky`, `top: 6rem` e `align-self: start`, acompanhando a rolagem até o limite inferior da área do retrato. A seção usa `overflow-x-clip` em vez de `overflow-hidden` para evitar que um ancestral bloqueie o sticky; o padding inferior da imagem é removido apenas no desktop para alinhar o limite ao fim visível do retrato. Em celulares e tablets touch, o texto permanece no fluxo normal acima da imagem. Os efeitos de mouse da fotografia são isolados no quadro do retrato: A posição do cursor é capturada globalmente e o spotlight/brilho é recalculado tanto ao mover o ponteiro quanto durante a rolagem, de modo que a luz acompanhe o cursor parado quando o retrato se desloca pela tela. GSAP controla a inclinação 3D sutil com transição suave quando o cursor se move; durante a rolagem, o ângulo é recalculado e aplicado diretamente em relação à posição fixa do ponteiro e à geometria atual do retrato, sem reiniciar um tween a cada quadro. GSAP também controla a elevação quando o cursor entra na área; CSS desenha o spotlight radial e o brilho da borda. As atualizações são agrupadas por requestAnimationFrame. No modo Reduced, o componente não registra listeners nem renderiza essas camadas; telas estreitas, touch e paisagem compacta também ocultam os efeitos. O globo e a borda inferior ficam fora do elemento animado, e o Hero da Home não é modificado. A raiz `#root`, declarada em `index.html`, usa `overflow-x-clip` para conter apenas o eixo horizontal; evitar `overflow-hidden` nos dois eixos é importante porque o `overflow-y: hidden` no ancestral estava impedindo o sticky de acompanhar a rolagem da janela.
+- **Refinamentos visuais em Sobre e nas páginas internas (26/10/2026):** em `src/layouts/InteriorPageLayout.jsx`, o cabeçalho mobile deixou de exibir o texto da marca ao lado do logo e o espaçamento superior do cabeçalho textual padrão foi reduzido no mobile; o posicionamento de desktop permanece separado por breakpoint. Em `src/pages/sobre/layouts/SobreHero.jsx`, “Da interface ao sistema.” passou a usar tratamento tipográfico uniforme, sem destaque bronze isolado em “sistema”; os espaçamentos da seção e o tamanho/posicionamento do marcador `GlobeIcon` também foram ajustados para telas maiores (`c-lg`). Esses ajustes são visuais e mantêm a organização geral do Hero, o alinhamento do marcador com a borda inferior e o comportamento sticky do texto.
+
+### Próximas etapas planejadas
+
+- Revisar periodicamente descrições, categorias e links do catálogo de Projetos; manter `DeferredProjects` na Home como apresentação de destaque independente da listagem paginada da rota `/projetos`.
+- **Monitorar o formulário Basin após a configuração inicial:** verificar periodicamente a pasta Spam e a entrega das mensagens, observar o limite mensal do plano e só avaliar CAPTCHA/Turnstile ou outras camadas extras se houver spam recorrente ou mensagens legítimas sendo bloqueadas.
+- Refinar o conteúdo de Sobre, usando as seções legadas de competências, diferenciais e formação. Avaliar separadamente qualquer futura mudança na trajetória/Hero com testes de regressão GSAP/ScrollTrigger.
+- Validar build, lint, testes, navegação por teclado, foco, botão voltar/avançar, carregamento direto/reload das quatro rotas e rewrites da Vercel.
+- Validar o `RouteTransitionPreloader` nas quatro rotas em desktop/mobile, incluindo retorno do navegador, links internos para `#hero`/`#stack`, preferência por movimento reduzido e falha no carregamento das imagens essenciais.
+- Validar visualmente o Preloader principal em reload e primeiro acesso (desktop/mobile), incluindo saída em cortina, barra de progresso, ausência de bloqueio de scroll após encerramento e comportamento com `prefers-reduced-motion`.
+- Verificar manualmente carregamento direto/reload das quatro rotas, canonical e aliases/rewrites na Vercel. Avaliar futuramente pré-renderização do corpo React (SSG/SSR): o build atual pré-gera metadados por URL, mas não o DOM completo das páginas.
 
 ## 4. Stack tecnológica
 
@@ -79,19 +126,40 @@ Tecnologias principais observadas:
 Estrutura identificada no repositório:
 
 - `src/main.jsx`: inicializa React em `StrictMode` e `BrowserRouter`; inclui mensagem de boas-vindas no console do DevTools.
-- `src/App.jsx`: composição principal; Preloader, CursorTrail, SmoothScroll, link para pular ao conteúdo, Hero e seções carregadas sob demanda.
-- `src/layout/`: seções principais (Hero, tecnologias/Seclogs, competências, projetos, diferenciais, formação e footer).
-- `src/components/HeroSectionTransition.jsx`: controla a transição Hero/Stack e o comportamento do menu desktop associado à rolagem.
-- `src/components/DeferredLayoutSection.jsx`: carregamento diferido das seções usando `IntersectionObserver` e carregamento dinâmico.
-- `src/components/DeferredProjects.jsx`: carregamento diferido da seção de projetos.
-- `src/components/HeroDesktop.jsx` e `src/components/HeroMobile.jsx`: composições do Hero por contexto de viewport.
-- `src/components/MenuDesktop.jsx` e `src/components/MenuMobile.jsx`: navegação específica para desktop/mobile.
-- `src/components/OptimizedImage.jsx`: componente de imagem responsiva com metadados, `srcSet`, dimensões reservadas e placeholder opcional.
-- `src/components/ProjetoDesktop.jsx` e `src/components/ProjetoCarouselMobile.jsx`: apresentações de projetos diferentes para desktop e mobile.
-- `src/components/Socials.jsx`: painel de redes sociais.
+- `src/App.jsx`: shell global, Preloader, CursorTrail, SmoothScroll, link para pular ao conteúdo, controles globais de UI SFX, chamada de `useRouteSeo(location.pathname)` e definição das quatro rotas com carregamento sob demanda. Rotas desconhecidas ainda redirecionam para `/` via `Navigate`, em vez de mostrar uma página 404 dedicada.
+- `src/pages/`: componentes de rota. `home/Home.jsx` contém Hero/Stack, `DeferredProjects` e footer; `sobre/Sobre.jsx` usa `SobreHero.jsx` antes das seções de competências, diferenciais e formação; `projetos/Projetos.jsx` apresenta o catálogo paginado; `contato/Contato.jsx` contém o formulário integrado por endpoint Basin e links alternativos para GitHub/LinkedIn; em 29/10/2026, o usuário confirmou a configuração do destinatário/notificação e um envio de teste bem-sucedido. A variável `VITE_BASIN_FORM_ENDPOINT` continua necessária para conectar cada ambiente. O setup está em `docs/BASIN_FORM_SETUP.md`.
+- `src/layouts/InteriorPageLayout.jsx`: estrutura compartilhada das rotas internas e navegação principal; aceita `heroContent` opcional para trocar o cabeçalho textual padrão por um Hero específico. Os metadados pertencem ao hook global `src/hooks/useRouteSeo.js`, usado por `src/App.jsx`.
+- `src/layouts/Footer.jsx`: única implementação do footer, reutilizada pela Home e pelas rotas internas através de `DeferredLayoutSection`; o carregamento só ocorre quando a seção se aproxima da viewport.
+- `src/layouts/`: layouts compartilhados (`InteriorPageLayout.jsx` e `Footer.jsx`). As composições e seções exclusivas foram organizadas nas pastas específicas de `src/pages/`.
+- `src/pages/home/layouts/HeroSectionTransition.jsx`: controla a transição Hero/Stack e o comportamento do menu desktop associado à rolagem; informa a prontidão da Home após o layout correto, o retrato principal e, no desktop Full, o Stack necessário para medir o pin.
+- `src/components/RouteTransitionPreloader.jsx`: preloader de navegação entre Início, Projetos, Sobre e Contato. Mostra o título com revelação tipográfica curta, a mensagem contextual `page.status` e uma linha bronze/champagne com segmento animado; quando a rota sinaliza prontidão, a linha se completa. A transição só começa após o sinal de prontidão e o tempo mínimo de 600 ms (80 ms em movimento reduzido); bloqueia temporariamente a rolagem e preserva a saída em fade de 300 ms sincronizada com a entrada do conteúdo da rota. O indicador é decorativo para tecnologias assistivas, enquanto o contêiner `role="status"` anuncia a página de destino. A preferência `prefers-reduced-motion` deixa título/mensagem visíveis sem as animações decorativas.
+- **Preloader principal (`src/components/Preloader.jsx`, carregamento inicial/reload — atualizado em 27/10/2026):** independente do `RouteTransitionPreloader`. Uma janela recorta o lado esquerdo de `public/logo-completa-bra.svg` para mostrar apenas o símbolo no centro da tela; ele surge suavemente e desloca-se para a posição inicial da wordmark. Em seguida, a logo completa é revelada da esquerda para a direita. Depois, a área de recorte encolhe da direita para a esquerda, mantendo a escala da imagem e trazendo o símbolo de volta ao centro. Só após esse recolhimento o nome `KLEBER GONÇALVES` entra com `translateY(12px)` para `translateY(0)`; profissão e bloco de progresso aparecem em sequência. A barra bronze/champagne e a mensagem dinâmica permanecem; a lista de etapas continua fora da apresentação visual. A sequência visual tem mínimo de 3000 ms a partir do carregamento da wordmark, antes da saída em cortina de 760 ms. Em redes lentas, a animação começa somente após o asset estar pronto. Com `prefers-reduced-motion`, a marca completa fica visível de imediato e as animações decorativas/esperas adicionais são ignoradas. O carregamento continua aguardando a wordmark, retrato essencial, fontes e dois frames de layout.
+- `src/components/DeferredLayoutSection.jsx`: carregamento diferido das seções usando `IntersectionObserver` e `React.lazy()`. A configuração `footer` aponta para `src/layouts/Footer.jsx`, mantendo o rodapé compartilhado fora do bundle inicial.
+- `src/pages/home/components/DeferredProjects.jsx`: carregamento diferido da seção de projetos.
+- `src/pages/home/layouts/HeroDesktop.jsx` e `src/pages/home/layouts/HeroMobile.jsx`: composições do Hero por contexto de viewport.
+- `src/components/MenuDesktop.jsx`: painel flutuante desktop, separado do cabeçalho horizontal da página; sua visibilidade é coordenada pelo `App.jsx` com base no estado da Home ou da navegação da rota interna.
+- `src/components/MenuMobile.jsx`: painel de navegação móvel, incluindo controles móveis de som e navegação após a animação de fechamento.
+- `src/components/buttonReset.jsx`: botão global de retorno ao topo, visível após 400 px de rolagem tanto no mobile quanto no desktop; usa `scrollToTarget(0)` para respeitar o Lenis quando ativo, sincroniza a visibilidade inicial após restauração de scroll e mantém feedback sonoro/visual durante a rolagem.
+- `src/components/PortfolioDesktopHeader.jsx`: composição desktop reutilizável do logo, Experience, Som e navbar. `placement="hero"` preserva o posicionamento do Hero; `placement="interior"` adapta a composição ao cabeçalho das rotas internas. Encaminha refs usados pelo GSAP.
+- `src/components/PortfolioNavigation.jsx`: lista horizontal de links magnéticos que recebe itens, destino ativo e handler de navegação.
+- `src/pages/sobre/layouts/SobreHero.jsx`: Hero editorial específico da página Sobre, com retrato, apresentação profissional e links para as seções de competências e formação. O retrato `/euNvEnvt.png` usa `OptimizedImage` e sinaliza prontidão quando carrega ou falha, evitando prender a transição indefinidamente.
+- `src/hooks/usePortfolioNavigation.js`: handler comum para navegação entre rotas e âncoras da Home, incluindo retorno à Home antes de rolar de uma página interna.
+- `src/data/navigation.js`: fonte única dos destinos e rótulos Início, Stack, Projetos, Sobre e Contato.
+- `src/data/seoRoutes.json`: fonte única dos títulos, descrições e alternativas da imagem social para as quatro rotas; também define a URL pública usada pelo canonical e sitemap.
+- `src/hooks/useRouteSeo.js`: atualiza title, meta description, robots, canonical, Open Graph, Twitter Cards e JSON-LD `WebPage` durante navegação SPA.
+- `scripts/generate-seo-routes.mjs`: parte do build de produção; escreve HTML com metadados específicos em `dist/index.html` e `dist/{projetos,sobre,contato}/index.html`, e gera `dist/sitemap.xml`.
+- `scripts/audit-accessibility-seo.mjs`: confere os metadados estáticos por rota e executa as checagens semânticas/Axe em desktop e mobile.
+- `src/pages/projetos/data/projetosCatalogo.js`: catálogo próprio da rota `/projetos`, com 41 registros separados por categoria, tecnologia e links. Cada registro inclui `anoCriacaoRepositorio`, preenchido a partir do `created_at` da API de repositórios do GitHub e exibido como `GitHub · AAAA`. Esse metadado indica a criação do repositório, não necessariamente o início do desenvolvimento do código, o primeiro commit nem a publicação de uma versão. Os filtros e a lista paginada em páginas de 10 projetos são renderizados por `src/pages/projetos/layouts/ProjetoCatalogo.jsx`; o catálogo da página não é a fonte dos destaques da Home.
+- `src/components/OptimizedImage.jsx`: componente de imagem responsiva com metadados, `srcSet`, dimensões reservadas e placeholder opcional. `scripts/optimize-project-images.mjs` também gera variantes WebP do retrato de Sobre (`public/euNvEnvt.png`) em `public/_optimized/hero/`, registradas em `src/generated/imageMetadata.json`; o workflow de otimização inclui a branch `feat/separacao-paginas`.
+- **Auditoria de imagens em 24/10/2026:** o retrato raster de `SobreHero.jsx` era a única imagem de conteúdo encontrada fora de `OptimizedImage` e foi convertido. O workflow [Optimize project images — run 40142679387, tentativa 2](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/40142679387) concluiu com sucesso e criou as variantes `euNvEnvt-320.webp`, `-640.webp`, `-960.webp` e `-original.webp`, incluindo `srcSet` no metadata gerado. Os `<img>` restantes são logos/ilustrações SVG decorativas, os elementos internos do próprio `OptimizedImage` ou o ramo genérico de `LogoLoop` para itens `src` (os dados atuais do stack usam nós SVG/React, não imagens raster). Não converter automaticamente esses casos: eles não se beneficiam da pipeline WebP e algumas conversões alterariam o layout.
+- `src/pages/home/layouts/ProjetoDesktop.jsx` e `src/pages/home/layouts/ProjetoCarouselMobile.jsx`: apresentações de projetos diferentes para a seção de destaque na Home (desktop e mobile). A página dedicada `/projetos` usa separadamente `src/pages/projetos/layouts/ProjetoCatalogo.jsx` com `src/pages/projetos/data/projetosCatalogo.js`, para não modificar a apresentação já existente na Home. No `ProjetoDesktop`, preservar a sensação original do preview: o painel segue o cursor com GSAP em `duration: 1.45`, a bolinha calcula sua posição relativa com `getBoundingClientRect()` e se move em `0.35` s; após 120 ms sem movimento, ela volta ao centro. A tentativa de trocar por `gsap.quickTo`, encurtar as transições e recalcular pela escala foi revertida pelo usuário porque ele prefere o comportamento visual anterior. O possível desalinhamento ocasional permanece como problema a investigar; futuras correções devem preservar o ritmo e a sensação da animação, salvo pedido explícito para alterá-los.
+- `src/pages/home/components/Socials.jsx`: painel de redes sociais.
 - `src/components/SoundControls.jsx`, `SoundToggle.jsx` e `SoundVolumeSliderMobile.jsx`: controles de áudio.
 - `src/hooks/useResponsive.js`: centraliza a lógica de viewport, dispositivos touch, tablet e paisagem compacta.
 - `src/utils/experienceMode.js`: leitura e persistência do modo Full/Reduced.
+- `src/pages/contato/utils/contactSchema.js`: schema Zod do formulário de contato. `validateContactField()` valida campos individuais no `onBlur`, e `validateContactForm()` valida o conjunto completo antes do envio, compartilhando as mesmas regras e normalizando valores com `trim()`.
+- `src/pages/contato/utils/contactSubmission.js`: validação do formato do endpoint Basin e envio HTTP isolado, com tratamento de respostas rejeitadas e erros de rede.
+- `src/utils/test/`: testes unitários de utilitários e teste de integração do componente Contato com Vitest/jsdom e `fetch` simulado, incluindo validação no blur, feedback de botão habilitado/desabilitado conforme o schema, mensagens acessíveis e correção dos campos. Esses testes não substituem um envio real ao Basin.
 - `src/utils/uiSfx.js` e `src/utils/uiSfxEvents.js`: integração central dos efeitos sonoros e eventos.
 - `src/utils/lenisControl.js`: controles auxiliares de rolagem.
 - `src/data/`: dados de trajetória e tecnologias/stack.
@@ -100,7 +168,7 @@ Estrutura identificada no repositório:
 - `scripts/`: automação para análises e testes de navegador.
 - `.github/workflows/`: definições de GitHub Actions.
 - `public/_optimized/`: variantes otimizadas de imagens.
-- `src/assets/projetos/`: imagens originais dos projetos.
+- `src/pages/home/assets/projetos/`: imagens originais dos projetos.
 
 A árvore e o conjunto exatos de arquivos podem evoluir; confira o snapshot automatizado e o código da branch atual.
 
@@ -120,6 +188,8 @@ A paleta e os tokens observados em `src/App.css` incluem:
 | Champagne / detalhes | `#D8C2AA` |
 
 Tipografias carregadas em `index.html`: **DM Mono**, **Space Grotesk** e **Bebas Neue**.
+
+Escala dimensional compartilhada dos controles: `control-size-compact` = 32 px de altura para o cabeçalho desktop; `control-size-standard` = 36 px para links de ação e filtros; `control-size-touch` = altura mínima de 44 px para alvos touch; `control-size-icon` = 44 × 44 px para controles icon-only. Padronizar alturas e padding entre controles equivalentes, sem forçar larguras iguais quando o texto difere.
 
 Princípios de implementação:
 - Manter a identidade escura, tipografia e acentos bronze/champagne coerentes.
@@ -187,12 +257,40 @@ Implementações observadas:
 
 Esses recursos são uma base de implementação, não uma declaração de conformidade integral com WCAG, nem uma garantia de indexação/ranking.
 
-Ao adicionar rotas:
-- Cada rota pública precisa de um `<h1>` único e informativo, títulos/metadados adequados e links reais com `href`.
-- Verificar navegação por teclado, foco após mudança de rota, botão de voltar/avançar e carregamento direto/reload de cada URL.
-- Atualizar sitemap/canonical/OG com URLs consistentes.
-- Confirmar rewrites/fallbacks da Vercel para deep links.
-- Se SEO por rota for importante, avaliar prerenderização; hoje o HTML inicial é uma raiz React vazia para o conteúdo da aplicação.
+### SEO por rota e auditoria automatizada
+
+- **Fonte única de metadados:** `src/data/seoRoutes.json` mantém título, descrição, texto alternativo da imagem social e URLs-base para `/`, `/projetos`, `/sobre` e `/contato`.
+- **SEO durante navegação SPA:** `src/hooks/useRouteSeo.js` atualiza título do documento, description, robots, canonical, Open Graph, Twitter Cards e JSON-LD `WebPage`; `src/App.jsx` aciona o hook a partir de `location.pathname`, sem depender de efeitos separados em cada página.
+- **Metadados estáticos por URL:** `scripts/generate-seo-routes.mjs` é executado ao fim de `npm run build`. Ele gera `dist/projetos/index.html`, `dist/sobre/index.html` e `dist/contato/index.html` com título, descrição, canonical, Open Graph/Twitter e JSON-LD específicos. A imagem de preload do Hero é retirada das páginas internas para evitar download desnecessário.
+- **Sitemap:** a fonte `public/sitemap.xml` lista as quatro rotas públicas; o build gera `dist/sitemap.xml` a partir da mesma configuração de SEO.
+- **Escopo e limite atual:** o script gera HTML estático com metadados por rota, mas não pré-renderiza o DOM completo do React. O conteúdo da página continua dependendo da hidratação JavaScript; o auditor deve manter esse ponto como aviso até uma implementação SSG/SSR de conteúdo ser validada.
+- **Auditoria por rota:** `.github/workflows/accessibility-seo.yml` inclui `feat/separacao-paginas`. O script `scripts/audit-accessibility-seo.mjs` valida metadados, canonical, JSON-LD e sitemap nas quatro páginas e executa checagens semânticas/Axe em desktop e mobile. Os botões de paginação anterior, números e próxima página têm `title` descritivo além do nome acessível.
+- **Resultado registrado em 24/10/2026:** [Acessibilidade e SEO — Actions run 40140155543](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/40140155543) terminou com sucesso. A auditoria estática contou 81 verificações aprovadas, 1 aviso e 0 erros; Axe encontrou 0 grupos de violações nas páginas e estados examinados. As checagens semânticas passaram para `/`, `/projetos`, `/sobre` e `/contato` em desktop 1440×900 e mobile 390×844: um `<main>`, um `<h1>` visível, botões/links com nome acessível, navegação rotulada, sem botão somente com ícone sem `title` e sem `div[role=button]`.
+- **Correções motivadas pelo Axe:** em `src/pages/projetos/layouts/ProjetoCatalogo.jsx`, os números dos filtros e rótulos de categoria receberam contraste de texto mais alto; `src/components/buttonReset.jsx` passou a colocar o atalho flutuante de retorno ao topo dentro de um `<nav aria-label>` nomeado. A auditoria anterior apontou esses problemas como violações e a execução posterior não registrou violações Axe.
+- **Avisos não bloqueantes que permanecem:** o relatório ainda aponta que o corpo da página não está pré-renderizado (somente os metadados são estáticos por rota), e a checagem interativa não encontrou um gatilho visível de “Abrir menu” no viewport desktop testado. O segundo é um aviso de interação do script, não uma violação Axe; deve ser revisitado em testes manuais do menu desktop.
+
+### Navegação entre páginas e cabeçalhos
+
+- **Implementado na arquitetura atual:** o cabeçalho desktop compartilhado reúne logo, Experience, controles de som e navbar magnética nas páginas internas e no Hero da Home. A navegação horizontal é distinta do painel desktop flutuante acionado durante a rolagem.
+- A lista de links fica em `src/data/navigation.js`; o link ativo usa a seção atual na Home e a rota atual nas páginas internas.
+- Nos links Início/Stack clicados em páginas internas, a aplicação volta à Home e aguarda a disponibilidade do conteúdo antes de executar a rolagem para a âncora.
+- No mobile, a navegação interna continua usando cabeçalho compacto e `MenuMobile`; os controles de som móveis permanecem no painel mobile.
+- O Hero do Sobre tem um único `h1` próprio e ações para as seções já existentes (`#competencias` e `#formacao`); essas ações usam a API central de rolagem em vez de criar novos destinos ou duplicar conteúdo.
+
+### Visibilidade do MenuDesktop e sincronização das páginas internas
+
+- **Comportamento anterior (observado):** em um reload direto de uma rota interna com a página restaurando uma posição de scroll no meio do conteúdo, o `MenuDesktop` podia não aparecer. O efeito em `App.jsx` consultava `document.querySelector("[data-route-navigation]")` antes da montagem do componente carregado por `React.lazy()`; quando o elemento ainda não existia, o efeito encerrava e não registrava o observador. Como a rota não mudava depois que o componente lazy montava, o efeito não era executado novamente.
+- **Correção implementada:** `InteriorPageLayout` encaminha seu cabeçalho real por `ref={onRouteNavigationElementChange}`. As páginas `Projetos`, `Sobre` e `Contato` encaminham essa callback recebida do `App.jsx`. O estado `routeNavigationElement` faz o efeito do `App.jsx` executar novamente quando o cabeçalho real é registrado; somente então o `IntersectionObserver` é criado e observado. A Home conserva sua lógica própria via callback de `HeroSectionTransition`.
+- **Identificação do botão:** `MenuDesktop.jsx` marca o botão flutuante com `data-menu-desktop-trigger`. O atributo permite ao Playwright selecionar o controle desktop sem confundi-lo com o botão do `MenuMobile` que pode existir oculto no DOM.
+- **Regressão automatizada:** `scripts/test-menu-desktop-reduced.mjs`, executado por `.github/workflows/menu-desktop-reduced.yml`, verifica a troca Full → Reduced, reload da Home com scroll restaurado e reload direto com scroll restaurado em `/projetos`, `/sobre` e `/contato`. O teste confirma dimensões e visibilidade do gatilho desktop após cada cenário. No código do workflow, a execução aprovada correspondente é [Menu Desktop Reduced Visibility — run 42406728373](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42406728373), no commit de código `faace481bb61554f3ebd89d2a789f26359fde6f3`.
+- **Validações relacionadas:** [Unit Tests — run 42406728366](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42406728366) passou em testes unitários, ESLint e build; [AI Context — Synchronize — run 42406728393](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42406728393) concluiu a sincronização. Essas evidências pertencem ao commit de código indicado e não equivalem a inspeção visual manual ou validação em dispositivo físico.
+- **Pendências ainda abertas:** durante o Playwright, o cenário de `/projetos` registrou no console um erro de `ScrollTrigger.refresh()` (`TypeError: Cannot read properties of undefined (reading 'restart')`). O menu permaneceu visível e a regressão passou; a causa do erro de ScrollTrigger não foi investigada nem corrigida nesta tarefa.
+
+Ainda é necessário:
+- Verificar manualmente navegação por teclado, leitores de tela, foco após mudança de rota e botão voltar/avançar.
+- Confirmar na Vercel que as rotas estáticas geradas são servidas diretamente e que canonical não conflita com redirecionamentos de barra final.
+- Avaliar SSG/SSR do conteúdo React se a pré-renderização integral se mostrar necessária; metadados estáticos por rota não significam que o conteúdo do corpo foi pré-renderizado.
+
 
 ## 12. GitHub Actions, scripts e ambiente de desenvolvimento
 
@@ -212,7 +310,7 @@ Para testes com Playwright, alguns workflows instalam ferramentas de forma tempo
 Notas importantes:
 - `package.json` oferece `npm test` (execução única), `npm run test:watch` (modo observação) e `npm run test:coverage` (cobertura via V8), além de `dev`, `build`, `lint` e `preview`.
 - `.github/workflows/unit-tests.yml` executa `npm ci`, `npm test`, `npm run lint` e `npm run build` em todo `push` para branches que contenham o workflow e a infraestrutura de testes; `pull_request` é filtrado para destinos `main` e `dev`. Também oferece execução manual via `workflow_dispatch`. A configuração foi propagada para `main` e `dev`; branches antigas sem esses arquivos precisam sincronizar a infraestrutura antes de executar testes em pushes próprios.
-- A suíte unitária atual usa Vitest/jsdom e tem **32 testes em três arquivos**: `src/utils/test/experienceMode.test.js` (9), `src/utils/test/lenisControl.test.js` (12) e `src/utils/test/uiSfxEvents.test.js` (11). Na execução local registrada em 22/10/2026, os 32 testes passaram. O workflow [Unit Tests na `dev`](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/39835048103) também concluiu com sucesso as etapas de teste, ESLint e build no commit de código `13d9186`. Isso confirma aquela execução; futuras alterações devem ser validadas novamente.
+- A suíte unitária usa Vitest/jsdom. No commit `3612246` (29/10/2026), ela tem **64 testes em seis arquivos**: `experienceMode.test.js` (9), `lenisControl.test.js` (15), `uiSfxEvents.test.js` (11), `contactSchema.test.js` (15), `Contato.test.jsx` (7) e `contactSubmission.test.js` (7). O workflow [Unit Tests — run 40923705338](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/40923705338) concluiu com sucesso os 64 testes, ESLint (0 erros e 5 avisos) e build de produção. O run [40395868817](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/40395868817) e o run [40140491941](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/40140491941) são referências históricas de commits anteriores; revalidar sempre mudanças posteriores.
 - Os workflows atuais usam Node.js 24.
 - `vite.config.js` declara porta **3000** e `strictPort: true`; a documentação anterior no README menciona a porta padrão 5173. Verificar/corrigir essa inconsistência antes de depender de uma das portas.
 - O fato de um workflow estar verde significa que aquele job passou seus próprios checks. Não substitui testes físicos em aparelho, avaliação manual de acessibilidade ou análise de todos os fluxos.
@@ -245,24 +343,26 @@ Links dos runs usados naquela auditoria:
 Trate estes pontos como itens para verificar, não como autorização para fazer mudanças amplas sem testes:
 
 1. **LCP desktop:** em uma auditoria de laboratório, LCP aproximou-se de 8 s. Investigar priorização da imagem e caminho de renderização do Hero antes de mexer no visual.
-2. **Controles sonoros:** verificar consistência entre texto visível e nome acessível dos botões, com teste dedicado.
+2. **Acessibilidade semântica:** na auditoria mais recente, as verificações semânticas registraram nomes acessíveis para botões/links, navegação rotulada e ausência de `div` simulando botões; a validação manual com teclado e leitor de tela continua pendente. A falha atual do Axe está descrita separadamente no item de contraste.
 3. **Bundle:** avaliar imports de GSAP/ScrollTrigger e módulos grandes; medir o ganho antes de refatorar.
-4. **HTML inicial/SEO por rota:** se houver migração para páginas dedicadas, avaliar prerenderização e metadados por URL.
-5. **CI:** acompanhar o resultado real do workflow `Unit Tests` em `push` e `pull_request`, confirmar que teste/lint/build aparecem como etapas e ampliar a cobertura conforme necessário. A configuração do workflow, isoladamente, não prova que uma execução passou.
-6. **Testes unitários:** Vitest e jsdom estão configurados; os três arquivos de teste cobrem `experienceMode.js`, `lenisControl.js` e `uiSfxEvents.js`, totalizando 32 casos. A próxima expansão prioritária é criar testes unitários para `uiSfx.js` (estado de áudio, desbloqueio, preferências, volume e limpeza) e `useResponsive.js` (breakpoints, orientação, touch e listeners), orientando o escopo pelo relatório `npm run test:coverage`.
-7. **Segurança de dependências:** avaliar auditoria das dependências e boas práticas de permissões de Actions, sem presumir que exista uma vulnerabilidade concreta.
-8. **Nomes de arquivos:** nomes como `HeroTeste2.jsx` e `ProjetosTeste2.jsx` podem merecer uma renomeação planejada se forem componentes consolidados; atualizar imports e validar build/testes.
-9. **Documentação de porta:** resolver a divergência entre a porta 3000 em `vite.config.js` e 5173 em partes da documentação.
+4. **SEO por rota:** títulos, descriptions, canonical, Open Graph/Twitter, JSON-LD `WebPage` e sitemap por rota já estão implementados e são verificados pelo workflow. O conteúdo React do corpo ainda não é pré-renderizado. Além disso, o wildcard em `src/App.jsx` redireciona caminhos desconhecidos para `/`; avaliar uma página 404 com comportamento apropriado e testar deep links na Vercel.
+5. **MenuDesktop em reload de rotas internas — corrigido e coberto por regressão:** a inicialização do `IntersectionObserver` agora aguarda o cabeçalho real de `InteriorPageLayout` por callback ref. O workflow [Menu Desktop Reduced Visibility — run 42406728373](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42406728373) passou no commit de código `faace481`; cobriu Full → Reduced, reload da Home no meio do conteúdo e reload direto com scroll restaurado em `/projetos`, `/sobre` e `/contato`. Consulte a seção de navegação para a implementação. A validação automatizada não substitui teste manual em dispositivos físicos.
+6. **Cobertura de testes unitários:** Vitest/jsdom está configurado e o `package.json` declara `npm test`, `npm run test:watch` e `npm run test:coverage`. Evite manter uma contagem fixa de casos neste documento, pois a suíte evolui; use o resultado do run correspondente ao commit ou execute a cobertura para obter números atuais. A expansão de testes para `uiSfx.js` (estado de áudio, desbloqueio, preferências, volume e limpeza) e `useResponsive.js` (breakpoints, orientação, touch e listeners) continua sendo uma oportunidade.
+7. **Contraste na página Contato — pendente:** a auditoria [Accessibility and SEO Audit — run 42406728425](https://github.com/kleber-goncalves/portfolio-kg/actions/runs/42406728425), executada no commit de código `faace481`, passou pelo Lighthouse mobile e desktop, mas falhou na etapa Axe com três grupos de violação ligados a `color-contrast`. Os números dos campos do formulário foram medidos com contraste 3,33:1 (`#656565` sobre `#0D0D0D`, texto de 14px), abaixo do mínimo 4,5:1 apontado pela ferramenta. A alteração visual não foi feita neste trabalho; revisar a classe de cor preservando a direção visual.
+8. **Segurança de dependências:** avaliar auditoria das dependências e boas práticas de permissões de Actions, sem presumir que exista uma vulnerabilidade concreta.
+9. **Nomes de arquivos:** nomes como `HeroTeste2.jsx` e `ProjetosTeste2.jsx` podem merecer uma renomeação planejada se forem componentes consolidados; atualizar imports e validar build/testes.
+10. **Documentação de porta:** `vite.config.js` declara a porta 3000 e `strictPort: true`; confirmar a documentação antes de depender de uma porta específica.
 
 ## 15. Prioridades sugeridas
 
 1. Resolver e revalidar o LCP desktop com relatórios comparáveis.
-2. Corrigir e testar os nomes acessíveis dos controles sonoros.
+2. Corrigir o contraste dos números do formulário de Contato e reexecutar a auditoria Axe; manter a validação manual de teclado/leitor de tela como tarefa separada.
 3. Executar `npm run test:coverage`, registrar a cobertura inicial e ampliar os testes unitários de `uiSfx.js` e `useResponsive.js` com mocks controlados; depois, cobrir outras lacunas reais reveladas pela cobertura.
-4. Planejar a arquitetura de rotas e o conteúdo de Home, Projetos, Sobre e Contato antes de separar as páginas.
-5. Implementar formulário de contato com envio real e proteção contra spam.
-6. Depois da mudança de rotas, atualizar metadados/sitemap, testar deep links, foco, teclado, Reduced, Lighthouse e Axe.
-7. Continuar otimizando o bundle somente a partir de evidências e sem quebrar animações ou experiência mobile.
+4. Revisar manualmente os repositórios menores no catálogo de Projetos para confirmar descrições, status e links de demonstração quando houver pouca documentação pública. Manter a fonte de dados da página `/projetos` independente dos seis destaques da Home.
+5. Monitorar a entrega e a pasta Spam do Basin após a configuração e o teste já confirmados; considerar novas proteções somente se houver spam recorrente ou falsos positivos.
+6. Refinar conteúdo e layout de Sobre, validando as seções diferidas e o footer.
+7. Fazer validação manual de teclado, leitor de tela e foco após navegação; confirmar deep links, canonical e os HTMLs gerados nas quatro rotas na Vercel.
+8. Avaliar SSG/SSR do corpo React e uma página 404 para caminhos desconhecidos; os metadados estáticos por rota e o sitemap já estão implementados.
 
 ## 16. Regras para registrar futuras alterações neste contexto
 
@@ -282,23 +382,23 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `05ee9abf46d7e997987081c0bcdb35e7b0e39806`
-- **Data do commit analisado:** 2026-10-22T16:07:18-03:00
-- **Mensagem do commit:** docs: atualizar contexto dos testes unitários
-- **Branch de referência desta execução:** dev
+- **Commit de código analisado:** `b070dd0a3e07093c1be6edad9daada460de51f75`
+- **Data do commit analisado:** 2026-11-25T15:00:51-03:00
+- **Mensagem do commit:** docs(architecture): registrar revisão do PR de integração
+- **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
-- **Dependências de runtime:** 15
+- **Dependências de runtime:** 16
 - **Dependências de desenvolvimento:** 12
 - **Workflows encontrados:** 17
-- **Scripts de automação encontrados:** 18
+- **Scripts de automação encontrados:** 19
 
 ### Scripts npm
 
 | Comando | Definição |
 |---|---|
 | `npm run dev` | `vite --host` |
-| `npm run build` | `vite build` |
+| `npm run build` | `vite build && node scripts/generate-seo-routes.mjs` |
 | `npm run lint` | `eslint .` |
 | `npm run preview` | `vite preview` |
 | `npm run test` | `vitest run` |
@@ -324,6 +424,7 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 | `tailwindcss` | `^4.3.3` |
 | `thesvg` | `^3.3.1` |
 | `uisfx` | `^0.4.0` |
+| `zod` | `^4.6.7` |
 
 ### Dependências de desenvolvimento
 
@@ -368,6 +469,7 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 - `scripts/analyze-js-runtime-coverage.mjs`
 - `scripts/audit-accessibility-seo.mjs`
 - `scripts/check-reduced-mode-scroll.mjs`
+- `scripts/generate-seo-routes.mjs`
 - `scripts/lhci-set-experience-mode.cjs`
 - `scripts/measure-desktop-scroll-performance.mjs`
 - `scripts/optimize-project-images.mjs`
@@ -385,13 +487,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 ### Diretórios principais de `src/`
 
-- `src/assets/`
 - `src/components/`
 - `src/data/`
 - `src/docs/`
 - `src/generated/`
 - `src/hooks/`
-- `src/layout/`
+- `src/layouts/`
+- `src/pages/`
 - `src/styles/`
 - `src/utils/`
 
@@ -399,13 +501,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
-| `05ee9ab` | 2026-10-22 | docs: atualizar contexto dos testes unitários |
-| `3b08230` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
-| `13d9186` | 2026-10-22 | Merge pull request #36 from kleber-goncalves/main |
-| `df8ef52` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
-| `4e88ce3` | 2026-10-22 | Merge branch 'dev' into main |
-| `6de56dd` | 2026-10-22 | style: ajustar formatação do arquivo package.json |
-| `08bf15c` | 2026-10-22 | refactor: ajustar importações e comentários no arquivo de configuração do Vite |
-| `0d097b5` | 2026-10-22 | docs(ai-context): atualizar snapshot automaticamente |
+| `b070dd0` | 2026-11-25 | docs(architecture): registrar revisão do PR de integração |
+| `7565c70` | 2026-11-25 | docs(ai-context): atualizar snapshot do pull request |
+| `b95ec3c` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
+| `cb3d77f` | 2026-11-07 | docs(architecture): registrar validação final da reorganização |
+| `1a3ef08` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
+| `daf4551` | 2026-11-07 | docs(architecture): consolidar documentação da arquitetura |
+| `fc67ea8` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
+| `e4dc9e3` | 2026-11-07 | docs(architecture): registrar etapa Footer concluída |
 
 <!-- END AUTO-GENERATED SECTION -->

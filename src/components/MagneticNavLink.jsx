@@ -193,6 +193,7 @@ function MagneticLink({
                 justify-center
                 overflow-hidden
                 rounded-sm
+                control-size-compact
                 py-1
                 px-2
                 focus-visible:outline
