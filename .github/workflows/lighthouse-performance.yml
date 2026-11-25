@@ -8,6 +8,18 @@ on:
       - feat/responsividadeFull
       - feat/separacao-paginas
       - feat/auditoria-multirota
+    paths:
+      - "src/**"
+      - "public/**"
+      - "index.html"
+      - "package.json"
+      - "package-lock.json"
+      - "vite.config.js"
+      - "vite.analysis.config.js"
+      - "src/data/seoRoutes.json"
+      - "scripts/generate-seo-routes.mjs"
+      - "lighthouserc-performance-*.json"
+      - ".github/workflows/lighthouse-performance.yml"
   workflow_dispatch:
 
 permissions:

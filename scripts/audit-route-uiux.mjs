@@ -205,10 +205,10 @@ async function navigateToRoute(page, route, mobile) {
         const menu = page.locator("[data-mobile-menu]");
         await menu.waitFor({ state: "visible", timeout: 10000 });
 
-        const selector = route === "/"
-            ? 'a[data-mobile-menu-link][href="#hero"]'
-            : 'a[data-mobile-menu-link][href="' + route + '"]';
-        await page.locator(selector).first().click();
+        const targetLink = route === "/"
+            ? page.locator("a[data-mobile-menu-link]").filter({ hasText: "Início" }).first()
+            : page.locator('a[data-mobile-menu-link][href="' + route + '"]').first();
+        await targetLink.click();
     } else if (route === "/") {
         await page.locator('a[aria-label^="KLEBER DEV"][href="/"]:visible').first().click();
     } else {

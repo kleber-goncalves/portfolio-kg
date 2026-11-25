@@ -51,7 +51,9 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Build diagnostic bundle with source maps
-        run: npm run build -- --config vite.analysis.config.js
+        run: |
+          npx vite build --config vite.analysis.config.js
+          node scripts/generate-seo-routes.mjs
 
       - name: Start local production preview
         run: |
