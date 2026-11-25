@@ -382,10 +382,10 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `3cca519284b7515df817ed5dfef414a4e91d8cf8`
-- **Data do commit analisado:** 2026-11-25T15:23:21-03:00
-- **Mensagem do commit:** refatorar: simplificar a renderização do componente RouteFallback e otimizar a lógica de transição de rotas
-- **Branch de referência desta execução:** dev
+- **Commit de código analisado:** `6dcd2ccd3e0102c252409da3a0843ed31950af3e`
+- **Data do commit analisado:** 2026-11-25T18:23:42Z
+- **Mensagem do commit:** docs(ai-context): atualizar snapshot automaticamente
+- **Branch de referência desta execução:** feat/auditoria-multirota
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
 - **Dependências de runtime:** 16
@@ -501,6 +501,7 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `6dcd2cc` | 2026-11-25 | docs(ai-context): atualizar snapshot automaticamente |
 | `3cca519` | 2026-11-25 | refatorar: simplificar a renderização do componente RouteFallback e otimizar a lógica de transição de rotas |
 | `1849a8b` | 2026-11-25 | docs(ai-context): atualizar snapshot automaticamente |
 | `b93eab6` | 2026-11-25 | Merge pull request #37 from kleber-goncalves/feat/separacao-paginas |
@@ -508,6 +509,5 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 | `b070dd0` | 2026-11-25 | docs(architecture): registrar revisão do PR de integração |
 | `7565c70` | 2026-11-25 | docs(ai-context): atualizar snapshot do pull request |
 | `b95ec3c` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
-| `cb3d77f` | 2026-11-07 | docs(architecture): registrar validação final da reorganização |
 
 <!-- END AUTO-GENERATED SECTION -->
