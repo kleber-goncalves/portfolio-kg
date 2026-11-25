@@ -382,9 +382,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `cb3d77fae689f28e5a81d0e4b744c9046ad456c4`
-- **Data do commit analisado:** 2026-11-07T20:09:47-03:00
-- **Mensagem do commit:** docs(architecture): registrar validação final da reorganização
+- **Commit de código analisado:** `b95ec3c17a4b9e64e58bfb4a2fe3777a547852ba`
+- **Data do commit analisado:** 2026-11-07T23:09:58Z
+- **Mensagem do commit:** docs(ai-context): atualizar snapshot automaticamente
 - **Branch de referência desta execução:** feat/separacao-paginas
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -501,6 +501,7 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `b95ec3c` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `cb3d77f` | 2026-11-07 | docs(architecture): registrar validação final da reorganização |
 | `1a3ef08` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `daf4551` | 2026-11-07 | docs(architecture): consolidar documentação da arquitetura |
@@ -508,6 +509,5 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 | `e4dc9e3` | 2026-11-07 | docs(architecture): registrar etapa Footer concluída |
 | `7b28959` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 | `955108a` | 2026-11-07 | refactor(layout): mover Footer compartilhado para layouts |
-| `0b05d60` | 2026-11-07 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
