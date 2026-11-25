@@ -41,28 +41,47 @@ async function waitForPreloaderToFinish(page, scope) {
 }
 
 async function revealFullPage(page) {
-    // Primeiro força o carregamento dos blocos que usam IntersectionObserver.
+    const scrollElementIntoView = async (locator) => locator.evaluate((element) => {
+        const style = window.getComputedStyle(element);
+        const rect = element.getBoundingClientRect();
+        const visible = style.display !== "none"
+            && style.visibility !== "hidden"
+            && rect.width > 0
+            && rect.height > 0;
+
+        if (!visible) return { visible: false, busy: false };
+
+        const targetTop = window.scrollY + rect.top - Math.round(window.innerHeight * 0.3);
+        window.scrollTo({ top: Math.max(0, targetTop), behavior: "instant" });
+
+        return {
+            visible: true,
+            busy: element.getAttribute("aria-busy") === "true",
+        };
+    });
+
+    // Carrega seções adiadas visíveis, sem tentar rolar até variantes
+    // desktop/mobile que estejam ocultas por CSS.
     const deferredSections = page.locator("#projetos[aria-busy], [data-deferred-section]");
     const deferredCount = await deferredSections.count();
 
     for (let index = 0; index < deferredCount; index += 1) {
         const section = deferredSections.nth(index);
-        await section.scrollIntoViewIfNeeded({ timeout: 15000 });
+        const state = await scrollElementIntoView(section);
+        if (!state.visible) continue;
 
-        const handle = await section.elementHandle();
-        if (!handle) continue;
-
-        await page.waitForFunction(
-            (element) => element.getAttribute("aria-busy") === "false",
-            handle,
-            { timeout: 20000 },
-        );
-        await page.waitForTimeout(350);
+        if (state.busy) {
+            await page.waitForFunction(
+                (element) => element.getAttribute("aria-busy") === "false",
+                await section.elementHandle(),
+                { timeout: 20000 },
+            );
+        }
+        await page.waitForTimeout(300);
     }
 
-    // Percorre cada alvo animado para ativar ScrollTrigger/useInView.
-    // Não retorna ao topo: animações scrub precisam permanecer no estado final
-    // de rolagem enquanto o screenshot fullPage é capturado.
+    // Ativa entradas GSAP/ScrollTrigger nos elementos visíveis. Variantes
+    // display:none não bloqueiam a auditoria e não geram timeout no Playwright.
     const revealTargets = page.locator(
         '[data-route-entrance], [data-project-scroll-reveal], [data-diferencial-card], [data-formation-entry]',
     );
@@ -70,11 +89,12 @@ async function revealFullPage(page) {
 
     for (let index = 0; index < revealCount; index += 1) {
         const target = revealTargets.nth(index);
-        await target.scrollIntoViewIfNeeded({ timeout: 15000 });
+        const state = await scrollElementIntoView(target);
+        if (!state.visible) continue;
         await page.waitForTimeout(180);
     }
 
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(900);
 }
 async function waitForRoute(page, route) {
     const expectedUrl = new URL(route, BASE_URL).href;
