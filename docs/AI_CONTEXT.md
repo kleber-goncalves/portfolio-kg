@@ -382,9 +382,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `08dc57942a5c66a2e74a86ca8924cba1649705f6`
-- **Data do commit analisado:** 2026-11-25T16:33:16-03:00
-- **Mensagem do commit:** test: aguardar preloader e revelar conteúdo antes das capturas
+- **Commit de código analisado:** `fca3ecc5bd13cd679916dda6e47df09af51ebddd`
+- **Data do commit analisado:** 2026-11-25T16:35:23-03:00
+- **Mensagem do commit:** test: cobrir teclado, catálogo e formulário de contato
 - **Branch de referência desta execução:** feat/auditoria-multirota
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -503,13 +503,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `fca3ecc` | 2026-11-25 | test: cobrir teclado, catálogo e formulário de contato |
+| `678660a` | 2026-11-25 | docs(ai-context): atualizar snapshot automaticamente |
 | `08dc579` | 2026-11-25 | test: aguardar preloader e revelar conteúdo antes das capturas |
 | `59c397b` | 2026-11-25 | docs(ai-context): atualizar snapshot automaticamente |
 | `9855ec0` | 2026-11-25 | test: corrigir navegação mobile e build com source maps |
 | `51ea234` | 2026-11-25 | docs(ai-context): atualizar snapshot automaticamente |
 | `cd00f13` | 2026-11-25 | docs: registrar plano de auditoria multirrota |
 | `ece1925` | 2026-11-25 | docs(ai-context): atualizar snapshot automaticamente |
-| `45e771c` | 2026-11-25 | test: adicionar auditoria responsiva e navegação SPA |
-| `bc47c5b` | 2026-11-25 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
