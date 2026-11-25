@@ -382,9 +382,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `515d3234bd33f73ddd4b60579a7f46e77c9e751b`
-- **Data do commit analisado:** 2026-11-25T16:52:46-03:00
-- **Mensagem do commit:** docs: registrar linha de base da auditoria multirrota
+- **Commit de código analisado:** `82cae7c041d8e9adb02cfdc4ec01184b7912ca48`
+- **Data do commit analisado:** 2026-11-25T16:54:54-03:00
+- **Mensagem do commit:** test: ignorar variantes ocultas ao preparar capturas
 - **Branch de referência desta execução:** feat/auditoria-multirota
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -503,13 +503,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `82cae7c` | 2026-11-25 | test: ignorar variantes ocultas ao preparar capturas |
+| `acbd4fb` | 2026-11-25 | docs(ai-context): atualizar snapshot automaticamente |
 | `515d323` | 2026-11-25 | docs: registrar linha de base da auditoria multirrota |
 | `bf666d2` | 2026-11-25 | docs(ai-context): atualizar snapshot automaticamente |
 | `76532b1` | 2026-11-25 | test: carregar seções adiadas antes das capturas |
 | `2c92022` | 2026-11-25 | docs(ai-context): atualizar snapshot automaticamente |
 | `b62630f` | 2026-11-25 | test: estabilizar checagem do reenvio do formulário |
 | `6562c2d` | 2026-11-25 | docs(ai-context): atualizar snapshot automaticamente |
-| `fca3ecc` | 2026-11-25 | test: cobrir teclado, catálogo e formulário de contato |
-| `678660a` | 2026-11-25 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
