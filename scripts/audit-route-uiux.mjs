@@ -450,7 +450,7 @@ async function auditContactForm(browser, viewport) {
         const email = form.locator('input[name="email"]');
         const subject = form.locator('input[name="assunto"]');
         const message = form.locator('textarea[name="mensagem"]');
-        const submit = form.getByRole("button", { name: "Enviar mensagem" });
+        const submit = form.locator('button[type="submit"]');
 
         await name.fill("K");
         await name.blur();
@@ -473,18 +473,34 @@ async function auditContactForm(browser, viewport) {
             enabled ? "Quatro campos válidos habilitam o envio." : "Envio permaneceu desabilitado com campos válidos.");
 
         await submit.click();
-        await page.getByText("Mensagem enviada com sucesso. Obrigado pelo contato!", { exact: true })
+        await form.locator('[role="status"]').filter({ hasText: "Mensagem enviada com sucesso." })
             .waitFor({ state: "visible", timeout: 12000 });
         recordInteraction(scope, "form-success-state", interceptedRequests === 1,
             interceptedRequests === 1 ? "Resposta de sucesso simulada foi interceptada." : "Envio de sucesso não foi interceptado uma única vez.");
 
         mockMode = "failure";
         await fillValidContactForm(page);
-        await form.getByRole("button", { name: "Enviar mensagem" }).click();
-        await page.getByText("Não foi possível enviar a mensagem agora. Tente novamente ou use um dos canais alternativos.", { exact: true })
-            .waitFor({ state: "visible", timeout: 12000 });
-        recordInteraction(scope, "form-error-state", interceptedRequests === 2,
-            interceptedRequests === 2 ? "Resposta de falha simulada apresenta mensagem de erro." : "Falha simulada não foi interceptada como esperado.");
+        await submit.waitFor({ state: "visible", timeout: 10000 });
+        await page.waitForFunction(() => {
+            const button = document.querySelector('form button[type="submit"]');
+            return Boolean(button && !button.disabled);
+        }, null, { timeout: 10000 });
+        const retryButtonState = await submit.evaluate((button) => ({
+            disabled: button.disabled,
+            text: button.textContent?.trim() ?? "",
+        }));
+        recordInteraction(scope, "form-retry-enabled-after-reset", !retryButtonState.disabled,
+            !retryButtonState.disabled
+                ? "Após o reset, preencher novamente os campos válidos reabilita o envio."
+                : "Após o reset, o botão continuou desabilitado: " + retryButtonState.text);
+        await submit.click();
+        const errorAlert = form.locator('[role="alert"]');
+        await errorAlert.waitFor({ state: "visible", timeout: 12000 });
+        const errorText = await errorAlert.textContent();
+        recordInteraction(scope, "form-error-state", interceptedRequests === 2 && errorText?.includes("Não foi possível enviar a mensagem"),
+            interceptedRequests === 2 && errorText?.includes("Não foi possível enviar a mensagem")
+                ? "Resposta HTTP simulada de falha apresenta alerta acessível."
+                : "A resposta simulada de falha não gerou o alerta acessível esperado.");
     } catch (error) {
         recordInteraction(scope, "form-interaction-execution", false, String(error?.message ?? error));
     } finally {
