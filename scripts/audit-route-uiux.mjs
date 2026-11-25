@@ -27,6 +27,57 @@ function routeSlug(route) {
     return route === "/" ? "home" : route.slice(1).replaceAll("/", "-");
 }
 
+async function waitForPreloaderToFinish(page, scope) {
+    const preloader = page.locator(".site-preloader");
+    if (await preloader.count() === 0) return;
+
+    try {
+        await preloader.waitFor({ state: "detached", timeout: 20000 });
+    } catch {
+        addFailure(scope, "preloader-not-dismissed", "O preloader permaneceu visível por mais de 20 segundos.");
+        throw new Error("Preloader não foi removido dentro do tempo esperado.");
+    }
+}
+
+async function revealFullPage(page) {
+    let previousHeight = -1;
+
+    for (let pass = 0; pass < 3; pass += 1) {
+        for (let step = 0; step < 60; step += 1) {
+            const state = await page.evaluate(() => ({
+                y: window.scrollY,
+                viewport: window.innerHeight,
+                height: Math.max(document.documentElement.scrollHeight, document.body.scrollHeight),
+            }));
+            const maxY = Math.max(0, state.height - state.viewport);
+            const nextY = Math.min(maxY, state.y + Math.max(250, Math.floor(state.viewport * 0.75)));
+            if (nextY <= state.y + 1) break;
+
+            await page.mouse.wheel(0, nextY - state.y);
+            await page.waitForTimeout(250);
+
+            const actualY = await page.evaluate(() => window.scrollY);
+            if (Math.abs(actualY - nextY) > Math.max(100, state.viewport * 0.2)) {
+                await page.evaluate((y) => window.scrollTo({ top: y, behavior: "instant" }), nextY);
+            }
+            await page.waitForTimeout(250);
+        }
+
+        await page.waitForTimeout(700);
+        const height = await page.evaluate(() => Math.max(
+            document.documentElement.scrollHeight,
+            document.body.scrollHeight,
+        ));
+        if (height === previousHeight) break;
+        previousHeight = height;
+        await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+        await page.waitForTimeout(300);
+    }
+
+    await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+    await page.waitForTimeout(900);
+}
+
 async function waitForRoute(page, route) {
     const expectedUrl = new URL(route, BASE_URL).href;
     await page.waitForURL(expectedUrl, { timeout: 20000 });
@@ -114,7 +165,8 @@ async function auditDirectRoute(browser, route, viewport) {
         await page.goto(new URL(route, BASE_URL).href, { waitUntil: "domcontentloaded", timeout: 60000 });
         await page.locator("main").first().waitFor({ state: "visible", timeout: 25000 });
         await page.locator("h1").first().waitFor({ state: "visible", timeout: 25000 });
-        await page.waitForTimeout(1300);
+        await waitForPreloaderToFinish(page, scope);
+        await revealFullPage(page);
 
         const metadata = await readRouteMetadata(page);
         metadataChecks = validateMetadata(route, metadata, scope);
