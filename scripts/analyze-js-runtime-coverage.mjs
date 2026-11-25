@@ -9,12 +9,22 @@ const assetsDir = path.join(root, "dist", "assets");
 const outputDir = path.join(root, "dist");
 const baseUrl = process.env.COVERAGE_URL || "http://127.0.0.1:4173/";
 
-const scenarios = [
+const routeConfig = JSON.parse(await readFile(path.join(root, "src", "data", "seoRoutes.json"), "utf8"));
+const pageRoutes = Object.keys(routeConfig.routes);
+
+const scenarioTemplates = [
     { id: "desktop-initial", title: "Desktop — primeira tela", mobile: false, fullPage: false, width: 1365, height: 900 },
     { id: "desktop-full-page", title: "Desktop — página percorrida", mobile: false, fullPage: true, width: 1365, height: 900 },
     { id: "mobile-initial", title: "Celular — primeira tela", mobile: true, fullPage: false, width: 390, height: 844 },
     { id: "mobile-full-page", title: "Celular — página percorrida", mobile: true, fullPage: true, width: 390, height: 844 },
 ];
+
+const scenarios = pageRoutes.flatMap((pathname) => scenarioTemplates.map((scenario) => ({
+    ...scenario,
+    id: (pathname === "/" ? "home" : pathname.slice(1)) + "-" + scenario.id,
+    pathname,
+    title: pathname + " — " + scenario.title,
+})));
 
 const toKiB = (bytes) => (bytes / 1024).toFixed(1);
 const toPct = (part, total) => (total > 0 ? ((part / total) * 100).toFixed(1) : "0.0");
@@ -266,7 +276,7 @@ async function analyzeScenario(browser, scenario, knownAssets) {
     await cdp.send("Profiler.startPreciseCoverage", { callCount: false, detailed: true });
 
     try {
-        await page.goto(baseUrl, { waitUntil: "load", timeout: 60000 });
+        await page.goto(new URL(scenario.pathname, baseUrl).href, { waitUntil: "load", timeout: 60000 });
         await page.waitForTimeout(2500);
         if (scenario.fullPage) await scrollThroughPage(page);
 
@@ -374,6 +384,7 @@ async function analyzeScenario(browser, scenario, knownAssets) {
         const usedChars = assets.reduce((sum, asset) => sum + asset.usedChars, 0);
         return {
             id: scenario.id,
+            pathname: scenario.pathname,
             title: scenario.title,
             viewport: scenario.width + "x" + scenario.height,
             scriptsLoaded: assets.length,
@@ -533,8 +544,9 @@ try {
 
 const report = {
     generatedAt: new Date().toISOString(),
-    testedUrl: baseUrl,
-    note: "A cobertura representa apenas os caminhos percorridos durante o teste; código não executado não é necessariamente código morto.",
+    baseUrl,
+    testedRoutes: pageRoutes,
+    note: "A cobertura percorre todas as rotas configuradas em seoRoutes.json nos cenários desktop/mobile; código não executado não é necessariamente código morto.",
     scenarios: results,
 };
 

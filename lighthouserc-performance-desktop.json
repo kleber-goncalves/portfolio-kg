@@ -1,0 +1,32 @@
+{
+  "ci": {
+    "collect": {
+      "url": [
+        "http://127.0.0.1:4173/",
+        "http://127.0.0.1:4173/projetos",
+        "http://127.0.0.1:4173/sobre",
+        "http://127.0.0.1:4173/contato"
+      ],
+      "numberOfRuns": 3,
+      "settings": {
+        "formFactor": "desktop",
+        "screenEmulation": {
+          "mobile": false,
+          "width": 1365,
+          "height": 900,
+          "deviceScaleFactor": 1
+        }
+      }
+    },
+    "assert": {
+      "assertions": {
+        "categories:performance": [
+          "error",
+          {
+            "minScore": 0.6
+          }
+        ]
+      }
+    }
+  }
+}

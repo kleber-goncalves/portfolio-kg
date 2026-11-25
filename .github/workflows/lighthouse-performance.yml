@@ -1,82 +1,73 @@
-name: Lighthouse Performance
+name: Lighthouse Performance Route Matrix
 
 on:
-    push:
-        branches:
-            - main
-            - dev
-            - feat/responsividadeFull
-    workflow_dispatch:
+  push:
+    branches:
+      - main
+      - dev
+      - feat/responsividadeFull
+      - feat/separacao-paginas
+      - feat/auditoria-multirota
+  workflow_dispatch:
 
 permissions:
-    contents: read
+  contents: read
 
 concurrency:
-    group: lighthouse-${{ github.workflow }}-${{ github.ref }}
-    cancel-in-progress: true
+  group: lighthouse-performance-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-    lighthouse:
-        name: Build and validate Vercel preview performance
-        runs-on: ubuntu-latest
-        timeout-minutes: 20
+  lighthouse:
+    name: Lighthouse on all routes — mobile and desktop
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
 
-        env:
-            PREVIEW_URL: "${{ github.ref_name == 'main' && 'https://kleber-goncalves-dev.vercel.app/' || github.ref_name == 'dev' && 'https://portfolio-kg-git-dev-kleber-goncalves-s-projects.vercel.app/' || 'https://portfolio-kg-git-feat-respon-0847d0-kleber-goncalves-s-projects.vercel.app/' }}"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
 
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v6
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
 
-            - name: Set up Node.js
-              uses: actions/setup-node@v5
-              with:
-                  node-version: 24
-                  cache: npm
+      - name: Install dependencies
+        run: npm ci
 
-            - name: Install dependencies
-              run: npm ci
+      - name: Validate production build
+        run: npm run build
 
-            - name: Validate production build
-              run: npm run build
+      - name: Start local production preview
+        run: |
+          npx vite preview --host 127.0.0.1 --port 4173 --strictPort > /tmp/lighthouse-preview.log 2>&1 &
+          echo $! > /tmp/lighthouse-preview.pid
 
-            - name: Allow Vercel to finish deploying
-              run: |
-                  echo "Aguardando 60 segundos para a Vercel concluir o deployment da branch."
-                  sleep 60
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4173/ --output /dev/null; then
+              echo "Production preview is responding."
+              exit 0
+            fi
+            echo "Attempt $attempt/30: waiting for preview."
+            sleep 2
+          done
 
-            - name: Wait for Vercel preview
-              run: |
-                  echo "Verificando o preview em $PREVIEW_URL"
-                  for attempt in $(seq 1 30); do
-                    if curl --fail --silent --show-error "$PREVIEW_URL" --output /dev/null; then
-                      echo "Preview da Vercel está respondendo."
-                      exit 0
-                    fi
+          cat /tmp/lighthouse-preview.log
+          exit 1
 
-                    echo "Tentativa $attempt/30: preview ainda indisponível."
-                    sleep 10
-                  done
+      - name: Lighthouse — mobile, all routes (3 runs each)
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          configPath: ./lighthouserc-performance-mobile.json
+          artifactName: lighthouse-performance-mobile
+          uploadArtifacts: true
+          temporaryPublicStorage: false
 
-                  echo "A preview da Vercel não ficou disponível dentro do tempo limite."
-                  exit 1
-
-            - name: Configure Lighthouse target for current branch
-              run: |
-                  node --input-type=module <<'NODE'
-                  import { readFileSync, writeFileSync } from "node:fs";
-
-                  const configPath = "lighthouserc.json";
-                  const config = JSON.parse(readFileSync(configPath, "utf8"));
-                  config.ci.collect.url = [process.env.PREVIEW_URL];
-                  writeFileSync(configPath, JSON.stringify(config, null, 2) + "\n");
-
-                  console.log(`Lighthouse target: ${process.env.PREVIEW_URL}`);
-                  NODE
-
-            - name: Run Lighthouse against Vercel preview
-              uses: treosh/lighthouse-ci-action@v12
-              with:
-                  configPath: ./lighthouserc.json
-                  uploadArtifacts: true
-                  temporaryPublicStorage: false
+      - name: Lighthouse — desktop, all routes (3 runs each)
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          configPath: ./lighthouserc-performance-desktop.json
+          artifactName: lighthouse-performance-desktop
+          uploadArtifacts: true
+          temporaryPublicStorage: false

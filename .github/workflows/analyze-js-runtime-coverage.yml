@@ -6,6 +6,7 @@ on:
       - main
       - dev
       - feat/responsividadeFull
+      - feat/auditoria-multirota
     paths:
       - "src/**"
       - "package.json"

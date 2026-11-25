@@ -2,7 +2,10 @@
   "ci": {
     "collect": {
       "url": [
-        "http://127.0.0.1:4173/"
+        "http://127.0.0.1:4173/",
+        "http://127.0.0.1:4173/projetos",
+        "http://127.0.0.1:4173/sobre",
+        "http://127.0.0.1:4173/contato"
       ],
       "numberOfRuns": 2,
       "settings": {
