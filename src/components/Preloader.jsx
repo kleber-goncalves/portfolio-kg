@@ -3,7 +3,9 @@ import imageMetadata from "../generated/imageMetadata.json";
 
 const TOTAL_STEPS = 4;
 const MIN_DISPLAY_TIME = 3000;
+const MOBILE_MIN_DISPLAY_TIME = 650;
 const EXIT_DURATION = 760;
+const MOBILE_EXIT_DURATION = 240;
 
 function loadImage(src, srcSet, sizes) {
     return new Promise((resolve) => {
@@ -31,6 +33,7 @@ function prefersReducedMotion() {
 }
 
 function Preloader() {
+    const isMobileExperience = window.matchMedia?.("(max-width: 767px), (hover: none), (pointer: coarse)")?.matches ?? false;
     const [progress, setProgress] = useState(0);
     const [logoReady, setLogoReady] = useState(false);
     const [currentLabel, setCurrentLabel] = useState("Iniciando carregamento");
@@ -62,23 +65,27 @@ function Preloader() {
             completeStep();
 
             setCurrentLabel("Carregando seu retrato");
-            const portraitMetadata = imageMetadata["kleber-goncalves.png"];
-            await loadImage(
-                portraitMetadata?.src ?? "https://github.com/kleber-goncalves.png",
-                portraitMetadata?.srcSet,
-                portraitMetadata?.sizes,
-            );
+            if (!isMobileExperience) {
+                const portraitMetadata = imageMetadata["kleber-goncalves.png"];
+                await loadImage(
+                    portraitMetadata?.src ?? "https://github.com/kleber-goncalves.png",
+                    portraitMetadata?.srcSet,
+                    portraitMetadata?.sizes,
+                );
+            }
             completeStep();
 
             if (cancelled) return;
 
             setCurrentLabel("Preparando a tipografia");
-            try {
-                await document.fonts.ready;
-                completeStep();
-            } catch {
-                completeStep();
+            if (!isMobileExperience) {
+                try {
+                    await document.fonts.ready;
+                } catch {
+                    // A tipografia não deve impedir a saída do preloader.
+                }
             }
+            completeStep();
 
             if (cancelled) return;
 
@@ -97,7 +104,11 @@ function Preloader() {
             // Mantém a sequência visual completa antes de iniciar a saída.
             // Em movimento reduzido, não força a espera nem a animação de saída.
             const reducedMotion = prefersReducedMotion();
-            const minimumTime = reducedMotion ? 0 : MIN_DISPLAY_TIME;
+            const minimumTime = reducedMotion
+                ? 0
+                : isMobileExperience
+                    ? MOBILE_MIN_DISPLAY_TIME
+                    : MIN_DISPLAY_TIME;
             const elapsed = performance.now() - (reducedMotion ? startedAt : visualStartedAt);
             const remainingTime = Math.max(0, minimumTime - elapsed);
 
@@ -109,7 +120,7 @@ function Preloader() {
 
             if (!reducedMotion) {
                 setPhase("leaving");
-                await wait(EXIT_DURATION);
+                await wait(isMobileExperience ? MOBILE_EXIT_DURATION : EXIT_DURATION);
             }
 
             if (!cancelled) {
@@ -127,7 +138,7 @@ function Preloader() {
             cancelled = true;
             document.body.style.overflow = previousOverflow;
         };
-    }, []);
+    }, [isMobileExperience]);
 
     if (!visible) return null;
 
