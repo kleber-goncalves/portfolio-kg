@@ -94,10 +94,26 @@ function createRouteHtml(baseHtml, route, page, config) {
     const imageAlt = page.socialImageAlt || page.title;
     let html = baseHtml;
 
-    // O preload do retrato do Hero é útil na Home, mas não deve ser baixado
-    // desnecessariamente nas páginas internas.
+    // O preload do retrato da Home não deve ser baixado nas páginas internas.
+    // O logo do preloader permanece global porque é usado em todas as rotas.
     if (route !== "/") {
-        html = html.replace(/<link\b(?=[^>]*\brel=["']preload["'])(?=[^>]*\bas=["']image["'])[^>]*>/i, "");
+        html = html.replace(
+            /<link\b(?=[^>]*\brel=["']preload["'])(?=[^>]*\bas=["']image["'])(?=[^>]*\bhref=["']\/_optimized\/hero\/kleber-goncalves-320\.webp["'])[^>]*>/i,
+            "",
+        );
+    }
+
+    // A imagem do Hero de Sobre é descoberta antes do JavaScript em layouts mobile.
+    if (route === "/sobre") {
+        const aboutHeroPreload = [
+            '<link rel="preload" as="image"',
+            ' href="/_optimized/hero/euNvEnvt-640.webp"',
+            ' imagesrcset="/_optimized/hero/euNvEnvt-320.webp 320w, /_optimized/hero/euNvEnvt-640.webp 640w, /_optimized/hero/euNvEnvt-960.webp 960w, /_optimized/hero/euNvEnvt-original.webp 1120w"',
+            ' imagesizes="350px"',
+            ' media="(max-width: 767px), (hover: none) and (pointer: coarse), (orientation: landscape) and (max-height: 600px)"',
+            ' fetchpriority="high" />',
+        ].join("");
+        html = html.replace("</head>", `    ${aboutHeroPreload}\n    </head>`);
     }
 
     html = html.replace(/<title\b[^>]*>[\s\S]*?<\/title>/i, `<title>${escapeHtml(page.title)}</title>`);
