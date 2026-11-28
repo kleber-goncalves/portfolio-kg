@@ -382,9 +382,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `82cae7c041d8e9adb02cfdc4ec01184b7912ca48`
-- **Data do commit analisado:** 2026-11-25T16:54:54-03:00
-- **Mensagem do commit:** test: ignorar variantes ocultas ao preparar capturas
+- **Commit de código analisado:** `36286e73e796cc5de2c6b2292dc9680f2e79a74b`
+- **Data do commit analisado:** 2026-11-28T13:16:46-03:00
+- **Mensagem do commit:** perf(mobile): reduzir bloqueio do preloader inicial
 - **Branch de referência desta execução:** feat/auditoria-multirota
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -503,13 +503,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `36286e7` | 2026-11-28 | perf(mobile): reduzir bloqueio do preloader inicial |
+| `c4551e5` | 2026-11-25 | docs(ai-context): atualizar snapshot automaticamente |
 | `82cae7c` | 2026-11-25 | test: ignorar variantes ocultas ao preparar capturas |
 | `acbd4fb` | 2026-11-25 | docs(ai-context): atualizar snapshot automaticamente |
 | `515d323` | 2026-11-25 | docs: registrar linha de base da auditoria multirrota |
 | `bf666d2` | 2026-11-25 | docs(ai-context): atualizar snapshot automaticamente |
 | `76532b1` | 2026-11-25 | test: carregar seções adiadas antes das capturas |
 | `2c92022` | 2026-11-25 | docs(ai-context): atualizar snapshot automaticamente |
-| `b62630f` | 2026-11-25 | test: estabilizar checagem do reenvio do formulário |
-| `6562c2d` | 2026-11-25 | docs(ai-context): atualizar snapshot automaticamente |
 
 <!-- END AUTO-GENERATED SECTION -->
