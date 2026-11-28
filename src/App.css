@@ -612,8 +612,8 @@ html::-webkit-scrollbar {
     .site-preloader__name,
     .site-preloader__role,
     .site-preloader__progress {
-        opacity: 1;
-        transform: none;
+        opacity: 1 !important;
+        transform: none !important;
         animation: none !important;
     }
 }
