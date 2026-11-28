@@ -382,9 +382,9 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 > Esta seção é gerada por `scripts/update-ai-context.mjs`. Não edite manualmente o conteúdo entre os marcadores.
 
-- **Commit de código analisado:** `d963baf86a02736d822e606564c666ae4c7a6324`
-- **Data do commit analisado:** 2026-11-28T13:16:54-03:00
-- **Mensagem do commit:** perf(seo): preload do retrato na rota Sobre mobile
+- **Commit de código analisado:** `732bb6aa2fc767441d7f4f1a8b77a26e3857b4f8`
+- **Data do commit analisado:** 2026-11-28T13:17:17-03:00
+- **Mensagem do commit:** fix(mobile): manter texto do splash visível
 - **Branch de referência desta execução:** feat/auditoria-multirota
 - **Versão declarada do projeto:** portfolio-kg@0.0.0
 - **Scripts npm declarados:** 7
@@ -503,13 +503,13 @@ Trate estes pontos como itens para verificar, não como autorização para fazer
 
 | Commit | Data | Mensagem |
 |---|---|---|
+| `732bb6a` | 2026-11-28 | fix(mobile): manter texto do splash visível |
+| `4b61f12` | 2026-11-28 | docs(ai-context): atualizar snapshot automaticamente |
+| `2b00d29` | 2026-11-28 | docs(ai-context): atualizar snapshot automaticamente |
 | `d963baf` | 2026-11-28 | perf(seo): preload do retrato na rota Sobre mobile |
 | `16e4430` | 2026-11-28 | perf: antecipar carregamento do logo global |
 | `be10528` | 2026-11-28 | style(mobile): exibir preloader compacto sem animações longas |
 | `36286e7` | 2026-11-28 | perf(mobile): reduzir bloqueio do preloader inicial |
 | `c4551e5` | 2026-11-25 | docs(ai-context): atualizar snapshot automaticamente |
-| `82cae7c` | 2026-11-25 | test: ignorar variantes ocultas ao preparar capturas |
-| `acbd4fb` | 2026-11-25 | docs(ai-context): atualizar snapshot automaticamente |
-| `515d323` | 2026-11-25 | docs: registrar linha de base da auditoria multirrota |
 
 <!-- END AUTO-GENERATED SECTION -->
