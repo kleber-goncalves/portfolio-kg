@@ -587,6 +587,37 @@ html::-webkit-scrollbar {
     clip-path: inset(0 100% 0 0);
 }
 
+/* Em dispositivos touch, o splash preserva a identidade sem bloquear a página
+   com a sequência longa de animações da versão desktop. */
+@media (max-width: 767px), (hover: none), (pointer: coarse) {
+    .site-preloader {
+        transition-duration: 240ms;
+    }
+
+    .site-preloader__brand-stage--animate {
+        width: min(82vw, 320px);
+        animation: none !important;
+    }
+
+    .site-preloader__wordmark {
+        clip-path: none;
+        animation: none !important;
+    }
+
+    .site-preloader__symbol {
+        display: none;
+        animation: none !important;
+    }
+
+    .site-preloader__name,
+    .site-preloader__role,
+    .site-preloader__progress {
+        opacity: 1;
+        transform: none;
+        animation: none !important;
+    }
+}
+
 .site-preloader__symbol {
     position: absolute;
     z-index: 1;
